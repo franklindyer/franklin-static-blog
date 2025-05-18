@@ -1,0 +1,490 @@
+<html>
+<head>
+    <title>Who's Who of Elliptic Functions</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Who’s who of Elliptic Functions</h2>
+
+<p>Since about halfway through the Spring 2021 semester, I’ve been participating in the brand new <a href="https://math.unm.edu/research/mathematics-directed-reading-program-drp">mathematics directed reading program</a> at UNM. Since I’m interested in learning about complex analysis, I’ve been paired with another interested undergraduate and a grad student (shout-out to Owen Davis for putting up with all of my crazy questions!), and the three of us have been working through Ahlfors’ <em>Complex Analysis</em>, sometimes supplementing our exploration with other books or papers. It’s been a lot of fun so far, and I’m looking forward to continuing in the Fall! My current reference for elliptic-related goodies is Hancock's <em>Lectures on the Theory of Elliptic Functions</em>, and I'm hoping to eventually work my way through the book <em>Pi and the AGM</em> by the Borwein Brothers.</p>
+
+<p>Now that we’ve finished the basics of complex analysis, we’ve started to delve into a more specialized topic: <strong>elliptic functions</strong> and <strong>elliptic integrals</strong>. This is a topic I’ve wanted to learn about since high school, but it’s only become accessible to me recently because of what I’ve learned about complex analysis. The purpose of this post is to show off some of the results that initially got me interested in elliptic functions/integrals, list concepts that (according to my experience) are essential prerequsites to understanding elliptic integrals, and give a general overview of the major "players" in the realm of elliptic functions and their relationships to each other. In a way, the intended audience of this post is my past self - this is what I wish someone had written for me when I was trying to learn about elliptic functions in highschool.</p>
+
+<p>Just a disclaimer: I am by no means an expert in elliptic functions (or even complex analysis) now, and I’m still struggling with a lot of core concepts. However, I think I have enough of a grasp on the basics to give an accurate overview. </p>
+
+<h3>Wacky series and products <a id="toc-section-1" class="toc-section"></a></h3>
+
+<p>This is a teaser intended to entice and bewilder you with some bizarre identities that result from the theory of elliptic functions, as I was during high school while browsing around on Stackexchange. If you like integrals and infinite series with elegant evaluations, and you haven’t learned about elliptic functions yet, hopefully this section will pique your interest.</p>
+
+<p>Consider the innocent-looking sum</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{n \gt 0} x^{n^2}</script>
+</p>
+
+<p>where $|x|&lt;1$, so that the sum converges. This looks pretty similar to a geometric series, and geometric series are very easy to evaluate, having the following simple closed-form:</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{n\gt 0} x^{n} = \frac{1}{1-x}</script>
+</p>
+
+<p>The only difference is that the powers of the terms are the perfect squares, instead of the natural numbers. Might this sum have nice closed-form values for simple values of $x$ like, say, $x=1/2$ or $x=1/3$?</p>
+
+<p>I don’t think closed-form evaluations are known for either of those values, but for $x=e^{-\pi}$, the following special value is known:</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{n\gt 0} e^{-\pi n^2} = \frac{\pi^{1/4}}{2\Gamma(3/4)}+\frac{1}{2}</script>
+</p>
+
+<p>What the hell is this? How did the Gamma Function get here? And why does this sum have a "nice" evaluation (that is, if you consider the Gamma Function to be "nice") at the crazy value of $x=e^{-\pi}$, instead of some simple value like $x=1/2$? As it happens, there are also nice evaluations for $x=e^{-2\pi}$, and $x=e^{-3\pi}$, and even $x=e^{-\sqrt{2}\pi}$.</p>
+
+<p>Alright, here’s another sum that looks kinda like a geometric series:</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{n=1}^\infty \frac{x^n}{1-x^n}</script>
+</p>
+
+<p>Turns out this series - as well as some modified versions of this series in which each term is multiplied by an extra coefficient (also known as <strong>Lambert Series</strong>) - have some really nice arithmetic/algebraic properties. But again, the simple form of the summand is misleading - good luck finding a closed form value without using elliptic functions! However, some of the variations on this sum have really nice closed-form values: for instance</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{n=1}^\infty \frac{\mu(n)x^n}{1-x^n} = x</script>
+</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{n=1}^\infty \frac{\phi(n)x^n}{1-x^n} = \frac{x}{(1-x)^2}</script>
+</p>
+
+<p>Where $\mu$ and $\phi$ are the Mobius Mu function and the Euler Totient function, respectively.     Not to mention the following <em>tantalizing</em> relationship with the previous sum involving square numbers in the terms’ exponents:</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{n=1}^\infty \frac{(-1)^{n+1}x^{2n+1}}{1-x^{2n+1}} = \frac{1}{4}\Bigg(\sum_{n=1}^\infty x^{n^2}\Bigg)^2</script>
+</p>
+
+<p>These past three identities can be proven using elementary number-theoretical and generating function techniques. However, if you want to evaluate the plain vanilla Lambert Series, you’ll need elliptic functions.</p>
+
+<p>Okay, just one more thing - this one is an infinite product:</p>
+
+<p>
+<script type="math/tex; mode=display">\prod_{n=1}^\infty (1-x^n)</script>
+</p>
+
+<p>Seems simple enough, right? Once again, special values of this infinite product are unexpectedly hard to come by, but they are just as unintuitive and surprising, such as the following:</p>
+
+<p>
+<script type="math/tex; mode=display">\prod_{n=1}^\infty (1-e^{-\pi n})= \frac{e^{\pi/24}\Gamma(1/4)}{2^{7/8}\pi^{3/4}}</script>
+</p>
+
+<p>Here we have $e^\pi$ cropping up again! What gives? And how the heck do we prove these crazy identities? (Spoiler alert: I’m not going to prove these identities. However, I am going to introduce some of the machinery that is used to prove them.)</p>
+
+<h3>Prerequisites from complex analysis <a id="toc-section-2" class="toc-section"></a></h3>
+
+<p>There’s a lot of overhead required to understand the derivations of these identities (which I’m not even entirely comfortable with yet), the most foundational of which is an understanding of complex analysis fundamentals. I’m not going to try to squeeze a mini-course on complex analysis into this post, so here’s a short list of concepts/theorems that are essential for working your way up to elliptic functions.</p>
+
+<ul>
+<li><strong>Arithmetic and algebra of complex numbers.</strong> The algebra of the complex numbers often has geometrical significance, which can be realized by visualizing complex numbers as points in the complex plane. For instance, addition can be understood as a translation, multiplication as a rotation/dilation, and mobius transformations (also called "linear transformations") can be understood as rotations of the Riemann Sphere.</li>
+<li><strong>Complex differentiation and integration.</strong> Calculus can be generalized to the complex numbers in a way that is arguably much "nicer" than calculus on the real numbers. For instance, analytic functions (i.e. functions that are differentiable everywhere) are <em>guaranteed</em> to have derivatives of all orders. You should be familiar with the Cauchy integral formulae and the Residue Theorem as well.</li>
+<li><strong>Holomorphic functions and existence/uniqueness theorems.</strong> Holomorphic functions can be nicely classified based on the locations and types of their singularities. For instance, rational functions cannot have essential singularities, and can only have finitely many poles. The Weierstrass Factorization Theorem helps construct functions with prescribed zeroes, and the Mittag-Leffler Theorem helps construct functions with prescribed poles. Finally, Liouville’s Theorem (one of the most important and useful!) allows us to deduce that any bounded holomorphic function is constant.</li>
+<li><strong>Infinite series and products.</strong> Know how to expand a function about a base point as a Taylor or Laurent Series, and determine the regions in which these series converge. (The region will usually be a disc for Taylor Series, and an annulus for a Laurent Series.)</li>
+<li><strong>Multi-valued functions, and branch points/cuts.</strong> The square root and logarithm functions, for instance, are two of the most important multi-valued functions. They cannot be defined in such a way that they are holomorphic <em>everywhere</em> in $\mathbb C$, but they can be made to be holomorphic on $\mathbb C$ minus a ray that stretches from $0$ to $\infty$ (i.e. the "branch cut"). Contour integrals of entire functions are path-independent, but not so for non-entire holomorphic or multi-valued functions. For instance, $\int_\gamma \sqrt{z}\space dz$ equals zero if $\gamma$ does not encircle the origin, but what if $\gamma$ <em>does</em> encircle the origin (once, twice, or $n$ times, clockwise or counterclockwise)?</li>
+</ul>
+
+<h3>Basic properties of elliptic functions <a id="toc-section-3" class="toc-section"></a></h3>
+
+<p>Recall that a periodic function on the real numbers $f:\mathbb R\mapsto \mathbb R$ is one that "repeats itself" regularly after a certain interval. That is,</p>
+
+<p>
+<script type="math/tex; mode=display">f(x+T)=f(x)</script>
+</p>
+
+<p>for all $x\in \mathbb R$, where $T\ne 0$ is the period. If we know the values of $f$ in the interval $[0,T)$, then we know its values <em>everywhere</em>, since any real number can be brought into that interval by subtracting off multiples of $T$. In other words, $f$ restricted to $[0,T)$ tells us everything we need to know about $f$ if it’s periodic. It is also a theorem that if a continuous, nonconstant real-valued function has two distinct periods, either one must be an integer multiple of the other, or both must be integer multiples of some smaller period. Can you figure out why this is the case?</p>
+
+<p>We can also have periodic functions on the complex numbers: $f:\mathbb C\to\mathbb C$ is periodic if and only if there is some period $\omega\in\mathbb C/{0}$ for which</p>
+
+<p>
+<script type="math/tex; mode=display">f(z+\omega)=f(z)</script>
+</p>
+
+<p>for all $z\in\mathbb C$. There’s something different about periodic functions on the complex numbers, though. $\mathbb C$ is two-dimensional (hence, we visualize $\mathbb R$ as a 1D line and $\mathbb C$ as a 2D plane), meaning that a nonconstant continuous function $f$ <em>can</em> have <em>two distinct, relatively irrational periods</em>! For instance, if $g,h$ are two continuous, real-valued functions with period $1$, then the complex-valued function defined as</p>
+
+<p>
+<script type="math/tex; mode=display">f(z)=f(x+yi)=g(x)+h(y)i</script>
+</p>
+
+<p>has periods $\omega_1 = 1$ and $\omega_2 = i$, and is also continuous! However, in complex analysis, we are often most interested in <em>analytic</em> or <em>holomorphic</em> functions, and there is no guarantee that the above construction is either.</p>
+
+<p>Geometrically, a real-valued periodic function is determined by all of its values inside an interval, whereas a complex-valued periodic function is determined by all of its values inside of a <em>strip</em>. For instance, if a complex function has period $i$, then if we know its values inside of the strip $0\le \text{Im}(z)\lt 1$, we can determine its value at any other point. This is because any complex number can be brought within that strip by repeatedly adding or subtracting $i$, and the function’s value at that point is equal to its value at the corresponding point in the strip.</p>
+
+<p>If a continuous complex-valued function has two relatively irrational periods, then the function is everywhere determined by its values not in an interval or a strip, but in a <em>parallelogram</em>, sometimes called the <strong>fundamental parallelogram</strong>. If the complex periods $\omega_1,\omega_2$ are visualized as vectors in the complex plane, then a fundamental parallelogram is the parallelogram spanning those vectors. Any complex number can be brought within this parallelogram by adding or subtracting some multiple of $\omega_1$ and some multiple of $\omega_2$. In other words, for all $z\in\mathbb C$, there exists $z’$ in the fundamental parallelogram and integers $m,n$ such that $z=z’+m\omega_1 + n\omega_2$ and hence $f(z)=f(z’)$.</p>
+
+<p>An <strong>elliptic function</strong> is simply defined as a holomorphic non-constant doubly periodic function. (Or, you might say that constant functions are "trivial" elliptic functions.) That’s all there is to it! Finding such functions, however, is harder than it looks - the cute example I showed above, for instance, is doubly periodic, but not necessarily holomorphic. (In fact, there aren’t many functions of that form that are holomorphic at all. Can you find all of them?)</p>
+
+<p>Before we actually go ahead and <em>find</em> an elliptic function, there are several things we can say about them. Here’s a brief list of important properties of elliptic functions that follow directly from their definition:</p>
+
+<ul>
+<li><em>The derivatives of an elliptic function are also elliptic.</em> If $f(z+\omega)=f(z)$ for all $z\in\mathbb z$ and $f$ is holomorphic, then $f’(z+\omega)=f’(z)$ for all $z\in\mathbb C$ as well. This means that the derivatives of a function "inherit" all of its periods.</li>
+<li><em>They cannot be entire.</em> If a doubly-periodic function is bounded inside of its fundamental parallelogram, then it must be bounded <em>everywhere</em>, because all of its values are taken on that parallelogram. But Liouville’s Theorem implies that bounded-everywhere entire functions must be constant. Since we’re not interested in constant doubly-periodic functions, we must consider functions that become unbounded in their fundamental parallelogram, meaning that they must have one or more singularities in that parallelogram.</li>
+<li><em>They must have equally many zeroes and poles inside their fundamental parallelogram (counting multiplicity).</em> This can be seen by taking a contour integral of $f’(z)/f(z)$ around the boundary of the fundamental parallelogram, choosing the parallelogram in such a way that it doesn’t pass through any poles. The integrals over each pair of opposite sides of the parallelogram cancel each other because $f’(z)/f(z)$ is also doubly periodic, and so the contour integral equals $0$, which implies that there are equally many zeroes and poles in the interior of the contour (counting multiplicity).</li>
+<li><em>The sum of the residues of the poles in the fundamental parallelogram equals zero</em> by a similar argument to the one above.</li>
+<li><em>The periods of an elliptic function, and the locations and multiplicities of its poles, determine it uniquely up to a multiplicative constant.</em> If $f_1$ and $f_2$ are two elliptic functions with the same periods and the same poles having the same multiplicities, then the function $f_1/f_2$ has <em>no</em> poles in the fundamental parallelogram, making it bounded and therefore constant (by an above theorem). This means that $f_1 = kf_2$ for some constant $k\in\mathbb C$. This theorem is <em>incredibly</em> important for proving some nontrivial equalities later on.</li>
+<li><em>Every elliptic function has an algebraic addition theorem.</em> In other words, if $f$ is an elliptic function, then there exists a polynomial $P(x,y,z)$ such that <script type="math/tex; mode=display">P(f(w+z),f(w),f(z))=0</script> for all $w,z\in\mathbb C$. The proof of this is quite complicated, but Hancock’s <em>Lectures of the Theory of Elliptic Functions</em> does a fantastic job of explaining how double-periodicity relates to algebraic addition theorems. In fact, according to Hancock, Weierstrass  postulated that the central problem of the theory of elliptic functions was to classify all holomorphic functions with an algebraic addition-formula.</li>
+</ul>
+
+<h3>Weierstrass Elliptic Functions <a id="toc-section-4" class="toc-section"></a></h3>
+
+<p>There are several different families of functions (which I almost think of as "characters") involved in the theory of elliptic functions. Now that we know what an ellptic function <em>is</em>, I‘d like to start introducing them, along with the motivation behind them and their relationships with each other and several auxiliary functions.</p>
+
+<p>Let‘s start with the <strong>Weierstrass Elliptic Functions</strong>. So far, we‘ve looked at the general properties of elliptic functions that follow from their definitions, but we haven’t actually <em>found</em> any (nontrivial) examples. One of the most straighforward constructions of an actual elliptic function is the <strong>Weierstrass P-function</strong>, which is defined as follows:</p>
+
+<p>
+<script type="math/tex; mode=display">\wp(z) := \frac{1}{z^2} + \sum_{\omega \in \Lambda/\{0\}} \Big(\frac{1}{(z-\omega)^2} - \frac{1}{\omega^2}\Big)</script>
+</p>
+
+<p>where $\Lambda$ is the set of all integer combinations of the periods $\omega_1, \omega_2$; that is,</p>
+
+<p>
+<script type="math/tex; mode=display">\Lambda = \{m\omega_1+n\omega_2 | m,n\in\mathbb Z\}</script>
+</p>
+
+<p>Note that this function has poles at all points in $\Lambda$, and the series converges to a finite value everywhere else. Also, we can verify that it is indeed elliptic with periods $\omega_1,\omega_2$ by noticing that replacing $z$ with $z+\omega_1$ or $z+\omega_2$ amounts to a mere reindexing of the series, leaving its value the same (since it is absolutely convergent).</p>
+
+<p>The function $\wp$ is an even function, and it turns out that <em>any even elliptic function</em> with periods $\omega_1$ and $\omega_2$ can be expressed in terms of $\wp$. That is, any even elliptic function with periods $\omega_1,\omega_2$ can be written in the form</p>
+
+<p>
+<script type="math/tex; mode=display">C\prod_{k=1}^n \frac{\wp(z)-\wp(a_k)}{\wp(z)-\wp(b_k)}</script>
+</p>
+
+<p>Where $C$ is some constant, and the $a_k$ and $b_k$ are respectively the locations of the zeroes and the poles of the elliptic function (which may be repeated depending on multiplicity). We know this because elliptic functions are uniquely determined up to a multiplicative constant by their periods and the locations of their poles, a property listed in the previous section.</p>
+
+<p>Another elliptic function is defined as follows:</p>
+
+<p>
+<script type="math/tex; mode=display">\sigma(z) = \frac{\wp’(z)}{\wp(z)}</script>
+</p>
+
+<p>This elliptic function has <em>order 1</em>, that is, it only has one pole inside of a fundamental parallelogram. It turns out that <em>any elliptic function</em>, not just any <em>even</em> elliptic function, can be expressed in terms of $\sigma$. In particular, any elliptic function with periods $\omega_1,\omega_2$ can be expressed as</p>
+
+<p>
+<script type="math/tex; mode=display">C\prod_{k=1}^n \frac{\sigma(z-a_k)}{\sigma(z-b_k)}</script>
+</p>
+
+<p>where $C$ is a constant and $a_k,b_k$ are again the locations of the zeroes and the poles of the elliptic function.</p>
+
+<p>The P-function has some pretty cool algebraic properties. For instance, it satisfies the following differential equation:</p>
+
+<p>
+<script type="math/tex; mode=display">\wp’(z)^2 = 4\wp(z)^3 - g_2 \wp(z) - g_3</script>
+</p>
+
+<p>where $g_2$ and $g_3$ are two constants that depend upon the periods $\omega_1,\omega_2$. This can be proven again using the uniqueness theorem of elliptic functions, by expanding both sides into their Laurent Series and noticing that all negative-powered terms are the same (for suitable values of $g_2,g_3$).</p>
+
+<p>We also have the following nice addition theorem for $\wp$:</p>
+
+<p>
+<script type="math/tex; mode=display">\wp(z+u) = \frac{1}{4}\Bigg(\frac{\wp’(z)-\wp’(u)}{\wp(z)-\wp(u)}\Bigg)^2 - \wp(z)-\wp(u)</script>
+</p>
+
+<p>which can be proven using a similar technique, considering both sides as an elliptic function in both $z$ and $u$.</p>
+
+<h3>A closer look at the periods <a id="toc-section-5" class="toc-section"></a></h3>
+
+<p>Note that there is not just one "Weierstrass $\wp$ Function". There are <em>infinitely many</em> such functions - one for every possible choice of the periods $\omega_1$ and $\omega_2$. Some of these functions, however, are reducible to each other. For instance, if $\wp_1$ has periods $\omega_1,\omega_2$ and $\wp_2$ has periods $2\omega_1,2\omega_2$, then the following relationship follows from the series definition of $\wp$:</p>
+
+<p>
+<script type="math/tex; mode=display">\wp_1(z) = 4\wp_2(2z)</script>
+</p>
+
+<p>In other words, multiplying both periods by $2$ amounts to a <em>rescaling</em> of the lattice $\Lambda$ at which the poles of $\wp$ occur.</p>
+
+<p>In fact, if both $\omega_1$ and $\omega_2$ are multiplied by some nonzero complex constant, then the lattice of poles of $\wp$ is essentially just rotated and rescaled, and its values are multiplied by a constant. This means that, in a sense, all of these functions are "equivalent" to each other - they take the same values, but their domans and ranges are just stretched out and rotated a bit. We only really need to study <em>one</em> of these functions in order to understand the behavior of <em>all</em> of them. By convention, we often study the Weierstrass P-function with periods $1$ and $\tau$, where $\tau = \omega_2/\omega_1$, since all P-functions with periods $\alpha\omega_1$ and $\alpha\omega_2$ are scaled versions of this "canonical" function.</p>
+
+<p>Another example: if $\wp_1$ has periods $\omega_1$ and $\omega_2$, and $\wp_2$ has periods $\omega_1$ and $\omega_1+\omega_2$, then it follows that $\wp_1(z)=\wp_2(z)$! Why is this the case? Because if $\wp_2$ has periods $\omega_1$ and $\omega_1 + \omega_2$, then it must also have period $\omega_2$, because the sum/difference of any two periods of a function must also be a period! And if two Weierstrass P-functions have the exact same periods, then they must be the same (because the summation in their definitions range over the same values).</p>
+
+<p>More generally, it can be shown that if $\langle \omega_1, \omega_2\rangle$ and $\langle \omega_1’, \omega_2’\rangle$ are related to each other by a unimodular transformation - that is, if</p>
+
+<p>
+<script type="math/tex; mode=display">\begin{bmatrix}\omega_1’ \\ \omega_2’\end{bmatrix} = \begin{bmatrix}a & b \\ c & d\end{bmatrix}\begin{bmatrix}\omega_1 \\ \omega_2\end{bmatrix}</script>
+</p>
+
+<p>where $a,b,c,d$ are integers and the $2\times 2$ matrix has determinant $1$ - then the Weierstrassian elliptic function defined by the two pairs of periods are identical.</p>
+
+<p>There’s another special function that is sometimes used to characterize the different $\wp$ functions that result from different choices of periods: it’s called the <strong>Modular Lambda Function</strong>, and is defined as</p>
+
+<p>
+<script type="math/tex; mode=display">\lambda(\tau) = \frac{\wp(\frac{\omega_1+\omega_2}{2})-\wp(\frac{\omega_2}{2})}{\wp(\frac{\omega_1+\omega_2}{2})-\wp(\frac{\omega_1}{2})}</script>
+</p>
+
+<p>Intuitively, $\lambda$ is a cross-ratio measuring the relative positions of the half-period values of $\wp$ - that is, the values it assumes at the midpoints of the sides of the fundamental parallelogram, and at its center. In fact, these values are important enough that they have their own names - they are the <strong>Half-Period Values</strong> of $\wp$, defined as</p>
+
+<p>
+<script type="math/tex; mode=display">e_1 = \wp\bigg(\frac{\omega_1}{2}\bigg)</script>
+<script type="math/tex; mode=display">e_2 = \wp\bigg(\frac{\omega_2}{2}\bigg)</script>
+<script type="math/tex; mode=display">e_3 = \wp\bigg(\frac{\omega_1+\omega_2}{2}\bigg)</script>
+</p>
+
+<p>By this definition, $e_1$ is the value of $\wp$ at the midpoint of the side of the parallelogram joining $0$ to $\omega_1$, $e_2$ is the value halfway along the side joining $0$ to $\omega_2$, and $e_3$ is the value in the center of the fundamental parallelogram. From these definitions, we have that</p>
+
+<p>
+<script type="math/tex; mode=display">\lambda(\tau) = \frac{e_3-e_2}{e_3-e_1}</script>
+</p>
+
+<p>Notice that $\lambda$ is a function of $\tau=\omega_2/\omega_1$, not $\omega_1$ and $\omega_2$. This is because the right-hand-side is <em>the same</em> whenever $\omega_1$ and $\omega_2$ are scaled by the same constant - meaning that it is dependent only upon their ratio.</p>
+
+<p>On the other hand, unimodular transformations of the periods do <em>not</em> leave $\lambda$ unchanged. However, they do cause it to change in very predictable and pleasantly symmetrical ways. By observing how unimodular transformations affect the value of $\tau=\omega_2/\omega_1$ and permute the half-period values $e_1,e_2,e_3$, the following functional equations can be proven:</p>
+
+<p>
+<script type="math/tex; mode=display">\lambda(\tau+1)=\frac{\lambda(\tau)}{\lambda(\tau)-1}</script>
+</p>
+
+<p>
+<script type="math/tex; mode=display">\lambda(-1/\tau) = 1-\lambda(\tau)</script>
+</p>
+
+<p>It happens that $\lambda$ is something called a <a href="https://en.wikipedia.org/wiki/Modular_form">modular form</a> - but modular forms have their own entire subfield of math, so I’m not gonna go into them here. Remember the Lambda Function though, because it will crop up again later.</p>
+
+<h3>Inverting Elliptic Integrals <a id="toc-section-6" class="toc-section"></a></h3>
+
+<p>Now let’s take a little detour. Consider the following well-known integral identity:</p>
+
+<p>
+<script type="math/tex; mode=display">\arcsin(z) = \int_0^z \frac{dw}{\sqrt{1-w^2}}</script>
+</p>
+
+<p>Or, equivalently, </p>
+
+<p>
+<script type="math/tex; mode=display">z = \int_0^{\sin(z)} \frac{dw}{\sqrt{1-w^2}}</script>
+</p>
+
+<p>If we wanted, we could <em>define</em> the sine function through the above equation. In fact, for a moment, try to forget everything you know about the sine function, and suppose that I told you I was defining some "mystery function" $f(z)$ through the above equation:</p>
+
+<p>
+<script type="math/tex; mode=display">z = \int_0^{f(z)} \frac{dw}{\sqrt{1-w^2}}</script>
+</p>
+
+<p>Note that there’s actually an ambiguity in this integral. Since we’re integrating in the complex plane, there are many possible curves along which we could integrate - the only constraint is that the curve starts at $0$ and ends at $f(z)$. If the integrand were analytic, the integral would be path-independent, so it wouldn’t matter. However, our integrand is <em>not</em> analytic on all of $\mathbb C$, and can be defined such that it has a branch cut stretching from $-1$ to $1$ (the two singularities of the integrand). Depending on how many times the path of integration wraps around this branch cut, the integral may take on different values. Specifically, the contour integral around a counterclockwise closed loop $\gamma$ enclosing this branch cut is given by</p>
+
+<p>
+<script type="math/tex; mode=display">\int_\gamma \frac{dw}{\sqrt{1-w^2}} = 2\pi</script>
+</p>
+
+<p>which is an exercise in contour integration. This means that </p>
+
+<p>
+<script type="math/tex; mode=display">\int_0^{z} \frac{dw}{\sqrt{1-w^2}}</script>
+</p>
+
+<p>is a multi-valued function of $z$ (so, not <em>actually</em> a function at all). If the integral taken along some path equals $I$, then the integral can be made to equal $I+2\pi n$ for any integer $n\in\mathbb Z$, by altering the path such that it wraps around the branch cut more/fewer times (or reversing the orientation of its path). Hence, if we define $f$ to be the "inverse" of this multi-valued function, it would follow that $f$ is unchanged when a multiple of $2\pi$ is added to/subtracted from its argument. In other words,</p>
+
+<p>
+<script type="math/tex; mode=display">f(x+2\pi)=f(x)</script>
+</p>
+
+<p>or $f$ has period $2\pi$! See what we’ve done here? By defining  a function (which so happens to be our good friend $f(z)=\sin(z)$) as the "inverse" of an integral, and showing that the integral is multi-valued with its possible values spaced out by a certain amount, we have shown that the function is periodic!</p>
+
+<p>Now, the <strong>Incomplete Elliptic Integral of the First Kind</strong> with <strong>modulus</strong> $k$ is defined as follows:</p>
+
+<p>
+<script type="math/tex; mode=display">F(z; k) = \int_0^z \frac{dw}{\sqrt{(1-w^2)(1-k^2 w^2)}}</script>
+</p>
+
+<p>This integrand is also non-analytic, with singularities at $w=\pm 1$ and $w=\pm 1/k$. It can be arranged such that it has  precisely <em>two</em> branch cuts - one extending rightwards from $-1$ to $1$, and one "infinite cut" stretching leftwards from $-1/k$ all the way "through infinity" and ending at $1/k$. This means that this integral is multi-valued as well. By convention, $F$ is defined unambiguously by choosing the path of integration such that it does not loop around any of the branch cuts. However, if it loops once around the first branch cut, its value is changed by the amount</p>
+
+<p>
+<script type="math/tex; mode=display">\omega_1 = 2\int_{-1}^1 \frac{dw}{\sqrt{(1-w^2)(1-k^2w^2)}}</script>
+</p>
+
+<p>whereas if it loops around the second branch cut once, it value changes by</p>
+
+<p>
+<script type="math/tex; mode=display">\omega_2 = 2\int_{1}^{1/k} \frac{dw}{\sqrt{(1-w^2)(1-k^2w^2)}}</script>
+</p>
+
+<p>By looping around the first branch cut $m$ times (with negative $m$ representing inverted orientation), we may change the integral’s value by $m\omega_1$. By looping around the second branch cut $n$ times, we may change its value by $n\omega_1$. Suppose now that we define a special function called $\text{sn}(z)$ to be the "inverse" of this multi-valued integral, such that</p>
+
+<p>
+<script type="math/tex; mode=display">z = \int_0^{\text{sn}(z)} \frac{dw}{\sqrt{(1-w^2)(1-k^2 w^2)}}</script>
+</p>
+
+<p>It would then follow, by the same reasoning we used in the simpler example above, that $\text{sn}(z)$ <em>is doubly periodic</em> and has $\omega_1$ and $\omega_2$ as its periods. That is,</p>
+
+<p>
+<script type="math/tex; mode=display">\text{sn}(z + m\omega_1 + n\omega_2) = \text{sn}(z)</script>
+</p>
+
+<p>for any $m,n\in\mathbb Z$! <em>It’s another elliptic function!</em></p>
+
+<p>Briefly, I’ll introduce an auxiliary function called the <strong>Complete Elliptic Integral of the First Kind</strong>, which is defined as</p>
+
+<p>
+<script type="math/tex; mode=display">K(k) = F(1;k) = \int_0^1 \frac{dw}{\sqrt{(1-w^2)(1-k^2w^2)}}</script>
+</p>
+
+<p>where $k$ is again called the <strong>modulus</strong>. There’s also a quantity called the <strong>complementary modulus</strong> denoted $k’$ which is defined as $k’=\sqrt{1-k^2}$, and the quantity $K(k’)$ is often denoted $K’$ (not to be confused with the derivative of $K$). Given these definitions, the periods $\omega_1$ and $\omega_2$ of this new function $\text{sn}(z)$ are equal to</p>
+
+<p>
+<script type="math/tex; mode=display">\omega_1 = 4K</script>
+</p>
+
+<p>
+<script type="math/tex; mode=display">\omega_2 = 2iK’</script>
+</p>
+
+<p>which can be proven by making a few simple substitutions in the above integral formulae for $\omega_1$ and $\omega_2$.</p>
+
+<p>This new elliptic function $\text{sn}(z)$ that we’ve derived is one of the <strong>Jacobi Elliptic Functions</strong>. There are a total of 12 such functions (!!!) whose periods can be expressed in terms of $K$ and $K’$, and they’re defined by the placement of their poles and zeroes within the fundamental parallelogram. The uniqueness theorem of elliptic functions that we mentioned earlier suggests that these aren’t actually <em>distinct</em> from the Weierstrassian elliptic functions, and that there must be some relationship between them. Indeed, the following relation connecting $\text{sn}$ and $\wp$ holds:</p>
+
+<p>
+<script type="math/tex; mode=display">\wp(z) = e_2 + \frac{e_1-e_2}{\text{sn}^2(\sqrt{e_1-e_2}z)}</script>
+</p>
+
+<p>How can this be proven? Well, recall the differential equation for $\wp$ stated earlier. It follows from this differential equation that</p>
+
+<p>
+<script type="math/tex; mode=display">z = \int_0^{\wp(z)} \frac{dw}{\sqrt{4w^3-g_2 w-g_3}}</script>
+</p>
+
+<p>By making a few slick substitutions, this integral can be converted into an incomplete integral of the first kind, allowing us to equate an expression involving $\wp$ with the function $\text{sn}$. This proof uses the fact that the cubic $4w^3-g_2 w-g_3$ can be factored as $4(w-e_1)(w-e_2)(w-e_3)$. (If it isn’t clear why this is true, use symmetry to show that $\wp’$ must equal zero at each of the half-periods, meaning that $4\wp^3 -g_2 \wp -g_3$ must equal zero when $\wp$ is equal to any of the $3$ half-period values $e_1,e_2,e_3$, allowing the cubic to be factored). In fact, these substitutions bring the integrand into the form</p>
+
+<p>
+<script type="math/tex; mode=display">\frac{dw}{\sqrt{(1-z^2)(1-\lambda z^2)}}</script>
+</p>
+
+<p>which has the amazing consequence that $\lambda = k^2$. In other words, if we know the value of $\lambda$ for some Weierstrassian Elliptic Function $\wp$, we can <em>solve for its periods</em> using elliptic integrals: they will be given by $4K(\sqrt{\lambda})$ and $2iK’(\sqrt{\lambda})$.</p>
+
+<h3>Theta Functions <a id="toc-section-7" class="toc-section"></a></h3>
+
+<p>So far we’ve seen a way to construct elliptic functions using an infinite sum over a lattice of periods, and another way that defines elliptic functions as inverses of multi-valued elliptic integrals. Now we’ll take a look at one more approach to constructing elliptic functions that gives rise to a family of functions with some of the richest algebraic identities in complex analysis.</p>
+
+<p>Have a look at the following Fourier-series defined function:</p>
+
+<p>
+<script type="math/tex; mode=display">\vartheta(z) = \sum_{n\in\mathbb Z} e^{\pi i\tau n^2 + 2\pi i z n}</script>
+</p>
+
+<p>Firstly, notice that it is certainly periodic with period $1$, since it consists of a summation of coefficients times terms of the form $e^{2\pi i z}$, each of which is a periodic function of $z$ with period $1$. Next notice that</p>
+
+<p>
+<script type="math/tex; mode=display">\begin{align}
+\vartheta(z+\tau) &= \sum_{n\in\mathbb Z} e^{\pi i \tau n^2 + 2\pi i (z+\tau) n} \\ &= \sum_{n\in\mathbb Z} e^{\pi i \tau n^2  + 2\pi i \tau n + 2\pi i z n} \\ &= \sum_{n\in\mathbb Z} e^{\pi i \tau (n+1)^2 - \pi i \tau + 2\pi i z n} \\ &= \sum_{n\in\mathbb Z} e^{\pi i \tau n^2 - \pi i \tau + 2\pi i z (n-1)} \\ &= \sum_{n\in\mathbb Z} e^{\pi i \tau n^2 - \pi i \tau + 2\pi i z n - 2\pi i z} \\ &= e^{-2\pi i z}e^{-\pi i \tau}\sum_{n\in\mathbb Z} e^{\pi i \tau n^2 + 2\pi i z n} \\ &= e^{-2\pi i z}e^{-\pi i \tau} \vartheta(z)
+\end{align}</script>
+</p>
+
+<p>where reindexing occurs between steps $3$ and $4$. For convenience, we denote the quantity $e^{\pi i \tau}$ by $q$, which is often referred to as the <strong>elliptic nome</strong>. Then we have that</p>
+
+<p>
+<script type="math/tex; mode=display">\vartheta(z+1)=\vartheta(z) \\ \vartheta(z+\tau)=\frac{1}{q}e^{-2\pi i z}\vartheta(z)</script>
+</p>
+
+<p>The function $\vartheta$ isn’t exactly doubly periodic. It is <em>singly</em> periodic, with period $1$, but it does not have period $\tau$, since increasing the argument by $\tau$ changes the value of $\vartheta$ by a factor of $e^{-2\pi i z}/q$. However, we might be tempted to say that this function has a "fundamental parallelogram" spanned by $1$ and $\tau$, since all values of $\vartheta$ can be expressed <em>in terms of</em> values inside of this parallelogram using these functional equations (although they are not exactly equal).</p>
+
+<p>Four functions, called the <strong>Jacobi Theta Functions</strong>, may defined in terms of the above function:</p>
+
+<p>
+<script type="math/tex; mode=display">\begin{align}\vartheta_{00}(z) &= \vartheta(z) \\ \vartheta_{01}(z) &= \vartheta\Big(z + \frac{1}{2}\Big) \\ \vartheta_{10}(z) &= \sqrt[4]{q}e^{\pi i z}\vartheta\Big(z+\frac{\tau}{2}\Big) \\ \vartheta_{11}(z) &= \sqrt[4]{q}e^{\pi i (z+1/2)}\vartheta\Big(z+\frac{1+\tau}{2}\Big)\end{align}</script>
+</p>
+
+<p>Since these are all expressible in terms of the original $\vartheta$ function, they are in some sense superfluous, but it’s often convenient to have a shorthand symbol for each of them - intuitively, they are variations of $\vartheta$ shifted over by each of the "half-periods" $1/2$ and $\tau/2$ (although as we noticed above, $\tau$ isn’t exactly a period).</p>
+
+<p>From each of the functional equations we derived for the original $\theta$ function, we can find a corresponding functional equation for each of these four auxiliary functions by making substitutions for $z$. Here are all of the equations:</p>
+
+<p>
+<script type="math/tex; mode=display">\begin{align}
+\vartheta_{00}(z+1) &= \vartheta_{00}(z) \\
+\vartheta_{01}(z+1) &= \vartheta_{01}(z) \\
+\vartheta_{10}(z+1) &= -\vartheta_{10}(z) \\
+\vartheta_{11}(z+1) &= -\vartheta_{11}(z) \\
+\end{align}</script>
+</p>
+
+<p>
+<script type="math/tex; mode=display">\begin{align}
+\vartheta_{00}(z+\tau) &= q^{-1}e^{-2\pi i z}\vartheta_{00}(z) \\
+\vartheta_{01}(z+\tau) &= -q^{-1}e^{-2\pi i z}\vartheta_{01}(z) \\
+\vartheta_{10}(z+\tau) &= q^{-1}e^{-2\pi i z}\vartheta_{10}(z) \\
+\vartheta_{11}(z+1) &= -q^{-1}e^{2\pi i z}\vartheta_{11}(z) \\
+\end{align}</script>
+</p>
+
+<p>Now, here’s the kicker - consider a quotient of two of these elliptic functions, say $\vartheta_{01}/\vartheta_{11}$. From these functional equations, we have that</p>
+
+<p>
+<script type="math/tex; mode=display">\frac{\vartheta_{01}(z+2)}{\vartheta_{11}(z+2)} = \frac{\vartheta_{01}(z+1)}{-\vartheta_{11}(z+1)}=\frac{\vartheta_{01}(z)}{\vartheta_{11}(z)}</script>
+</p>
+
+<p>and</p>
+
+<p>
+<script type="math/tex; mode=display">\frac{\vartheta_{01}(z+\tau)}{\vartheta_{11}(z+\tau)} = \frac{-q^{-1}e^{2\pi i z}\vartheta_{01}(z)}{-q^{-1}e^{2\pi i z}\vartheta_{11}(z)}=\frac{\vartheta_{01}(z)}{\vartheta_{11}(z)}</script>
+</p>
+
+<p>So the function $\vartheta_{01}/\vartheta_{11}$ <em>is doubly periodic</em> with periods $2$ and $\tau$. <em>It’s yet another elliptic function!</em></p>
+
+<p>As you might guess, this and other quotients of the Theta Functions can be expressed in terms of the Weierstrassian and Jacobian Elliptic Functions, and there’s even the following beautiful connection between the Theta Functions and the elliptic modulus/lambda function:</p>
+
+<p>
+<script type="math/tex; mode=display">\lambda(\tau) = k^2 = \bigg(\frac{\vartheta_{10}(0)}{\vartheta_{00}(0)}\bigg)^4</script>
+</p>
+
+<p>(Don’t forget that the each of the $\vartheta$ is also a function of $\tau$, although usually only $z$ is listed among its arguments.) The Theta Functions also satisfy a plethora of other incredible algebraic identities. One such identity is</p>
+
+<p>
+<script type="math/tex; mode=display">\vartheta_{00}(0)^4 = \vartheta_{01}(0)^4 + \vartheta_{10}(0)^4</script>
+</p>
+
+<p>and here’s another formula that gives a clue as to how these functions lead to the amazing infinite product evaluation used as a "teaser" at the beginning of the post:</p>
+
+<p>
+<script type="math/tex; mode=display">\vartheta_{00}(0)\vartheta_{01}(0)\vartheta_{10}(0) = 2\sqrt[8]{q}\Bigg(\prod_{n=1}^\infty (1-q^n)\Bigg)^3</script>
+</p>
+
+<p>But that’s enough about these functions for now. The proofs of most Theta Function identities are really quite miraculous and ought to have a blog post all to themselves.</p>
+
+<h3>Summary <a id="toc-section-8" class="toc-section"></a></h3>
+
+<p>That post was a hell of a lot longer than I intended it to be! There are tons of special functions and amazing identities and relationships surrounding the theory of elliptic functions, and a single post can hardly do it justice (I’m still struggling to understand much of it myself). However, I hope I’ve done a decent job of introducing the basics of this fascinating field and their relationships, even if my explanations are mostly intuitive and lack rigor for now.</p>
+
+<p>Here’s a short summary of each of the "characters" we’ve encountered, which you can use as a kind of notational "cheat sheet" to remind yourself of their relationships.</p>
+
+<ul>
+<li><strong>The periods</strong> $\omega_1, \omega_2$ of an elliptic function form a lattice of periods in the complex plane. A <strong>fundamental parallelogram</strong> is spanned by the vectors pointing to $\omega_1$ and $\omega_2$, and the values assumed in this parallelogram are repeated in every other cell of the lattice.</li>
+<li>The <strong>period ratio</strong> $\tau$ is often used in place of the periods, since an elliptic function remains qualitatively invariant under scaling. The <strong>elliptic nome</strong> is $e^{\pi i \tau}$.</li>
+<li>The <strong>Weierstrass Elliptic Functions</strong> are $\wp$, which has a straightforward series definition, and $\sigma = \wp’/\wp$, its logarithmic derivative. These "building blocks" can be used to express all other elliptic functions. The <strong>half-period values</strong> $e_1,e_2,e_3$ are the values taken by $\wp$ when $\wp’ = 0$, at the midpoints of the sides and at the center of the fundamental parallelogram. The <strong>Modular Lambda Function</strong> $\lambda$ is a function of the period-ratio $\tau$ and characterizes every possible elliptic function $\wp$ by the relative positions of $e_1,e_2,e_3$ in the complex plane.</li>
+<li>The <strong>Jacobi Elliptic Functions</strong>, such as $\text{sn}(z)$, are defined by inverting <strong>Complete Elliptic Integrals of the First Kind</strong> $F(z;k)$ with respect to the first argument. The second argument $k$ is called the <strong>elliptic modulus</strong>. The quantity $k’=\sqrt{1-k^2}$ is the <strong>complementary modulus</strong>. The <strong>Complete Elliptic Integral of the First Kind</strong> $K(k)$ can be used to express one period of $\text{sn(z)}$, and the other can be expressed using $K(k’)$, often denoted by $K’$. The other Jacobian Elliptic Functions have different periods, but they can also be written in terms of $K$ and $K’$. We also have that $\lambda = k^2$.</li>
+<li>The <strong>Jacobi Theta Functions</strong> $\vartheta_{00},\vartheta_{01},\vartheta_{10},\vartheta_{11}$ are essentially the same function, but translated and multiplied by an exponential function and a constant. They aren’t elliptic functions by themselves, but the ratio of any two Theta Functions is an elliptic function.</li>
+</ul>
+
+<p>Hopefully, if past Franklin had access to this post, he would’ve found it helpful.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

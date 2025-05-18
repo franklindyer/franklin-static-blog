@@ -1,0 +1,203 @@
+<html>
+<head>
+    <title>n-Involutory Rational Functions</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>n-Involutory Rational Functions</h2>
+
+<p><em>2017 April 17</em></p>
+
+<blockquote>
+<p>Find a function with the property $f^3(x)=x$.
+Find a function with the property $f^4(x)=x$.
+Find a function with the property $f^6(x)=x$.</p>
+</blockquote>
+
+<p>Lately I've been fascinated with a different class of functions - <em>involutory</em> functions, or functions that invert themselves. These functions have the property $f^2(x)=x$. A few of these functions include:
+<script type="math/tex; mode=display">f_1(x)=-x</script>
+<script type="math/tex; mode=display">f_2(x)=1-x</script>
+<script type="math/tex; mode=display">f_3(x)=\frac{1}{x}</script>
+<script type="math/tex; mode=display">f_4(x)=-\frac{1}{x}</script>
+<script type="math/tex; mode=display">f_5(x)=\frac{x+1}{x-1}</script>
+</p>
+
+<p>In fact, there are infinitely many such functions, because if $f$ is in the form
+<script type="math/tex; mode=display">f(x)=(g\circ h\circ g^{-1})(x)</script>
+</p>
+
+<p>then $f$ is an involution whenever $h$ is. A very special type of function to consider is a function of the type
+<script type="math/tex; mode=display">f(x)=\frac{ax+b}{cx+d}</script>
+</p>
+
+<p>which does some interesting things when iterated. Notice what happens when we compose two rational functions of the form
+<script type="math/tex; mode=display">f(x)=\frac{ax+b}{cx+d}</script>
+<script type="math/tex; mode=display">g(x)=\frac{ex+f}{gx+h}</script>
+<script type="math/tex; mode=display">(f\circ g)(x)=\frac{a\frac{ex+f}{gx+h}+b}{c\frac{ex+f}{gx+h}+d}</script>
+<script type="math/tex; mode=display">(f\circ g)(x)=\frac{a(ex+f)+b(gx+h)}{c(ex+f)+d(gx+h)}</script>
+<script type="math/tex; mode=display">(f\circ g)(x)=\frac{(ae+bg)x+(af+bh)}{(ce+dg)x+(cf+dh)}</script>
+</p>
+
+<p>This may not seem remarkable at first, but notice what happens when we multiply two matrices:
+<script type="math/tex; mode=display">\begin{bmatrix}a & b\\c & d\end{bmatrix}\begin{bmatrix}e & f\\g & h\end{bmatrix}</script>
+<script type="math/tex; mode=display">\begin{bmatrix}ae+bg & af+bh\\ce+dg & cf+dh\end{bmatrix}</script>
+</p>
+
+<p>Which is analogous to what we got for our iterated rational function. Therefore, if we map the rational function
+<script type="math/tex; mode=display">f(x)=\frac{ax+b}{cx+d}</script>
+</p>
+
+<p>onto the matrix
+<script type="math/tex; mode=display">\begin{bmatrix}a & b\\c & d\end{bmatrix}</script>
+</p>
+
+<p>so that we map the coefficients of $x$ on the numerator and denominator to the leftmost entries and the constants to the rightmost entries, then $f^n(x)$ maps onto the matrix
+<script type="math/tex; mode=display">\begin{bmatrix}a & b\\c & d\end{bmatrix}^n</script>
+</p>
+
+<p>Notice then that if such a function is involutory, then the matrix that it maps onto has the property that
+<script type="math/tex; mode=display">\begin{bmatrix}a & b\\c & d\end{bmatrix}^2=\begin{bmatrix}1 & 0\\0 & 1\end{bmatrix}</script>
+</p>
+
+<p>which is the $2$ x $2$ identity matrix. Interestingly, this holds even for fractional and negative iterates of $f$. Using this result, we can find a couple very interesting types of rational functions. For example, functions of the form
+<script type="math/tex; mode=display">f(x)=\frac{ax-a^2}{x}</script>
+</p>
+
+<p>are <em>3-involutory</em>, meaning that $f^3(x)=x$. The function
+<script type="math/tex; mode=display">f(x)=\frac{ax-a^2}{x+a}</script>
+</p>
+
+<p>is <em>4-involutory</em>. We can even find a function that is $6-involutory$ by finding the halfth iterate of our 3-involutory function. To find the halfth iterate or <em>functional square root</em> of a rational function
+<script type="math/tex; mode=display">f(x)=\frac{ax+b}{cx+d}</script>
+</p>
+
+<p>we map it onto a matrix
+<script type="math/tex; mode=display">\begin{bmatrix}a & b\\c & d\end{bmatrix}</script>
+</p>
+
+<p>and use the matrix square root formula:
+<script type="math/tex; mode=display">\sqrt{\begin{bmatrix}a & b\\c & d\end{bmatrix}}=\frac{1}{t}\begin{bmatrix}a+s & b\\c & d+s\end{bmatrix}</script>
+</p>
+
+<p>where $s$ is the positive or negative root of the determinant. We don't have to worry about what $t$ is, because when we revert this back to a rational function, it will cancel out. So the square root of our rational function is
+<script type="math/tex; mode=display">f(x)=\frac{(a\pm\sqrt{ad-bc})x+b}{cx+(d\pm\sqrt{ad-bc})}</script>
+</p>
+
+<p>and using this, we can find the functional square root of our <em>3-involutory function</em>:
+<script type="math/tex; mode=display">f(x)=\frac{(a\pm\sqrt{a^2})x+b}{cx+(d\pm\sqrt{a^2})}</script>
+<script type="math/tex; mode=display">f(x)=\frac{(a\pm a)x-a^2}{x\pm a}</script>
+</p>
+
+<p>and so now we know that functions of the form
+<script type="math/tex; mode=display">f(x)=\frac{2ax-a^2}{x+a}</script>
+<script type="math/tex; mode=display">f(x)=\frac{a^2}{a-x}</script>
+</p>
+
+<p>are <em>6-involutory</em>. We could go even further and find a <em>12-involutory</em> function or a <em>24-involutory</em> function, but... nah. There's one more interesting property about these types of functions. If 
+<script type="math/tex; mode=display">f(x)=\frac{ax+b}{cx+d}</script>
+</p>
+
+<p>and 
+<script type="math/tex; mode=display">f^n(x)=\frac{ex+f}{gx+h}</script>
+</p>
+
+<p>then if
+<script type="math/tex; mode=display">g(x)=\frac{ax+c}{bx+d}</script>
+</p>
+
+<p>it must be true that
+<script type="math/tex; mode=display">g^n(x)=\frac{ex+g}{fx+h}</script>
+</p>
+
+<p>Why is this true? Well, try mapping the functions $f$ and $g$ onto matrices $F$ and $G$. Then it is clear that $F$ is the transpose of $G$, or that $F^T=G$. There is a property of matrices stating that for any matrices $A$ and $B$, 
+<script type="math/tex; mode=display">(AB)^T=B^TA^T</script>
+</p>
+
+<p>so it follows from this that for any matrix $A$, 
+<script type="math/tex; mode=display">(A^{n})^T=(A^{T})^n</script>
+</p>
+
+<p>Since we are likening exponentiation of matrices to the iteration of functions, this means that the "transpose" of $f$ iterated $n$ times is equal to the the <em>n</em>th iterate of its transpose, proving our original statement. Furthermore, if a function of this type is <em>n-involutory</em>, then so is its "transpose", telling us that in addition to our above <em>6-involutory</em> functions, we also have the functions
+<script type="math/tex; mode=display">f(x)=\frac{2ax+1}{a-a^2x}</script>
+<script type="math/tex; mode=display">f(x)=\frac{-1}{a^2x+a}</script>
+</p>
+
+<p>And this theorem can be applied to all types of <em>n-involutory</em> functions of this type.</p>
+
+<p>Edit: <em>2017 June 3</em></p>
+
+<p>Okay, there is a way to find an <em>n-involutory</em> rational function for any positive integer $n$. Such a function is given by
+<script type="math/tex; mode=display">f(x)=\frac{x\cos\zeta-\sin\zeta}{x\sin\zeta-\cos\zeta}</script>
+</p>
+
+<p>where
+<script type="math/tex; mode=display">\zeta=\frac{2\pi}{n}</script>
+</p>
+
+<p>To prove this, we will have to employ the trigonometric sum angle formulas for the sine and cosine:
+<script type="math/tex; mode=display">\sin(\theta+\phi)=\sin\theta\cos\phi+\cos\theta\sin\phi</script>
+<script type="math/tex; mode=display">\cos(\theta+\phi)=\cos\theta\cos\phi-\sin\theta\sin\phi</script>
+</p>
+
+<p>This can be derived by, once again, using matrices in place of actual rational functions. Suppose we are multiplying the matrices
+<script type="math/tex; mode=display">\begin{bmatrix}\cos a\zeta & -\sin a\zeta\\\sin a\zeta & \cos a\zeta\end{bmatrix}\begin{bmatrix}\cos b\zeta & -\sin b\zeta\\\sin b\zeta & \cos b\zeta\end{bmatrix}</script>
+</p>
+
+<p>When we carry out the multiplication, we get
+<script type="math/tex; mode=display">\begin{bmatrix}\cos a\zeta\cos b\zeta-\sin a\zeta\sin b\zeta & -\sin a\zeta\cos b\zeta-\cos a\zeta\sin b\zeta\\\sin a\zeta\cos b\zeta+\cos a\zeta\sin b\zeta & \cos a\zeta\cos b\zeta-\sin a\zeta\sin b\zeta\end{bmatrix}</script>
+</p>
+
+<p>Look! These are the sum angle formulas, and this can be simplified to
+<script type="math/tex; mode=display">\begin{bmatrix}\cos (a+b)\zeta & -\sin (a+b)\zeta\\\sin (a+b)\zeta & \cos (a+b)\zeta\end{bmatrix}</script>
+</p>
+
+<p>Now that we know this, we can say that
+<script type="math/tex; mode=display">\begin{bmatrix}\cos \zeta & -\sin \zeta\\\sin \zeta & \cos \zeta\end{bmatrix}^n=\begin{bmatrix}\cos n\zeta & -\sin n\zeta\\\sin n\zeta & \cos n\zeta\end{bmatrix}</script>
+</p>
+
+<p>And, if $\zeta=\frac{2\pi}{n}$,
+<script type="math/tex; mode=display">\begin{bmatrix}\cos \zeta & -\sin \zeta\\\sin \zeta & \cos \zeta\end{bmatrix}^n=\begin{bmatrix}\cos 2\pi & -\sin 2\pi\\\sin 2\pi & \cos 2\pi\end{bmatrix}</script>
+<script type="math/tex; mode=display">\begin{bmatrix}\cos \zeta & -\sin \zeta\\\sin \zeta & \cos \zeta\end{bmatrix}^n=\begin{bmatrix}1 & 0\\0 & 1\end{bmatrix}</script>
+</p>
+
+<p>Thus it is proven. Because of the relationship previously established between matrices and rational functions, if
+<script type="math/tex; mode=display">f(x)=\frac{x\cos\zeta-\sin\zeta}{x\sin\zeta-\cos\zeta}</script>
+and
+<script type="math/tex; mode=display">\zeta=\frac{2\pi}{n}</script>
+then
+<script type="math/tex; mode=display">f^n(x)=x</script>
+</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

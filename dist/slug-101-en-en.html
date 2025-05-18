@@ -1,0 +1,84 @@
+<html>
+<head>
+    <title>Slicing a Plane</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Slicing a Plane</h2>
+
+<p><em>2017 Feb 19</em></p>
+
+<blockquote>
+<p>What is the largest number of pieces into which you could slice a plane with $n$ line cuts?</p>
+</blockquote>
+
+<p>Suppose we are tasked with finding a general rule for the maximum number of regions that a plane can be sliced into with $n$ line cuts. First we need to decide what a "perfect" series of slices looks like, or the series of slices producing the largest number of regions. First, in order to create as many new regions as possible, each line drawn should intersect each other line. Additionally, no two lines should intersect another line at the same point (since more regions could be obtained if they intersect in different locations).</p>
+
+<p>First, we observe the first couple values, and then we may begin to attack the problem.</p>
+
+<p><center><img src="/img/2017-2-19-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>Suppose a plance has already been sliced $n-1$ times so that it has been divided into the maximum number of regions that can be made with $n-1$ cuts, or so that each line intersects each other line and no three lines intersect at the same point. Choose one of the lines $l$ that has already been constructed. Then there are $n-2$ lines intersecting $l$ each at different points. We can see from the picture that $l$ is touching $n-1$ of the regions already made on each of its sides:</p>
+
+<p><center><img src="/img/2017-2-19-Fig2.png" alt="Fig 2" /></center></p>
+
+<p>A new line can be  constructed by finding a rotation of $l$ at a point at which it does not intersect any other lines so that it is not parallel to any preexisting lines, and so that it does not pass through any other points of intersection. Such a line intersects each other line at distinct points, so it adds the maximum number of possible regions, which we can see from the visual is a total of $n$ new regions.</p>
+
+<p><center><img src="/img/2017-2-19-Fig3.png" alt="Fig 3" /></center></p>
+
+<p>If $r_n$ denotes the maximum number of regions after slice $n$, we have just established the property
+<script type="math/tex; mode=display">r_n=r_{n-1}+n</script>
+</p>
+
+<p>Since we also know that </p>
+
+<p>$r_0=1$</p>
+
+<p>We have a recursive definition of $r_n$, which we can use to find an explicit one. We already have that
+<script type="math/tex; mode=display">r_n=r_{n-1}+n</script>
+</p>
+
+<p>which can be rewritten as
+<script type="math/tex; mode=display">r_n=r_0+1+2+...+n</script>
+<script type="math/tex; mode=display">r_n=1+1+2+...+n</script>
+</p>
+
+<p>Since the formula for the sum of the first $n$ integers is $\frac{n(n+1)}{2}$, we can replace that with
+<script type="math/tex; mode=display">r_n=1+\frac{n(n+1)}{2}</script>
+</p>
+
+<p>Which is the formula for the maximum number of regions after $n$ slices.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

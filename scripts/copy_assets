@@ -1,0 +1,10 @@
+rm -r ./dist/img
+mkdir ./dist/img
+
+rm -r ./dist/css
+mkdir ./dist/css
+
+cp ./content/img/*.png ./dist/img/
+cp ./content/img/*.jpg ./dist/img/
+cp ./content/img/*.jpeg ./dist/img/
+cp ./content/css/*.css ./dist/css/

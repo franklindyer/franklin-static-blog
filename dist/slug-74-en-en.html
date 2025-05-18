@@ -1,0 +1,153 @@
+<html>
+<head>
+    <title>Using complex numbers to evaluate series</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Using complex numbers to evaluate series</h2>
+
+<blockquote>
+<p>Evaluate the following infinite series:
+<script type="math/tex; mode=display">\sum_{k=0}^\infty \frac{1}{(2k+1)!}</script>
+<script type="math/tex; mode=display">\sum_{k=0}^\infty \frac{(-1)^k}{(2k+1)!}</script>
+<script type="math/tex; mode=display">\sum_{k=0}^\infty \frac{1}{(3k)!}</script>
+<script type="math/tex; mode=display">\sum_{k=0}^\infty \frac{1}{8^k(3k+1)!}</script>
+<script type="math/tex; mode=display">\sum_{k=0}^\infty \frac{(-1)^k}{3k+1}</script>
+</p>
+</blockquote>
+
+<p>In this post, I will demonstrate how to evaluate series similar to the the Taylor series of a few common functions. Recall the following ordinary Taylor series:
+<script type="math/tex; mode=display">e^x=\sum_{k=0}^\infty \frac{x^k}{k!}</script>
+<script type="math/tex; mode=display">-\ln(1-x)=\sum_{k=1}^\infty \frac{x^k}{k}</script>
+</p>
+
+<p>One notices immediately that these Taylor series look very similar to the series problems that I have proposed, but they only use some of the terms. For example, the series
+<script type="math/tex; mode=display">\sum_{k=0}^\infty \frac{1}{(2k+1)!}</script>
+is a special case of
+<script type="math/tex; mode=display">\sum_{k=0}^\infty \frac{x^{2k+1}}{(2k+1)!}</script>
+which is just the sum of every other term in the Taylor series of $e^x$. How might we eliminate half of the terms to obtain the desired result?</p>
+
+<p>First, I will consider a more general series. Suppose the function $G$ can be expressed as the following series:
+<script type="math/tex; mode=display">G(x)=\sum_{k=0}^\infty a_k x^k</script>
+where $a_k$ is some sequence. Then notice that
+<script type="math/tex; mode=display">G(-x)=\sum_{k=0}^\infty (-1)^k a_k x^k</script>
+which gives an alternating version of the same series. Thus, if we add $G(x)$ and $G(-x)$, every other term will cancel, and we will have
+<script type="math/tex; mode=display">G(x)+G(-x)=a_0x^0+a_0x^0+a_1x^1-a_1x^1+a_2x^2+a_2x^2+a_3x^3-a_3x^3+...</script>
+<script type="math/tex; mode=display">G(x)+G(-x)=2a_0x^0+2a_2x^2+2a_4x^4+...</script>
+or
+<script type="math/tex; mode=display">\frac{G(x)+G(-x)}{2}=\sum_{k=0}^\infty a_{2k}x^{2k}</script>
+Similarly, if we subtract $G(x)$ and $G(-x)$, the even terms cancel and the odd terms remain, giving us
+<script type="math/tex; mode=display">\frac{G(x)-G(-x)}{2}=\sum_{k=0}^\infty a_{2k+1}x^{2k+1}</script>
+Great, now we should be able to evaluate our first sum! If we let $G(x)=e^x$, then $a_k=\frac{1}{k!}$, telling us that
+<script type="math/tex; mode=display">\frac{e^x-e^{-x}}{2}=\sum_{k=0}^\infty \frac{x^{2k+1}}{(2k+1)!}</script>
+and, consequently,
+<script type="math/tex; mode=display">\frac{e-e^{-1}}{2}=\sum_{k=0}^\infty \frac{1}{(2k+1)!}</script>
+To evaluate the second sum, we will have to use imaginary numbers and Euler's formula:
+<script type="math/tex; mode=display">\frac{e^i-e^{-i}}{2}=\sum_{k=0}^\infty \frac{i^{2k+1}}{(2k+1)!}</script>
+<script type="math/tex; mode=display">\frac{e^i-e^{-i}}{2}=i\sum_{k=0}^\infty \frac{(-1)^k}{(2k+1)!}</script>
+Now, from Euler's formula, we may say that $e^i=\cos(1)+i\sin(1)$ and $e^{-i}=\cos(1)-i\sin(1)$:
+<script type="math/tex; mode=display">\frac{\cos(1)+i\sin(1)-(\cos(1)-i\sin(1))}{2}=i\sum_{k=0}^\infty \frac{(-1)^k}{(2k+1)!}</script>
+<script type="math/tex; mode=display">i\sin(1)=i\sum_{k=0}^\infty \frac{(-1)^k}{(2k+1)!}</script>
+<script type="math/tex; mode=display">\sin(1)=\sum_{k=0}^\infty \frac{(-1)^k}{(2k+1)!}</script>
+With the first two sums out of the way, things get a little bit trickier. We've figured out how to skip every other term of a series using its alternating form, but how can we eliminate two out of every three terms to be left with every third term?</p>
+
+<p>To solve this problem, we must venture again into the realm of complex numbers - consider the complex numbers in the form
+<script type="math/tex; mode=display">\omega_n = \cos \frac{2\pi}{n}+i\sin \frac{2\pi}{n}</script>
+These numbers have the interesting property that the quantity
+<script type="math/tex; mode=display">\omega_n^{k}+\omega_n^{2k}+...+\omega_n^{nk}</script>
+equals $n$ if $k$ is a multiple of $n$ and equals $0$ otherwise (the proof is easy, so I will omit it). This interesting property can be applied to help solve our problem. Let us define $G$ the same as before:
+<script type="math/tex; mode=display">G(x)=\sum_{k=0}^\infty a_k x^k</script>
+Now consider the following quantity:
+<script type="math/tex; mode=display">G(x\omega_n)+G(x\omega_n^2)+...+G(x\omega_n^n)=\sum_{k=0}^\infty a_k x^k (\omega_n^k+\omega_n^{2k}+...+\omega_n^{nk})</script>
+I already noted that $\omega_n^k+\omega_n^{2k}+...+\omega_n^{nk}$ equals $n$ when $k$ is a multiple of $n$ and zero otherwise, meaning that all terms of the series except for those which are multiples of $n$ will be deleted. Thus, we have
+<script type="math/tex; mode=display">G(x\omega_n)+G(x\omega_n^2)+...+G(x\omega_n^n)=n\sum_{k=0}^\infty a_{nk} x^{nk}</script>
+or
+<script type="math/tex; mode=display">\frac{1}{n}\sum_{k=1}^n G(x\omega_n^k)=\sum_{k=0}^\infty a_{nk} x^{nk}</script>
+We can use this to evaluate the third sum by letting $a_k=\frac{1}{k!}$, $x=1$, and $G(x)=e^x$. This gives us
+<script type="math/tex; mode=display">\frac{G(\omega_3)+G(\omega_3^2)+G(\omega_3^3)}{3}=\sum_{k=0}^\infty \frac{1}{(3k)!}</script>
+Now we may use
+<script type="math/tex; mode=display">\omega_3=-\frac{1}{2}+\frac{\sqrt 3}{2}i,\space\space \omega_3^2=-\frac{1}{2}-\frac{\sqrt 3}{2}i,\space\space \omega_3^3=1</script>
+to write
+<script type="math/tex; mode=display">\frac{e^{-\frac{1}{2}+\frac{\sqrt 3}{2}i}+e^{-\frac{1}{2}-\frac{\sqrt 3}{2}i}+e}{3}=\sum_{k=0}^\infty \frac{1}{(3k)!}</script>
+<script type="math/tex; mode=display">\frac{e^{-\frac{1}{2}}\big(e^{\frac{\sqrt 3}{2}i}+e^{-\frac{\sqrt 3}{2}i}\big)+e}{3}=\sum_{k=0}^\infty \frac{1}{(3k)!}</script>
+and by Euler's formula, this is equal to
+<script type="math/tex; mode=display">\frac{2e^{-\frac{1}{2}}\cos \frac{\sqrt 3}{2}+e}{3}=\sum_{k=0}^\infty \frac{1}{(3k)!}</script>
+...which gives us a value for the third sum!</p>
+
+<p>Now let us return to the trick we used before:
+<script type="math/tex; mode=display">G(x\omega_n)+G(x\omega_n^2)+...+G(x\omega_n^n)=\sum_{k=0}^\infty a_k x^k (\omega_n^k+\omega_n^{2k}+...+\omega_n^{nk})</script>
+This trick allows us to delete all of the terms other than the $a_{nk}x^{nk}$ terms of the sum, but what if we want the $a_{nk+1}x^{nk+1}$ or $a_{nk+2}x^{nk+2}$ terms instead? The key lies in noticing that
+<script type="math/tex; mode=display">\omega_n^{-m}G(x\omega_n)+\omega_n^{-2m}G(x\omega_n^2)+...+\omega_n^{-nm}G(x\omega_n^n)=\sum_{k=0}^\infty a_k x^k (\omega_n^{k-m}+\omega_n^{2(k-m)}+...+\omega_n^{n(k-m)})</script>
+which deletes all terms except those for which $k-m$ is a multiple of $n$, or the $nk+m$ terms. Thus we have
+<script type="math/tex; mode=display">\omega_n^{-m}G(x\omega_n)+\omega_n^{-2m}G(x\omega_n^2)+...+\omega_n^{-nm}G(x\omega_n^n)=n\sum_{k=0}^\infty a_{nk+m} x^{nk+m}</script>
+or, since $\omega_n^{-1}=\overline{\omega_n}$,
+<script type="math/tex; mode=display">\overline{\omega_n}^{m}G(x\omega_n)+\overline{\omega_n}^{2m}G(x\omega_n^2)+...+\overline{\omega_n}^{nm}G(x\omega_n^n)=n\sum_{k=0}^\infty a_{nk+m} x^{nk+m}</script>
+or, more compactly written,
+<script type="math/tex; mode=display">\frac{1}{n}\sum_{k=1}^n \overline{\omega_n}^{km}G(x\omega_n^k)=\sum_{k=0}^\infty a_{nk+m} x^{nk+m}</script>
+Now we may calculate the fourth sum by letting $a_k=\frac{1}{k!}$, $x=\frac{1}{2}$, $G(x)=e^x$, and $m=1$:
+<script type="math/tex; mode=display">\frac{1}{3}\bigg(\big(-\frac{1}{2}-\frac{\sqrt 3}{2}i\big)e^{-\frac{1}{4}+\frac{\sqrt 3}{4}i}+\big(-\frac{1}{2}+\frac{\sqrt 3}{2}i\big)e^{-\frac{1}{4}-\frac{\sqrt 3}{4}i}+e^\frac{1}{2}\bigg)=\sum_{k=0}^\infty \frac{1}{2^{3k+1}(3k+1)!}</script>
+<script type="math/tex; mode=display">\frac{2}{3}\bigg(-\frac{1}{2}e^{-\frac{1}{4}}\cos \frac{\sqrt 3}{4}+\frac{\sqrt 3}{2}e^{-\frac{1}{4}}\sin \frac{\sqrt 3}{4}+\sqrt e\bigg)=\sum_{k=0}^\infty \frac{1}{8^{k}(3k+1)!}</script>
+Yuck!</p>
+
+<p>To evaluate the final sum, we will recall the Taylor series for the natural logarithm:
+<script type="math/tex; mode=display">-\ln(1-x)=\sum_{k=1}^\infty \frac{x^k}{k}</script>
+In this case, we will let $G(x)=-\ln(1-x)$, $x=-1$, $a_k=\frac{1}{k}$, $n=3$, and $m=1$. This gives us
+<script type="math/tex; mode=display">\frac{-\ln(1-x)-\big(-\frac{1}{2}-\frac{\sqrt 3}{2}i\big)\ln\big(1-\big(-\frac{1}{2}+\frac{\sqrt 3}{2}i\big)x\big)-\big(-\frac{1}{2}+\frac{\sqrt 3}{2}i\big)\ln\big(1-\big(-\frac{1}{2}-\frac{\sqrt 3}{2}i\big)x\big)}{3}=\sum_{k=0}^\infty \frac{x^{3k+1}}{3k+1}</script>
+and
+<script type="math/tex; mode=display">\frac{-\ln(2)-\big(-\frac{1}{2}-\frac{\sqrt 3}{2}i\big)\ln\big(\frac{1}{2}+\frac{\sqrt 3}{2}i\big)-\big(-\frac{1}{2}+\frac{\sqrt 3}{2}i\big)\ln\big(\frac{1}{2}-\frac{\sqrt 3}{2}i\big)}{3}=\sum_{k=0}^\infty \frac{(-1)^{3k+1}}{3k+1}</script>
+<script type="math/tex; mode=display">\frac{-\ln(2)+\frac{1}{2}\ln\big(\frac{1}{4}+\frac{3}{4}\big)+\frac{\sqrt 3}{2}i\ln\bigg(\frac{1+\sqrt{3}i}{1-\sqrt{3}i}\bigg)}{3}=\sum_{k=0}^\infty \frac{(-1)^{k+1}}{3k+1}</script>
+<script type="math/tex; mode=display">\frac{-\ln(2)-\sqrt{3}\arctan \sqrt 3}{3}=\sum_{k=0}^\infty \frac{(-1)^{k+1}}{3k+1}</script>
+<script type="math/tex; mode=display">\frac{-\ln(2)-\sqrt{3}\frac{\pi}{3}}{3}=\sum_{k=0}^\infty \frac{(-1)^{k+1}}{3k+1}</script>
+<script type="math/tex; mode=display">\frac{-3\ln(2)-\pi\sqrt 3}{9}=\sum_{k=0}^\infty \frac{(-1)^{k+1}}{3k+1}</script>
+<script type="math/tex; mode=display">\frac{3\ln(2)+\pi\sqrt 3}{9}=\sum_{k=0}^\infty \frac{(-1)^{k}}{3k+1}</script>
+</p>
+
+<p>Before I end this post, I would like to quickly demonstrate another method that can be used to evaluate sums involving trigonometric functions by using Euler's formula. Again, suppose that we define a function $G$ as
+<script type="math/tex; mode=display">G(x)=\sum_{k=0}^\infty a_k x^k</script>
+Then we have
+<script type="math/tex; mode=display">G(x\cdot e^{i\theta})=\sum_{k=0}^\infty a_k x^k\cdot e^{ik\theta}</script>
+or, by Euler's formula,
+<script type="math/tex; mode=display">G(x\cdot e^{i\theta})=\sum_{k=0}^\infty a_k x^k(\cos(k\theta)+i\sin(k\theta))</script>
+Implying that
+<script type="math/tex; mode=display">\Re[G(x\cdot e^{i\theta})]=\sum_{k=0}^\infty a_k x^k\cos(k\theta)</script>
+and
+<script type="math/tex; mode=display">\Im[G(x\cdot e^{i\theta})]=\sum_{k=0}^\infty a_k x^k\sin(k\theta)</script>
+This is easy to show, but can result in some interesting sums. For example, the following sum can be proven using the former of these two formulae:
+<script type="math/tex; mode=display">\sum_{k=0}^\infty \frac{\cos(k\theta)}{k!}=e^{\cos\theta}\cos(\sin\theta)</script>
+</p>
+
+<p>That concludes this post!</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

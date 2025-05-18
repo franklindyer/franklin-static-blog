@@ -1,0 +1,92 @@
+<html>
+<head>
+    <title>Squares in a Lattice Grid</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Squares in a Lattice Grid</h2>
+
+<p><em>2017 Feb 24</em></p>
+
+<blockquote>
+<p>How many possible squares can be constructed by connecting some $4$ points of an $n$ x $n$ grid of lattice points? What about in a rectangular $m$ x $n$ grid of lattice points?</p>
+</blockquote>
+
+<p>First one must notice that there are essentially two types of squares: <em>normal squares</em> with vertical and horizontal sides and <em>diagonal squares</em> with sloped sides. The formula giving the total number of possible squares will be the sum of the formulas for the number of normal squares and for the number of diagonal squares.</p>
+
+<p>Suppose we have an $n$ x $n$ grid of lattice points. Let us denote a normal square on such a grid by an ordered triple $(c_0, r_0, l_0)$ where $c_0$ is the column of the square's leftmost side, $r_0$ is the row of the square's topmost side, and $l_0$ is the side length of the square in units.</p>
+
+<p><center><img src="/img/2017-2-24-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>If a square with such an ordered triple sits in an $n$ x $n$ grid of lattice points, none of $c_0$, $r_0$, $c_0+l$, and $r_0+l$ can exceed $n-1$. This means that for any value of $l$, there are $n-l$ possible values for both $c_0$ and $r_0$, meaning that there are a total of $(n-l)^2$ possible values for $c_0$ and $r_0$ together for each value of $l$. Since $l$ can take on a minimum value of $1$ and a maximum value of $n-1$, the total number of normal squares is 
+<script type="math/tex; mode=display">\sum_{l=1}^{n-1} (n-l)^2</script>
+</p>
+
+<p>Which is equal to 
+<script type="math/tex; mode=display">\frac{n(n-1)(2n-1)}{6}</script>
+</p>
+
+<p>So now we have the total number of normal squares and we need to find the total number of diagonal squares.</p>
+
+<p>Now let us denote a lattice point in the <em>cth</em> column and the <em>rth</em> row as $(c,r)$. Let the values $l_1$ and $l_2$ be defined as shown in the picture for any diagonal square:</p>
+
+<p><center><img src="/img/2017-2-24-Fig2.png" alt="Fig 2" /></center></p>
+
+<p>Such a diagonal square with side length $\sqrt{{l_1}^2+{l_2}^2}$ fits perfectly inside of a square with side length $l_1+l_2$, so the number of possible diagonal squares with some given value of $l_1+l_2$ is equal to the number of normal squares with side length $l_1+l_2$. Let $l_s=l_1+l_2$. Then we know from our analysis of normal squares that the number of normal squares with side length $l_s$ is $(n-l_s)^2$. Additionally, for any possible value of $l_s$, there are $l_s-1$ possible values of $l_1$ and $l_2$ so that $l_1+l_2=l_s$ and both $l_1$ and $l_2$ are positive integers. This means that the total number of diagonal squares for any value of $l_s$ is
+<script type="math/tex; mode=display">(l_s-1)(n-l_s)^2</script>
+</p>
+
+<p>In our grid of lattice points, the greatest possible value of $l_s$ is $n-1$, so the total number of diagonal squares is the sum of the number of possible squares with values of $l_s$ from $2$ to $n-1$ since the minimum value of $l_1+l_2$ is $2$ and the maximum is $n-1$, giving us 
+<script type="math/tex; mode=display">\sum_{l_s=2}^{n-1} (l_s-1)(n-l_s)^2</script>
+</p>
+
+<p>which we can convert to a closed-form formula (thanks, Wolfram Alpha!) :
+<script type="math/tex; mode=display">\frac{n(n-1)^2(n-2)}{12}</script>
+</p>
+
+<p>The total number of squares is the sum of our two formulas:
+<script type="math/tex; mode=display">\frac{n(n-1)(2n-1)}{6}+\frac{n(n-1)^2(n-2)}{12}</script>
+<script type="math/tex; mode=display">\frac{2n(n-1)(2n-1)+(n-1)^2(n^2-2n)}{12}</script>
+<script type="math/tex; mode=display">\frac{4n^3-6n^2+2n+n^4-4n^3+5n^2-2n}{12}</script>
+<script type="math/tex; mode=display">\frac{n^4-n^2}{12}</script>
+</p>
+
+<p>Giving us a simple formula for the total number of normal and diagonal squares in an $n$ x $n$ grid of lattice points.</p>
+
+<p>Using a similar method, we can derive the formula for the total number of squares in a rectangular $m$ x $n$ grid of lattice points, where $m \ge n$:
+<script type="math/tex; mode=display">\frac{3mn(n-1)-n^3+n}{6}</script>
+</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

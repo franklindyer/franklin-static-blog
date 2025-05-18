@@ -1,0 +1,71 @@
+<html>
+<head>
+    <title>Una pequeña anomalía de codificación</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h3>Una pequeña anomalía de codificación</h3>
+
+<p>Hace unos días visité la librería Barnes &amp; Noble con mi novia y compramos tres libros. Noté un detalle curioso en el recibo que nos dieron después de la compra. ¿Lo notas?</p>
+
+<p><center><img src="/img/2023-06-15-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>El primer libro se titula <code>La hipótesis del amor</code> pero se ha impreso como <code>La hip≤tesis del amor</code> en el recibo. Si te interesa un pequeño rompecabezas del googleado, intenta averiguar a qué se podría deber este errorcito. Yo tengo mi propia explicación tentativa de esta peculiaridad y la describiré a continuación.</p>
+
+<p>La primera posibilidad que se me ocurrió es que tenga algo que ver con la manera en la que se codifica el texto. Pues en un ordenador, los glifos, o sea los formas geométricas que se consideran símbolos aislados como las letras del alfabeto latín <code>a,b,c,...,A,B,C,...</code> o las cifras arábigas <code>0,1,2,...</code>, se codifican como cadenas de bits, como casi todo lo que se almacena en formato digital. Así que, para convertir un documento digital en algo legible o mostrando los glifos encadenados en la pantalla o imprimiéndolos en, digamos, un recibo, hace falta convertir la cadena de bits que constituye un fichero en una sucesión de formas geométricas. </p>
+
+<p>Pero hay distintos estándares que dictaminan cómo convertir entre bits y glifos. Si el programa que genera un fichero de texto supone una regla para convertir entre bits y glifos mientras que el impresor emplea otra, entonces el texto impreso puede ser distinto del texto mostrado en la pantalla. Mi hipótesis, entonces, es que el programa que se ha utilizado para generar la representación digital del recibo utiliza una <a href="https://en.wikipedia.org/wiki/Code_page">página de códigos</a> distinta de la que utiliza la impresora de recibos. Las dos páginas deben ser iguales en cuanto al cifrado de la mayoría de los caracteres utilizados con frecuencia, como los del alfabeto latín y las cifras arábigas, y diferenciarse en las traducciones de caracteres menos utilizados. En concreto, la cadena de bits que representa <code>ó</code> según la página de códigos del proceso que generó el fichero debe de representar el glifo <code>≤</code> en la página de códigos que utiliza la impresora.</p>
+
+<p>El siguiente paso era ir buscando a ver si podría encontrar dos páginas de códigos verosímiles que podrían haber producido este error. Una referencia útil es el libro <em>Fonts and Encodings</em> por Yannis Haralambous, que cuenta con detalle la historia de varias páginas de códigos comunes. Uno de los códigos más conocidos se llama ASCII. Originalmente representó cada glifo como una sucesión de $7$ bytes, los cuales también se puede representar como dos cifras hexadecimales tal que la primera se restringe a las cifras <code>0-7</code>. Aquí está una tabla del libro de Haralambous que representa la versión 1967 de ASCII:</p>
+
+<p><center><img src="/img/2023-06-15-Fig2.png" alt="Fig 2" /></center></p>
+
+<p>Se ve que ASCII-1967 es bastante limitado, pues no incluye el glifo <code>ó</code> ni <code>≤</code>. (A propósito, sí es que hay una manera de representar acentos en ASCII-1967 aunque es muy torpe. El <code>ó</code> se puede representar como <code>0x6F0827</code>, en el que se usa el carácter de retroceso para superponer un <code>o</code> con un apóstrofo. Se supone que el <code>≤</code> se podría representar semejantemente como <code>0x3C085F</code>.)</p>
+
+<p>Pero muchas de las páginas de códigos que se usan más hoy día son versiones extendidas de ASCII, es decir, son códigos de $8$ bits en las que los códigos de <code>0x00</code> a <code>0x7F</code> son iguales a los de ASCII mientras que los códigos de <code>0x80</code> a <code>0xFF</code> son propios a la versión concreta. Para encontrar un punto de partida para mi búsqueda, busqué especificaciones para algunas impresoras de recibos, aunque no conozco el tipo concreto de impresora que se ha usado en la librería. Por ejemplo, <a href="http://h10032.www1.hp.com/ctg/Manual/c06524613.pdf">el guión de esta impresora</a> tiene en la página 14 una lista de conjuntos de caracteres, entre los cuales los que me parecen más relevantes a primera vista son:</p>
+
+<ul>
+<li><code>Code Page 437 US English</code></li>
+<li><code>Code Page 850 Multilingual</code></li>
+<li><code>Code Page 1252 Windows Latin 1</code></li>
+</ul>
+
+<p>Buscando las tablas de estas páginas de códigos, encontré que las páginas <code>437</code> y <code>1252</code> cumplen las propiedades necesarias. Es decir, las dos se basan en ASCII, pero el código <code>0xF3</code> representa el glifo <code>≤</code> en la página <code>437</code> mientras que representa el glifo <code>ó</code> en la página <code>1252</code>. Por tanto, mi conjetura es que el proceso que ha generado el recibo estaba utilizando la página de códigos <code>1252</code> (tendría sentido, pues muchas veces se utilizan ordenadores Windows en las empresas) mientras que la impresora estaba traduciendo según la <code>437</code>, probablemente debido a una configuración por defecto. Aquí están los trozos de las dos páginas de códigos que no son heredados de ASCII:</p>
+
+<p><center><img src="/img/2023-06-15-Fig3.png" alt="Fig 3" /></center></p>
+
+<p>Si es correcta, entonces mi hipótesis permitiría predecir otros fallos más allá de la sustitución de <code>≤</code> en lugar de <code>ó</code>, por ejemplo un <code>±</code> en lugar de <code>ñ</code> o un <code>µ</code> en lugar de <code>æ</code>. Pues si vuelvo a este Barnes &amp; Noble, me aseguraré de comprarme el libro con el título que incluye la mayor cantidad posible de glifos fuera del conjunto de ASCII-1967, a ver si se confirma mi conjetura.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

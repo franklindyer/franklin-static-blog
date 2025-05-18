@@ -1,0 +1,170 @@
+<html>
+<head>
+    <title>Sudoku en C</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Sudoku en C</h2>
+
+<p>Este semestre asisto CS241, una clase de algoritmos y estructuras de datos en UNM. Como nuestro primer gran proyecto tuvimos que construir un algoritmo en C (el lenguaje que usaremos durante toda la clase) que resuelve las rompecabezas de Sudoku. Dado una cuadrícula parcialmente completada, debe o devolver una solución posible o concluir que el rompecabezas no sea posible. Como pasé un par de días jugando con esta tarea y me ha resultado muy divertida (por lo menos mucho más que solucionar los Sudoku a mano), en esta entrada me pongo a describir mi algoritmo, algunas optimizaciones, y además los resultados de unos experimentos numéricos que he llevado a cabo con el código.</p>
+
+<h3>La estructura del algoritmo <a id="toc-section-1" class="toc-section"></a></h3>
+
+<p>Para dar un repaso: un Sudoku es un rompecabezas que consiste en una cuadrícula de nueva filas y nueve columnas, en la cual la mayoría de las entradas quedan en blanco, pero algunos contienen un número de $1$ a $9$. En un Sudoku correctamente resuelto, cada entrada contiene un número de tal manera que cada cifra aparece exactamente una vez en cada una de las nueve filas, columnas, y $3\times 3$ minicuadrículas; es decir que el rompecabezas rellenado constituye un <a href="https://es.wikipedia.org/wiki/Cuadrado_latino">cuadrado latino</a>. Si quieres probar suerte con Sudoku, puedes <a href="https://www.chiark.greenend.org.uk/~sgtatham/puzzles/js/solo.html">practicar aquí</a> todo lo que quieras.</p>
+
+<p>Al jugar, te darás cuenta muy pronto que resolver Sudoku es un trabajo bastante repetitivo. Lo primero que hago yo es buscar entradas vacías cuyas valores quedan determinados por las otras entradas llenas en la misma fila, columna o minicuadrícula. En concreto, si la fila, columna y minicuadrícula de una entrada ya contienen juntos cada cifra salvo una, sabemos que ésta debe ser nuestro número desconocido, suponiendo que nuestro Sudoku aún tiene solución. Llenar esta entrada nos da la oportunidad de adivinar los valores de aún otras usando esta información nueva, etcétera. Sin embargo, esta estrategia no necesariamente <em>basta</em> para resolver un Sudoku, es decir, es posible encontrarse en el apuro de no poder deducir el valor de ni una entrada más de esta manera, aunque el rompecabezas posea una solución única.</p>
+
+<p>En este caso hay que hacer una conjetura sobre el valor de una de las entradas todavía no determinadas y correr el peligro de perder tiempo en un ramal equivocado del sendero de soluciones que bifurca. Si llenas una entrada con una suposición aleatoria y las deducciones que siguen te llevan a una situación imposible, hay que volver atrás, eliminar esta posibilidad, y suponer otro. Pero es posible que tendrás que hacer dos, tres o aún más suposiciones antes de llegar a una calle ciega, y quedarse dentro de varios hipotéticos anidados. Recuerda a un algoritmo recurrente, ¿no?</p>
+
+<p>En mi código he escrito funciones especializadas para cumplir cada parte de ese proceso:</p>
+
+<ul>
+<li><code>boardStatus(int board[9][9])</code> determina si una cuadrícula queda en un estado solucionado, no solucionado, o imposible (que indica que no tiene solución ninguna).</li>
+<li><code>eliminateEntries(int board[9][9], int i, int j)</code> mira a la entrada en la posición <code>i, j</code> y si queda ya determinado, elimina su valor de la lista de posibilidades de cada otra entrada en la misma fila, columna, o minicuadrícula.</li>
+<li><code>eliminateAllEntries(int board[9][9])</code> aplica <code>eliminateEntries</code> a cada entrada de la cuadrícula, así llevando a cabo cada deducción posible (de primer órden).</li>
+<li><code>makeGuess(int board[9][9])</code> y <code>sudokuSolver(int board[9][9])</code> son un par de funciones recurrentes que se llaman la una a la otra.<ul>
+<li><code>makeGuess(int board[9][9])</code> acepta como argumento una cuadrícula no solucionado y busca una entrada todavía no determinada para probar cada valor posible y llamar a <code>sudokuSolver</code> para determinar la validez de cada suposición, hasta o encontrar una solution o agotar todas las posibilidades y concluir que no haya solución.</li>
+<li><code>sudokuSolver(int board[9][9])</code> aplica <code>eliminateAllEntries</code> a la cuadrícula varias veces, y si todavía no queda solucionado ni en un estado imposible, llama a <code>makeGuess</code> para empezar a adivinar los valores de las entradas.</li>
+</ul>
+
+<p></li></p>
+
+</ul>
+<p>Sólo unas pocas palabras más sobre el diseño de la cuadrícula en mi código. Uso un <code>int[9][9]</code> para cifrar una cuadrícula parcialmente o totalmente solucionada, pero las entradas no son números entre $1$ y $9$, sino entre $0$ y $511$, para que puedan representar no sólo entradas ya determinadas, sino también las entradas sobre cuyas valores tenemos <em>algúna</em> información aunque todavía hay incertidumbre. Cada número entero entre $0$ y $511$ tiene una representación binaria de $9$ figuras, por ejemplo $510 = 111111110_2$. El enésimo bit de una entrada indica si <em>es posible</em> que esa entrada tome el valor $n$. Por ejemplo, si supiéramos con certeza que una entrada contuviera un $4$, la llenaríamos con el número</p>
+<p>
+
+<script type="math/tex; mode=display">000001000_2 = 8</script>
+
+</p>
+<p>Por otro lado, si pudiéramos descartar las posibilidades $1,2,4$ y $8$ para una entrada sin saber su valor éxacto, la llenaríamos con</p>
+<p>
+
+<script type="math/tex; mode=display">101110100_2 = 372</script>
+
+</p>
+<p>Por lo general, si una entrada contiene el número $000000000_2 = 0$, indica que la cuadrícula queda en estado imposible, pero si cada entrada contiene un número con un solo bit activado (es decir, una potencia de dos) la cuadrícula queda solucionada!</p>
+<p>Aquí esta un diagrama de flujo para resumir el funcionamiento de <code>sudokuSolver</code> y <code>makeGuess</code>:</p>
+<center>![Fig 1](/img/2021-09-25-Fig1.png)</center>
+
+<h3>Algunas optimizaciones <a id="toc-section-2" class="toc-section"></a></h3>
+<p>Nuestro profe de CS241 nos ha regalado <a href="/file/sudokuTestPuzzles.txt">un conjunto de $95$ rompecabezas</a> (todos solucionables) para probar nuestro código. Mi algoritmo ingenuo tarda $34.48$ segundos en solucionar todos, así que $0.34$ por segundo por promedio. Además he resumido la distribución de duraciones para todos los rompecabezas en este histograma:</p>
+<center>![Fig 2](/img/2021-09-25-Fig2.png)</center>
+
+<p>Como manera alternativa de visualizar la distribución de duraciones, aquí está un gráfico de distribución cumulativa:</p>
+<center>![Fig 3](/img/2021-09-25-Fig3.png)</center>
+
+<p>(El programa que resuelve los Sudoku está escrito en C, pero uso Python para manipular y visualizar los datos sobre su rendimiento.) También he añadido unas líneas a mi código para registrar la "profundidad" de cada rompecabezas - o sea, el número de llamadas anidadas de <code>makeGuess</code> que el algoritmo tiene que realizar. Se puede interpretar la "profundidad" como medida de la dureza del rompecabezas, porque los rompecabezas más difíciles tienden a requerir más adivinación. (Pero no debemos asumir que el algoritmo esté seleccionando sus suposiciones tan eficientemente como un solucionador humano - ya veremos que su manera de adivinar es bastante subóptimo.) Aquí están dos histogramas más - el rojo mide la "profundidad máxima" de cada rompecabezas, es decir, el punto más profundo que alcanza a lo largo del programa; y el azúl mide la profundidad al momento de encontrar una solución: </p>
+<center>![Fig 4](/img/2021-09-25-Fig4.png)</center>
+
+<p>Y ahora, ¡a optimizar! Tras un poco de experimentación he descubierto dos puntos débiles en mi algoritmo que lo ralentizan:</p>
+<ol>
+
+<p><li>El algoritmo llama a la función <code>eliminateEntries</code> hasta que ya no tiene efecto en las entradas de la cuadrícula. Sucede que eso es much más que lo necesario - en contra a la intuición, a veces es más eficiente seguir a llamar a <code>makeGuess</code> sin asegurar que hemos hecho todas las eliminaciones posibles.</li>
+<li>Al hacer una adivinación, es más ventajoso enfocarse en una entrada con pocas posibilidades, para poder eliminarlas más rápidamente. Por ejemplo, elegir una entrada con $9$ posibilidades dividiría el árbol de posibilidades en $9$ ramales más, pero un entrada con $2$ posibilidades sólo nos dejará dos ramas más para explorar. Después de hacer varias suposiciones, el número de posibilidades se multiplica de manera exponencial - y aún $4^n$ y $3^n$ se crecen mucho más rápidamente que $2^n$.</li></p>
+
+</ol>
+<p>Para reparar debilidad $1$, modifiqué el algoritmo para llamar a <code>eliminateEntries</code> un número fijo de veces en vez de repetirlo hasta que no tenga efecto. Aquí está una tabla de los resultados:</p>
+<p>
+
+<script type="math/tex; mode=display">\begin{array}{c|c}
+ \text{Algorithm} & \text{Average time per puzzle} \\\hline
+ \text{Naive} & 0.345 \\
+ \text{1 call} & 0.163\text{s} \\
+ \text{2 calls} & 0.208\text{s} \\
+ \text{3 calls} & 0.284\text{s} \\
+\end{array}</script>
+
+<p></p></p>
+
+<p>Y para ver más detalle, otro gráfico que compara las distribuciones cumulativas:</p>
+
+<p><center><img src="/img/2021-09-25-Fig5.png" alt="Fig 5" /></center></p>
+
+<p>Sorprendente, ¿no? Sea el Sudoku lo que sea, es casi siempre más ventajoso llamar a <code>eliminateAllEntries</code> una sola vez. Tal vez no debe ser tan inesperado ese hallazgo, puesto que cada entrada tiene $20$ "vecinos" (o sea, entradas que comparten la misma fila, columna, o minicuadrícula) y hay $81$ entradas en una cuadrícula, hechos que implican que una sola llamada a <code>eliminateAllEntries</code> involucra $20\cdot 81 = 1620$ eliminaciones a lo máximo, muchos de los cuales serán superfluos.</p>
+
+<p>Y ahora a encargarnos de la debilidad $2$. En vez de simplemente elegir la primera entrada todavía no determinada al llamar <code>makeGuess</code>, debemos comenzar con buscar entradas con sólo dos posibilidades, y si no hay, buscar entradas con tres, etcétera. Esta revisión otorga una mejora significante - ¡resuelve los $95$ Sudoku en $6.13$ segundos, tardando $0.061$ segundos por Sudoku por promedio! Esta modificación sencilla casi ha acelerado nuestro "algoritmo ingenuo" por un factor de $5$. Aquí están los gráficos de distribución cumulativa otra vez, para comparar:</p>
+
+<p><center><img src="/img/2021-09-25-Fig6.png" alt="Fig 6" /></center></p>
+
+<p>Al fin, comparamos el rendimiento de los siguiente cuatro versiones del algoritmo:</p>
+
+<ul>
+<li>El algoritmo original "ingenuo</li>
+<li>El algoritmo con sólo debilidad $1$ reparado</li>
+<li>El algoritmo con sólo debilidad $2$ reparado</li>
+<li>El algoritmo con ambas debilidades reparadas</li>
+</ul>
+
+<p>Aquí esta una tabla que los compara:</p>
+
+<p>
+<script type="math/tex; mode=display">\begin{array}{c|c}
+ \text{Algorithm} & \text{Average time per puzzle} \\\hline
+ \text{Naive} & 0.345 \\
+ \text{Elimination optimized} & 0.163\text{s} \\
+ \text{Guessing optimized} & 0.061\text{s} \\
+ \text{Both optimized} & 0.030\text{s} \\
+\end{array}</script>
+</p>
+
+<p>Y aquí el gráfico de distribución cumulativa:</p>
+
+<p><center><img src="/img/2021-09-25-Fig7.png" alt="Fig 7" /></center></p>
+
+<p>Observamos que, para los Sudoku menos difíciles (los que requieren menos tiempo, que caen en el lado izquierda del gráfico) ni el algoritmo optimizado para eliminación ni lo optimizado para adivinación supera el otro. Por otro mano, para los Sudoku más difíciles, vemos que la optimización de adivinación es más importante. Eso explica cómo la optimización de adivinación ha influido el <em>promedio</em> de las duraciones de manera tan extrema: ha reducido las duraciones necesarias para los Sudoku más engorrosos que iban ejerciendo una influencia más fuerte sobre el promedio que los otros, por ser más caros por varios factors de $10$.</p>
+
+<h3>Conclusión <a id="toc-section-3" class="toc-section"></a></h3>
+
+<p>Seguramente podría optimizar mi algoritmo aún más a través de varios ajustes, por ejemplo:</p>
+
+<ul>
+<li>Llamar a <code>eliminateAllEntries</code> aún menos, tal vez ni siquiera cada vez que <code>sudokuSolver</code> está llamado</li>
+<li>Revisar <code>eliminateAllEntries</code> para eliminar redundancia, o sea asegurar que no desempeña la misma eliminación varias veces, o detenerse en medio de su funcionamiento al toparse con una imposibilidad</li>
+<li>Al elegir entradas para adivinar, priorizar no sólo las entradas con menos posibilidades, sino también las que tienen mayor cantidad de vecinos no determinados (para maximizar el "impacto" de la adivinación)</li>
+</ul>
+
+<p>Si a tí te gustaría juguetear con mi código, lo adjuntaré aquí tan pronto que el proyecto de CS241 vence (para no dejar por accidente que alguien copie mi solución).</p>
+
+<p>Al fin, aquí están algunas preguntas interesantes para meditar:</p>
+
+<blockquote>
+<p>¿Como máximo, cuántas entradas llenas puede tener un Sudoku que tiene solución <em>no única</em>?<br />
+¿Puedes concebir una cota superior del número de suposiciones necesarias para resolver un Sudoku que tiene solución única?<br />
+¿Cómo escribirías un algoritmo para determinar el <em>número</em> de soluciones posibles a un Sudoku que no necesariamente tenga solución única?<br />
+¿Cómo escribirías un algoritmo para diseñar un rompecabezas de Sudoku? ¿Para asegurar que su solución sea única? ¿Para ajustar su dificultad?<br />
+¿Si llenas $n$ entradas de una cuadrícula aleatoriamente, cuál es la probabilidad de que exista una solución? ¿Y qué tal una solución única?  </p>
+</blockquote>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

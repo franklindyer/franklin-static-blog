@@ -1,0 +1,236 @@
+<html>
+<head>
+    <title>More Functional Equations</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>More Functional Equations</h2>
+
+<p><em>2017 Aug 15</em></p>
+
+<p><strong>NOTE:</strong> I will be using superscripts in three different ways in this post, so be careful not to get confused. The first way is as an exponent. The expression
+<script type="math/tex; mode=display">f(x)^n</script>
+reads "f of x, raised to the nth power." The second way is to represent iteration. The expression
+<script type="math/tex; mode=display">f^n(x)</script>
+reads "the nth iterate of f of x." The last way is to represent multiple derivatives. The expression
+<script type="math/tex; mode=display">f^{(n)}(x)</script>
+reads "the nth derivative of f of x.</p>
+
+<p>It's time for some more functional equations!</p>
+
+<p>In <a href="/post/89">this previous post</a>, I looked at a few interesting functional equations, and in retrospect, it doesn't seem like they were very difficult. The answers were mostly polynomial functions that could be solved by differentiating a few times. This time, however, I have some very hard functional equations to try.</p>
+
+<blockquote>
+<p>Find non-constant functions (if they exist) with the following properties:
+<script type="math/tex; mode=display">\alpha(x)^2+\alpha(2x)^2=1</script>
+<script type="math/tex; mode=display">\beta(x)+2\beta(2x)=3\beta(3x)</script>
+<script type="math/tex; mode=display">\gamma(x)+\gamma(2x)=e^x</script>
+<script type="math/tex; mode=display">\delta(5x)^5\delta(10x)^{10}=x+1</script>
+<script type="math/tex; mode=display">\epsilon(x)+\epsilon\bigg(\frac{x\cos\frac{\pi}{50}-\sin\frac{\pi}{50}}{x\sin\frac{\pi}{50}+\cos\frac{\pi}{50}}\bigg)=\ln(x)</script>
+<script type="math/tex; mode=display">\zeta(x+1)=4\zeta(x)-4\zeta(x)^2</script>
+</p>
+</blockquote>
+
+<p>Let's start with the first problem. It is rather easy, but it is a good problem to start with.
+<script type="math/tex; mode=display">\alpha(x)^2+\alpha(2x)^2=1</script>
+This can be simplified with a technique that is analogous to substitution in normal equations. To simplify the equation, we can define
+<script type="math/tex; mode=display">\psi_1(\log_2 x)=\alpha(x)</script>
+so that we have
+<script type="math/tex; mode=display">\psi_1(\log_2 x)^2+\psi_1(1+\log_2 x)^2=1</script>
+and making the substitution $\log_2 x\to x$, we have
+<script type="math/tex; mode=display">\psi(x)_1^2+\psi(x+1)_1^2=1</script>
+At this point, you should be able to recognize a similarity between this equation and another functional equation involving the trigonometric functions:
+<script type="math/tex; mode=display">\sin^2 x+\cos^2 x=1</script>
+or
+<script type="math/tex; mode=display">\sin^2 x+\cos^2 \bigg(x-\frac{\pi}{2}\bigg)=1</script>
+Noticing this yields the obvious solution
+<script type="math/tex; mode=display">\psi_1(x)=\sin \frac{\pi x}{2}</script>
+or
+<script type="math/tex; mode=display">\alpha(x)=\sin \frac{\pi \log_2 x}{2}</script>
+</p>
+
+<p>Now it's time for the hard problems!</p>
+
+<p>I used differentiation in my previous post about functional equations, but only to solve functional equations with polynomial solutions. I would like to show how to use differentiation to solve other types of functional equations. For example, the second problem:
+<script type="math/tex; mode=display">\beta(x)+2\beta(2x)=3\beta(3x)</script>
+This one stumped me for a while, and I was rather annoyed to find out that there was no non-constant solution. Watch what happens when we differentiate:
+<script type="math/tex; mode=display">\beta'(x)+4\beta'(2x)=9\beta'(3x)</script>
+And if we differentiate again:
+<script type="math/tex; mode=display">\beta''(x)+8\beta''(2x)=27\beta''(3x)</script>
+and so on:
+<script type="math/tex; mode=display">\beta^{(n)}(x)+2^{n+1}\beta^{(n)}(2x)=3^{n+1}\beta^{(n)}(3x)</script>
+Which means that the nth derivative of $\beta$ at $x=0$ is
+<script type="math/tex; mode=display">\beta^{(n)}(0)+2^{n+1}\beta^{(n)}(0)=3^{n+1}\beta^{(n)}(0)</script>
+<script type="math/tex; mode=display">(3^{n+1}-2^{n+1}-1)\beta^{(n)}(0)=0</script>
+and so, for all positive integer $n$,
+<script type="math/tex; mode=display">\beta^{(n)}(0)=0</script>
+And, of course, the only function all of whose derivatives are equal to zero is the constant function, meaning that there exists no non-constant $\beta$ satisfying the functional equation.</p>
+
+<p>On to the third one:
+<script type="math/tex; mode=display">\gamma(x)+\gamma(2x)=e^x</script>
+The solution to this one is rather complicated. You could try the method that we used on the first problem, but you would end up with
+<script type="math/tex; mode=display">\psi_1(x)+\psi_1(x+1)=e^{\log_2 x}</script>
+Yuck.</p>
+
+<p>As it turns out, the answer may not even have a closed-form representation, and the answe has to be expressed as a Taylor Series. In case you are not familiar with the idea, the Taylor Series of a function $f$ is
+<script type="math/tex; mode=display">\sum_{n=0}^\infty \frac{(x-a)^n}{n!}f^{(n)}(a)</script>
+and Taylor's Theorem states that
+<script type="math/tex; mode=display">f(x)=\sum_{n=0}^\infty \frac{(x-a)^n}{n!}f^{(n)}(a)</script>
+This can be very helpful with some functional equations. If we differentiate both sides of our functional equation $n$ times, we end up with
+<script type="math/tex; mode=display">\gamma^{(n)}(x)+2^n\gamma^{(n)}(2x)=e^x</script>
+and so
+<script type="math/tex; mode=display">\gamma^{(n)}(0)+2^n\gamma^{(n)}(0)=1</script>
+<script type="math/tex; mode=display">\gamma^{(n)}(0)=\frac{1}{2^n+1}</script>
+and so
+<script type="math/tex; mode=display">\gamma(x)=\sum_{n=0}^\infty \frac{x^n}{n!(2^n+1)}</script>
+</p>
+
+<p>The next functional equation is
+<script type="math/tex; mode=display">\delta(5x)^5\delta(10x)^{10}=x+1</script>
+and it uses the same strategy, but required a bit of manipulation before iterated differentiation can be applies. First we must take the natural logarithm of both sides:
+<script type="math/tex; mode=display">\ln \big(\delta(5x)^5\delta(10x)^{10}\big)=\ln(x+1)</script>
+<script type="math/tex; mode=display">5\ln \delta(5x)+ 10\ln\delta(10x)=\ln(x+1)</script>
+Now we must make a substitution. Define $\psi_1$ as $\ln\delta(x)=\psi(x)$ so that our functional equation is transformed into
+<script type="math/tex; mode=display">5\psi_1(5x)+ 10\psi(10x)=\ln(x+1)</script>
+Now we can differentiate both sides $n$ times to get
+<script type="math/tex; mode=display">5^{n+1}\psi_1^{(n)}(5x)+ 10^{n+1}\psi_1^{(n)}(10x)=\frac{(-1)^{n-1} (n-1)!}{x+1}</script>
+for $n\ge 1$. Then we have
+<script type="math/tex; mode=display">5^{n+1}\psi_1^{(n)}(0)+ 10^{n+1}\psi_1^{(n)}(0)=(-1)^{n-1} (n-1)!</script>
+<script type="math/tex; mode=display">\psi_1^{(n)}(0)=\frac{(-1)^{n-1} (n-1)!}{10^{n+1}+5^{n+1}}</script>
+for $n\ge 1$. Then, since we have all but the first term of the Taylor Series (which is zero anyways since $\ln (1)=0$, so we don't need to worry about it) we can express $\psi_1$ as
+<script type="math/tex; mode=display">\psi_1(x)=\sum_{n=1}^\infty \frac{x^n}{n!}\frac{(-1)^{n-1} (n-1)!}{10^{n+1}+5^{n+1}}</script>
+<script type="math/tex; mode=display">\psi_1(x)=\sum_{n=1}^\infty \frac{x^n(-1)^{n-1}}{n(10^{n+1}+5^{n+1})}</script>
+and so, when we reverse our substitution, we have
+<script type="math/tex; mode=display">\ln\delta(x)=\sum_{n=1}^\infty \frac{x^n(-1)^{n-1}}{n(10^{n+1}+5^{n+1})}</script>
+<script type="math/tex; mode=display">\delta(x)=\exp\Bigg(\sum_{n=1}^\infty \frac{x^n(-1)^{n-1}}{n(10^{n+1}+5^{n+1})}\Bigg)</script>
+</p>
+
+<p>Of course, this solution isn't perfect - since we used the natural logarithm and obtained $\ln(x+1)$ on the right side of one of our equations, we basically invalidated our answer for any values of $x$ for which $\ln(x+1)$ is nonreal; namely, $x\le 0$.</p>
+
+<p>Now let's try and tackle those last two functional equations.</p>
+
+<p>Before we try the next one, I would like to revisit a problem from my previous post about functional equations. Here it is:
+<script type="math/tex; mode=display">h(x)-2h\bigg(\frac{2}{x}\bigg)=\frac{1}{2x}</script>
+The method that I used to solve it was to substitute $x\to \frac{2}{x}$ to get
+<script type="math/tex; mode=display">h\bigg(\frac{2}{x}\bigg)-2h\bigg(\frac{2}{\frac{2}{x}}\bigg)=\frac{1}{2\frac{2}{x}}</script>
+or
+<script type="math/tex; mode=display">h\bigg(\frac{2}{x}\bigg)-2h(x)=\frac{1}{4}x</script>
+I then took the original equation and this new equation:
+<script type="math/tex; mode=display">h(x)-2h\bigg(\frac{2}{x}\bigg)=\frac{1}{2x}</script>
+<script type="math/tex; mode=display">h\bigg(\frac{2}{x}\bigg)-2h(x)=\frac{1}{4}x</script>
+and treated them like a system of equations to be solved. If the second equation is multiplied by two, we obtain
+<script type="math/tex; mode=display">2\bigg(\frac{2}{x}\bigg)-4h(x)=\frac{1}{2}x</script>
+and when we add this to the original equation, we get
+<script type="math/tex; mode=display">h(x)-2h\bigg(\frac{2}{x}\bigg)+2\bigg(\frac{2}{x}\bigg)-4h(x)=\frac{1}{2x}+\frac{1}{2}x</script>
+<script type="math/tex; mode=display">h(x)-4h(x)=\frac{1}{2x}+\frac{1}{2}x</script>
+<script type="math/tex; mode=display">-3h(x)=\frac{1}{2x}+\frac{1}{2}x</script>
+<script type="math/tex; mode=display">h(x)=-\frac{1}{6x}-\frac{1}{6}x</script>
+<script type="math/tex; mode=display">h(x)=-\frac{x^2+1}{6x}</script>
+</p>
+
+<p>Notice now that if we have <em>any</em> functional equation in the form
+<script type="math/tex; mode=display">f(x)+a(f\circ \theta)(x)=g(x)</script>
+Where we are trying to solve for $f$, $g$ is given, $a$ is a constant, and $\theta$ has the property
+<script type="math/tex; mode=display">\theta^n(x)=x</script>
+In fact, a formula can be obtained for $f$ in this equation. Using the same method as we did with my example, through the substitution $x\to\theta(x)$ repeated $n-1$ times, we can obtain the system of equations
+<script type="math/tex; mode=display">f(x)+a(f\circ \theta)(x)=g(x)</script>
+<script type="math/tex; mode=display">(f\circ\theta)(x)+a(f\circ \theta^2)(x)=(g\circ\theta)(x)</script>
+<script type="math/tex; mode=display">(f\circ\theta^2)(x)+a(f\circ \theta^3)(x)=(g\circ\theta^2)(x)</script>
+<script type="math/tex; mode=display">...</script>
+<script type="math/tex; mode=display">(f\circ\theta^{n-2})(x)+a(f\circ \theta^{n-1})(x)=(g\circ\theta^{n-2})(x)</script>
+<script type="math/tex; mode=display">(f\circ\theta^{n-1})(x)+af(x)=(g\circ\theta^{n-1})(x)</script>
+Now we multiply the second equation by $-a$, the third by $a^2$, the fourth by $-a^3$, and so on, until we multiply the last equation by $(-a)^{n-1}$, which leaves us with
+<script type="math/tex; mode=display">f(x)+a(f\circ \theta)(x)=g(x)</script>
+<script type="math/tex; mode=display">-a(f\circ\theta)(x)-a^2(f\circ \theta^2)(x)=-a(g\circ\theta)(x)</script>
+<script type="math/tex; mode=display">a^2(f\circ\theta^2)(x)+a^3(f\circ \theta^3)(x)=a^2(g\circ\theta^2)(x)</script>
+<script type="math/tex; mode=display">...</script>
+<script type="math/tex; mode=display">(-a)^{n-2}(f\circ\theta^{n-2})(x)-(-a)^{n-2}(f\circ \theta^{n-1})(x)=(-a)^{n-2}(g\circ\theta^{n-2})(x)</script>
+<script type="math/tex; mode=display">(-a)^{n-1}(f\circ\theta^{n-1})(x)-(-a)^{n-1}f(x)=(-a)^{n-1}(g\circ\theta^{n-1})(x)</script>
+And now watch what happens when we add this system together. When we add the first two, we have
+<script type="math/tex; mode=display">f(x)+a(f\circ \theta)(x)-a(f\circ\theta)(x)-a^2(f\circ \theta^2)(x)=g(x)-a(g\circ\theta)(x)</script>
+<script type="math/tex; mode=display">f(x)-a^2(f\circ \theta^2)(x)=g(x)-a(g\circ\theta)(x)</script>
+and when we add this to the third one:
+<script type="math/tex; mode=display">f(x)-a^2(f\circ \theta^2)(x)+a^2(f\circ\theta^2)(x)+a^3(f\circ \theta^3)(x)=g(x)-a(g\circ\theta)(x)+a^2(g\circ\theta^2)(x)</script>
+<script type="math/tex; mode=display">f(x)+a^3(f\circ \theta^3)(x)=g(x)-a(g\circ\theta)(x)+a^2(g\circ\theta^2)(x)</script>
+and if you keep adding them up until the very last one, you will eventually end up with
+<script type="math/tex; mode=display">f(x)-(-a)^{n-1}f(x)=\sum_{k=0}^{n-1} (-a)^{k}(g\circ\theta^k)(x)</script>
+and
+<script type="math/tex; mode=display">f(x)=\frac{1}{1-(-a)^{n-1}}\sum_{k=0}^{n-1} (-a)^{k}(g\circ\theta^k)(x)</script>
+Which is our formula.</p>
+
+<p>We just need one more thing before we try the next functional equation. I'm not going to go over it again in this post, but if you haven't already, you should go back to <a href="/post/95">this post</a> and read the very end of it.</p>
+
+<p>You should be able to notice now when you look at the next functional equation
+<script type="math/tex; mode=display">\epsilon(x)+\epsilon\bigg(\frac{x\cos\frac{\pi}{50}-\sin\frac{\pi}{50}}{x\sin\frac{\pi}{50}+\cos\frac{\pi}{50}}\bigg)=\ln(x)</script>
+That this fits the form of our formula perfectly, with $a=-1$, $g(x)=\ln(x)$, and
+<script type="math/tex; mode=display">\theta(x)=\frac{x\cos\frac{\pi}{50}-\sin\frac{\pi}{50}}{x\sin\frac{\pi}{50}+\cos\frac{\pi}{50}}</script>
+and after careful observation using the information found in my previous post, we have $n=100$. Additionally, we can determine that
+<script type="math/tex; mode=display">\theta^k(x)=\frac{x\cos\frac{\pi k}{50}-\sin\frac{\pi k}{50}}{x\sin\frac{\pi k}{50}+\cos\frac{\pi k}{50}}</script>
+and so, by plugging into the formula, we have
+<script type="math/tex; mode=display">f(x)=\frac{1}{1-(-1)^{99}}\sum_{k=0}^{99} (-1)^{k}\ln\bigg( \frac{x\cos\frac{\pi k}{50}-\sin\frac{\pi k}{50}}{x\sin\frac{\pi k}{50}+\cos\frac{\pi k}{50}} \bigg)</script>
+<script type="math/tex; mode=display">f(x)=\frac{1}{2}\sum_{k=0}^{99} (-1)^{k}\ln\bigg( \frac{x\cos\frac{\pi k}{50}-\sin\frac{\pi k}{50}}{x\sin\frac{\pi k}{50}+\cos\frac{\pi k}{50}} \bigg)</script>
+There's no need to evaluate this sum - this answer is good enough.</p>
+
+<p>The last functional equation is similar to the first in that it is best solved using substitution and intuition, but it is much more difficult.
+<script type="math/tex; mode=display">\zeta(x+1)=4\zeta(x)-4\zeta(x)^2</script>
+This can be rearranged to get
+<script type="math/tex; mode=display">\zeta(x+1)=4\zeta(x)(1-\zeta(x))</script>
+Let us now make the substitution $\psi_1(2^x)=\zeta(x)$. Then
+<script type="math/tex; mode=display">\psi_1(2^{x+1})=4\psi_1(2^x)(1-\psi_1(2^x))</script>
+and by taking $2^x\to x$,
+<script type="math/tex; mode=display">\psi_1(2x)=4\psi_1(x)(1-\psi_1(x))</script>
+</p>
+
+<p>At this point, you may be wondering how I decided to make those substitutions. This is where the intuition part of the problem comes in.</p>
+
+<p>Upon seeing the problem, it was immediately obvious to me that the answer would not end up being a non-constant polynomial. This can be easily determined by noticing that if it was a polynomial with degree $d$, then the left side of the functional equation would also have degree $d$, whereas the right side would have degree $2d$.</p>
+
+<p>Once I found this out, I began to think that the solution would involve trigonometric functions, since there are so many identities relating the trigonometric functions to their squares. And when I factored the right side as
+<script type="math/tex; mode=display">4\zeta(x)(1-\zeta(x))</script>
+I was reminded of the pythagorean identities almost immediately.</p>
+
+<p>If you were unable to figure this one out before, stop reading now and let what I have revealed so far be a hint to you.</p>
+
+<p>Because of my suspicions about the pythagorean identities, I made another substitution by letting $\sin^2 \psi_2(x)=\psi_1(x)$. Then I got
+<script type="math/tex; mode=display">\sin^2\psi_2(2x)=4\sin^2(\psi_2(x))(1-\sin^2(\psi_2(x))</script>
+<script type="math/tex; mode=display">\sin^2\psi_2(2x)=4\sin^2(\psi_2(x))\cos^2(\psi_2(x))</script>
+<script type="math/tex; mode=display">(\sin\psi_2(2x))^2=(2\sin(\psi_2(x))\cos(\psi_2(x)))^2</script>
+At this point I realized that I could just let $\psi_2(x)=x$, because my equation had turned into the double-angle identity. When I substituted back in to find $\zeta$, I ended up with
+<script type="math/tex; mode=display">\zeta(x)=\sin^2 (2^x)</script>
+Which I thought was a rather satisfying solution.</p>
+
+<p>That's all that I am going to do with functional equations for now.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

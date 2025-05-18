@@ -1,0 +1,443 @@
+<html>
+<head>
+    <title>Abstracción de chatbots en Discord, Slack y Telegram</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h3>Abstracción de chatbots en Discord, Slack y Telegram</h3>
+
+<p>(Psst! Don't want to read this in Spanish? <a href="/post/202">Here's a translation.</a>)</p>
+
+<p>En esta entrada me pongo a detallar un pequeño proyecto personal con el que he quedado ocupado en los últimos días. Conozco y uso varias plataformas de mensajería instantánea, siendo Discord la que uso con más frecuencia. También he participado en algunos grupos de Slack para asignaturas y reuniones en el pasado, ahora que me encuentro en España para un año de intercambio tengo cuenta de Telegram, plataforma que se usa más aquí que en los EEUU. Cada una de ellas tiene una API que se puede usar para desarrollar bots, o sea "usuarios" falsos cuyo comportamiento es automatizado para desempeñar algún papel como proporcionarles información a los usuarios reales, formatear los mensajes de los demás usuarios de manera automatizada, etcétera. En <a href="https://franklin.dyer.me/post/173">una entrada anterior</a> he usado la API de Discord para desarrollar un bot que imita los mensajes de los usuarios de un servidor mediante un modelo de aprendizaje de lenguaje (y como esperaba fueron ridículos los resultados).</p>
+
+<p>Se me ha ocurrido que sería interesante bosquejar una aplicación que abstrae las interfaces de las distintas plataformas, para permitir que uno escriba un bot con código muy general que funcione más o menos igual en cada plataforma. Así uno podría escribir una variedad de aplicaciones sin tener que hurgar por la documentación de cada una de las API ni repetir mucho código. Me ha parecido un buen ejercicio por varias razones:</p>
+
+<ul>
+<li>Me daría la oportunidad de familiarizarme con las APIs de Slack y Telegram con las cuales no tengo experiencia ninguna</li>
+<li>Probaría mi habilidad de escribir código modular y extensible y aplicar patrones de diseño útiles</li>
+<li>Sería interesante comparar las API y las estructuras internas de distintas plataformas de mensajería</li>
+</ul>
+
+<p>Al principio iba intentando poner en marcha mi idea con Python, pero el manejo de asincronicidad con la biblioteca <code>asyncio</code> me ha resultado muy difícil y al final no ha salido bien el proyecto. Por otro lado, salió todo muy elegante al intentarlo con Node.js por su paradigma asíncrono. Una cosa más que vale apuntar es que aunque pretendo presentar el diseño de esta aplicacioncita muy sistemáticamente, mi propio proceso de diseño ha sido muy exploratorio y no tan lineal.</p>
+
+<p>Al lío!</p>
+
+<h4>Diseño de la interfaz <a id="toc-section-1" class="toc-section"></a></a></h4>
+
+<p>Cada una de las tres plataformas que consideramos proporciona funcionalidades levemente distintas, por ejemplo tratan contenido multimedia de maneras distintas, funcionan un poco distinto las "reacciones" a los mensajes, etcétera. Además, quiero que lo que diseña sea fácil de extender en el futuro a casi cualquiera plataforma de mensajería que a uno le de la gana, suponiendo que ésta disponga de una API pública. Por tanto, nuestros bots tendrán sólo los siguientes requisitos funcionales muy limitados:</p>
+
+<ul>
+<li>Conectarse a la plataforma</li>
+<li>Enviar un mensaje (de texto llano) a un determinado usuario/en un determinado canal</li>
+<li>Recibir y tramitar un mensaje (de texto llano)</li>
+</ul>
+
+<p>También, sólo diseñaremos nuestros bots para que funciones en mensajes directos y no en canales con varios usuarios (para no liarnos demasiado). Para preservar la independencia de nuestros servicios de las plataformas concretas en las que se lanzan, encapsularemos la <em>lógica</em> de los servicios y la <em>comunicación por red</em> de los mismos en clases distintas. En concreto, crearemos una clase llamada <code>ChatService</code> que encapsula la lógica de un servicio y otra clase con el nombre <code>ChatBot</code> que encapsula la comunicación por red y la interacción con las APIs. Por tanto <code>ChatBot</code> tendrá que tener varias subclases - una para cada plataforma. Aquí está un diagrama de clases:</p>
+
+<p><center><img src="/img/2023-04-30-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>El contenido de una subclase concreta de <code>ChatBot</code> debe ser lo más mínimo necesario para interactuar con la API de la plataforma a la que corresponde. Por eso, al recibir un mensaje, debe de producirse una llamada a <code>handle_msg</code>, que hará precisamente lo mismo para todas las subclases de <code>ChatBot</code>, en concreto llamar al método correspondiente del <code>ChatService</code> a que pertenece ese bot. El <code>ChatService</code> puede hacer lo que quiera con el contenido de ese mensaje según lo que pretende cumplir el servicio concreto, pero el <code>ChatBot</code> no debe hacer nada salvo pasárselo el mensaje que recibe (además de un nombre que identifica el bot, por si acaso el servicio involucra múltiples bots). A propósito, habiendo diseñado las interfaces, ya podemos escribirlas como clases abstractas en Javascript. Aquí está un esqueleto para la clase <code>ChatService</code>:</p>
+
+<div class="code"><code><pre>
+class ChatService {
+
+    constructor() {}
+
+    handle_msg(botname, userid, msg) {}
+
+    run() {}
+
+}
+</pre></code></div>
+
+<p>y aquí un esqueleto para la clase <code>ChatBot</code>:</p>
+
+<div class="code"><code><pre>
+const creds = require("./my_credentials.json")
+
+class ChatBot {
+
+    constructor(credkey, name) {
+        this.creds = creds[credkey]
+        this.name = name
+    }
+
+    set_service(service) {
+        this.service = service;
+    }
+
+    handle_msg(userid, msg) {}
+
+    send_msg(userid, msg) {}
+
+    run() {}
+
+}
+</pre></code></div>
+
+<p>Durante la construcción de un chatbot cualquiera, se obtendrá los credenciales necesarios para acceso a la API extrayéndolos de un fichero JSON. El número y tipo de los credenciales puede variar según la API específica de la plataforma así que no asumimos nada sobre la estructura de los credenciales, sólo los asignamos a un atributo para que las subclases no tienen que repetir la tarea de extraerlos del objeto JSON que contiene todos los credenciales. </p>
+
+<p>Fíjate que dada esta interfaz ya podemos escribir una aplicación muy sencilla - aunque no podremos desplegarla hasta que implementemos a lo menos un bot concreto. Aquí está el código para un servicio llamado <code>EchoService</code> que describe una aplicación de un solo bot que simplemente repite lo que un usuario le diga:</p>
+
+<div class="code"><code><pre>
+const ChatService = require("./ChatService.js")
+
+class EchoService extends ChatService {
+
+    constructor(bot) {
+            super();
+        this.bot = bot;
+        this.bot.set_service(this);
+    }
+
+    handle_msg(bot, userid, msg) {
+        this.bot.send_msg(userid, msg);
+    }
+
+    run() {
+        this.bot.run();
+    }
+
+}
+</pre></code></div>
+
+<p>Así se puede visualizar el comportamiento del <code>EchoService</code> cuando, por ejemplo, la plataforma es Discord:</p>
+
+<p><center><img src="/img/2023-04-30-Fig2.png" alt="Fig 2" /></center></p>
+
+<p>pero para Slack y Telegram la lógica sería exactamente igual a pesar de las distintas APIs - y de eso la ventaja de la encapsulación y del uso de interfaces muy generales. Fíjate que según nuestra implementación de <code>EchoService</code>, recibirá un bot como argumento a su constructor, así que el tipo concreto del bot que se pasa determinará la plataforma del servicio que se pone en marcha.</p>
+
+<h4>Registro de los bots <a id="toc-section-2" class="toc-section"></a></a></h4>
+
+<p>Antes de escribir el código hay que registrar un bot con cada plataforma. Para Discord, hay que meterse en el <a href="https://discord.com/developers/applications">portal de desarrolladores</a>. Allí se puede crear una nueva aplicación con un bot con facilidad. Lo esencial es generar un <em>token</em> para el bot, el cual se usará para autenticarnos y controlarlo luego. El token aparecerá aquí (como ya he generado el mío, ya no está):</p>
+
+<p><center><img src="/img/2023-04-30-Fig3.png" alt="Fig 3" /></center></p>
+
+<p>Para Slack hay que ingresar en el portal de <a href="https://api.slack.com/apps">gestión de aplicaciones</a> y crear una nueva app. Nosotros usaremos <code>Socket Mode</code> para nuestro bot de Slack, y para ello hace falta entrar en esta sección y activarlo. Entonces hay que especificar el "ámbito" (scope) de la aplicación, o sea el conjunto de operaciones que Slack le permitirá realizar, y se generará un token de la aplicación que corresponde a los permisos específicos que requiere. Nosotros sólo necesitaremos los permisos <code>connections:write</code> y <code>authorizations:read</code> para leer y escribir mensajes:</p>
+
+<p><center><img src="/img/2023-04-30-Fig4.png" alt="Fig 4" /></center></p>
+
+<p>También hay que entrar en la página <code>Event Subscriptions</code> y activar el uso de eventos, para que se dispare un nuevo evento en nuestro bot cuando un usuario le envíe un mensaje. Dentro de la sección <code>Subscribe to events on behalf of users</code>, tenemos que añadir el evento <code>message.im</code>:</p>
+
+<p><center><img src="/img/2023-04-30-Fig5.png" alt="Fig 5" /></center></p>
+
+<p>Una vez hecho este paso, hay que instalar el bot al "espacio de trabajo" dentro del que quieres interactuar con él. Una diferencia entre los "espacios de trabajo" de Slack y los "servidores" de Discord es que, si no me equivoco, toda interacción en Slack ocurre en algún espacio de trabajo, incluso los mensajes directos, mientras que en Discord se puede enviar mensajes directos que no pertenecen a ningún servidor.</p>
+
+<p>Finalmente, hay que obtener <em>dos tokens</em> para poder usar el bot de Slack: un token a nivel de bot y otro token a nivel de aplicación. Se encuentra el token a nivel de aplicación en la página de <code>Basic Information</code> bajo la cabecera <code>App-Level Tokens</code>, donde anteriormente especificamos el ámbito de la aplicación. Hay que pulsar en el nombre del token para mostrar el token en sí, que empieza con los caracteres <code>xapp-</code>:</p>
+
+<p><center><img src="/img/2023-04-30-Fig6.png" alt="Fig 6" /></center></p>
+
+<p>Para el token a nivel de bot hay que entrar en la página <code>OAuth &amp; Permissions</code> y copiar el <code>Bot User OAuth Token</code> que aparece aquí, el cual empieza con los caracteres <code>xoxb-</code>:</p>
+
+<p><center><img src="/img/2023-04-30-Fig7.png" alt="Fig 7" /></center></p>
+
+<p>Finalmente creamos un bot de Telegram, el cual proceso seguramente será el más fácil de los tres por mucho. Sólo hace falta enviarle un mensaje al usuario especial de Telegram que se llama el <code>BotFather</code>:</p>
+
+<p><center><img src="/img/2023-04-30-Fig8.png" alt="Fig 8" /></center></p>
+
+<p>y entonces elegir un nombre para el nuevo bot:</p>
+
+<p><center><img src="/img/2023-04-30-Fig9.png" alt="Fig 9" /></center></p>
+
+<p>y ya está, así de fácil!</p>
+
+<p>Finalmente recopilamos todas las credenciales en un fichero de JSON para poder acceder a ellas con facilidad desde un <code>ChatBot</code>:</p>
+
+<div class="code"><code><pre>
+{
+    "DISCORD_TOKEN" : "...",
+
+    "SLACK_CREDS" : {
+        "token" : "xoxb-...",
+        "apptoken" : "xapp-...
+    },
+
+    "TELEGRAM_TOKEN" : "...
+}
+</pre></code></div>
+
+<h4>Código de los ChatBot <a id="toc-section-3" class="toc-section"></a></a></h4>
+
+<p>Aprovecharemos de los siguientes tres módulos de Node.js para escribir las tres subclases concretas de <code>ChatBot</code>:</p>
+
+<ul>
+<li><a href="https://discord.js.org">discord.js</a></li>
+<li><a href="https://www.npmjs.com/package/@slack/bolt">@slack/bolt</a></li>
+<li><a href="https://telegrafjs.org/#/">telegraf.js</a></li>
+</ul>
+
+<p>A propósito, estos tres módulos se encargan de interactuar con la API, así que nosotros ni siquiera tendremos que escribir el código que interactúe directamente. Lo que nosotros pretendemos diseñar es más bien <a href="https://en.wikipedia.org/wiki/Facade_pattern">una fachada</a> para clases análogas de estos tres módulos respectivos que trabajan con las APIs respectivas de Discord, Slack y Telegram. Lo único que me ha hecho falta para implementar las tres clases <code>DiscordBot</code>, <code>SlackBot</code> y <code>TelegramBot</code> es mucho indagar en la documentación de los respectivos módulos para averiguar su uso correcto. Por tanto no describo aquí el proceso de escribir estas clases paso a paso, pero aquí se puede ver el código por si te interesa:</p>
+
+<ul>
+<li><a href="https://github.com/franklindyer/interchat/blob/main/src/DiscordBot.js">DiscordBot.js</a></li>
+<li><a href="https://github.com/franklindyer/interchat/blob/main/src/SlackBot.js">SlackBot.js</a></li>
+<li><a href="https://github.com/franklindyer/interchat/blob/main/src/TelegramBot.js">TelegramBot.js</a></li>
+</ul>
+
+<h4>Algunos servicios sencillos <a id="toc-section-4" class="toc-section"></a></a></h4>
+
+<p>La primera prueba será el despliegue del <code>EchoBot</code>. En principio, si nos hemos conformado bien con la interfaz que describimos al principio, el código que ya escribimos para el <code>EchoBot</code> debe de funcionar igual en Discord, en Slack y en Telegram, siendo la única diferencia entre las implementaciones el tipo del bot que se pasa como argumento al constructor de la instancia de <code>EchoBot</code>. El código siguiente nos permitirá probar el servicio en las tres plataformas a la vez:</p>
+
+<div class="code"><code><pre>
+db = new DiscordBot("discord-bot");
+sb = new SlackBot("slack-bot");
+tb = new TelegramBot("telegram-bot");
+
+echoDiscord = new EchoService(db);
+echoSlack = new EchoService(sb);
+echoTelegram = new EchoService(tb);
+
+echoDiscord.run()
+echoSlack.run()
+echoTelegram.run()
+</pre></code></div>
+
+<p>Y se ve que sí funciona:</p>
+
+<p><center><img src="/img/2023-04-30-Fig10.png" alt="Fig 10" /></center></p>
+
+<p>Probaremos una aplicación un poco (muy poco) más compleja, que detecta los nombres de ciertas frutas y verduras en los mensajes de los usuarios y les informa de si se refiere cada uno a fruta o verdura. La subclase de <code>ChatService</code> se llamará <code>FruitVeggieService</code> y su método <code>handle_msg</code> será el siguiente:</p>
+
+<div class="code"><code><pre>
+handle_msg(bot, userid, msg) {
+    msg.split(" ").forEach(word => {
+        if (this.fruits.includes(word)) {
+            this.bot.send_msg(userid, `${word} is a fruit`);
+        } else if (this.veggies.includes(word)) {
+            this.bot.send_msg(userid, `${word} is a veggie`);
+        }
+    })
+}
+</pre></code></div>
+
+<p>donde los arrays <code>fruits</code> y <code>veggies</code> serán los siguientes:</p>
+
+<div class="code"><code><pre>
+this.fruits = [
+    "apple",
+    "banana",
+    "pear
+]
+this.veggies = [
+    "carrot",
+    "cabbage",
+    "bokchoy
+]
+</pre></code></div>
+
+<p>Lanzamos el nuevo servicio en las tres plataformas a la vez con el siguiente código. Fíjate que funciona igual que el código de lanzamiento de los servicios que usamos para el <code>EchoService</code> excepto que esta vez evitamos un poco de repetición de código repetitivo usando el <code>forEach</code> de Javascript:</p>
+
+<div class="code"><code><pre>
+db = new DiscordBot("discord-bot");
+sb = new SlackBot("slack-bot");
+tb = new TelegramBot("telegram-bot");
+
+[db, sb, tb].forEach(b => {
+    new FruitVeggieService(b).run();
+})
+</pre></code></div>
+
+<p>y podemos verificar que los bots funcionan en las tres plataformas:</p>
+
+<p><center><img src="/img/2023-04-30-Fig11.png" alt="Fig 11" /></center></p>
+
+<p>Lo chulo es que también podemos utilizar nuestro diseño para crear aplicaciones que involucran bots en varias plataformas simultáneamente <em>que interactúan entre sí</em>. Por ejemplo, imagínate que hay un usuario de Discord que no quiere crear cuenta de Telegram y un usuario de Telegram que no quiere cuenta de Discord, pero que quieren comunicar entre sí de manera que le conviene a cada uno. Para ello se puede utilizar un servicio escrito con nuestro andamiaje que dispone de dos bots - uno de Discord y uno de Telegram - que simula un "tubo acústico" con un extremo en Discord y el otro en Telegram, de tal manera que cada mensaje que recibe en una plataforma se replica en la otra plataforma. En concreto, cuando nuestro servicio recibe un mensaje mediante uno de sus dos bots de algún usuario o canal en su plataforma correspondiente, entonces le reenviará el mismo al usuario o canal desde el que recibió un mensaje más recientemente en la otra plataforma. El código es bastante sencillo:</p>
+
+<div class="code"><code><pre>
+class TalkTubeService {
+
+    constructor(bot1, bot2) {
+        this.bot1 = bot1;
+        this.bot2 = bot2;
+        this.bot1.set_service(this);
+        this.bot2.set_service(this);
+
+        this.user1 = null;
+        this.user2 = null;
+    }
+
+    handle_msg(botname, userid, msg) {
+
+        if (botname === this.bot1.name) {
+            this.user1 = userid;
+            if (this.user2 != null) {
+                this.bot2.send_msg(this.user2, msg);
+            }
+        } else if (botname === this.bot2.name) {
+            this.user2 = userid;
+            if (this.user1 != null) {
+                this.bot1.send_msg(this.user1, msg);
+            }
+        } 
+    }
+
+    run() {
+        this.bot1.run();
+        this.bot2.run();
+    }
+
+}
+</pre></code></div>
+
+<p>y se puede desplegar la aplicación así:</p>
+
+<div class="code"><code><pre>
+db = new DiscordBot("discord-bot");
+tb = new TelegramBot("telegram-bot");
+
+new TalkTubeService(db, tb).run()
+</pre></code></div>
+
+<p>y se ve que funciona tal y como hemos descrito:</p>
+
+<p><center><img src="/img/2023-04-30-Fig12.png" alt="Fig 12" /></center></p>
+
+<p>Así se puede visualizar la acción del <code>TalkTubeBot</code>, una vez que los usuarios de ambas plataformas ya se han puesto en contacto con el bot por primera vez:</p>
+
+<p><center><img src="/img/2023-04-30-Fig13.png" alt="Fig 13" /></center></p>
+
+<h4>Interceptores de los ChatBot <a id="toc-section-5" class="toc-section"></a></a></h4>
+
+<p>Quiero comentar un truco más. Si usamos el <a href="https://en.wikipedia.org/wiki/Interceptor_pattern">patrón interceptor</a> para crear entidades intermediarias entre los <code>ChatBot</code> y <code>ChatService</code> para modificar el flujo de texto entre los dos, podremos crear un abanico de distintas aplicaciones con comportamientos levemente distintos combinando los bots, los servicios y los interceptores de distintas maneras. En concreto, crearemos una clase que se llama <code>ChatBotInterceptor</code> cuya interfaz es tal que los <code>ChatService</code> podrán interactuar con ella como si fuera un <code>ChatBot</code>, y los <code>ChatBot</code> podrán interactuar con ella como si fuera un <code>ChatService</code>.</p>
+
+<p><center><img src="/img/2023-04-30-Fig14.png" alt="Fig 14" /></center></p>
+
+<p>En concreto, aquí está la interfaz de <code>ChatBotInterceptor</code>:</p>
+
+<div class="code"><code><pre>
+class ChatBotInterceptor {
+
+    constructor(name, bots) {
+        this.bots = bots;
+        this.name = name
+        this.bots.forEach(b => b.set_service(this));
+    }
+
+    set_service(service) {
+        this.service = service;
+    }
+
+    handle_msg(name, userid, msg) {}
+
+    send_msg(userid, msg) {}
+
+    run() {
+        this.bots.forEach(b => b.run());
+    }
+
+}
+</pre></code></div>
+
+<p>Al construir un <code>ChatBotInterceptor</code> hay que pasar, además del nombre, una lista de bots cuyo tráfico el interceptor se encargará de recibir, tramitar y pasarle al servicio. Poner en marcha el interceptor equivale a poner en marcha cada uno de sus bots. Veremos ahora un ejemplo sencillo de un <code>ChatBotInterceptor</code> que no le pasa al servicio los mensajes de su único bot inmediatamente sino en lotes, es decir, espera hasta haber recibido un número fijo <code>n</code> de mensajes (que va almacenando) y entonces los concatena y se los pasa al servicio como un único mensaje grande. Su implementación es así:</p>
+
+<div class="code"><code><pre>
+class BatchBotInterceptor extends ChatBotInterceptor {
+
+    constructor(bot, n) {
+        super(bot.name.concat("-int"), [bot]);
+
+        this.limit = n;
+        this.lastuser = null;
+        this.queue = [];
+    }
+
+    handle_msg(name, userid, msg) {
+        if (userid != this.lastuser) {
+            this.lastuser = userid;
+            this.queue = [];
+        }
+
+        this.queue.push(msg)
+
+        if (this.queue.length == this.limit) {
+            this.service.handle_msg(this.name, this.lastuser, this.queue.join("\n"));
+            this.queue = [];
+        }
+    }
+
+    send_msg(userid, msg) {
+        this.bot.send_msg(userid, msg);
+    }
+
+}
+</pre></code></div>
+
+<p>Ahora podemos modificar cualquier una de nuestras aplicaciones anteriores metiendo entre el servicio y el bot un interceptor de este tipo. Por ejemplo, la aplicación de "tubería acústica":</p>
+
+<div class="code"><code><pre>
+sb = new SlackBot("slack-bot");
+tb = new TelegramBot("telegram-bot");
+
+new TalkTubeService(sb, new BatchBotInterceptor(tb, 3)).run()
+</pre></code></div>
+
+<p>y se ve que ya tenemos una tubería entre Slack y Telegram que es tal que los mensajes desde Telegram se transmiten sólo en lotes de tres mensajes, y no se envía ninguno hasta que se han acumulado tres mensajes por enviar.</p>
+
+<p><center><img src="/img/2023-04-30-Fig15.png" alt="Fig 15" /></center></p>
+
+<p>Aunque no expondré más interceptores aquí, se me ocurren varias ideas más que serían bastante fáciles de implementar:</p>
+
+<ul>
+<li>Un interceptor que descarta los mensajes con una cierta probabilidad</li>
+<li>Un interceptor que "filtra" el texto, quitando palabrotas o emojis o algo así, o reemplazando ciertos caracteres con otros</li>
+<li>Un interceptor que esconde dos bots detrás de una sola interfaz reenviando los mensajes de ambos al mismo servicio, de tal manera que al servicio le parece que todos los mensajes originan de una única fuente</li>
+<li>Un interceptor que no realiza ningún cambio en el flujo de mensajes pero que realiza logging imprimiendo en la consola el contenido de cada mensaje que pasa por él</li>
+</ul>
+
+<p>También se puede considerar los efectos emergentes que se dan al ensamblar varios interceptores en una cadena entre un bot y una aplicación. ¿Puedes predecir el comportamiento de la aplicación modificada que tendríamos al envolver el bot de Telegram <em>dos veces</em> en un interceptor por lotes, es decir, la aplicación que se lanza así?</p>
+
+<div class="code"><code><pre>
+sb = new SlackBot("slack-bot");
+tb = new TelegramBot("telegram-bot");
+
+new TalkTubeService(sb, 
+    new BatchBotInterceptor(
+        new BatchBotInterceptor(tb, 3), 
+        3
+    )
+).run()
+</pre></code></div>
+
+<h4>Mejoras adicionales <a id="toc-section-6" class="toc-section"></a></a></h4>
+
+<p>Hasta ahora lo que hemos diseñado es bastante sencillo, pero creo que sirve como buena herramienta para juguetear con los chatbots multiplataforma sin tener que liarse con los detalles de las APIs ni las implementaciones de los módulos concretos que existen para interactuar con cada una. Sin embargo se me ocurren varias maneras de mejorar este andamiaje en el futuro, que me quedan por implementar todavía:</p>
+
+<ul>
+<li>Añadir <code>ChatBot</code>s concretos para más plataformas o protocolos de mensajería, como XMPP por ejemplo</li>
+<li>Ampliar la interfaz para soportar funcionalidades distintas del envío de texto llano que son comunes a la mayoría de las plataformas, por ejemplo, las "reacciones" a los mensajes con emojis</li>
+<li>Crear una nueva clase <code>Message</code> que encapsula la información esencial de un mensaje que utilizaremos, en vez de pasar el ID de usuario y el texto de los mensajes por separado al método <code>handle_msg</code></li>
+</ul>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

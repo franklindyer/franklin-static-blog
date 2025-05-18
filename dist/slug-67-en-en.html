@@ -1,0 +1,83 @@
+<html>
+<head>
+    <title>A Half-Exponential Integral</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>A Half-Exponential Integral</h2>
+
+<p><em>2018 May 19</em></p>
+
+<blockquote>
+<p>Find some upper and lower bounds for the integral
+<script type="math/tex; mode=display">\int_0^1 f(x)dx</script>
+given that $f:\mathbb R\mapsto\mathbb R$ is continuous, increasing, and that $f(f(x))=e^x$.</p>
+</blockquote>
+
+<p>This is an interesting problem that I came up with while investigating half-exponential functions. I last investigated this type of function in <a href="/post/75">this post</a> about fractional iterates of functions, and I posed this puzzle to the users of <a href="https://math.stackexchange.com/questions/2783000/recreational-math-if-ffx-ex-bound-the-integral-int-01-fxdx/2783858#2783858">Math Stack Exchange</a>. In this short post, I will present my original solution to the problem.</p>
+
+<p>As I showed in the previous post, the function $f(x)$ must be bounded above by $e^x$ and below by $x$ for all $x\in\mathbb R$. This implies that $0\lt f(0)\lt 1$. For convenience, I will let $f_0=f(0)$. To solve the problem, I will first split up the integral in question into
+<script type="math/tex; mode=display">\int_0^1 f(x)dx=\int_0^{f_0} f(x)dx+\int_{f_0}^1 f(x)dx</script>
+Now, by making the substitution $x\to f(x)$ and using integration by parts in the second integral, we see that
+<script type="math/tex; mode=display">\begin{align}
+I:=\int_{f_0}^1 f(x)dx
+&=\int_{0}^{f^{-1}(1)} f(f(x))f'(x)dx\\
+&=\int_{0}^{f_0} e^xf'(x)dx\\
+&=\big[e^xf(x)\big]_0^{f_0}-\int_{0}^{f_0} e^xf(x)dx\\
+&=e^{f_0}-f_0-\int_{0}^{f_0} e^xf(x)dx\\
+\end{align}</script>
+and so our original integral is equal to
+<script type="math/tex; mode=display">I=e^{f_0}-f_0-\int_0^{f_0} (e^x-1)f(x)dx\tag{1}</script>
+Now consider the following integral:
+<script type="math/tex; mode=display">\int_0^{f_0} (e^x-1)f(x)dx</script>
+It is always positive, because of the previously mentioned bounds for $f$. Furthermore, since $f$ is increasing, for all $x\in [0,f_0]$, we have that $f(x)\in [f_0,1]$. Thus, we have that
+<script type="math/tex; mode=display">f_0\int_0^{f_0} (e^x-1)dx\lt\int_0^{f_0} (e^x-1)f(x)dx\lt \int_0^{f_0} (e^x-1)dx</script>
+...or, after simplifying the integrals in the upper and lower bounds,
+<script type="math/tex; mode=display">f_0e^{f_0}-f_0^2-f_0\lt\int_0^{f_0} (e^x-1)f(x)dx\lt e^{f_0}-f_0-1</script>
+By combining this inequality with equation (1), we have that
+<script type="math/tex; mode=display">1 \lt I\lt (1-f_0)e^{f_0}+f_0^2</script>
+It can be shown using basic calculus that for all $x\in [0,1]$, the quantity $(1-x)e^x+x^2$ is always less than or equal to $\ln^2(2)-2\ln(2)+2\approx 1.0942$. Thus, since $f_0\in [0,1]$, we have that
+<script type="math/tex; mode=display">1 \lt I\lt \ln^2(2)-2\ln(2)+2</script>
+Not only are these bounds correct, but they are also the <em>best possible bounds</em>, in that there exist functions $f$ making the integral arbitrarily close to $1$ or $\ln^2(2)-2\ln(2)+2$. In order to make the integral arbitrarily close to $1$, one need only choose a function $f(x)$ such that $f(0)$ is arbitrarily close to $1$, and such that $f(x)$ is arbitrarily close to $1$ for $x\in [0,f(0)]$, so that the graph of $f$ for $0\le x\le 1$ looks very much like a horizontal line segment. Similarly, to make $I$ arbitrarily close to $\ln^2(2)-2\ln(2)+2$, one should choose $f$ such that $f(0)=\ln(2)$ and such that $f(x)$ is very close to $\ln(2)$ for $x\in [0,\ln(2)]$.</p>
+
+<p>The solution to this puzzle concludes this (short) blog post! I shall leave a final puzzle for the reader which is slightly more difficult than the one solved in this post:</p>
+
+<blockquote>
+<p>Prove that
+<script type="math/tex; mode=display">\frac{23}{27}\lt \int_0^1 g(x)dx\lt\frac{55}{54}</script>
+given that $g:\mathbb R\mapsto\mathbb R$ is continuous, increasing, and that $g(g(x))=x^2+1$.</p>
+</blockquote>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

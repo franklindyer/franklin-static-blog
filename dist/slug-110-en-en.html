@@ -1,0 +1,69 @@
+<html>
+<head>
+    <title>Centroid of a Triangle</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Centroid of a Triangle</h2>
+
+<p><em>2016 Nov 5</em></p>
+
+<blockquote>
+<p>Find the centroid of a triangle, given its three vertices in the cartesian coordinate plane.</p>
+</blockquote>
+
+<p>Suppose we are given three points $A(x_1, y_1)$, $B(x_2, y_2)$, and $C(x_3, y_3)$ forming a triangle in a coordinate plane. The line segments formed by connecting each vertex of the triangle with the midpoint of the opposite side are called the <em>medians</em> of the triangle, and the point in which all three of the medians intersect is called the <em>centroid</em> of the triangle. To find the centroid of the triangle, the only formula that we need to find the centroid is the formula for the point $\frac{m}{n}$ of the way from the point $(x_a, y_a)$ to $(x_b, y_b)$:</p>
+
+<p>
+<script type="math/tex; mode=display">(x_a+\frac{m}{n}(x_b-x_a), y_a+\frac{m}{n}(y_b-y_a))</script>
+</p>
+
+<p>With the three points on the triangle, we could write the equations of the medians of the triangles and find their intersection, but there is a preexisting theorem stating that the centroid of a triangle is $\frac{2}{3}$ of the distance from any of the triangle's vertices to the midpoint of the opposite side. To proceed this way, first we need to find the midpoint of $\overline{BC}$. By the midpoint formula, this midpoint is the point</p>
+
+<p>
+<script type="math/tex; mode=display">(\frac{x_2+x_3}{2}, \frac{y_2+y_3}{2})</script>.</p>
+
+<p>Now we can put our formula to use by finding the point $\frac{2}{3}$ of the way from $(x_1, y_1)$ to $(\frac{x_2+x_3}{2}, \frac{y_2+y_3}{2})$:</p>
+
+<p>
+<script type="math/tex; mode=display">(x_1+\frac{2}{3}(\frac{x_2+x_3}{2}-x_1), y_1+\frac{2}{3}(\frac{y_2+y_3}{2}-y_1))</script>
+<script type="math/tex; mode=display">(x_1+\frac{2}{3}(\frac{-2x_1+x_2+x_3}{2}), y_1+\frac{2}{3}(\frac{-2y_1+y_2+y_3}{2}))</script>
+<script type="math/tex; mode=display">(x_1+\frac{-2x_1+x_2+x_3}{3}, y_1+\frac{-2y_1+y_2+y_3}{3})</script>
+<script type="math/tex; mode=display">(\frac{x_1+x_2+x_3}{3}, \frac{y_1+y_2+y_3}{3})</script>
+</p>
+
+<p>And we are left with this beautiful formula, showing us that the centroid of a triangle in the coordinate plane has an abscissa equal to the average of the abscissas of its vertices and an ordinate equal to the average of the ordinates of its vertices.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

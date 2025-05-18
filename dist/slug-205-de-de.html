@@ -1,0 +1,130 @@
+<html>
+<head>
+    <title>Intransitive Zufallsvariablen</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h3>Intransitive Zufallsvariablen</h3>
+
+<p>(Psst! Don't want to read this in German? <a href="/post/206">Here's a translation.</a>)</p>
+
+<p>Stell dir vor, ein Schwindler schlagt vor, ein einfache Würfelspiel zu spielen, in dem es drei Würfel gibt, jeder spieler würfelt einen von denen und der, der die höchste Zahl erhält, wird der Sieger. Aber um dich daran zu beruhigen, daß es keinen gezinkten Würfel gibt, der höhere Zahlen als die anderen in den meisten Fällen hervorbringt, der Schwindler schenkt dir die Gelegenheit, den Würfel auszuwählen, der dir am meisten gefällt, vor er den Seinen wählt.</p>
+
+<p>Vielleicht ahnst du irgendeine Art von Betrügerei, aber wenn du das Recht der ersten Wahl hast, denkst du, das Spiel gerecht sein könnte, oder sogar zu deinem Vorteil? Und wenn die drei Würfel sind die Folgenden?</p>
+
+<p><center><img src="/img/2023-06-30-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>Als drei Zufallsvariablen könnte man diese drei Würfel formulieren:</p>
+
+<p>
+<script type="math/tex; mode=display">\begin{align*}X &= \begin{cases}0 & \text{Wahrscheinlichkeit } 1/3 \\ 5 & \text{Wahrscheinlichkeit } 1/3 \\ 7 & \text{Wahrscheinlichkeit } 1/3 \end{cases} \\ Y &= \begin{cases}1 & \text{Wahrscheinlichkeit } 1/3 \\ 3 & \text{Wahrscheinlichkeit } 1/3 \\ 8 & \text{Wahrscheinlichkeit } 1/3 \end{cases} \\ Z &= \begin{cases}2 & \text{Wahrscheinlichkeit } 1/3 \\ 4 & \text{Wahrscheinlichkeit } 1/3 \\ 6 & \text{Wahrscheinlichkeit } 1/3 \end{cases}\end{align*}</script>
+</p>
+
+<p>Diese drei Zufallsvariablen entsprechen einer seltsamen Eigenschaft - fallweise kann man bestätigen, daß</p>
+
+<p>
+<script type="math/tex; mode=display">\begin{align*}\mathbb P(X < Y) &= 5/9 \\ \mathbb P(Y < Z) &= 5/9 \\ \mathbb P(Z < X) &= 5/9\end{align*}</script>
+</p>
+
+<p>Das ist, es gibt keinen besten Würfel aber egal ist das Spiel kein gerechtes Spiel. Für jeden Würfel entspricht ihm anderen Würfel, die eine höhere Zahl in den meisten Fällen hervorbringt. Egal, welchen Würfel wählst du, wird der Schwindler einen erwählen um das Spiel mit Wahrscheinlichkeit $5/9$ zu gewinnen.</p>
+
+<h4>Aufklärung des Paradoxes <a id="toc-section-1" class="toc-section"></a></a></h4>
+
+<p>Dieses Phänomen heißt <strong>Intransitivität</strong> der Zufallsvariablen und es ist manchmal für seine unintuitive Natur bekannt. In diesem Abteil möchte ich einen generelleren Sachverhalt betreten, der (meiner Ansicht nach) auf den Grund, dieses Phänomen uns so verwirrend erscheinen kann, ein bisschen Licht wirft.</p>
+
+<p>Stell mal vor, wir überlegen drei Sätze $\psi,\phi,\chi$ die wahr oder falsch für jede Ergebnis der Zufallsvariable $W$ sind. Das ist, wenn $\Omega$ das Ergebnismenge der Zufallsvariable $W$ ist, denn sind $\psi,\phi,\chi$ Prädikaten aus der Menge $\Omega$. Wenn zwei Prädikaten $\psi,\phi$ inkompatibel sind, oder anders gesagt $\neg(\psi\land\phi)$ in jedem Fall Wahr wird, dann folgt es, daß <script type="math/tex; mode=display">\mathbb P(\psi) + \mathbb P(\phi) \leq 1</script> Stell aber mal vor, daß $\psi, \phi, \chi$ unvereinbar sind, also, daß <script type="math/tex; mode=display">\neg(\psi\land\phi\land\chi)</script> Zum Beispiel wenn $W$ aus einem Tripel von Zufallvariablen $(X,Y,Z)$ besteht sind die drei Aussagen <script type="math/tex; mode=display">\begin{align*}\psi &= \mathtt{"X < Y"} \\ \phi &= \mathtt{"Y < Z"} \\ \chi &= \mathtt{"Z < X"}\end{align*}</script> unvereinbar, aber jetzt sprechen wir über Prädikaten im allgemeinen. Intuitiv könnte es den Anschein haben, wir könnten genauso die Ungleichung <script type="math/tex; mode=display">\mathbb P(\psi) + \mathbb P(\phi) + \mathbb P(\chi) \leq 1</script> ableiten und zur Folge ableiten, daß es nicht sein könnte, jeder der drei Wahrscheinlichkeiten $\mathbb P(\psi),\mathbb P(\phi),\mathbb P(\chi)$ größer als $1/3$ sei, also <script type="math/tex; mode=display">\min\Big(\mathbb P(\psi),\mathbb P(\phi),\mathbb P(\chi)\Big) \leq \frac{1}{3}</script> und daß wenn $\Omega$ optimal verteilt wäre, um diese Mindestwahrscheinlichkeit zu maximieren, dann würde es so erscheinen: </p>
+
+<p><center><img src="/img/2023-06-30-Fig3.png" alt="Fig 3" /></center></p>
+
+<p>Diese Auswertung ist aber falsch, weil die drei Prädikaten unvereinbar aber <em>nicht paarweise unvereinbar</em> sind. Die Aussage $\psi\land\phi$ könnte wohl wahr sein und genauso können $\phi\land\chi$ oder $\chi\land\psi$ wahr sein, obwohl $\psi\land\phi\land\chi$ immer falsch ist. Für jeder Ergebnis $\omega\in\Omega$ können <em>am meisten zwei</em> von den drei unvereinbaren Prädikaten wahr sein und deshalb kann die Überlagerung der drei Teilmengen <script type="math/tex; mode=display">\psi^{-1}(\mathtt{T}), \phi^{-1}(\mathtt{T}), \chi^{-1}(\mathtt{T})\subset \Omega</script> die Ergebnismenge $\Omega$ am meisten <em>zweifach</em> bedecken. Aufgrund dieser Betrachtung können wir die wahre Obergrenze herleiten: <script type="math/tex; mode=display">\mathbb P(\psi) + \mathbb P(\phi) + \mathbb P(\chi) \leq 2</script> und deshalb <script type="math/tex; mode=display">\min\Big(\mathbb P(\psi),\mathbb P(\phi),\mathbb P(\chi)\Big) \leq \frac{2}{3}</script> und die begrenzende Verteilung wäre etwa so:</p>
+
+<p><center><img src="/img/2023-06-30-Fig4.png" alt="Fig 4" /></center></p>
+
+<p>In der Wirklichkeit gibt es deswegen kein Paradox. Meines Erachtens stammt die unintuitive Natur dieses Phänomens von einer schlechten Intuition wenn es um Aussagen derart "wahrscheinlich wird $\psi$ wahr" geht. Im Allgemeinen erfordert es viele geistigen Anstrengung, die folgende Aussagen miteinander abstimmen zu laßen:</p>
+
+<ul>
+<li>Wahrscheinlich wird $\psi$ wahr.</li>
+<li>Wahrscheinlich wird $\phi$ wahr.</li>
+<li>Wahrscheinlich wird $\chi$ wahr.</li>
+<li>Sicherlich werden $\psi,\phi,\chi$ nicht gleichzeitig wahr.</li>
+</ul>
+
+<p>Mit zwei Prädikaten gibt es kein "Paradox" dieser Art, weil es kann nicht sein, daß von $\psi$ und $\phi$ beide wahrscheinlich seien aber $\psi\land\phi$ unmöglich sei, wenn man die Aussage "wahrscheinlich wird $\psi$ wahr" als $\mathbb P(\psi) &gt; 1/2$ auffaßt.</p>
+
+<h4>Maximale Intransitivität <a id="toc-section-2" class="toc-section"></a></a></h4>
+
+<p>Wir haben schon entdeckt, daß mit drei Zufallsvariablen $X,Y,Z$ es keinen größeren Transitivitätsverstoß als das Folgende geben kann: <script type="math/tex; mode=display">\mathbb P(X < Y) = \mathbb P(Y < Z) = \mathbb P(Z < X) = \frac{2}{3}</script> Umgekehrt kann man einfach bestätigen, daß dieser Transitivitätsverstoß möglich ist, z.B. wenn $X,Y,Z$ die gemeinsame Wahrscheinlichkeitsverteilung befolgen: <script type="math/tex; mode=display">(X,Y,Z) = \begin{cases}(0,1,2) & \text{Wahrscheinlichkeit } 1/3 \\ (1,2,0) & \text{Wahrscheinlichkeit } 1/3 \\ (2,0,1) & \text{Wahrscheinlichkeit } 1/3\end{cases}</script> Doch wir haben auf eine wichtige Bestimmung der Zufallsvariablen verzichtet, damit sie als eine realistische Generalisierung des originalen Würfelspiel gelten, nämlich daß sie unabhängig sind. Offensichtlich sind die drei Zufallsbariablen in der obenen Wahrscheinlichkeitsverteilung abhängig. Es könnte sein, daß man drei unabhängige Zufallsvariablen erfinden kann, daß diese 2/3-Grenze auch erreichen, doch keine solche Beispiele haben wir bis jetzt gesehen.</p>
+
+<p>Stellen Sie vor, eine einfachere Frage, in der man setzt voraus, daß $Y$ eine Konstante sei, also, daß es eine reele Zahle $c$ gäbe, derart $\mathbb P(Y = c) = 1$. Wir setzen auch voraus, daß die Wahrscheinlichkeit, irgendeine zwei der drei Variablen zeigen sich gleich, sei null. In diesem Fall sucht man den Größtwert der Mindestwahrscheinlichkeit <script type="math/tex; mode=display">\min\Big(\mathbb P(X < c), \mathbb P(c < Z), \mathbb P(Z < X)\Big)</script> wenn $X,Z$ unabhängig sind. Es gilt aber dann, daß <script type="math/tex; mode=display">\mathbb P(Z < X) \leq 1 - \mathbb P(X < c) \mathbb P(c < Z)</script> weil $X &lt; c$ und $c &lt; Z$ zusammen auf $X &lt; Z$ schließen laßen, und die zwei Möglichkeiten unabhängig sind (aufgrund dieser Voraussetzung können wir seine Wahrscheinlichkeiten multiplizieren). Deshalb ist den ersuchten Größtwert höchstens <script type="math/tex; mode=display">\max_{p,q\in [0,1]} \min\big(p,q,1-pq\big)</script> Man kann aber überprüfen, daß diese Minimalwert am höchsten steigt wenn $p=q=1-pq$ also wenn <script type="math/tex; mode=display">p=q=\frac{1}{\phi}=\frac{-1+\sqrt{5}}{2}\approx 0.618</script> Deshalb wissen wir, wenn $Y$ konstante ist, daß wir einen Maximaltransitivitätsverstoß von $\phi^{-1}\approx 0.618$ erreichen könnten, doch ob es wirklich erreichbar ist wissen wir noch nicht. Sogar kann man von dieser Spezialfallgrenze eine generelle Grenze ableiten: in <a href="https://www.impan.pl/pl/wydawnictwa/czasopisma-i-serie-wydawnicze/applicationes-mathematicae/all/5/4/94895/on-the-paradox-of-three-random-variables">dieser Schrift</a> von S. Trybula wird es bewiesen, daß der Maximaltransitivitätsverstoß $\phi^{-1}$ ist, auch wenn $Y$ nicht konstant sein kann. Das ist: <script type="math/tex; mode=display">\min\Big(\mathbb P(X < Y), \mathbb P(Y < Z), \mathbb P(Z < X)\Big) \leq \phi^{-1}</script>
+</p>
+
+<p>Es ist ein schönes Rätsel rausfinden, ob es zwar drei unabhängige Zufallsvariablen gibt oder nicht, die diese Obergrenze erreichen. Tatsache ist, daß ein solches Tripel existiert und zwar existiert ein Tripel in dem $Y$ konstant ist: <script type="math/tex; mode=display">\begin{align*}X &= \begin{cases}1 & \text{Möglichkeit } \phi^{-1} \\ 4 & \text{Möglichkeit } \phi^{-2}\end{cases} \\ Y &= 2 \\ Z &= \begin{cases}0 & \text{Möglichkeit } \phi^{-2} \\ 3 & \text{Möglichkeit } \phi^{-1}\end{cases}\end{align*}</script> Gleich könnte man diese Zufallsvariablen durch ihre Wahrscheinlichkeitsdichtefunktionen beschreiben: <script type="math/tex; mode=display">\begin{align*}p_X(\alpha) &= \tfrac{1}{\phi}\delta_1(\alpha) + \tfrac{1}{\phi^2}\delta_4(\alpha) \\ p_Y(\alpha) &= \delta_2(\alpha) \\ p_Z(\alpha) &= \tfrac{1}{\phi^2}\delta_0(\alpha) + \tfrac{1}{\phi}\delta_3(\alpha)\end{align*}</script> und etwa so visualisieren:</p>
+
+<p><center><img src="/img/2023-06-30-Fig2.png" alt="Fig 2" /></center></p>
+
+<p>Wenn es um vier oder mehr Zufallsvariablen gibt bin ich mir nicht sicher, wieviel der Maximaltransitivitätsverstoß wäre. Mit mehrere Zufallsvariablen kann man die Obergrenze $\phi^{-1}$ überschreiten aber es läßt sich ziemlich einfach beweisen, daß es eine universale Obergrenze von $3/4$ gibt, das ist, wenn $X_1,X_2,\cdots, X_n$ unabhängige Zufallsvariablen sind, dann muss es sein, daß <script type="math/tex; mode=display">\min\Big(\mathbb P(X_1 < X_2), \cdots, \mathbb P(X_n < X_1)\Big)\leq \frac{3}{4}</script> Kannst du diese Obergrenze beweisen? Wenn du ein Hinweis möchtest, würde ich dir andeuten, es könnte günstig sein, Mediane der $n$ Zufallsvariablen überzulegen.</p>
+
+<h4>Parametrisierung einer Familie von intransiitiven Zufallsvariablen <a id="toc-section-3" class="toc-section"></a></a></h4>
+
+<p>Nehmen wir mal an, daß wir drei Zufallsvariablen $X,Y,Z$ haben, und daß wir eine ganze Familie von Zufallsvariablen so bestimmen: <script type="math/tex; mode=display">W(p,q,r) = \begin{cases}X & \text{Wahrscheinlichkeit } p \\ Y & \text{Wahrscheinlichkeit } q \\ Z & \text{Wahrscheinlichkeit } r\end{cases}</script> wenn $p+q+r=1$. Das ist, $W(p,q,r)$ heißt ein Zufallsvariabel, der sein Wert von $X$ nimmt mit Wahrscheinlichkeit $p$, von $Y$ mit Wahrscheinlichkeit $q$ und von $Z$ mit Wahrscheinlichkeit $r$. Anders gesagt, wenn $f_X,f_Y,f_Z$ die Wahrscheinlichkeitsdichtefunktionen von $X,Y,Z$ bzw. sind, dann wird die Wahrscheinlichkeitsdichtefunktion von $W(p,q,r)$ <script type="math/tex; mode=display">pf_X + qf_Y + rf_Z</script> Wir könnten diese Familie von Zufallsvariablen als dreidimensionale Vektoren von $\mathbb R^3$ parametrisieren: <script type="math/tex; mode=display">W(p,q,r) ~ \leftrightarrow ~ \begin{bmatrix}p \\ q \\ r\end{bmatrix}</script> Wenn man die Parameter $p,q,r$ beziehungsweise alle mögliche Werten der Interval $[0,1]$ bekommen laßen, derart $p+q+r=1$, dann manifestiert sich der Raum aller möglichen Zufallsvariablen dieser Familie als ein Dreieck in $\mathbb R^3$:</p>
+
+<p><center><img src="/img/2023-06-30-Fig5.png" alt="Fig 5" /></center></p>
+
+<p>Um ganz exakt zu sein, wir beschreiben eine Einbettung der konvexe Hülle der drei Funktionen $f_X,f_Y,f_Z$ im Vektorraum alle Distributionen auf $\mathbb R$ in dem dreidimensionalen Vektorraum $\mathbb R^3$ mittels eine konvexkombinationstreue Abbildung. Bitte beachte, daß die Zufallsvariablen $W(1,0,0), W(0,1,0), W(0,0,1)$ sind gleich verteilt wie $X,Y,Z$ beziehungsweise und den Ecken des Dreiecks entsprechen.</p>
+
+<p>Wenn wir noch mal annehmen, daß die drei Zufallsvariablen $X,Y,Z$ mit Wahrscheinlichkeit $1$ verschiedene Werte hervorbringen, und wenn wir die drei Wahrscheinlichkeiten <script type="math/tex; mode=display">\begin{align*}&\mathbb P(X < Y) \\ &\mathbb P(Y < Z) \\ &\mathbb P(Z < X)\end{align*}</script> wissen, dann können wir die Wahrscheinlichkeit jeder Vergleichung von zwei Zufallsvariablen unserer Familie $W(p,q,r)$ berechnen, also, die Wahrscheinlichkeit <script type="math/tex; mode=display">\mathbb P\Big(W(p_0,q_0,r_0) < W(p_1,q_1,r_1)\Big)</script> kalkulieren. Die Parametrisierung dieser Zufallsvariablen als Vektoren wird uns sehr nützlich, um diese Wahrscheinlichkeit einfach zu formulieren: wenn $\mathbf{w}_0, \mathbf{w}_1$ die Vektoren, die $W(p_0,q_0,r_0)$ und $W(p_1,q_1,r_1)$ bzw. entsprechen, und $A$ die Matrix <script type="math/tex; mode=display">A = \begin{bmatrix}\mathbb P(X < X') & \mathbb P(X < Y') & \mathbb P(X < Z') \\ \mathbb P(Y < X') & \mathbb P(Y < Y') & \mathbb P(Y < Z') \\ \mathbb P(Z < X') & \mathbb P(Z < Y') & \mathbb P(Z < Z')\end{bmatrix}</script> ist, dann kann man fallweise beweisen, daß <script type="math/tex; mode=display">\mathbb P\Big(W(p_0,q_0,r_0) < W(p_1,q_1,r_1)\Big) = \mathbf{w}_0^{\text{T}}A\mathbf{w}_1</script>
+</p>
+
+<p>Endlich bedenken wir den Fall, in dem $X,Y,Z$ drei unabhängige Zufallsvariablen die die Transitivität maximal missachten sind. Dann wird <script type="math/tex; mode=display">A = \begin{bmatrix}1/2 & 1/\phi & 1/\phi^2 \\ 1/\phi^2 & 1/2 & 1/\phi \\ 1/\phi & 1/\phi^2 & 1/2\end{bmatrix}</script> Merke: wir können $A$ anders beschreiben als <script type="math/tex; mode=display">A = \tfrac{1}{2}I + \tfrac{1}{\phi}C + \tfrac{1}{\phi^2}C^2</script> in der $C$ die Permutationsmatrix <script type="math/tex; mode=display">C = \begin{bmatrix}0 & 1 & 0 \\ 0 & 0 & 1 \\ 1 & 0 & 0\end{bmatrix}</script> bezeichnet. Und diese Matrix, als lineare Abbildung des Vektorraum $\mathbb R^3$, permutiert die drei Koordinaten der Vektoren, oder es führt eine Drehung von $2\pi/3$ um den Vektor $\langle 1,1,1\rangle$ durch:</p>
+
+<p><center><img src="/img/2023-06-30-Fig6.png" alt="Fig 6" /></center></p>
+
+<p>Was sehr interessant ist, ist daß $C$ ein Spezialfall der generellen Rotationsmatrix $R_\theta$ um den Vektor $\langle 1,1,1\rangle$ im Gegenuhrzeigersinn ist, sodass $C=R_{2\pi/3}$. Alle Rotationsmatrizen um die gleichen Achse laßen sich vertauschen weil $R_{\theta_0} R_{\theta_1} = R_{\theta_0 + \theta_1}$, deshalb <script type="math/tex; mode=display">CR_\theta = R_\theta C</script> für jede $\theta$. Zur Folge, jede $R_\theta$ sich mit $A$ vertauschen läßt, weil <script type="math/tex; mode=display">\begin{align*}R_\theta A &= \Big(\tfrac{1}{2}I + \tfrac{1}{\phi}C + \tfrac{1}{\phi^2}C^2\Big)A \\ &= \tfrac{1}{2}IA + \tfrac{1}{\phi}CA + \tfrac{1}{\phi^2}C^2 A \\ &= \tfrac{1}{2}AI + \tfrac{1}{\phi}AC + \tfrac{1}{\phi^2}AC^2 \\ &= AR_\theta\end{align*}</script> Deshalb wird die Möglichkeit des Ergebnis $W_0 &lt; W_1$, wenn wir die Vektoren der Parameter $\mathbf w_0, \mathbf w_1$ sich $\theta$ Radianten in der Ebene $x+y+z=1$ drehen laßen, also, sich mit $R_\theta \mathbf w_0, R_\theta \mathbf w_1$ ersetzen laßen, weil <script type="math/tex; mode=display">\begin{align*} (R_\theta \mathbf w_0)^\text{T} A (R_\theta \mathbf w_1) &= \mathbf w_0^\text{T} R_\theta^\text{T} A R_\theta \mathbf w_1 \\ &= \mathbf w_0^\text{T} R_{-\theta} A R_\theta \mathbf w_1 \\ &= w_0^\text{T} R_{-\theta} R_\theta A \mathbf w_1 \\ &= w_0^\text{T} A \mathbf w_1 \end{align*}</script> Tatsächlich kann man die Wahrscheinlichkeit $\mathbb P(W_0 &lt; W_1)$ kalkulieren auch wenn man nur die Größe der Komponenten und den Wert des Winkels zwischen den Komponenten der Vektoren $\mathbf w_0, \mathbf w_1$ in der Ebene $x+y+z=1$. Wenn seine Projektionen auf diese Ebene Größe $r_0, r_1$ haben und einen Winkel $\Delta\theta$ im Gegenuhrzeigersinn miteinander bilden, etwa so:</p>
+
+<p><center><img src="/img/2023-06-30-Fig7.png" alt="Fig 7" /></center></p>
+
+<p>dann wird $\mathbb P(W_0 &lt; W_1)$:</p>
+
+<p>
+<script type="math/tex; mode=display">\frac{1}{2}+r_1 r_2\Big(\tfrac{1}{2}\cos(\Delta\theta) + \tfrac{1}{\phi}\cos\big(\Delta\theta + \tfrac{2\pi}{3}\big)+ \tfrac{1}{\phi^2}\cos\big(\Delta\theta + \tfrac{4\pi}{3}\big)\Big)</script>
+</p>
+
+<p>Also, wenn man eine längere Kette von Zufallsvariablen $X_1, \cdots, X_n$ aufbauen will, die intransitiv sind, derart, daß <script type="math/tex; mode=display">\mathbb P(X_0 < X_1) = \cdots = \mathbb P(X_n < X_0) > \frac{1}{2}</script> könnte man einfach $n$ Vektoren in diesem Dreiecke finden, die die gleiche Länge haben und kongruenten Winkeln bzw. formen. Zum Beispiel, wenn man die $5$ Zufallsvariablen betrachtet, die den Vektoren <script type="math/tex; mode=display">\begin{align*}\mathbf w_0 &= \langle 0.5, 0.5, 0\rangle \\ \mathbf w_1 &= R_{-2\pi/5}\mathbf w_0 \\ \mathbf w_2 &= R_{-4\pi/5}\mathbf w_0 \\ \mathbf w_3 &= R_{-6\pi/5}\mathbf w_0 \\ \mathbf w_4 &= R_{-8\pi/5}\mathbf w_0\end{align*}</script> oder</p>
+
+<p><center><img src="/img/2023-06-30-Fig8.png" alt="Fig 8" /></center></p>
+
+<p>entsprechen, denn bekommt man einen (kleinen aber nicht nightigen) Transitivitätsverstoß von $\approx 0.532$, das ist, die Minimalwahrscheinlichkeit von $\mathbb P(W_0 &lt; W_1), \cdots, \mathbb P(W_4 &lt; W_0)$ wird $\approx 0.532$. Vermittels diese geometrische Visualisierung kann man größere und komplexere Familien von intransitiven Zufallsvariablen aufbauen, obwohl sie in den meisten Fällen nicht optimal sind.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

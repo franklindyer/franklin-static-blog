@@ -1,0 +1,195 @@
+<html>
+<head>
+    <title>Integrals involving Logarithms and Algebraic Functions</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Integrals involving Logarithms and Algebraic Functions</h2>
+
+<p><em>2018 June 7</em></p>
+
+<blockquote>
+<p>Evaluate the following definite integrals:
+<script type="math/tex; mode=display">\int_0^\infty \frac{\ln(x)}{1+x^2}</script>
+<script type="math/tex; mode=display">\int_0^\infty \frac{\ln(x)}{(1+x)^2}</script>
+<script type="math/tex; mode=display">\int_0^\infty \frac{\ln(x)}{2+x+x^2}</script>
+<script type="math/tex; mode=display">\int_0^1 \frac{\ln(x)}{\sqrt{1-x^2}}</script>
+</p>
+</blockquote>
+
+<p>The first class of integral involving the logarithm that I would like to explore is in the following form:
+<script type="math/tex; mode=display">\int_0^\infty \frac{\ln(x)}{ax^2+bx+c}dx</script>
+...that is, the integral from $x=0$ to $\infty$ of $\ln(x)$ times the reciprocal of any quadratic function of $x$. I choose to begin the post with this type of integral because it is a type of integral that seems like it would be very difficult to evaluate (indeed, one may abandon all hope of finding an antiderivative of the integrand), but all steps taken in my solution of it are highly elementary and rely on nothing other than functional properties of the integrand and the basic properties of an integral. In other words, it is a perfect example of how a chain of trivial equalities can result in something that seems highly non-trivial.</p>
+
+<p>Let us begin with my first two examples:
+<script type="math/tex; mode=display">\int_0^\infty \frac{\ln(x)}{1+x^2}</script>
+<script type="math/tex; mode=display">\int_0^\infty \frac{\ln(x)}{(1+x)^2}</script>
+Though they are nothing more than examples, they are in fact extremely useful for evaluating the more general case. By making the substitution $x\to 1/x$ in the first integral, we get the following:
+<script type="math/tex; mode=display">\begin{align}
+\int_0^\infty \frac{\ln(x)}{1+x^2}dx
+&=\int_{\infty}^0 \frac{\ln(1/x)}{1+(1/x)^2}\cdot-\frac{dx}{x^2}\\
+&=-\int_{0}^\infty \frac{\ln(x)}{(1+(1/x)^2)x^2}dx\\
+&=-\int_{0}^\infty \frac{\ln(x)}{1+x^2}dx\\
+\end{align}</script>
+Thus, we see that the integral in question is equal to its additive opposite, meaning that it must be equal to zero. This gives us the result
+<script type="math/tex; mode=display">\bbox[lightgray,5px]{\int_0^\infty \frac{\ln(x)}{1+x^2}dx=0}</script>
+...such a disappointingly boring result for a seemingly exciting integral. What a shame. Not to fear - there is still another example to evaluate. Let's see what happens if we make the same substitution into the next integral:
+<script type="math/tex; mode=display">\begin{align}
+\int_0^\infty \frac{\ln(x)}{(1+x)^2}dx
+&=\int_{\infty}^0 \frac{\ln(1/x)}{(1+1/x)^2}\cdot-\frac{dx}{x^2}\\
+&=-\int_{0}^\infty \frac{\ln(x)}{(1+1/x)^2x^2}dx\\
+&=-\int_{0}^\infty \frac{\ln(x)}{(1+x)^2}dx\\
+\end{align}</script>
+Drat! This integral is <em>also</em> equal to its additive opposite, making it vanish as well!
+<script type="math/tex; mode=display">\bbox[lightgray,5px]{\int_0^\infty \frac{\ln(x)}{(1+x)^2}dx=0}</script>
+What a letdown - two integrals in a row that both vanish! In fact, there are a <em>whole bunch</em> of integrals that vanish like this, including
+<script type="math/tex; mode=display">\bbox[lightgray,5px]{\int_0^\infty \frac{\ln(x)}{\sqrt{1+x^4}}dx=0}</script>
+and
+<script type="math/tex; mode=display">\bbox[lightgray,5px]{\int_0^\infty \frac{\ln(x)}{(1+x^{\sqrt 2})^{\sqrt{2}}}dx=0}</script>
+...and they both lend themselves to the same substitution that we performed on the previous two integrals. Want to know the secret? The generalization of this pattern is the following: if $p$ and $q$ are two numbers whose product is $2$ (such that $pq=2$) then the following is true:
+<script type="math/tex; mode=display">\bbox[lightgray,5px]{\int_0^\infty \frac{\ln(x)}{(1+x^p)^{q}}dx=0}</script>
+I know how much of a bore it is to read about vanishing integrals, but bear with me - it's about to get more exciting. Suppose we wanted to evaluate the following integral:
+<script type="math/tex; mode=display">\int_0^\infty \frac{\ln(x)}{2+x^2}dx</script>
+Well, one might guess that it can be shown to vanish by the same technique. However, by using the same substitution, one arrives at the following:
+<script type="math/tex; mode=display">-\int_0^\infty \frac{\ln(x)}{1+2x^2}dx</script>
+...which, needless to say, is <em>not</em> the additive opposite of the original integral. Try as one might to show that this integral vanishes, one will never be able to do so - because it's <em>not</em> equal to zero. Instead, watch what happens when we employ a different substitution of $x\to x\sqrt{2}$:
+<script type="math/tex; mode=display">\begin{align}
+\int_0^\infty \frac{\ln(x)}{2+x^2}dx
+&=\int_0^\infty \frac{\ln(x\sqrt{2})}{2+2x^2}\cdot \sqrt{2}dx\\
+&=\int_0^\infty \frac{\ln(x)+\frac{1}{2}\ln(2)}{2+2x^2}\cdot \sqrt{2}dx\\
+&=\frac{1}{\sqrt{2}}\int_0^\infty \frac{\ln(x)}{1+x^2}dx+\frac{\ln(2)}{2\sqrt{2}}\int_0^\infty \frac{dx}{1+x^2}\\
+&=0+\frac{\ln(2)}{2\sqrt{2}}\int_0^\infty \frac{dx}{1+x^2}\\
+&=\frac{\ln(2)}{2\sqrt{2}}\cdot\frac{\pi}{2}\\
+&=\frac{\pi\ln(2)}{4\sqrt{2}}
+\end{align}</script>
+See what happens? The additivity of the logarithm splits the integral into two pieces, one of which nicely vanishes while the other is nothing more than an integral of a rational function - readily evaluated (or even antidifferentiated) using the arctangent. The same type of strategy can be employed to evaluate any integral in the form
+<script type="math/tex; mode=display">\int_0^\infty \frac{\ln(x)}{a^2+x^2}dx</script>
+by using the substitution $x\to x\sqrt{a}$, or any integral in the form
+<script type="math/tex; mode=display">\int_0^\infty \frac{\ln(x)}{(a+x)^2}dx</script>
+by making the substitution $x\to ax$. But now let's turn our attention to the third example that I proposed:
+<script type="math/tex; mode=display">\int_0^\infty \frac{\ln(x)}{2+x+x^2}</script>
+This integral isn't in <em>either</em> of those forms, so how will we evaluate it? Well, the answer lies in <em>another</em> class of vanishing integrals. Recall that I already mentioned that
+<script type="math/tex; mode=display">\int_0^\infty \frac{\ln(x)}{(1+x^p)^q}dx=0</script>
+as long as $pq=2$. But this can be generalized further... in fact, the integral
+<script type="math/tex; mode=display">\int_0^\infty \frac{\ln(x)}{c_1(1+x^{p_1})^{q_1}+c_2(1+x^{p_2})^{q_2}+...+c_k(1+x^{p_k})^{q_k}}dx=0</script>
+where each $c_i$ is any arbitrary constant, as long as each pair of numbers $p_i,q_i$ has a product of $2$, satisfying $p_iq_i=2$ (again, this can be verified by making the substitution $x\to 1/x$). This implies that the integral
+<script type="math/tex; mode=display">\int_0^\infty \frac{\ln(x)}{1+x^2+a(1+x)^2}=0</script>
+for any value of $a$. Notice now that the integral <em>we want to evaluate</em> is equal to
+<script type="math/tex; mode=display">\int_0^\infty \frac{\ln(x)}{2+x+x^2}=\frac{2\sqrt 2}{2\sqrt 2-1}\int_0^\infty  \frac{\ln(x)}{2+x^2+\frac{1}{2\sqrt 2-1}(\sqrt{2}+x)^2}dx</script>
+...which may not look very promising at first, since it isn't <em>exactly</em> in the form that we've shown to vanish. But once we make the substitution $x\to x\sqrt{2}$, we're in business:
+<script type="math/tex; mode=display">\begin{align}
+\int_0^\infty \frac{\ln(x)}{2+x+x^2}dx
+&=\frac{2\sqrt 2}{2\sqrt 2-1}\int_0^\infty  \frac{\ln(x)}{2+x^2+\frac{1}{2\sqrt 2-1}(\sqrt{2}+x)^2}dx\\
+&=\frac{4}{2\sqrt 2-1}\int_0^\infty  \frac{\ln(x\sqrt 2)}{2+2x^2+\frac{2}{2\sqrt 2-1}(1+x)^2}dx\\
+&=\frac{2}{2\sqrt 2-1}\int_0^\infty  \frac{\ln(x)+\frac{\ln(2)}{2}}{1+x^2+\frac{1}{2\sqrt 2-1}(1+x)^2}dx\\
+&=\frac{2}{2\sqrt 2-1}\int_0^\infty  \frac{\ln(x)}{1+x^2+\frac{1}{2\sqrt 2-1}(1+x)^2}dx+\frac{\ln(2)}{2\sqrt 2-1}\int_0^\infty  \frac{dx}{1+x^2+\frac{1}{2\sqrt 2-1}(1+x)^2}\\
+&=0+\frac{\ln(2)}{2\sqrt 2-1}\int_0^\infty  \frac{dx}{1+x^2+\frac{1}{2\sqrt 2-1}(1+x)^2}\\
+&=\frac{\ln(2)}{2\sqrt 2-1}\int_0^\infty  \frac{dx}{1+x^2+\frac{1}{2\sqrt 2-1}(1+x)^2}\\
+\end{align}</script>
+</p>
+
+<p>Now <em>this</em> is just the reciprocal of a quadratic, and it can be easily evaluated:</p>
+
+<p>
+<script type="math/tex; mode=display">\int_0^\infty  \frac{dx}{1+x^2+\frac{1}{2\sqrt 2-1}(1+x)^2}=\frac{(2\sqrt 2-1)\arctan(\sqrt 7)}{\sqrt 7}</script>
+</p>
+
+<p>...which gives us our result:</p>
+
+<p>
+<script type="math/tex; mode=display">\bbox[lightgray,5px]{\int_0^\infty \frac{\ln(x)}{2+x+x^2}dx=\frac{\ln(2)\arctan(\sqrt 7)}{\sqrt 7}}</script>
+</p>
+
+<p>This method can be applied more broadly. Consider, for example, the general case of
+<script type="math/tex; mode=display">\int_0^\infty \frac{\ln(x)}{b^2+x^2+a(b+x)^2}dx</script>
+We can evaluate this in terms of $a$ and $b$:
+<script type="math/tex; mode=display">\begin{align}
+\int_0^\infty \frac{\ln(x)}{b^2+x^2+a(b+x)^2}dx
+&=\int_0^\infty \frac{b\ln(bx)}{b^2+b^2x^2+a(b+bx)^2}dx\\
+&=\frac{1}{b}\int_0^\infty \frac{\ln(x)+\ln(b)}{1+x^2+a(1+x)^2}dx\\
+&=\frac{1}{b}\int_0^\infty \frac{\ln(x)}{1+x^2+a(1+x)^2}dx+\frac{\ln(b)}{b}\int_0^\infty \frac{dx}{1+x^2+a(1+x)^2}\\
+&=0+\frac{\ln(b)}{b}\int_0^\infty \frac{dx}{1+x^2+a(1+x)^2}\\
+&=\frac{\ln(b)}{b}\int_0^\infty \frac{dx}{1+x^2+a(1+x)^2}\\
+&=\frac{\ln(b)}{b}\frac{\arctan\big(\frac{\sqrt{2a+1}}{a}\big)}{\sqrt{2a+1}}
+\end{align}</script>
+...assuming that $a$ is positive. Thus, we have the following formula, which allows us to evaluate most integrals of the class that we wanted:</p>
+
+<p>
+<script type="math/tex; mode=display">\bbox[lightgray,5px]{\int_0^\infty \frac{\ln(x)}{b^2+x^2+a(b+x)^2}dx=\frac{\ln(b)}{b}\frac{\arctan\big(\frac{\sqrt{2a+1}}{a}\big)}{\sqrt{2a+1}}}</script>
+</p>
+
+<p>Now let us turn our attention to a different class of integrals, like the fourth and final example that I posed:
+<script type="math/tex; mode=display">\int_0^1 \frac{\ln(x)}{\sqrt{1-x^2}}</script>
+Unfortunately, integrals like this will not yield themselves to such elementary methods... to solve this one, we'll have to use the Gamma function. If you haven't already, go back and read <a href="/post/71">this post</a> - it's essential to what I'm about to do.</p>
+
+<p>Just one more note: I'm not going to go into depth with this type of integral as much as I did for the previous class of integrals. The evaluation of some integrals of this type are replete with messy algebra, and are best left to computer algebra software (like Wolfram) to evaluate. So I'll do this example, explain how to use the technique for other examples, and then end the post.</p>
+
+<p>Recall the representation of the Gamma function in terms of the Beta function:
+<script type="math/tex; mode=display">\frac{\Gamma(m)\Gamma(n)}{\Gamma(m+n)}=\int_0^1 x^{m-1}(1-x)^{n-1}dx</script>
+By making the substitution $x\to x^2$ in the integral, we have
+<script type="math/tex; mode=display">\frac{\Gamma(m)\Gamma(n)}{2\Gamma(m+n)}=\int_0^1 x^{2m-1}(1-x^2)^{n-1}dx</script>
+and by letting $n=1/2$, we have
+<script type="math/tex; mode=display">\frac{\sqrt{\pi}\Gamma(m)}{2\Gamma(m+1/2)}=\int_0^1 \frac{x^{2m-1}}{\sqrt{1-x^2}}dx</script>
+Okay, this is starting to look like our integral, but where could the $\ln(x)$ come from? Well, let's rewrite the integral on the RHS:
+<script type="math/tex; mode=display">\frac{\sqrt{\pi}\Gamma(m)}{2\Gamma(m+1/2)}=\int_0^1 \frac{e^{(2m-1)\ln(x)}}{\sqrt{1-x^2}}dx</script>
+...then take the derivative of both sides with respect to $m$. This is where the magic happens: we now have
+<script type="math/tex; mode=display">\frac{\sqrt{\pi}\Gamma'(m)}{2\Gamma(m+1/2)}-\frac{\sqrt{\pi}\Gamma(m)\Gamma'(m+1/2)}{2\Gamma^2(m+1/2)}=\int_0^1 \frac{2x^{2m-1}\ln(x)}{\sqrt{1-x^2}}dx</script>
+...or, in terms of the Digamma function,
+<script type="math/tex; mode=display">\frac{\sqrt{\pi}\Gamma(m)\psi(m)}{2\Gamma(m+1/2)}-\frac{\sqrt{\pi}\Gamma(m)\psi(m+1/2)}{2\Gamma(m+1/2)}=\int_0^1 \frac{2x^{2m-1}\ln(x)}{\sqrt{1-x^2}}dx</script>
+Our integral emerges when we let $m=1/2$, giving
+<script type="math/tex; mode=display">\frac{\sqrt{\pi}\Gamma(1/2)\psi(1/2)}{2\Gamma(1)}-\frac{\sqrt{\pi}\Gamma(1/2)\psi(1)}{2\Gamma(1)}=\int_0^1 \frac{2x^{2m-1}\ln(x)}{\sqrt{1-x^2}}dx</script>
+To evaluate the LHS, I'll use the special values $\Gamma(1)=1$, $\Gamma(1/2)=\sqrt\pi$, $\psi(1)=-\gamma$, and $\psi(1/2)=-\gamma-2\ln(2)$ to obtain
+<script type="math/tex; mode=display">\frac{\pi(-\gamma-2\ln(2))}{2}+\frac{\pi\gamma}{2}=\int_0^1 \frac{2x^{2m-1}\ln(x)}{\sqrt{1-x^2}}dx</script>
+or, after a bit of simplification,</p>
+
+<p>
+<script type="math/tex; mode=display">\bbox[lightgray,5px]{\int_0^1 \frac{\ln(x)}{\sqrt{1-x^2}}dx=-\frac{\pi\ln(2)}{2}}</script>
+</p>
+
+<p>Okay, time to tell the truth: this integral could have been evaluated in a much easier way. If you were paying attention, you'd have noticed that a simple substitution of $x\to\sin x$ would transform the integral into 
+<script type="math/tex; mode=display">\int_0^{\pi/2}\ln(\sin(x))dx=\frac{1}{2}\int_0^\pi \ln(\sin(x))dx</script>
+...which we evaluated using <em>very</em> elementary methods in <a href="/post/79">this post</a>. No Gamma function necessary!</p>
+
+<p>However, suppose I asked you to evaluate this integral:
+<script type="math/tex; mode=display">\int_0^{\pi/2}\ln^2(\sin(x))dx=\int_0^1 \frac{\ln^2(x)}{\sqrt{1-x^2}}dx</script>
+The technique used for the previous integral in my other post won't work here - try it for yourself. However, its value can be obtained using the Gamma function by taking <em>another</em> derivative (yuck!). For anyone curious, the result is
+<script type="math/tex; mode=display">\bbox[lightgray,5px]{\int_0^1 \frac{\ln^2(x)}{\sqrt{1-x^2}}dx=\frac{\pi^3}{24}+\frac{\pi\ln^2(2)}{2}}</script>
+</p>
+
+<p>Thus, the purpose of that unnecessary ordeal with the Gamma function was to demonstrate a more widely applicable technique of integration (namely, differentiating the Beta function) as opposed to the limited "trick" applied to the integral in my other post. </p>
+
+<p>And with that, I conclude this post!</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

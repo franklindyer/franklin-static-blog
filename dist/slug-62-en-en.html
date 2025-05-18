@@ -1,0 +1,116 @@
+<html>
+<head>
+    <title>Some Arithmetic Functions</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Some Arithmetic Functions</h2>
+
+<p><em>2018 August 25</em></p>
+
+<p>In a <a href="/post/69">previous post about Dirichlet Series,</a> I referenced some properties of a few arithmetic functions like $\tau$, the divisor-counting function, $\sigma$, the divisor sum function, $\varphi$, the Euler totient function, $\mu$, the Mobius mu function, and $\sigma_a$, the generalized divisor sum function. Many of these statements went without proof in that post, so in this post I will prove them, along with some other properties of each of these functions.</p>
+
+<p>Let's start with $\sigma_a$, the generalized divisor sum function, as well as $\tau=\sigma_0$ and $\sigma=\sigma_1$. This is defined as
+<script type="math/tex; mode=display">\sigma_a(n):=\sum_{d|n}d^a</script>
+...where the sum is taken over all of the divisors of $n$, the input. For example, if $p,q$ are distinct primes, then
+<script type="math/tex; mode=display">\sigma_a (pq)=1+p^a+q^a+(pq)^a</script>
+An essential property of these functions is that they are multiplicative; that is, that if $m,n$ are two coprime natural numbers, then $\sigma_a(mn)=\sigma_a(m)\sigma_a(n)$. This is pretty easy to prove, using the following property of sums:
+<script type="math/tex; mode=display">\bigg(\sum_{x\in X} f(x)\bigg)\bigg(\sum_{y\in Y} g(y)\bigg)=\sum_{(x,y)\in X\times Y}f(x)g(y)</script>
+If $m,n$ are coprime, then each divisor of $mn$ can be written uniquely as the product of a divisor of $m$ and a divisor of $n$. Thus, using the product of summations formula, we have
+<script type="math/tex; mode=display">\begin{align}
+\sigma_a(m)\sigma_a(n)
+&=\bigg(\sum_{d_m|m}d_m^a\bigg)\bigg(\sum_{d_n|n}d_n^a\bigg)\\
+&=\sum_{d_m|m, \space d_n|n}d_m^a d_n^a\\
+&=\sum_{d_m d_n |mn} (d_m d_n)^a\\
+&=\sum_{d|mn} d^a\\
+&=\sigma_a(mn)\\
+\end{align}</script>
+Because $\sigma_a$ is multiplicative, we may obtain a formula for $\sigma_a$ as a finite product using the prime factorization of its input. Note that if $p$ is a prime, then
+<script type="math/tex; mode=display">\sigma_a(p^k)=1+p^a+...+p^{ka}=\frac{p^{(k+1)a}-1}{p^a-1}</script>
+Thus, if $n$ has the prime factorization
+<script type="math/tex; mode=display">n=p_1^{k_1}p_2^{k_2}...p_i^{k_i}</script>
+then we have that
+<script type="math/tex; mode=display">\begin{align}
+\sigma_a(n)
+&=\sigma_a(p_1^{k_1}p_2^{k_2}...p_i^{k_i})\\
+&=\sigma_a(p_1^{k_1})\sigma_a(p_2^{k_2})...\sigma_a(p_i^{k_i})\\
+&=\frac{p_1^{(k_1+1)a}-1}{p_1^a-1}\frac{p_2^{(k_2+1)a}-1}{p_2^a-1}...\frac{p_i^{(k_i+1)a}-1}{p_i^a-1}\\
+&=\prod \frac{p^{(k+1)a}-1}{p^a-1}
+\end{align}</script>
+where the product is taken over all primes $p$ dividing $n$, and their respective multiplicities $k$.</p>
+
+<p>Now let's move on to $\mu$, the Mobius mu function. It has a piecewise definition:</p>
+
+<p><center><img src="/img/2018-8-25-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>It's easy to show that $\mu$ is multiplicative as well. If $m,n$ are positive integers and one of $m,n$ is divisible by a perfect square other than $1$, then their product clearly is as well; thus, if $\mu(m)\mu(n)=0$ then $\mu(mn)=0$ and $\mu(mn)=\mu(m)\mu(n)$. If neither $\mu(m)$ nor $\mu(n)$ is $0$, then we must do a bit of casework. If they are coprime, their sets of prime factors are disjoint, so if the parities of their cardinalities are distinct, then the parity of the cardinality of their union is odd; otherwise, the parity of the cardinality of their union is even. These correspond to the identities $1\cdot 1=1$, $(-1)\cdot (-1)=1$, and $1\cdot (-1)=-1$, establishing the multiplicativity of $\mu$.</p>
+
+<p>Many of the interesting identities of $\mu$ are related to arithmetic sums, but this will be the topic of the next blog post.</p>
+
+<p>Finally, consider the function $\varphi$, or the Euler Totient Function. $\varphi(n)$ is defined as the number of positive integers less than and relatively prime to $n$. Proving the multiplicativity of $\varphi$ is the most difficult, and it requires some previous knowledge about $\mathbb Z_m$, the additive group of integers modulo m.</p>
+
+<p>Suppose $m,n$ are coprime positive integers. Arrange all of the positive integers from $1$ to $mn$ in a table with $n$ columns and $m$ rows, as shown below:</p>
+
+<p><center><img src="/img/2018-8-25-Fig2.png" alt="Fig 2" /></center></p>
+
+<p>The numbers in the $c$ th column are in the form $bn+c$, so if $c$ is not coprime to $n$, since all common divisors of $c,n$ must also divide $bn+c$, we have that all numbers in the $c$ th column are not coprime to $n$, and are thus not coprime to $mn$.</p>
+
+<p>So let us consider only the columns $c$ for which $c$ is coprime to $n$, noticing that the number in the $b$ th row and $c$ th column is $bn+c$. Because all of these numbers are coprime to $n$ as long as $c$ is coprime to $n$, and because $mn$ is coprime to any number as long as that number is coprime to both $m$ and $n$, we must figure out how many of the numbers in each column are coprime to $m$.</p>
+
+<p>Now I shall use the fact that if $a$, an integer, is coprime to $m$, then multiplying each element of $\mathbb Z_m$ by $a$ and taking the remainder modulo $m$ still results in the set $\mathbb Z_m$; similarly, adding any number to all elements of $\mathbb Z_m$ and taking modulo $m$ results in $\mathbb Z_m$. This means that, modulo $m$, the elements in any two columns are exactly the same up to rearrangement, since the elements in any column consist of the elements of $\mathbb Z_m$ multiplied by $n$ (which is coprime to $m$), plus a constant. Since a number is coprime to $m$ if and only if its residue modulo $m$ is coprime to $m$, we have that the number of elements of any column of the grid coprime to $m$ is equal to the number of elements of $\mathbb Z_m$ that are coprime to $m$. This is precisely $\varphi (m)$, by definition.</p>
+
+<p>Thus, we have that there are $\varphi(m)$ numbers coprime to $m$ in each column, and all numbers in each of $\varphi(n)$ columns are coprime to $n$; thus, since a number is coprime to $mn$ if and only if it is coprime to $m$ and $n$, we have that there are $\varphi(m)\varphi(n)$ numbers coprime to $mn$ in the grid, and so $\varphi(mn)=\varphi(m)\varphi(n)$ as desired.</p>
+
+<p>We may find an interesting product representation for $\varphi(n)$ using its prime factorization, similarly to how we did for $\sigma_a$, using the trivial fact that
+<script type="math/tex; mode=display">\varphi(p^k)=p^k-p^{k-1}</script>
+for $k\gt 0$.
+We have that if the prime factorization of $n$ is
+<script type="math/tex; mode=display">n=p_1^{k_1}p_2^{k_2}...p_i^{k_i}</script>
+Then
+<script type="math/tex; mode=display">\begin{align}
+\varphi(n)
+&=\varphi(p_1^{k_1}p_2^{k_2}...p_i^{k_i})\\
+&=\varphi(p_1^{k_1})\varphi(p_2^{k_2})...\varphi(p_i^{k_i})\\
+&=(p_1^{k_1}-p_1^{k_1-1})(p_2^{k_2}-p_2^{k_2-1})...(p_i^{k_i}-p_i^{k_i-1})\\
+&=p_1^{k_1}(1-p_1^{-1})p_2^{k_2}(1-p_2^{-1})...p_i^{k_i}(1-p_i^{-1})\\
+&=p_1^{k_1}p_2^{k_2}...p_i^{k_i}(1-p_1^{-1})(1-p_2^{-1})...(1-p_i^{-1})\\
+&=n(1-p_1^{-1})(1-p_2^{-1})...(1-p_i^{-1})\\
+&=n\prod \big(1-\frac{1}{p}\big)\\
+\end{align}</script>
+...where the product is taken over all primes $p$ dividing $n$.</p>
+
+<p>That concludes this short post! The next post will hopefully be much longer and more interesting, and it will be about the evaluation of certain finite arithmetic sums involving these functions.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<html>
+<head>
+    <title>Integration without Antidifferentiation</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Integration without Antidifferentiation</h2>
+
+<p><em>2017 Sept 5</em></p>
+
+<blockquote>
+<blockquote>
+<p>Compute the following definite integrals:
+<script type="math/tex; mode=display">\int_{-\infty}^\infty e^{-x^2}dx</script>
+<script type="math/tex; mode=display">\int_0^\infty \frac{\sin x}{x}dx</script>
+<script type="math/tex; mode=display">\int_0^{\pi/2} \frac{\sqrt{\sin x}}{\sqrt{\sin x}+\sqrt{\cos x}}dx</script>
+<script type="math/tex; mode=display">\int_0^\pi \ln(\sin x)dx</script>
+<script type="math/tex; mode=display">\int_0^1 \{\ln x\}dx</script>
+</p>
+</blockquote>
+</blockquote>
+
+<p>In this post, I'm going to lay out a few tricks that one can use to evaluate the definite integral of a function over an interval without actually finding the antiderivative of the function. I'll start with the first integral, which is called the <em>Gaussian Integral</em> after the mathematician <em>Carl Friedrich Gauss</em> who famously evaluated it. The derivation of its value is rather complicated, and uses a few tricks that would be hard to come up with on the spot.</p>
+
+<p>Before deriving its value, it would be best to recall an identity that is used in the derivation:
+<script type="math/tex; mode=display">\bigg(\sum_{i=m_1}^{m_2} a_i\bigg)\bigg(\sum_{j=n_1}^{n_2} b_j\bigg)=\sum_{i=m_1}^{m_2} \sum_{j=n_1}^{n_2} a_i b_j</script>
+This identity is rather apparent, and can be proven easily using the distributive property of multiplication over addition. And because a definite integral is a limit of a sum, we can usually extend the properties of sums to definite integrals, and say that
+<script type="math/tex; mode=display">\bigg(\int_{m_1}^{m_2} f(x)dx\bigg)\bigg(\int_{n_1}^{n_2} g(y)dy\bigg)=\int_{m_1}^{m_2} \int_{n_1}^{n_2} f(x)g(y)dydx</script>
+</p>
+
+<p>Now we may begin.
+<script type="math/tex; mode=display">\int_{-\infty}^\infty e^{-x^2}dx</script>
+We start by recognizing that the integral has a positive value since the graph of $e^{-x^2}$ is never dips below the $x$-axis, allowing us to say that it is equal to the square root of its own square:
+<script type="math/tex; mode=display">=\sqrt{\bigg(\int_{-\infty}^\infty e^{-x^2}dx\bigg)\int_{-\infty}^\infty e^{-x^2}dx\bigg)}</script>
+and because the variable used in the integration does not matter, we may swap the $x$ in one of the integrals with  a $y$:
+<script type="math/tex; mode=display">=\sqrt{\bigg(\int_{-\infty}^\infty e^{-x^2}dx\bigg)\int_{-\infty}^\infty e^{-y^2}dy\bigg)}</script>
+Now we apply our sum identity to say that this is equal to
+<script type="math/tex; mode=display">=\sqrt{\int_{-\infty}^\infty \int_{-\infty}^\infty e^{-x^2}e^{-y^2}dydx}</script>
+<script type="math/tex; mode=display">=\sqrt{\int_{-\infty}^\infty \int_{-\infty}^\infty e^{-(x^2+y^2)}dydx}</script>
+This is where the tricky part comes in. The double integral underneath the radical can be interpreted as representing a <em>volume</em> between a three-dimensional curve and the $x,y$ plane in the three-dimensional cartesian coordinate space. The curve would be $z=e^{-(x^2+y^2)}$, and here is what it would look like:</p>
+
+<p><center><img src="/img/2017-9-5-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>When we find the volume underneath it using the double integral that we are currently using, it is as if we are taking an infinite number of mutually parallel vertical slices, finding the cross-sectional area of each, and adding them all up to come up with a volume. However, the volume could instead be found by a different method - instead of taking an infinite number of plane slices, imagine how the double integral would look if we instead took an infinite number of "cookie cutter" slices by adding up the areas on the sides of an infinite number of cylinders inscribed under the curve. Suppose we take a cookie cutter in the shape of a cylinder with radius $r$ and punch it into this curve, with the axis of the cylinder lined up with the $z$-axis. The cylindrical "cross section" that we obtain will be the same all around, because the function
+<script type="math/tex; mode=display">z=e^{-(x^2+y^2)}</script>
+can be expressed directly as a function of $r$ rather than of $x$ and $y$ - since $r=\sqrt{x^2+y^2}$, $z$ can instead be expressed as
+<script type="math/tex; mode=display">z=e^{-r^2}</script>
+Which will be the height of our cylindrical cross-section. The radius of this cylindrical cross-section is $r$, so, since we now have the height of each cylinder, we can say that the surface area of each cylinder (excluding that of the bases) can be expressed as
+<script type="math/tex; mode=display">S=2\pi re^{-r^2}</script>
+And since the area under the curve can be expressed as an infinite sum of infinitely many inscribed cylinders, with radius $r$ varying from $0$ to $\infty$, we can replace our double integral to get
+<script type="math/tex; mode=display">=\sqrt{2\pi\int_{0}^\infty re^{-r^2} dr}</script>
+This integral is elementary to evaluate:
+<script type="math/tex; mode=display">=\sqrt{2\pi\bigg[\frac{e^{-r^2}}{2}\bigg]_0^\infty}</script>
+<script type="math/tex; mode=display">=\sqrt{2\pi\bigg[\frac{1}{2}\bigg]}</script>
+<script type="math/tex; mode=display">=\sqrt{\pi}</script>
+Which is our final and beautiful answer.</p>
+
+<p>Next up is the integral
+<script type="math/tex; mode=display">\int_0^\infty \frac{\sin x}{x}dx</script>
+The trick used to solve this one is recognizing that
+<script type="math/tex; mode=display">\frac{\sin x}{x}=\int_0^\infty e^{-xy}\sin x dy</script>
+This fact is easy to establish, and I will exclude the proof. If we substitute this into our original integral, we get
+<script type="math/tex; mode=display">\int_0^\infty \frac{\sin x}{x}dx=\int_0^\infty \int_0^\infty e^{-xy}\sin x dydx</script>
+Now we may make use of the property of double integrals that allows us the <em>switch their order</em> under "normal" circumstances:
+<script type="math/tex; mode=display">=\int_0^\infty \int_0^\infty e^{-xy}\sin x dxdy</script>
+Now we may evaluate this double integral to get our answer. The innermost integral has an elementary antiderivative, which is given by
+<script type="math/tex; mode=display">\int e^{-xy}\sin x dx=\frac{e^{-xy}(-y\sin x-\cos x)}{y^2+1}</script>
+Again, this can be easily derived using integration by parts, and I will exclude the proof. This tells us that
+<script type="math/tex; mode=display">\int_0^\infty e^{-xy}\sin x dx=\frac{1}{y^2+1}</script>
+and so our integral is transformed into
+<script type="math/tex; mode=display">\int_0^\infty \frac{dy}{1+y^2}</script>
+<script type="math/tex; mode=display">=[\arctan y]_0^\infty</script>
+<script type="math/tex; mode=display">=\frac{\pi}{2}</script>
+and so we have found the value of our second integral.</p>
+
+<p>The two most difficult integrals are now completed. The next two can be evaluated simply using algebraic manipulation, and require no actual integration whatsoever - one can primarily use the properties of the integral to evaluate them, rather than the properties of the function being integrated.</p>
+
+<p>Let us set the variable $I$ equal to the value of our first integral:
+<script type="math/tex; mode=display">I=\int_0^{\pi/2} \frac{\sqrt{\sin x}}{\sqrt{\sin x}+\sqrt{\cos x}}dx</script>
+This may seem intimidating at first, but it is actually quite easy to discover the trick once one begins to play with it. If we decompose our function using partial fractions, we end up with
+<script type="math/tex; mode=display">I=\int_0^{\pi/2} \bigg(1-\frac{\sqrt{\cos x}}{\sqrt{\sin x}+\sqrt{\cos x}}\bigg)dx</script>
+<script type="math/tex; mode=display">I=\frac{\pi}{2}-\int_0^{\pi/2} \frac{\sqrt{\cos x}}{\sqrt{\sin x}+\sqrt{\cos x}}dx</script>
+Now if we make the substitution $x\to\frac{\pi}{2}-x$ in the integral, we have
+<script type="math/tex; mode=display">I=\frac{\pi}{2}-\int_{\pi/2}^{0} \frac{\sqrt{\cos (\pi/2-x)}}{\sqrt{\sin (\pi/2-x)}+\sqrt{\cos (\pi/2-x)}}\cdot -dx</script>
+<script type="math/tex; mode=display">I=\frac{\pi}{2}+\int_{\pi/2}^{0} \frac{\sqrt{\sin x}}{\sqrt{\cos x}+\sqrt{\sin x}}\cdot dx</script>
+Now we can use the property of integrals
+<script type="math/tex; mode=display">\int_a^b f(x)dx=-\int_b^a f(x)dx</script>
+to change our equation into
+<script type="math/tex; mode=display">I=\frac{\pi}{2}-\int_{0}^{\pi/2} \frac{\sqrt{\sin x}}{\sqrt{\cos x}+\sqrt{\sin x}}dx</script>
+Do you recognize how our original integral has appeared? We can replace it with $I$ and obtain
+<script type="math/tex; mode=display">I=\frac{\pi}{2}-I</script>
+Now we have a linear equation, which can be solved readily:
+<script type="math/tex; mode=display">I=\frac{\pi}{4}</script>
+</p>
+
+<p>Now we may consider the next integral:
+<script type="math/tex; mode=display">\int_0^\pi \ln(\sin x)dx</script>
+Let us now define $J$ as follows:
+<script type="math/tex; mode=display">J=\int_0^\pi \ln(\sin x)dx</script>
+and with the substitution $x\to 2x$, we have
+<script type="math/tex; mode=display">J=2\int_0^{\pi/2} \ln(\sin 2x)dx</script>
+<script type="math/tex; mode=display">J=2\int_0^{\pi/2} \ln(2\sin(x)\cos(x))dx</script>
+<script type="math/tex; mode=display">J=2\int_0^{\pi/2} (\ln(2)+\ln(\sin x)+\ln(\cos x))dx</script>
+<script type="math/tex; mode=display">J=\pi\ln(2)+2\int_0^{\pi/2} \ln(\sin x)dx+2\int_0^{\pi/2} \ln(\cos x)dx</script>
+If we make the substitution $x\to \frac{\pi}{2}-x$ in the second integral, using the "interval-flipping" property of integrals mentioned in the solution of the last integral, we have
+<script type="math/tex; mode=display">J=\pi\ln(2)+2\int_0^{\pi/2} \ln(\sin x)dx+2\int_0^{\pi/2} \ln(\sin x)dx</script>
+<script type="math/tex; mode=display">J=\pi\ln(2)+4\int_0^{\pi/2} \ln(\sin x)dx</script>
+and because of the symmetry of the sine function,
+<script type="math/tex; mode=display">2\int_0^{\pi/2} \ln(\sin x)dx=\int_0^\pi \ln(\sin x)dx=2J</script>
+and so we are left with another linear equation:
+<script type="math/tex; mode=display">J=\pi\ln(2)+2J</script>
+and so
+<script type="math/tex; mode=display">J=-\pi\ln(2)</script>
+is our answer.</p>
+
+<p>The next integral is
+<script type="math/tex; mode=display">\int_0^1 \{\ln x\}dx</script>
+where ${ }$ represents the "fractional part" function.</p>
+
+<p>The trick here is recognizing that the fractional part function can be defined using a piecewise function as
+<script type="math/tex; mode=display">\{x\}=x-k \space\space\operatorname{when}\space\space k\le x\lt k+1, k\in\mathbb Z</script>
+and utilizing the following property of integrals:
+<script type="math/tex; mode=display">\int_a^b f(x)dx+\int_b^c f(x)dx=\int_a^c f(x)dx</script>
+Using our piecewise definition of the fractional part function, we can say that
+<script type="math/tex; mode=display">\{\ln x\}=\ln x-k \space\space\operatorname{when}\space\space e^k\le x\lt e^{k+1}, k\in\mathbb Z</script>
+and using the integral identity, we can split up our original integral into
+<script type="math/tex; mode=display">\int_{e^{-1}}^{e^0} \{\ln x\}dx+\int_{e^{-2}}^{e^{-1}} \{\ln x\}dx+\int_{e^{-3}}^{e^{-2}} \{\ln x\}dx+...</script>
+or
+<script type="math/tex; mode=display">\sum_{k=0}^\infty \int_{e^{-k-1}}^{e^{-k}}\{\ln x\}dx</script>
+and since each integral covers a single interval of the piecewise definition of ${\ln x}$, we can change each integral to
+<script type="math/tex; mode=display">\sum_{k=0}^\infty \int_{e^{-k-1}}^{e^{-k}}\ln(x)+k+1dx</script>
+Now we may evaluate the integrals that we are summing:
+<script type="math/tex; mode=display">=\sum_{k=0}^\infty \bigg[x\ln x+kx\bigg]_{e^{-k-1}}^{e^{-k}}</script>
+<script type="math/tex; mode=display">=\sum_{k=0}^\infty -ke^{-k}+ke^{-k}-(-k-1)e^{-k-1}-ke^{-k-1}</script>
+<script type="math/tex; mode=display">=\sum_{k=0}^\infty (k+1)e^{-k-1}-ke^{-k-1}</script>
+<script type="math/tex; mode=display">=\sum_{k=0}^\infty e^{-k-1}</script>
+Which can be evaluated easily as a geometric series:
+<script type="math/tex; mode=display">=\frac{1}{e}\sum_{k=0}^\infty e^{-k}</script>
+<script type="math/tex; mode=display">=\frac{1}{e}\frac{1}{1-\frac{1}{e}}</script>
+<script type="math/tex; mode=display">=\frac{1}{e-1}</script>
+And this is our final answer.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

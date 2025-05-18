@@ -1,0 +1,176 @@
+<html>
+<head>
+    <title>Solving Difference Equations</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Solving Difference Equations</h2>
+
+<p>In a previous post, I presented a method of deriving the explicit formula for the terms of the Fibonacci Sequence. In this post, I will present a more concrete method that can be applied to an entire class of recursively-defined sequences.</p>
+
+<blockquote>
+<p>If $a_n, b_n, c_n$ are sequences, find explicit formulas for each, given these initial conditions and recursive rules for each:
+<script type="math/tex; mode=display">a_n=a_{n-1}+a_{n-2},\space a_0=2, a_1=1</script>
+<script type="math/tex; mode=display">b_n=2b_{n-1}-b_{n-2}+2b_{n-3},\space b_0=b_1=b_2=1</script>
+<script type="math/tex; mode=display">c_n=c_{n-1}+c_{n-2}+1,\space c_0=c_1=1</script>
+</p>
+</blockquote>
+
+<p>Let us start by returning to the problem of the Fibonacci Sequence:
+<script type="math/tex; mode=display">F_n=F_{n-1}+F_{n-2},\space F_0=0, F_1=1</script>
+If we move all of the terms in our recursive definition to one side, we get
+<script type="math/tex; mode=display">F_n-F_{n-1}-F_{n-2}=0</script>
+Now suppose that the initial terms of the sequence were not given to us, and we were simply asked to find sequences satisfying this relationship, as if it were a <em>functional equation</em>. In functional equations, observing the properties of a function and making an <em>assumption</em> about its nature can often lead to helpful results. Thus, in this functional equation, I will consider functions of the form
+<script type="math/tex; mode=display">f(n)=\rho ^n</script>
+where $\rho$ is some real number. If I assume that $F_n$ takes this form, or assume that $F_n=f(n)$, then I obtain
+<script type="math/tex; mode=display">\rho ^n-\rho^{n-1}-\rho^{n-2}=0</script>
+and, assuming that $\rho$ is nonzero,
+<script type="math/tex; mode=display">\rho ^2-\rho-1=0</script>
+Given this, we may solve for $\rho$, using the quadratic formula:
+<script type="math/tex; mode=display">\rho=\frac{1\pm \sqrt 5}{2}</script>
+and so we now have <em>two</em> functions satisfying the recursive formula:
+<script type="math/tex; mode=display">f_+(n)=\bigg(\frac{1+ \sqrt 5}{2}\bigg)^n</script>
+and
+<script type="math/tex; mode=display">f_-(n)=\bigg(\frac{1- \sqrt 5}{2}\bigg)^n</script>
+...however, neither of these satisfy the initial conditions of the Fibonacci Sequence, so we must keep looking for a solution.</p>
+
+<p>Now I will take a pause in our pursuit of an explicit formula to unveil the "trick" which is central to the solution of this problem, and many others like it. Suppose a sequence is defined by the recursive formula
+<script type="math/tex; mode=display">s_n+k_1s_{n-1}+k_2 s_{n-2}+...+k_m s_{n-m}=0</script>
+where each $k_i$ is some real constant, and the first $m$ terms are given. Then suppose that some sequence $S_1(n)$ satisfies the same recursive formula. Then
+<script type="math/tex; mode=display">S_1(n)+k_1 S_1(n-1)+k_2 S_1(n-2)+...+k_m S_1(n-m)=0</script>
+and, if $a$ is some real number,
+<script type="math/tex; mode=display">\alpha S_1(n)+k_1 \alpha S_1(n-1)+k_2 \alpha S_1(n-2)+...+k_m \alpha S_1(n-m)=0</script>
+and so $\alpha S_1(n)$ also satisfies the same recursive formula. Similarly, suppose some two sequences $S_1(n)$ and $S_2(n)$ both satisfy the recursive formula. Then, both
+<script type="math/tex; mode=display">S_1(n)+k_1 S_1(n-1)+k_2 S_1(n-2)+...+k_m S_1(n-m)=0</script>
+and
+<script type="math/tex; mode=display">S_2(n)+k_1 S_2(n-1)+k_2 S_2(n-2)+...+k_m S_2(n-m)=0</script>
+are true. Then, by adding the two equations,
+<script type="math/tex; mode=display">S_1(n)+k_1 S_1(n-1)+k_2 S_1(n-2)+...+k_m S_1(n-m)+S_2(n)+k_1 S_2(n-1)+k_2 S_2(n-2)+...+k_m S_2(n-m)=0</script>
+<script type="math/tex; mode=display">S_1(n)+S_2(n)+k_1 S_1(n-1)+k_1S_2(n-1)+k_2 S_1(n-2)+k_2S_2(n-2)+...+k_m S_1(n-m)+k_mS_2(n-m)=0</script>
+<script type="math/tex; mode=display">(S_1+S_2)(n)+k_1 (S_1+S_2)(n-1)+k_2 (S_1+S_2)(n-2)+...+k_m (S_1+S_2)(n-m)=0</script>
+and so the sequence $(S_1+S_2)(n)$ <em>also</em> satisfies the recursive formula.</p>
+
+<p>Back to our original problem. Because of the facts that we have just established, and because we had already shown that the functions
+<script type="math/tex; mode=display">f_+(n)=\bigg(\frac{1+ \sqrt 5}{2}\bigg)^n</script>
+and
+<script type="math/tex; mode=display">f_-(n)=\bigg(\frac{1- \sqrt 5}{2}\bigg)^n</script>
+satisfy the recursive formula
+<script type="math/tex; mode=display">F_n-F_{n-1}-F_{n-2}=0</script>
+we may say that any function in the form
+<script type="math/tex; mode=display">f(n)=\alpha\bigg(\frac{1+ \sqrt 5}{2}\bigg)^n+\beta \bigg(\frac{1- \sqrt 5}{2}\bigg)^n</script>
+satisfies the recursive formula, where $\alpha,\beta$ are real constants. Now we have determined an entire class of functions satisfying our recursive formula, and from among them, we need only find the function with initial values $f(0)=0$ and $f(1)=1$. To do this, we can set up a system of equation with unknowns $\alpha$ and $\beta$, and then solve for $\alpha$ and $\beta$:
+<script type="math/tex; mode=display">f(0)=\alpha+\beta=0</script>
+<script type="math/tex; mode=display">f(1)=\alpha \frac{1+ \sqrt 5}{2}+\beta \frac{1- \sqrt 5}{2}=1</script>
+I will spare the reader the tedium of watching me solve a system of linear equations. After solving, we obtain the solutions
+<script type="math/tex; mode=display">\alpha=\frac{1}{\sqrt 5}</script>
+<script type="math/tex; mode=display">\beta=-\frac{1}{\sqrt 5}</script>
+Which gives us, as the final solution,
+<script type="math/tex; mode=display">F_n=\frac{1}{\sqrt 5}\bigg(\frac{1+ \sqrt 5}{2}\bigg)^n-\frac{1}{\sqrt 5} \bigg(\frac{1- \sqrt 5}{2}\bigg)^n</script>
+</p>
+
+<p>We may now apply this method to the four problems that I posed at the beginning of the post. First, we have the sequence with initial conditions $a_0=2, a_1=1$ and recursive definition
+<script type="math/tex; mode=display">a_n=a_{n-1}+a_{n-2}</script>
+Because this recursive rule is the same as that in the previous problem, we may use the same class of functions:
+<script type="math/tex; mode=display">f(n)=\alpha\bigg(\frac{1+ \sqrt 5}{2}\bigg)^n+\beta \bigg(\frac{1- \sqrt 5}{2}\bigg)^n</script>
+But this time, $\alpha,\beta$ will have different values, since the initial conditions are different this time. To solve, we can set up the system
+<script type="math/tex; mode=display">f(0)=\alpha+\beta=2</script>
+<script type="math/tex; mode=display">f(1)=\alpha \frac{1+ \sqrt 5}{2}+\beta \frac{1- \sqrt 5}{2}=1</script>
+By solving this, we obtain
+<script type="math/tex; mode=display">\alpha=\beta=1</script>
+and so
+<script type="math/tex; mode=display">a_n=\bigg(\frac{1+ \sqrt 5}{2}\bigg)^n+\bigg(\frac{1- \sqrt 5}{2}\bigg)^n</script>
+This sequence, a variation of the Fibonacci sequence, is known as the Lucas sequence.</p>
+
+<p>Before beginning the next problem, I will take another pause to derive another result that is, in part, a generalization of the trick that we used earlier. Suppose again that some sequence satisfies
+<script type="math/tex; mode=display">s_n+k_1s_{n-1}+k_2 s_{n-2}+...+k_m s_{n-m}=0</script>
+Now notice that if some number $\rho$ has the property
+<script type="math/tex; mode=display">\rho^m+k_1\rho^{m-1}+k_2\rho^{m-2}+...+k_m\rho^0=0</script>
+Then the sequence
+<script type="math/tex; mode=display">S(n)=\rho^n</script>
+also satisfies the recurrence relation. As a consequence, if $\rho_1, \rho_2,...,\rho_m$ are the roots of the polynomial
+<script type="math/tex; mode=display">x^m+k_1 x^{m-1}+k_2 x^{m-2}+...+k_m x^0=0</script>
+then any sequence in the form
+<script type="math/tex; mode=display">S(n)=\alpha_1\rho_1^n+\alpha_2\rho_2^n+...+\alpha_m\rho_m^n+</script>
+also satisfies the recurrence relation, where each $\alpha_i$ is a real number. This result is very helpful, because it allows us to instantly generate a family of solutions for any of our recursively defined sequences. Because of this, given a recursively define sequence, the polynomial
+<script type="math/tex; mode=display">x^m+k_1 x^{m-1}+k_2 x^{m-2}+...+k_m x^0</script>
+is often referred to as its <em>characteristic polynomial</em>.</p>
+
+<p>Now we can begin working on the second problem, with initial conditions $b_0=b_1=b_2=1$ and recursive rule
+<script type="math/tex; mode=display">b_n=2b_{n-1}-b_{n-2}+2b_{n-3}</script>
+Which can be rewritten as
+<script type="math/tex; mode=display">b_n-2b_{n-1}+b_{n-2}-2b_{n-3}=0</script>
+Now we can extract the characteristic polynomial
+<script type="math/tex; mode=display">x^3-2x^2+x-2</script>
+with the following zeroes:
+<script type="math/tex; mode=display">x=2,\space\space x=i,\space\space x=-i</script>
+Notice that, even though the polynomial has some nonreal zeroes, we can still go ahead and use the nonreal zeroes to create our formula. Our family of solutions will be in the form
+<script type="math/tex; mode=display">\alpha 2^n+\beta i^n+\gamma (-i)^n</script>
+and so we can set up the following system of equations:
+<script type="math/tex; mode=display">b_0=\alpha+\beta+\gamma=1</script>
+<script type="math/tex; mode=display">b_1=2\alpha+i\beta-i\gamma=1</script>
+<script type="math/tex; mode=display">b_2=4\alpha-\beta-\gamma=1</script>
+And when we solve for $\alpha, \beta, \gamma$, we get the following values:
+<script type="math/tex; mode=display">\alpha=\frac{2}{5}</script>
+<script type="math/tex; mode=display">\beta=\frac{3}{10}-\frac{1}{10}i</script>
+<script type="math/tex; mode=display">\beta=\frac{3}{10}+\frac{1}{10}i</script>
+So, at last, we have found our formula:
+<script type="math/tex; mode=display">b_n=\frac{2}{5}2^n+\bigg(\frac{3}{10}-\frac{1}{10}i\bigg) i^n+\bigg(\frac{3}{10}+\frac{1}{10}i\bigg) (-i)^n</script>
+</p>
+
+<p>One last problem. The sequence $c_n$ has initial conditions $c_0=c_1=1$ and recursive definition
+<script type="math/tex; mode=display">c_n=c_{n-1}+c_{n-2}+1</script>
+Uh oh, there's a problem - this is similar to the Fibonacci Sequence, but there's a constant term in our recursive definition, and we don't know how to deal with that. If you want to try to figure out what to do on your own, you should stop reading here and try it.</p>
+
+<p>Okay, here's the trick. Notice that we can rearrange our recursive definition to look like this:
+<script type="math/tex; mode=display">c_n +1=c_{n-1}+1+c_{n-2}+1</script>
+Now I'm going to define a new sequence $c'_n$, defined in terms of $c_n$ as
+<script type="math/tex; mode=display">c'_n=c_n+1</script>
+Then the initial conditions of $c'_n$ are $c'_0=c'_1=2$, and by substituting into the recursive definition of $c_n$,
+<script type="math/tex; mode=display">c'_n=c'_{n-1}+c'_{n-2}</script>
+Look, it's just like the Fibonacci Sequence, but it's initial terms are doubled. And since each term is a linear combination of the previous two terms, <em>all</em> of the terms are doubled. Thus
+<script type="math/tex; mode=display">c'_n=2F_n</script>
+and so
+<script type="math/tex; mode=display">c'_n=\frac{2}{\sqrt 5}\bigg(\frac{1+ \sqrt 5}{2}\bigg)^n-\frac{2}{\sqrt 5} \bigg(\frac{1- \sqrt 5}{2}\bigg)^n</script>
+and, since $c'_n=c_n+1$,
+<script type="math/tex; mode=display">c_n=\frac{2}{\sqrt 5}\bigg(\frac{1+ \sqrt 5}{2}\bigg)^n-\frac{2}{\sqrt 5} \bigg(\frac{1- \sqrt 5}{2}\bigg)^n-1</script>
+or
+<script type="math/tex; mode=display">c_n=2F_n-1</script>
+</p>
+
+<p>...and that concludes this blog post. If you want another problem to try, here's a challenge problem (whose solution I will not post): try to find an algebraic representation for the <em>nth</em> term of the sequence
+<script type="math/tex; mode=display">1,2,3,2,1,2,3,2,1,2,3,2,1,2,3,2,1,...</script>
+</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

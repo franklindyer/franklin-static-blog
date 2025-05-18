@@ -1,0 +1,75 @@
+<html>
+<head>
+    <title>Motivación elemental para la teoría de Galois</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <p>En esta entrada corta pretendo motivar la teoría de Galois de una manera que me encantaría haber oído hace mucho tiempo. (Claro, existe una tal explicación por algún lado, pero nunca lo encontré yo.)</p>
+
+<p>El resultado por el que se suele conocer la teoría de Galois es el hecho de que no todos los polinomios se puedan resolver usando raices, a lo menos en el "pop math". Seguro, es un hecho asombroso. Aturde conocer este resultado como estudiante de la secundaria que está matriculado en una asignatura de álgebra o precálculo, pues en estas asignaturas lo que se suele hacer con polinomios es <em>encontrar sus raices explícitamente</em>, sin darse cuenta aún de que no sea posible en general. Aún más impresionante es el hecho de que los polinomios de <em>quinto grado</em> son los primeros para los que no se puede. ¿Cómo diablos es que hayan algoritmos para resolver los polinomios cuadráticos, cúbicos y de cuarto grado usando raices, pero grado cinco es intratable? Parece tan arbitrario.</p>
+
+<p>Pero para entender la insolubilidad de polinomios de quinto grado hace falta mucho conocimiento de fondo. Hay que estudiar bastante la teoría de grupos para entender lo que es un "grupo resoluble", para el que hay que entender bien los subgrupos normales y los productos semidirectos. Entonces hay que poder demostrar que ciertos grupos, en concreto el grupo $S_5$, no sean resolubles, el cual suele exigir demostrar que ciertos subgrupos (e.g. $A_5$) son sencillos. Hace falta entender la definición de un grupo de Galois y saber como calcularlos. Existen técnicas para los polinomios de grados pequeños, pero aún para grados pequeños se vuelve bastante complicado.</p>
+
+<p>Estas son cosas que hemos tratado en mi asignatura de álgebra abstracta a nivel graduado, pero que me intimidaron lo suficiente para que no indagara mucho en estos temas como estudiante de la secundaria. ¡Ojalá lo hubiera hecho! El no ser resoluble sólo es una de las propiedades interesantes y desconcertantes de los polinomios y sus raices. En esta entrada quiero retratar un par de fenómenos que (¡ojalá!) son un poco más accesibles y que sin embargo demuestran que hay más sutileza y complejidad en el tema de polinomios que lo de que se habla en los clases de precálculo.</p>
+
+<hr>
+
+<p>Imagínate querer realizar computaciones simbólicas con números algebráicos, tanto con los raices cuadrados como $\sqrt{2}$ como con los raices cubos como $\sqrt[3]{2}$ y aún con los raices de polinomios que no sabes resolver en forma exacta, por ejemplo $x^5+x+3$. En principio podrías asignarle a cada número algebráico que introduzcas un nombre único, y rastrear los polinomios de los que son los raices.</p>
+
+<p>Por ejemplo, podríamos suponemor que ya tienes una manera computacional de representar los números racionales, y que te interesa manipular expresiones que incluyen $\sqrt{2}$ también. Tal vez agregarías el símbolo $\alpha$ para representar $\sqrt{2}$ y escribirías expresiones más complejas que se puede construirusando los números racionales y $\alpha$ como polinomios o bien funciones racionales en términos de $\alpha$. Por ejemplo $1+2\alpha$ representaría $1+2\sqrt{2}$. La expresión $1+\alpha^2$ se podría reducir a $3$, como ya sabes que $\alpha^2 = 2$. La expresión $1/\alpha$ también se podría "reducir" a $(1/2)\alpha$: como sabes que $\alpha^2 = 2$, también puedes deducir que $\alpha\cdot(\alpha/2) = 1$, así que $(1/2)\alpha$ es el inverso de $\alpha$. Etcétera. Jugueteando podrás convencerte de que cualquiera función racional de $\alpha$ se puede reducir a la forma $x+y\alpha$ de tal manera que $x,y$ sean números racionales y aún puedes diseñar un algoritmo para realizar esta reducción. </p>
+
+<p>Podrías querer trabajar también con los <em>cuerpos de descomposición</em>. Un cuerpo de descomposición es un cuerpo al que se haya agregado <em>todos los raices</em> de un polinomio. Por ejemplo, el cuerpo de descomposición del polinomio $x^2-2$ es simplemente $\mathbb Q(\sqrt 2)$. El cuerpo de descomposición de $x^4-4$ no es $\mathbb Q(\sqrt 2)$ sino $\mathbb Q(\sqrt{2}, i)$, pues el polinomio también tiene las raices complejas $\pm i\sqrt{2}$.</p>
+
+<p>No todos los polinomios tendrán raices que se puedan expresar de forma tan linda en términos de radicales. (A propósito la teoría de Galois nos cuenta que aún es imposible en la mayoría de los casos - ¡pero no hace falta conocer la teoría de Galois para saber que resolver polinomios arbitrarios en términos de radicales es <em>difícil</em>!) Así que para hacer mates simbólicamente con los raices de polinomios, tendríamos que introducir símbolos que representen las raices de un polinomios que queremos descomponer y rastreas las identidades que cumplen estos nuevos valores, para entonces poder simplificar algorítmicamente expresiones complejas que los contienen. </p>
+
+<p>Por ejemplo, como comenté antes, para modelar el cuerpo de descomposición de $x^2-2$, podríamos expresar sus elementos como funciones racionales del variable $\alpha$ que representa $\sqrt{2}$, recordando que este símbolo cumple $\alpha^2-2=0$ mientras simplificamos las expresiones racionales lo más posible. Fíjate que no hace falta introducir un <em>segundo</em> símbolo $\beta$ que represente la otra raíz del polinomio $x^2-2$, pues sabemos que esta otra raíz es simplemente $-\sqrt{2}$ o sea $-\alpha$. Agregar otro variable sería redundante, como $x^2-2$ ya se puede descomponer como $(x+\alpha)(x-\alpha)$ al agregar la raíz $\alpha$.</p>
+
+<p>Suena sencillo, ¿no? Lo problemáticos es que para los polinomios más complicados, no es obvio en absoluto cuántos nuevos símbolos se tendría que agregar para expresar sus raices sin redundancia. Considérate por ejemplo el polinomio de quinto grado <script type="math/tex; mode=display">p(x) = x^5-x-1</script> Inocentemente podríamos introducir cinco variables nuevos $\alpha_1,\cdots,\alpha_5$ para representar sus raices y entonces ponernos a computar con funciones racionales de estos variables simplificando cuando podemos sabiendo que $\alpha_i^5-\alpha_i-1=0$. Con un poco más cuidado podríamos usar las <a href="https://en.wikipedia.org/wiki/Vieta%27s_formulas">fórmulas de Vieta</a> y darnos cuenta de que no haga falta un quinto variable y que bastan cuatro, pues el quinto se puede expresar en términos de los demás como $\alpha_5 = -\alpha_1 -\alpha_2 -\alpha_3 -\alpha_4$. (Tal y como sólo necesitamos un único símbolo nuevo para el cuerpo de descomposición de $x^2-2$.) Y ¡todo iría bien!</p>
+
+<p>Pero por otro lado podríamos intentar aplicar la misma técnica para modelar el cuerpo de descomposición del polinomio irreducible de quinto grado <script type="math/tex; mode=display">q(x) = x^5 + x^4 - 4x^3 - 3x^2 + 3x + 1</script> y otra vez utilizaríamos cuatro variables $\alpha_1,\alpha_2,\alpha_3,\alpha_4$ para representar cuatro de sus cinco raices. Pero esta vez <em>habríamos producido una redundancia sútil</em> entre los nuevos valores de nuestro modelo. Pues ¿por qué? A propósito, las raices de este polinomio son precisamente <script type="math/tex; mode=display">-2\cos\frac{\pi}{11}, ~ 2\cos\frac{2\pi}{11}, ~ -2\cos\frac{3\pi}{11}, ~ 2\cos\frac{4\pi}{11}, ~ -2\cos\frac{5\pi}{11}</script> y cualquier uno de estos números genera los demás, el cual hecho se puede demostrar usando la fórmula del ángulo doble del coseno. En concreto, si $\alpha_1,\cdots,\alpha_5$ representan estos valores respectivos, entonces se tiene <script type="math/tex; mode=display">\begin{align}\alpha_2 &= \alpha_1^2 - 2 \\ \alpha_4 &= \alpha_2^2-2 \\ \alpha_3 &= \alpha_4^2 - 2 \\ \alpha_5 &= \alpha_3^2 - 2\end{align}</script> Por tanto sólo hace falta un único variable $\alpha$ para expresar todas las raices de este polinomio en el cuerpo de descomposición. ¡Algo más y habríamos producido redundancia! Si agregamos todos los símbolos $\alpha_i$ y recordamos las identidades $q(\alpha_i)=0$ entonces no podremos simplificar algunas expresiones "tanto como debemos". Por ejemplo, la expresión <script type="math/tex; mode=display">\big(\alpha_1^2-2-\alpha_2\big)\big(\alpha_1^2-2-\alpha_3\big)\big(\alpha_1^2-2-\alpha_4\big)\big(\alpha_1^2-2+\alpha_1+\alpha_2+\alpha_3+\alpha_4\big)</script> debe reducirse a cero cuando $\alpha_1,\cdots,\alpha_4$ son raices distintas del polinomio $q$, pues siendo $\alpha_1^2-2$ otras raíz de $q$, debe ser igual a uno de las otras raices $\alpha_2,\alpha_3,\alpha_4$ o $-\alpha_1-\alpha_2-\alpha_3-\alpha_4$. Pero saber sólo que $q(\alpha_i)=0$ para cada $\alpha_i$ no basta para reducir esta expresión a cero.</p>
+
+<p>Simplemente echando un vistazo a un polinomio de quinto grado no es obvio para nada cuántos generadores se necesitaría para expresar todos sus raices. Por cierto, esta información se puede deducir sabiendo el grupo de Galois del polinomio. El grupo de Galois de $p$ es $S_5$ y el hecho de que hacen falta cuatro generadoras en el cuerpo de descomposición de $p$ se deduce de la existencia de permutaciones no triviales del conjunto ${0,1,2,3,4}$ que fijan cualquier triple de sus elementos. Por otro lado el grupo de Galois de $q$ es el grupo cíclico $\mathbb Z_5$, en el que cualquiera permutación está determinada por su acción en cualquier uno de los elementos de ${0,1,2,3,4}$.</p>
+
+<p>Aquí está otra complicación. Imagínate expandir el cuerpo base agregando todas las raices de un polynomio, y entonces querer expandirlo otra vez descomponiendo otro polinomio. Por ejemplo, supongamos que ya has decompuesto el polinomio $p$ que definimos antes y agregado cuatro variables nuevos $\alpha_1,\alpha_2,\alpha_3,\alpha_4$ y que ahora quieres descomponer el polinomio $x^2-2$, para el que agregas otro símbolo $\beta$ que representa uno de sus raices. Bien.</p>
+
+<p>Pero por casualidad, si en lugar del polinomio $x^2-2$ se te da la gana de descomponer $x^2-2869$, habrías así introducido redundancia otra vez. Es decir, $\beta=\sqrt{2869}$ es irracional, pero se puede expresar en términos de las raices del polinomio de quinto grado $p$ - o sea, este número <em>ya pertenece al cuerpo de descomposición</em> sin exigir expansión adicional. En concreto, <script type="math/tex; mode=display">\bigg(\prod_{i=1}^5 \prod_{i=1}^j (\alpha_i-\alpha_j)\bigg)^2 = 2869</script> como $2869$ es el <a href="https://en.wikipedia.org/wiki/Discriminant">discriminante</a> del polinomio $p$. Por lo general, el producto de las restas de las raices de un polinomio irreducible sobre $\mathbb Q$ al cuadrado siempre pertenece al cuerpo base $\mathbb Q$ y aún se lo puede expresar en términos de los coeficientes del polinomio. Por lo tanto, cuando este número no es un <em>número cuadrado</em> en ese cuerpo base, entonces un número irracional cuadrático nuevo aparece en el cuerpo de descomposición. No ocurre esta complicación al computar con las raices del polinomio $q$ que definimos anteriormente. Ese polinomio tiene discriminante igual a $11^4$, el cual número ya es un número cuadrado.</p>
+
+<p>Esta información también se puede deducir directamente del grupo de Galois de un polinomio. La introducción de nuevos números irracionales cuadráticos sobre $\mathbb Q$ en el cuerpo de descomposición de $p$ corresponde al hecho de que $S_5$ tiene un subgrupo normal $A_5$ con índice igual a $2$. El groupo de Galois $\mathbb Z_5$ del polinomio $q$ no tiene subgrupo propio ninguno, así que no hay que preocuparse de agregar raices de polinomios de grado más bajo al descomponer $q$.</p>
+
+<p>En mi opinión lo más interesante de esta propiedades raras es que se las puede demostrar (mayormente) de manera constructiva. Por ejemplo, se puede demostrar con pura álgebra que cuando $\alpha$ es una raíz de $p$ entonces $\alpha^2-2$ también es una raíz del mismo (aunque podría ser fea la computación). Además, con un poco de brujería en el estilo de Vieta, se puede computar el discriminante de $p$ a mano. Por eso estas propiedades me parecen un poco más "tangibles".</p>
+
+<p>Sin duda, los ejemplos de grado quinto que he elegido son un tanto difíciles de tratar. Se puede observar los mismos fenómenos en los dos polinomios cúbicos siguientes: <script type="math/tex; mode=display">\begin{align}p(x) &= x^3-x-1\\ q(x) &= x^3 + x^2 - 2x - 1\end{align}</script> El primer polinomio aquí tiene grupo de Galois igual a $S_3$ y por tanto se necesita dos raices para generar su cuerpo de descomposición, mientras que el segundo tiene grupo de Galois igual a $\mathbb Z_3$, de tal manera que cualquier una de sus raices es capaz de generar su cuerpo de descomposición. Como antes, el segundo tiene raices que se puede expresar sencillamente como valores especiales del coseno, pero te lo dejo a tí averiguar cómo. También se observa aquí que el discriminante de $p$ es $-23$, un número no cuadrado en $\mathbb Q$ que sin embargo tiene raíz cuadrática en el cuerpo de descomposición de $p$, mientras que el discriminante de $q$ es $7^2$, el cual ya es número cuadrado en $\mathbb Q$.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

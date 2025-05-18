@@ -1,0 +1,87 @@
+<html>
+<head>
+    <title>About PROMYS</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>About PROMYS</h2>
+
+<p><em>2018 August 13</em></p>
+
+<p>I just returned from PROMYS last weekend, and in this post, I hope to summarize the math that I learned there, describe the program itself, and offer a few observations and suggestions to anyone who plans to attend the PROMYS program, go to any other math programs, or become a mathematician in general.</p>
+
+<p>If you do plan to go to PROMYS, it is best that you DO NOT read the specifics about the math that is done there. I will make sure to include a WARNING before I start to talk about the math.</p>
+
+<p>First, a word about something that is <em>not math.</em> </p>
+
+<p>"But," you object, "This is a math blog!</p>
+
+<p>Just keep reading. This is something all mathematicians should know. I'll try to keep it short.</p>
+
+<p>Let me remind all readers (should I happen to have any) of my blog that although mathematics is one of the things I cherish most in life, it is not worth sacrificing one's health or quality of life in other areas for. Despite the fact that making progress in learning deep mathematics is difficult and requires a lot of time and effort, one <em>should not</em> pursue it with such enthusiasm that it upsets the balance of one's life. If you are a student in school, for example, it is important to do well in all subjects, and not just to do <em>very well</em> in math. If you are a college student or full adult, remember that there are other things to life than math.</p>
+
+<p>And, most importantly, do not let pursuing mathematics detract from your physical health. Being a mathematician doesn't mean sitting in a chair all day - you can be in shape and be a mathematician at the same time. Being a mathematician doesn't mean paying little attention to what you eat - if anything, being able to work out the details of a difficult proof means that one should be able to distinguish between a healthy and an unhealthy diet. Finally, perhaps the thing that was most prevalent at PROMYS, was sleep loss - being a mathematician doesn't mean you have to stay up until midnight or later every day doing math. Sleep loss, if anything, will make math <em>even more difficult,</em> since a sleep-deprived brain doesn't function as well as a well-rested one.</p>
+
+<p>Remember that mathematical rigor can also be applied to one's own life. One should analyze the choices just as thoroughly as one analyzes a mathematical system - they are, in fact, the choices that count the most.</p>
+
+<p>That's all I have to say about that! Back to the math.</p>
+
+<p>Now I feel I should say something about PROMYS as a whole. I really enjoyed being at the program for six weeks - it was the most fun I've had in a long time, but it was also exhausting. At the program, there is little time to do anything other than the math assigned. That being said, the math is extremely cool. The true value of the program comes through in the problem sets, which, at first glance, seem rather basic, but are in fact extremely well-designed; they somehow present the students with problems in a way that nudges them towards the desired results and discoveries without giving too much information ("spoilers"). Being submerged in a mathematically-inclined community for six weeks is also very refreshing for any mathematician who lives somewhere without a robust mathematical community. The diversity of the students there (they come from all over the world) is also eye-opening, and exposes one to people from all sorts of different backgrounds.</p>
+
+<p><strong>WARNING:</strong> Below are spoilers about the mathematical topics covered at PROMYS. If you plan to go, DO NOT read any further.</p>
+
+<p>Finally, a word about the math that we did at PROMYS. The program began with a look at the axiomatization of basic number theory, or really just arithmetic; we worked out how to describe the integers as formally and rigorously as possible, and for the first two to three weeks, we proved things about the integers that seemed trivial enough to take for granted before PROMYS. Of particular importance was Euclid's Division Algorithm, which states that any integers $a,b\in\mathbb Z$ satisfy the relationship $a=bq+r$ for some $q,r\in\mathbb Z$ with $0\le r\lt b$, so long as $b\ne 0$. Another important theorem was Bézout's identity, which states that if $a,b\in\mathbb Z$ are coprime integers, then the equation $ax+by=1$ has solutions $x,y\in\mathbb Z$. These all seem like trivialities, but they are, in fact, nontrivial to prove, if one is working only with the axioms of the integers.</p>
+
+<p>Later in the program, we explored mathematical systems:</p>
+
+<ul>
+<li>$\mathbb Z_m$, the set of integers modulo $m$,</li>
+<li>$U_m$, the set of units (elements with multiplicative inverses) in $\mathbb Z_m$</li>
+<li>$\mathbb Z [x]$, the set of polynomials with integer coefficients, </li>
+<li>$\mathbb Z_p [x]$, the set of polynomials with coefficients in $\mathbb Z_p$,</li>
+<li>$\mathbb Z[i]$, the set of "Gaussian Integers," or complex numbers with integer real and imaginary parts,</li>
+<li>$\mathbb Z[\sqrt d],$ the set of numbers in the form $a+b\sqrt d$, with $a,b,d\in\mathbb Z$, and $d$ not a perfect square</li>
+<li>$\mathbb H,$ the set of quaternions</li>
+</ul>
+
+<p>And, of course, there are even more than that, but I cannot list all of them. When studying these mathematical structures, the importance of rigorously proving the properties of the integers became clear, since some of them do not share the properties that we often take for granted in the integers. For example, one of the most beloved properties of the integers is that any integer can be factored uniquely into primes; however, unique prime factorization, surprisingly, does not hold in some fields of the form $\mathbb Z [\sqrt 5]$. I'll leave it to you to find out which.</p>
+
+<p>The most surprising and useful thing that I learned at PROMYS is the value of variety in studying mathematical systems; often, a mathematical theorem can be extremely difficult to prove, but is reduced almost to triviality if one has some foundation knowledge about the right mathematical structures. This means that knowledge in a  <em>variety</em> of areas is <em>extremely</em> important. Though all of the major theorems that we proved in PROMYS (such as quadratic reciprocity and the four-square theorem) are theorems in Number Theory, they were proven using results from Number Theory in a almost all of the mathematical systems listed above, as well as some theorems from geometry and algebra.</p>
+
+<p>Before attending PROMYS, I was stubbornly entrenched in the pursuit of knowledge only regarding calculus and analysis, but this program has shown me the magic that occurs in Number Theory and more elementary fields. While most of my past blog entries concerned calculus, it is likely that very few of my future blog posts will do so. There is so much to explore without ever surpassing the level of high-school geometry, and I will probably be fixated on that for a long time.</p>
+
+<p>Cheers!</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

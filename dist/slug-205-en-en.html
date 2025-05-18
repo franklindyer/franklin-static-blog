@@ -1,0 +1,128 @@
+<html>
+<head>
+    <title>Intransitive random variables</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h3>Intransitive random variables</h3>
+
+<p>Imagine that a swindler proposes a simple dice game to you, in which there are three dice, each player rolls one of the die, and whoever rolls the highest number is the winner. However, in order to assure you that there isn't any rigged die that rolls higher numbers than the others in most cases, the swindler gives you the opportunity to choose the die you like best before he chooses his.</p>
+
+<p>Perhaps you would suspect some kind of trickery, but if you have the right to pick your die first, do you think the game could be fair, or even in your favor? What about if the three dice are as follows?</p>
+
+<p><center><img src="/img/2023-06-30-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>These three dice can be described as three random variables:</p>
+
+<p>
+<script type="math/tex; mode=display">\begin{align*}X &= \begin{cases}0 & \text{probability } 1/3 \\ 5 & \text{probability } 1/3 \\ 7 & \text{probability } 1/3 \end{cases} \\ Y &= \begin{cases}1 & \text{probability } 1/3 \\ 3 & \text{probability } 1/3 \\ 8 & \text{probability } 1/3 \end{cases} \\ Z &= \begin{cases}2 & \text{probability } 1/3 \\ 4 & \text{probability } 1/3 \\ 6 & \text{probability } 1/3 \end{cases}\end{align*}</script>
+</p>
+
+<p>These three random variables have a very peculiar property - case by case, you can show that</p>
+
+<p>
+<script type="math/tex; mode=display">\begin{align*}\mathbb P(X < Y) &= 5/9 \\ \mathbb P(Y < Z) &= 5/9 \\ \mathbb P(Z < X) &= 5/9\end{align*}</script>
+</p>
+
+<p>That is, there's no preferable die, but all the same this is no fair game. For each die, there is another die that rolls a higher number than it does in most cases. No matter which die you choose, the swindler can choose another in order to win the game with probability $5/9$.</p>
+
+<h4>Explanation of the paradox <a id="toc-section-1" class="toc-section"></a></a></h4>
+
+<p>This phenomenon is called the <strong>intransitivity</strong> of random variables, and it's sometimes known for its unintuitive nature. In this section I'd like to consider a more general situation, which (in my opinion) sheds a bit of light upon why this phenomenon can seem so perplexing to us.</p>
+
+<p>Imagine for a moment that we're considering three sentences $\psi,\phi,\chi$ that are either true or false for each result of the random variable $W$. That is, if $\Omega$ is the sample space of the random variable $W$, then $\psi,\phi,\chi$ are predicates on the set $\Omega$. If two predicates $\psi,\phi$ are incompatible, or in other words if $\neg(\psi\land\phi)$ is true in each case, then it follows that <script type="math/tex; mode=display">\mathbb P(\psi) + \mathbb P(\phi) \leq 1</script> Now imagine that $\psi,\phi,\chi$ are incompatible, that is, that <script type="math/tex; mode=display">\neg(\psi\land\phi\land\chi)</script> For instance, if $W$ consists of a triple of random variables $(X,Y,Z)$ then the three sentences <script type="math/tex; mode=display">\begin{align*}\psi &= \mathtt{"X < Y"} \\ \phi &= \mathtt{"Y < Z"} \\ \chi &= \mathtt{"Z < X"}\end{align*}</script> are incompatible, although at the moment we're discussing general predicates. Intuitively, it might appear that we could deduce <script type="math/tex; mode=display">\mathbb P(\psi) + \mathbb P(\phi) + \mathbb P(\chi) \leq 1</script> in the same way, and consequently conclude that it's impossible for each of the probabilities $\mathbb P(\psi),\mathbb P(\phi),\mathbb P(\chi)$ to be greater than $1/3$, that is, <script type="math/tex; mode=display">\min\Big(\mathbb P(\psi),\mathbb P(\phi),\mathbb P(\chi)\Big) \leq \frac{1}{3}</script> and that if $\Omega$ were optimally divided up in such a way that maximizes this minimum probability, then it would look something like this:</p>
+
+<p><center><img src="/img/2023-06-30-Fig3.png" alt="Fig 3" /></center></p>
+
+<p>This analysis is, however, incorrect, since these three predicates are incompatible but <em>not pairwise incompatible</em>. The statement $\psi\land\phi$ can certainly be true and similarly $\phi\land\chi$ and $\chi\land\psi$ can also be true, even though $\psi\land\phi\land\chi$ is always false. For each result $\omega\in\Omega$, <em>at most two</em> of the three incompatible predicates can be true, and therefore the superposition of the three subsets <script type="math/tex; mode=display">\psi^{-1}(\mathtt{T}), \phi^{-1}(\mathtt{T}), \chi^{-1}(\mathtt{T})\subset \Omega</script> are capable of covering the sample space $\Omega$ at most <em>twice</em>. Using this observation, we can deduce the following upper bound: <script type="math/tex; mode=display">\mathbb P(\psi) + \mathbb P(\phi) + \mathbb P(\chi) \leq 2</script> and therefore <script type="math/tex; mode=display">\min\Big(\mathbb P(\psi),\mathbb P(\phi),\mathbb P(\chi)\Big) \leq \frac{2}{3}</script> and the limiting distribution would look something like this:</p>
+
+<p><center><img src="/img/2023-06-30-Fig4.png" alt="Fig 4" /></center></p>
+
+<p>In reality there's no paradox here. As far as I can tell, the unintuitive nature of this phenomenon arises from a poor intuition about statement of the form "probably $\psi$". In general, it takes a lot of cognitive effort for us to reconcile the following claims:</p>
+
+<ul>
+<li>$\psi$ will probably be true.</li>
+<li>$\phi$ will probably be true.</li>
+<li>$\chi$ will probably be true.</li>
+<li>$\psi,\phi,\chi$ will <em>definitely</em> not all be true.</li>
+</ul>
+
+<p>With just two predicates there isn't any "paradox" of this form, since it's not possible for $\psi$ and $\phi$ to both probably be true while $\psi\land\phi$ is impossible, if one interprets "probably $\psi$" as $\mathbb P(\psi) &gt; 1/2$.</p>
+
+<h4>Maximal intransitivity <a id="toc-section-2" class="toc-section"></a></a></h4>
+
+<p>We've already seen that with three random variables $X,Y,Z$, there can't be any violation of transitivity worse than the following: <script type="math/tex; mode=display">\mathbb P(X < Y) = \mathbb P(Y < Z) = \mathbb P(Z < X) = \frac{2}{3}</script> Conversely, we can easily confirm that a violation of this magnitude is in fact possible, for instance when $X,Y,Z$ are distributed as follows: <script type="math/tex; mode=display">(X,Y,Z) = \begin{cases}(0,1,2) & \text{Wahrscheinlichkeit } 1/3 \\ (1,2,0) & \text{Wahrscheinlichkeit } 1/3 \\ (2,0,1) & \text{Wahrscheinlichkeit } 1/3\end{cases}</script> But we've left out an important condition on these random variables that would be necessary for them to be considered a realistic generalization of the original dice game, namely that they be <em>independent</em>. The three random variables in the above distribution clearly aren't independent. It could be that we can also find three independent random variables which also attain this upper bound of $2/3$, but we haven't seen any such examples yet.</p>
+
+<p>Imagine a simpler question in which we assume that $Y$ is constant, that is, that there exists a real number $c$ such that $\mathbb P(Y = c) = 1$. We'll also assume that the probability of any two of the random variables being equal is zero. In this case, we'd be looking for the maximal value of the minimum probability <script type="math/tex; mode=display">\min\Big(\mathbb P(X < c), \mathbb P(c < Z), \mathbb P(Z < X)\Big)</script> if $X,Z$ are independent. It follows, however, that <script type="math/tex; mode=display">\mathbb P(Z < X) \leq 1 - \mathbb P(X < c) \mathbb P(c < Z)</script> since $X&lt;c$ and $c&lt;Z$ together imply $X &lt; Z$, and these two events are independent (due to this assumption we can multiply their probabilities). Therefore, the desired maximal value is at most <script type="math/tex; mode=display">\max_{p,q\in [0,1]} \min\big(p,q,1-pq\big)</script> However, you can confirm for yourself that this minimum value reaches its peak when $p=q=1-pq$, that is, when <script type="math/tex; mode=display">p=q=\frac{1}{\phi}=\frac{-1+\sqrt{5}}{2}\approx 0.618</script> Therefore, we know that if $Y$ is constant, the maximum violation of transitivity that we can attain is at most $\phi^{-1}\approx 0.618$, but as for whether this bound is attainable or not, we still don't know. As a matter of fact, from this special case, a more general bound can be derived: in <a href="https://www.impan.pl/pl/wydawnictwa/czasopisma-i-serie-wydawnicze/applicationes-mathematicae/all/5/4/94895/on-the-paradox-of-three-random-variables">this manuscript</a> by S. Trybula it's proven that the maximal violation of transitivity is $\phi^{-1}$ even when $Y$ is not assumed to be constant. That is: <script type="math/tex; mode=display">\min\Big(\mathbb P(X < Y), \mathbb P(Y < Z), \mathbb P(Z < X)\Big) \leq \phi^{-1}</script>
+</p>
+
+<p>It's a neat puzzle to try determining whether there exist three independent random variables that reach this upper bound. The fact is that such a triple <em>does exist</em>, and there even exists such a triple in which $Y$ is constant: <script type="math/tex; mode=display">\begin{align*}X &= \begin{cases}1 & \text{Möglichkeit } \phi^{-1} \\ 4 & \text{Möglichkeit } \phi^{-2}\end{cases} \\ Y &= 2 \\ Z &= \begin{cases}0 & \text{Möglichkeit } \phi^{-2} \\ 3 & \text{Möglichkeit } \phi^{-1}\end{cases}\end{align*}</script> We could equivalently describe these random variables by means of their probability density distributions: <script type="math/tex; mode=display">\begin{align*}p_X(\alpha) &= \tfrac{1}{\phi}\delta_1(\alpha) + \tfrac{1}{\phi^2}\delta_4(\alpha) \\ p_Y(\alpha) &= \delta_2(\alpha) \\ p_Z(\alpha) &= \tfrac{1}{\phi^2}\delta_0(\alpha) + \tfrac{1}{\phi}\delta_3(\alpha)\end{align*}</script> which can be visualized as looking something like this:</p>
+
+<p><center><img alt="Fig 2" src="/img/2023-06-30-Fig2.png" /></center></p>
+
+<p>When it comes to four or more random variables, I'm not sure what the maximal violation of transitivity would be. With more random variables, the upper bound of $\phi^{-1}$ can be surpassed, but it can be proven without too much difficulty that there's a universal upper bound of $3/4$, that is, if $X_1,X_2,\cdots, X_n$ are independent random variables, then it must be the case that <script type="math/tex; mode=display">\min\Big(\mathbb P(X_1 < X_2), \cdots, \mathbb P(X_n < X_1)\Big)\leq \frac{3}{4}</script> Can you prove this upper bound? If you'd like a hint, I'd suggest that it could be useful to consider <em>medians</em> of these $n$ random variables.</p>
+
+<h4>A parametrized family <a id="toc-section-3" class="toc-section"></a></a></h4>
+
+<p>Let's suppose for a moment that we have three random variables $X,Y,Z$ and that we describe a whole family of random variables as follows: <script type="math/tex; mode=display">W(p,q,r) = \begin{cases}X & \text{probability } p \\ Y & \text{probability } q \\ Z & \text{probability } r\end{cases}</script> where $p+q+r=1$. That is, $W(p,q,r)$ is a random variable that takes its value from $X$ with probability $p$, from $Y$ with probability $q$ and from $Z$ with probability $r$. In other words, if $f_X,f_Y,f_Z$ are the respective probability density distributions of $X,Y,Z$, then the distribution of $W(p,q,r)$ would be described by <script type="math/tex; mode=display">pf_X + qf_Y + rf_Z</script> We could parameterize this family of random variables as three-dimensional vectors from $\mathbb R^3$: <script type="math/tex; mode=display">W(p,q,r) ~ \leftrightarrow ~ \begin{bmatrix}p \\ q \\ r\end{bmatrix}</script> If we let the parameters $p,q,r$ take on all possible values from the interval $[0,1]$ such that $p+q+r=1$, then the space of all random variables belonging to this family manifests itself as a triangle in $\mathbb R^3$:</p>
+
+<p><center><img src="/img/2023-06-30-Fig5.png" alt="Fig 5" /></center></p>
+
+<p>To be precise, we're describing an embedding of the convex hull of the three distributions $f_X,f_Y,f_Z$ in the vector space of distributions on $\mathbb R$ in the three-dimensional vector space $\mathbb R^3$ by means of a convex-combination-preserving mapping. Note that the random variables $W(1,0,0), W(0,1,0), W(0,0,1)$ are respectively distributed identically to $X,Y,Z$, and correspond to the three corners of this triangle.</p>
+
+<p>If we assume once more that the three random variables $X,Y,Z$ take on distinct values with probability $1$, and if we know the three probabilities <script type="math/tex; mode=display">\begin{align*}&\mathbb P(X < Y) \\ &\mathbb P(Y < Z) \\ &\mathbb P(Z < X)\end{align*}</script> then we can calculate the probability of each possible comparison of random variables from our family $W(p,q,r)$, that is, the probability <script type="math/tex; mode=display">\mathbb P\Big(W(p_0,q_0,r_0) < W(p_1,q_1,r_1)\Big)</script> The parametrization of these random variables as vectors becomes very useful as a way of expressing this probability concisely. If $\mathbf{w}_0, \mathbf{w}_1$ are the vectors corresponding to the respective random variables $W(p_0,q_0,r_0)$ and $W(p_1,q_1,r_1)$, and $A$ is the matrix <script type="math/tex; mode=display">A = \begin{bmatrix}\mathbb P(X < X') & \mathbb P(X < Y') & \mathbb P(X < Z') \\ \mathbb P(Y < X') & \mathbb P(Y < Y') & \mathbb P(Y < Z') \\ \mathbb P(Z < X') & \mathbb P(Z < Y') & \mathbb P(Z < Z')\end{bmatrix}</script> then one can verify casewise that <script type="math/tex; mode=display">\mathbb P\Big(W(p_0,q_0,r_0) < W(p_1,q_1,r_1)\Big) = \mathbf{w}_0^{\text{T}}A\mathbf{w}_1</script>
+</p>
+
+<p>Finally, let's consider the case in which $X,Y,Z$ are three independent random variables that maximally violate transitivity. Then we'll have that <script type="math/tex; mode=display">A = \begin{bmatrix}1/2 & 1/\phi & 1/\phi^2 \\ 1/\phi^2 & 1/2 & 1/\phi \\ 1/\phi & 1/\phi^2 & 1/2\end{bmatrix}</script> Notice that we can alternatively describe $A$ as <script type="math/tex; mode=display">A = \tfrac{1}{2}I + \tfrac{1}{\phi}C + \tfrac{1}{\phi^2}C^2</script> where $C$ is the permutation matrix <script type="math/tex; mode=display">C = \begin{bmatrix}0 & 1 & 0 \\ 0 & 0 & 1 \\ 1 & 0 & 0\end{bmatrix}</script> And this matrix, as a linear transformation on the vector space $\mathbb R^3$, permutes the three coordinates of each vector, that is, it carries out a rotation of $2\pi/3$ radians about the vector $\langle 1,1,1\rangle$:</p>
+
+<p><center><img src="/img/2023-06-30-Fig6.png" alt="Fig 6" /></center></p>
+
+<p>The interesting thing is that $C$ is a special case of the more general rotation matrix $R_\theta$ about the vector $\langle 1,1,1\rangle$, so that $C = R_{2\pi/3}$. All rotation matrices about the same axis commute with each other since $R_{\theta_0} R_{\theta_1} = R_{\theta_0 + \theta_1}$, hence we have that <script type="math/tex; mode=display">CR_\theta = R_\theta C</script> for all $\theta$. Consequently, all of the $R_\theta$ commute with $A$, since <script type="math/tex; mode=display">\begin{align*}R_\theta A &= \Big(\tfrac{1}{2}I + \tfrac{1}{\phi}C + \tfrac{1}{\phi^2}C^2\Big)A \\ &= \tfrac{1}{2}IA + \tfrac{1}{\phi}CA + \tfrac{1}{\phi^2}C^2 A \\ &= \tfrac{1}{2}AI + \tfrac{1}{\phi}AC + \tfrac{1}{\phi^2}AC^2 \\ &= AR_\theta\end{align*}</script> Hence, the probability of the event $W_0 &lt; W_1$ will stay the same when we rotate the parameter vectors $\mathbf w_0, \mathbf w_1$ by an angle $\theta$ in the plane $x+y+z=1$, that is, replace them with $R_\theta \mathbf w_0, R_\theta \mathbf w_1$, since <script type="math/tex; mode=display">\begin{align*} (R_\theta \mathbf w_0)^\text{T} A (R_\theta \mathbf w_1) &= \mathbf w_0^\text{T} R_\theta^\text{T} A R_\theta \mathbf w_1 \\ &= \mathbf w_0^\text{T} R_{-\theta} A R_\theta \mathbf w_1 \\ &= w_0^\text{T} R_{-\theta} R_\theta A \mathbf w_1 \\ &= w_0^\text{T} A \mathbf w_1 \end{align*}</script> As a matter of fact, one can calculate the probability $\mathbb P(W_0 &lt; W_1)$ knowing only the respective magnitudes and the angle between the components of the vectors $\mathbf w_0, \mathbf w_1$ in the plane $x+y+z=1$. When their projections onto this plane have magnitudes of $r_0, r_1$ and form a counterclockwise angle of $\Delta\theta$, like this: </p>
+
+<p><center><img src="/img/2023-06-30-Fig7.png" alt="Fig 7" /></center></p>
+
+<p>then the probability $\mathbb P(W_0 &lt; W_1)$ will be:</p>
+
+<p>
+<script type="math/tex; mode=display">\frac{1}{2}+r_1 r_2\Big(\tfrac{1}{2}\cos(\Delta\theta) + \tfrac{1}{\phi}\cos\big(\Delta\theta + \tfrac{2\pi}{3}\big)+ \tfrac{1}{\phi^2}\cos\big(\Delta\theta + \tfrac{4\pi}{3}\big)\Big)</script>
+</p>
+
+<p>Hence, if you want to find a long chain of intransitive random variables $X_1, \cdots, X_n$ so that <script type="math/tex; mode=display">\mathbb P(X_0 < X_1) = \cdots = \mathbb P(X_n < X_0) > \frac{1}{2}</script> then it suffices to find $n$ vectors inside of this triangle that have the same length and form congruent angles. For example, if you consider the $5$ random variables corresponding to the vectors <script type="math/tex; mode=display">\begin{align*}\mathbf w_0 &= \langle 0.5, 0.5, 0\rangle \\ \mathbf w_1 &= R_{-2\pi/5}\mathbf w_0 \\ \mathbf w_2 &= R_{-4\pi/5}\mathbf w_0 \\ \mathbf w_3 &= R_{-6\pi/5}\mathbf w_0 \\ \mathbf w_4 &= R_{-8\pi/5}\mathbf w_0\end{align*}</script> or </p>
+
+<p><center><img src="/img/2023-06-30-Fig8.png" alt="Fig 8" /></center></p>
+
+<p>then you'll find the (small but non-negligible) transitivity violation of $\approx 0.532$, that is, the minimum of the probabilities $\mathbb P(W_0 &lt; W_1), \cdots, \mathbb P(W_4 &lt; W_0)$ will be $\approx 0.532$. Using this geometric visualization, we can construct larger and more complex families of intransitive random variables, although they won't be optimal in most cases.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

@@ -1,0 +1,122 @@
+<html>
+<head>
+    <title>Amortization Formulas</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Amortization Formulas</h2>
+
+<p><em>2017 March 30</em></p>
+
+<blockquote>
+<p>Derive the formula for the monthly payment in an amortization loan schedule.</p>
+</blockquote>
+
+<p>One interesting application of the iterated function is the calculation of formulas for an amortization schedule used to pay off loans. In such a plan, a monthly payment is made for the same amount each month for some number of payments. Though each payment is for the same amount, each payment is divided up into an interest payment and a principal payment. The portion of each payment that is paid as interest is the monthly interest rate (or $\frac{1}{12}$ of the annual interest rate) times the current balance (amount owed on the loan), and the rest of the payment is the principal payment, going towards paying down the balance. With each payment, the balance decreases, and less interest is paid at the next payment, meaning that the balance is paid down more and more quickly. Here is an example:</p>
+
+<p>Suppose you take out a loan of $\$100,000$ at an annual interest rate of $3\%$ to be paid off over a $2$ year period. This means that you will make a total of $24$ monthly payments at a monthly interest rate of $0.25\%$, or $0.0025$. In this case, the monthly payment will be about $\$4,298.12$. For the first payment, you pay $\$4,298.12$ as with every other payment, and $0.0025*\$100,000=\$250$ of this payment goes towards interest. The rest of the payment is the principal payment, which is about $\$4298.12-\$250=\$4048.12$, reducing the balance to $\$95,951.88$. At the next payment, the part of the payment going towards interest is a little bit less, since the balance decreased, and more of the payment is principal. Here is a table showing all $24$ of the payments:</p>
+
+<p><center><img src="/img/2017-3-30-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>Given the initial balance, the number of payments, and the monthly interest amount, finding the monthly payment can be a tricky task. However, we can set up an iterated function to calculate it. First, we assign variables to the givens and the unknowns. Our givens are $L$, the loan amount; $m$, the monthly interest rate; and $n$, the number of payments. Our unknowns are $p$, the monthly payment; $i_k$, the interest amount at the <em>k</em>th payment; $l_k$ be the interest amount at the <em>k</em>th payment; and $B_k$, the balance after the <em>k</em>th payment.</p>
+
+<p>We already know one thing about the relationship between $i_k$ and $B_k$; namely, that
+<script type="math/tex; mode=display">i_k=mB_{k-1}</script>
+</p>
+
+<p>because the interest of the <em>k</em>th payment is the monthly interest times rate times the current balance before the payment is made. We also know that
+<script type="math/tex; mode=display">l_k=p-i_k</script>
+</p>
+
+<p>because whatever part of a payment not interest is the principal part of the payment. Also, because whatever is not interest goes towards the loan,
+<script type="math/tex; mode=display">B_k=B_{k-1}-l_k</script>
+</p>
+
+<p>We can now substitute $p-i_k$ for $l_k$ and we get
+<script type="math/tex; mode=display">B_k=B_{k-1}-(p-i_k)</script>
+<script type="math/tex; mode=display">B_k=B_{k-1}-p+i_k</script>
+</p>
+
+<p>We also can substitute $mB_{k-1}$ for $i_k$, so
+<script type="math/tex; mode=display">B_k=B_{k-1}-p+mB_{k-1}</script>
+<script type="math/tex; mode=display">B_k=(m+1)B_{k-1}-p</script>
+</p>
+
+<p>We have turned $B_k$ into a sequence. In order to finish defining the sequence, we need only one term of the sequence. We already know that before any payments, the balance is $L$, so we can let $B_0=L$. Then we can define $B_k$ as
+<script type="math/tex; mode=display">B_k=f(B_{k-1})</script>
+</p>
+
+<p>where
+<script type="math/tex; mode=display">f(x)=(m+1)x-p</script>
+</p>
+
+<p>However, since $B_0=L$, then
+<script type="math/tex; mode=display">B_k=f^k(L)</script>
+</p>
+
+<p>and by our formula for the <em>n</em>th iteration of functions of the form $f(x)=cx+d$,
+<script type="math/tex; mode=display">f_k(x)=(m+1)^kx+p\frac{1-(m+1)^k}{m}</script>
+</p>
+
+<p>and
+<script type="math/tex; mode=display">B_k=(m+1)^kL+p\frac{1-(m+1)^k}{m}</script>
+</p>
+
+<p>But this is still in terms of $p$, which is an unknown as of yet. However, we can solve for $p$ because we know another value of $B_k$. Since, after the last payment, the balance will be $0$, we can say that $B_n=0$. We can substitute and solve for $p$:
+<script type="math/tex; mode=display">0=(m+1)^nL+p\frac{1-(m+1)^n}{m}</script>
+<script type="math/tex; mode=display">p\frac{(m+1)^n-1}{m}=(m+1)^nL</script>
+<script type="math/tex; mode=display">p=\frac{m(m+1)^nL}{(m+1)^n-1}</script>
+</p>
+
+<p>Ok, we've found the monthly payment. But those loan companies are tricky little buggers. Say we also want to find out the total amount that we'll end up paying them, or better yet, the total amount of <em>interest</em> that we end up paying.</p>
+
+<p>The total amount paid is an easy quantity to find - it is simply the number of monthly payments times the monthly payment, or
+<script type="math/tex; mode=display">\frac{mn(m+1)^nL}{(m+1)^n-1}</script>
+</p>
+
+<p>And the total amount of interest paid is the difference between the total amount paid and the loan amount, which is
+<script type="math/tex; mode=display">\frac{mn(m+1)^nL}{(m+1)^n-1}-L</script>
+<script type="math/tex; mode=display">L[\frac{mn(m+1)^n}{(m+1)^n-1}-1]</script>
+</p>
+
+<p>To summarize, if one is using an amortization schedule to pay off a loan of $L$ with a monthly interest rate of $m$ over the course of $n$ payments, the monthly payment $p$ is given by
+<script type="math/tex; mode=display">p=\frac{m(m+1)^nL}{(m+1)^n-1}</script>
+</p>
+
+<p>and the total amount of interest paid is
+<script type="math/tex; mode=display">L[\frac{mn(m+1)^n}{(m+1)^n-1}-1]</script>
+</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

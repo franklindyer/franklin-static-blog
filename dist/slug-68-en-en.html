@@ -1,0 +1,344 @@
+<html>
+<head>
+    <title>Integration without Antidifferentiation (Part 2)</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Integration without Antidifferentiation (Part 2)</h2>
+
+<p><em>2018 April 26</em></p>
+
+<p>In this blog post, as I did in the <a href="/post/79">precursor</a> to this post, I will explore some more methods of evaluating a few recreational definite integrals without finding the antiderivatives of their integrands. The methods that I employ to solve these problems are, more or less, elementary, relying heavily on functional equations and basic properties of the integral rather than advanced techniques. shall begin with a list of problems that I will solve over the course of the post, so that the reader can try them first:</p>
+
+<blockquote>
+<p>Evaluate the following integral expressions:
+<script type="math/tex; mode=display">\int_{-\pi/2}^{\pi/2} \frac{\cos(x)}{e^{\sin(\sin(x))}+1}dx</script>
+<script type="math/tex; mode=display">\int_{-\infty}^{\infty} \frac{e^{-x^2}}{e^{x^3}+1}dx</script>
+<script type="math/tex; mode=display">\int_0^1 \big(2^{x^2}+\sqrt{\log_2(x+1)}\big)dx</script>
+<script type="math/tex; mode=display">\int_e^{e^2}e^{1/\ln(x)}dx-\int_{\sqrt e}^{e}e^{1/\ln(x)}dx</script>
+<script type="math/tex; mode=display">\int_0^{\pi/2}\int_0^{\pi/2} \cos(x)\cos(\cos(x)\cos(y))dxdy</script>
+<script type="math/tex; mode=display">\int_0^{2\pi} e^{\cos(x)}\cos(\sin(x))dx</script>
+</p>
+</blockquote>
+
+<p>In reality, I will reveal very few distinct tricks in this post, but I will use each trick many times and generalize each as much as possible.</p>
+
+<p>I will evaluate the integrals mostly in the order than I proposed them, beginning with the first one:
+<script type="math/tex; mode=display">\int_{-\pi/2}^{\pi/2} \frac{\cos(x)}{e^{\sin(\sin(x))}+1}dx</script>
+Using a simple substitution $x\to -x$, we can see that this integral is equal to
+<script type="math/tex; mode=display">\begin{align}
+\int_{-\pi/2}^{\pi/2} \frac{\cos(x)}{e^{\sin(\sin(x))}+1}dx
+&= \int_{\pi/2}^{-\pi/2} \frac{\cos(-x)}{e^{\sin(\sin(-x))}+1}\cdot -dx\\
+&= \int_{-\pi/2}^{\pi/2} \frac{\cos(x)}{e^{-\sin(\sin(x))}+1}dx\\
+&= \int_{-\pi/2}^{\pi/2} \frac{\cos(x)e^{\sin(\sin(x))}}{e^{\sin(\sin(x))}+1}dx\\
+\end{align}</script>
+If we let $I$ be equal to the value of this integral, we can see that
+<script type="math/tex; mode=display">\begin{align}
+2I
+&= I+I\\
+&= \int_{-\pi/2}^{\pi/2} \frac{\cos(x)}{e^{\sin(\sin(x))}+1}dx+\int_{-\pi/2}^{\pi/2} \frac{\cos(x)e^{\sin(\sin(x))}}{e^{\sin(\sin(x))}+1}dx\\
+&= \int_{-\pi/2}^{\pi/2} \bigg(\frac{\cos(x)}{e^{\sin(\sin(x))}+1}+\frac{\cos(x)e^{\sin(\sin(x))}}{e^{\sin(\sin(x))}+1}\bigg)dx\\
+&= \int_{-\pi/2}^{\pi/2} \bigg(\frac{\cos(x)(e^{\sin(\sin(x))}+1)}{e^{\sin(\sin(x))}+1}\bigg)\\
+&= \int_{-\pi/2}^{\pi/2} \cos(x)\\
+&= 2\\
+\end{align}</script>
+</p>
+
+<p>Thus, we have $I=1$, and we have evaluated our first integral:</p>
+
+<p>
+<script type="math/tex; mode=display">\bbox[lightgray,5px]{\int_{-\pi/2}^{\pi/2} \frac{\cos(x)}{e^{\sin(\sin(x))}+1}dx=1}</script>
+</p>
+
+<p>What a strange creature! Only in one's wildest dreams might the integrand have an elementary antiderivative, and yet we somehow managed to evaluate this definite integral. What allowed us to do this?</p>
+
+<p>First of all, notice that when we made the seemingly innocent substitution $x\to -x$ at the beginning, the endpoints of the integral, $-\pi/2$ and $\pi/2$, were unchanged, since they are opposites of each other. They switched places upon making the substitution, but we were able to switch them back since the change from $dx$ to $-dx$ lent us a sign change that allowed us the change the direction of the integral, switching the endpoints back to how they originally were. The evenness of the cosine function left $\cos(x)$ unchanged as $x$ changed to $-x$, creating a similarity between the integrals before and after the substitution.</p>
+
+<p>Now for the interesting part. When we changed $x$ to $-x$, the function
+<script type="math/tex; mode=display">\frac{1}{e^{\sin(\sin(x))}+1}</script>
+changed to
+<script type="math/tex; mode=display">\frac{e^{\sin(\sin(x))}}{e^{\sin(\sin(x))}+1}</script>
+Thus, this function (let's call it $f$) has the cool property
+<script type="math/tex; mode=display">f(x)+f(-x)=1</script>
+Notice that any function in the form
+<script type="math/tex; mode=display">f(x)=\frac{1}{e^{O(x)}+1}</script>
+has this property, as long as $O(x)$ is an odd function. In this case, the odd function used was $\sin(\sin(x))$. While this weird (or "odd") function served to make the integral seem much more complicated than it actually was, it really changed nothing about the method of evaluating the integral.</p>
+
+<p>Having properly analyzed the integral, we are now ready to generalize. Consider now the integral
+<script type="math/tex; mode=display">\int_{-a}^a \frac{E(x)}{e^{O(x)}+1}dx</script>
+where $a$ is a constant, $E$ is an even function, and $O$ is an odd function. By making the same substitution as last time, this integral is equal to
+<script type="math/tex; mode=display">\int_{-a}^a \frac{E(x)e^{O(x)}}{e^{O(x)}+1}dx</script>
+and if we let $I$ be the value of the integral, we have
+<script type="math/tex; mode=display">\begin{align}
+2I
+&= I+I\\
+&= \int_{-a}^a \frac{E(x)}{e^{O(x)}+1}dx+\int_{-a}^a \frac{E(x)e^{O(x)}}{e^{O(x)}+1}dx\\
+&= \int_{-a}^a \frac{E(x)(e^{O(x)}+1)}{e^{O(x)}+1}dx\\
+&= \int_{-a}^a E(x)dx\\
+&= 2\int_{0}^a E(x)dx\\
+\end{align}</script>
+and so we have the wonderful result
+<script type="math/tex; mode=display">\bbox[lightgray,5px]{\int_{-a}^a \frac{E(x)}{e^{O(x)}+1}dx=\int_{0}^a E(x)}</script>
+</p>
+
+<p>Now we can consider the next integral:
+<script type="math/tex; mode=display">\int_{-\infty}^{\infty} \frac{e^{-x^2}}{e^{x^3}+1}dx</script>
+Immediately, the reader should recognize this as a special case of the result that we have just derived, with $a=\infty$, $E(x)=e^{-x^2}$, and $O(x)=x^3$. Using the formula previously obtained, we have
+<script type="math/tex; mode=display">\int_{-\infty}^{\infty} \frac{e^{-x^2}}{e^{x^3}+1}dx=\int_0^\infty e^{-x^2}dx=\frac{\sqrt{\pi}}{2}</script>
+Finally, we have
+<script type="math/tex; mode=display">\bbox[lightgray,5px]{\int_{-\infty}^{\infty} \frac{e^{-x^2}}{e^{x^3}+1}dx=\frac{\sqrt{\pi}}{2}}</script>
+Did you see the Gaussian Integral show up in that derivation? If you don't know what I'm talking about, you should go back to the precursor to this post whose link I offered at the beginning of this post. In that post, I derive the "Gaussian Integral.</p>
+
+<p>For the next two integrals, I will use the concept of an <em>inverse function</em> to evaluate them. First, consider
+<script type="math/tex; mode=display">\int_0^1 \big(2^{x^2}+\sqrt{\log_2(x+1)}\big)dx</script> 
+As surprising as it may seem, there is actually a way to evaluate this integral using the geometric interpretation of an integral as area. Let us begin by splitting this integral up as follows:
+<script type="math/tex; mode=display">\int_0^1 (2^{x^2}-1)dx+\int_0^1 \sqrt{\log_2(x+1)}dx+1</script> 
+This may seem strange, but it will make sense momentarily. Consider the graph of $y=2^{x^2}-1$:</p>
+
+<p><center><img src="/img/2018-4-26-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>The first integral into which I split the original problem can be interpreted as the area underneath this curve:</p>
+
+<p><center><img src="/img/2018-4-26-Fig2.png" alt="Fig 2" /></center></p>
+
+<p>Get ready, here comes the trick. Recall that the graph of the inverse function of a function can be found by reflecting the original graph about the line $y=x$. Thus, the area found by integrating the inverse of a function is the area between the <em>y-axis</em> and the function, where the limits of the integral refer to $y$ values rather than $x$ values. Since the values of $2^{x^2}-1$ are $0$ and $1$ at $x=0$ and $x=1$ (that is, the function has fixed points at $x=0$ and $x=1$), and since $\sqrt{\log_2(x+1)}$ is its inverse, the second integral can be interpreted as the following area:</p>
+
+<p><center><img src="/img/2018-4-26-Fig3.png" alt="Fig 3" /></center></p>
+
+<p>The sum of these two integrals gives the sum of the orange area and purple area, or the area formed by combining them:</p>
+
+<p><center><img src="/img/2018-4-26-Fig4.png" alt="Fig 4" /></center></p>
+
+<p>...but this is just a square with side length $1$, and its area is clearly $1$! Thus, the sum of the first two integrals is $1$, and the whole expression into which we divided our original integral is equal to $2$. Thus, we have</p>
+
+<p>
+<script type="math/tex; mode=display">\bbox[lightgray,5px]{\int_0^1 \big(2^{x^2}+\sqrt{\log_2(x+1)}\big)dx=2}</script>
+</p>
+
+<p>Let's generalize this little trick. Suppose that $f$ is a bijective function with fixed points $a,b$ such that $f(a)=a$ and $f(b)=b$, with $a\lt b$. Then consider the integral
+<script type="math/tex; mode=display">\int_a^b (f(x)+f^{-1}(x))dx</script>
+Since the graph of $y=f^{-1}(x)$ is the reflection of the graph of $y=f(x)$ about the line $y=x$, we will always be able to put together the areas under $y=f(x)$ and $y=f^{-1}(x)$ like two puzzle pieces to obtain some rectangles whose areas we can easily find. In general, this area will always be given by
+<script type="math/tex; mode=display">2a(b-a)+(b-a)^2</script>
+which can be simplified to $b^2-a^2$. Thus, we have</p>
+
+<p>
+<script type="math/tex; mode=display">\bbox[lightgray,5px]{\int_a^b (f(x)+f^{-1}(x))dx=b^2-a^2}</script>
+</p>
+
+<p>Now we can move on to the next problem, which is a multi-integral expression:</p>
+
+<p>
+<script type="math/tex; mode=display">\int_e^{e^2}e^{1/\ln(x)}dx-\int_{\sqrt e}^{e}e^{1/\ln(x)}dx</script>
+</p>
+
+<p>Again, notice that $f(x)=e^{1/\ln(x)}$ is a function that one could never hope to antidifferentiate. Let's graph the integrand just like we did last time, since that seemed to help. Using the special values $f(e)=e$, $f(e^2)=\sqrt e$, and $f(\sqrt e)=e^2$, I can make a graph:</p>
+
+<p><center><img src="/img/2018-4-26-Fig5.png" alt="Fig 5" /></center></p>
+
+<p>Using the interpretation of a definite integral as the area under a curve, I can display the areas represented by each of these two integrals:</p>
+
+<p><center><img src="/img/2018-4-26-Fig6.png" alt="Fig 6" /></center></p>
+
+<p>The integral expression that we wish to evaluate is equal to the difference of these two areas - more specifically, the blue area minus the yellow area. Now get ready, here comes the trick. Notice that the function $f(x)=e^{1/\ln(x)}$ is <em>its own inverse</em> (in math language, one would say that it is an <strong>involutory</strong> function). Because of the reflection property of inverse functions that I mentioned earlier, the graph of $y=f(x)$ must be <em>symmetrical</em> about the line $y=x$. If I reflect the yellow area about the line $y=x$, its area will remain unchanged, but look what happens when I do that:</p>
+
+<p><center><img src="/img/2018-4-26-Fig7.png" alt="Fig 7" /></center></p>
+
+<p>Since I'm taking a difference of the two areas, and the green area is contained in both the blue and yellow areas, it will cancel out. Thus, we only need to find the area of the blue region on this graph minus the area of the yellow region. Need I point out that they're both rectangles, whose areas we can easily calculate? The side lengths of the blue rectangle are $e^2-e$ and $\sqrt e$, giving an area of $e^{5/2}-e^{3/2}$, and the side lengths of the yellow rectangle are $e-\sqrt e$ and $e$, giving an area of $e^{2}-e^{3/2}$. The difference of these two areas gives us our answer:</p>
+
+<p>
+<script type="math/tex; mode=display">\bbox[lightgray,5px]{\int_e^{e^2}e^{1/\ln(x)}dx-\int_{\sqrt e}^{e}e^{1/\ln(x)}dx=e^2(\sqrt e -1)}</script>
+</p>
+
+<p>In general, one can prove that if $f$ is an involutory function, then</p>
+
+<p>
+<script type="math/tex; mode=display">\bbox[lightgray,5px]{\int_a^b f(x)dx+\int_{f(a)}^{f(b)}f(x)dx=bf(b)-af(a)}</script>
+</p>
+
+<p>I'll omit this proof as an exercise for the reader... it's not too difficult.</p>
+
+<p>Now I'll move on to the second-to-last integral problem (appropriately, it's a double integral). Unfortunately, my methods for evaluating this integral is a little bit less elementary. In my derivation of the solution, I will make use of the following two identities:
+<script type="math/tex; mode=display">\int_0^{\pi/2} \cos^{2n}\theta d\theta=\frac{\pi}{2}\frac{(2n-1)!!}{(2n)!!}</script>
+<script type="math/tex; mode=display">\int_0^{\pi/2} \cos^{2n+1}\theta d\theta=\frac{(2n)!}{(2n+1)!!}</script>
+...which hold for any natural number $n$. Notice that, as I will use later, these two formulas imply that for any natural number $n$,
+<script type="math/tex; mode=display">\bigg(\int_0^{\pi/2} \cos^{n}\theta d\theta\bigg)\bigg(\int_0^{\pi/2} \cos^{n+1}\theta d\theta\bigg)=\frac{\pi}{2}\frac{1}{n+1}</script>
+Let us return now to the problem that I posed at the beginning:
+<script type="math/tex; mode=display">\int_0^{\pi/2}\int_0^{\pi/2} \cos(x)\cos(\cos(x)\cos(y))dxdy</script>
+Recall that $\cos(x)$ has a Maclaurin series centered at $x=0$. Of course, we all know that the coefficients of this series are given by
+<script type="math/tex; mode=display">\cos(x)=\sum_{n=0}^\infty \frac{(-1)^n x^{2n}}{(2n)!}</script>
+...but, as I will demonstrate in a moment, we don't <em>need</em> to know the coefficients. So, for the sake of simplicity, I will instead write
+<script type="math/tex; mode=display">\cos(x)=\sum_{n=0}^\infty a_n x^n</script>
+This series representation for $\cos(x)$, together with the identities that I mentioned earlier, causes the whole integral to unfold before our eyes:
+<script type="math/tex; mode=display">\begin{align}
+\int_0^{\pi/2}\int_0^{\pi/2} \cos(x)\cos(\cos(x)\cos(y))dxdy
+&= \int_0^{\pi/2}\int_0^{\pi/2} \cos(x)\sum_{n=0}^\infty a_n \cos^n(x)\cos^n(y)dxdy\\
+&= \sum_{n=0}^\infty \int_0^{\pi/2}\int_0^{\pi/2} a_n \cos^{n+1}(x)\cos^n(y)dxdy\\
+&= \sum_{n=0}^\infty a_n\bigg(\int_0^{\pi/2}\cos^{n+1}(x)dx\bigg)\bigg(\int_0^{\pi/2} \cos^n(y)dy\bigg)\\
+&= \sum_{n=0}^\infty a_n\cdot \frac{\pi}{2}\frac{1}{n+1}\\
+&= \frac{\pi}{2}\sum_{n=0}^\infty \frac{a_n}{n+1}\\
+&= \frac{\pi}{2}\sum_{n=0}^\infty \int_0^1 a_n x^n dx\\
+&= \frac{\pi}{2} \int_0^1 \sum_{n=0}^\infty a_n x^n dx\\
+&= \frac{\pi}{2} \int_0^1 \cos(x) dx\\
+&= \frac{\pi\sin(1)}{2}
+\end{align}</script>
+Which gives us the miraculous result
+<script type="math/tex; mode=display">\bbox[lightgray,5px]{\int_0^{\pi/2}\int_0^{\pi/2} \cos(x)\cos(\cos(x)\cos(y))dxdy=\frac{\pi\sin(1)}{2}}</script>
+Wasn't that awesome? Its generalization is even awesomer. Suppose now that $f(x)$ is a function with a Maclaurin series:
+<script type="math/tex; mode=display">f(x)=\sum_{n=0}^\infty a_n x^n</script>
+If $k$ is some arbitrary constant, then we have the following:
+<script type="math/tex; mode=display">\begin{align}
+\int_0^{\pi/2}\int_0^{\pi/2} \cos(x)f(k\cos(x)\cos(y))dxdy
+&= \int_0^{\pi/2}\int_0^{\pi/2} \cos(x)\sum_{n=0}^\infty a_n k^n \cos^n(x)\cos^n(y)dxdy\\
+&= \sum_{n=0}^\infty \int_0^{\pi/2}\int_0^{\pi/2} a_n k^n \cos^{n+1}(x)\cos^n(y)dxdy\\
+&= \sum_{n=0}^\infty a_n k^n\bigg(\int_0^{\pi/2}\cos^{n+1}(x)dx\bigg)\bigg(\int_0^{\pi/2} \cos^n(y)dy\bigg)\\
+&= \sum_{n=0}^\infty a_n k^n\cdot \frac{\pi}{2}\frac{1}{n+1}\\
+&= \frac{\pi}{2}\sum_{n=0}^\infty \frac{a_n k^n}{n+1}\\
+&= \frac{\pi}{2k}\sum_{n=0}^\infty \int_0^k a_n x^n dx\\
+&= \frac{\pi}{2k} \int_0^k \sum_{n=0}^\infty a_n x^n dx\\
+&= \frac{\pi}{2k} \int_0^k f(x) dx\\
+\end{align}</script>
+</p>
+
+<p>Which gives us the following fantastic result:</p>
+
+<p>
+<script type="math/tex; mode=display">\bbox[lightgray,5px]{\int_0^{\pi/2}\int_0^{\pi/2} \cos(x)f(k\cos(x)\cos(y))dxdy=\frac{\pi}{2k} \int_0^k f(x) dx}</script>
+</p>
+
+<p>Just remember that this only works if $f$ has a Maclaurin series. As an exercise, I propose the following problem for the reader: try to find a similar formula for
+<script type="math/tex; mode=display">\int_0^{\pi/2}\int_0^{\pi/2} \cos^3(x)f(k\cos(x)\cos(y))dxdy</script>
+or, more generally,
+<script type="math/tex; mode=display">\int_0^{\pi/2}\int_0^{\pi/2} \cos^{2n+1}(x)f(k\cos(x)\cos(y))dxdy</script>
+for some arbitrary natural number $n$.</p>
+
+<p>Now we can move on to the final integral, whose derivation is significantly similar than the previous one. The integral is
+<script type="math/tex; mode=display">\int_0^{2\pi} e^{\cos(x)}\cos(\sin(x))dx</script>
+To evaluate this integral, we need only recal the Maclaurin series for $e^x$ (whose coefficients we will actually have to use this time) and a few properties of complex numbers:
+<script type="math/tex; mode=display">e^x=\sum_{n=0}^\infty \frac{x^n}{n!}</script>
+Letting $x=e^{i\theta}$, we have
+<script type="math/tex; mode=display">e^{e^{i\theta}}=\sum_{n=0}^\infty \frac{e^{in\theta}}{n!}</script>
+or
+<script type="math/tex; mode=display">e^{\cos\theta}(\cos(\sin(\theta))+i\sin(\sin(\theta)))=\sum_{n=0}^\infty \frac{\cos(n\theta)+i\sin(n\theta)}{n!}</script>
+Taking the real part of both sides, we have
+<script type="math/tex; mode=display">e^{\cos\theta}\cos(\sin(\theta))=\sum_{n=0}^\infty \frac{\cos(n\theta)}{n!}</script>
+and by integrating both sides from $0$ to $2\pi$, we have
+<script type="math/tex; mode=display">\int_0^{2\pi} e^{\cos\theta}\cos(\sin(\theta))d\theta=\sum_{n=0}^\infty \int_0^{2\pi} \frac{\cos(n\theta)}{n!}d\theta</script>
+Notice now that for any natural number $n\gt 0$,
+<script type="math/tex; mode=display">\int_0^{2\pi} \cos(nx)dx=0</script>
+Thus, we have
+<script type="math/tex; mode=display">\int_0^{2\pi} e^{\cos\theta}\cos(\sin(\theta))d\theta=\int_0^{2\pi} \frac{\cos(0\cdot \theta)}{0!}d\theta=\int_0^{2\pi}d\theta</script>
+and, finally,
+<script type="math/tex; mode=display">\bbox[lightgray,5px]{\int_0^{2\pi} e^{\cos\theta}\cos(\sin(\theta))d\theta=2\pi}</script>
+</p>
+
+<p>That beautiful identity concludes this blog post!</p>
+
+<p><strong>CONTINUATION:</strong> Soon after finishing this post, I discovered another mind-blowing trick that absolutely deserves to be part of it, so I'm going to add it to the end.</p>
+
+<blockquote>
+<p>Evaluate the following integral expressions:
+<script type="math/tex; mode=display">\int_0^1 \cos(x-\sqrt{1-x^2})dx</script>
+<script type="math/tex; mode=display">\int_0^{\pi/2} \sin(x)\cos(\cos(x)-\sin(x))dx</script>
+</p>
+</blockquote>
+
+<p>Once again, you should definitely try your hand at these problems before you read my explained solutions.</p>
+
+<p>Let's start with the first integral:
+<script type="math/tex; mode=display">\int_0^1 \cos(x-\sqrt{1-x^2})dx</script>
+Let us set the variable $I$ equal to the value of this integral. By using the substitution $x\to \sqrt{1-x^2}$, we have
+<script type="math/tex; mode=display">\begin{align}
+I
+&=\int_0^1 \cos(x-\sqrt{1-x^2})dx\\
+&=\int_1^0 \cos(\sqrt{1-x^2}-\sqrt{1-(1-x^2)})\cdot -\frac{xdx}{\sqrt{1-x^2}}\\
+&=\int_0^1 \cos(x-\sqrt{1-x^2})\frac{xdx}{\sqrt{1-x^2}}\\
+\end{align}</script>
+</p>
+
+<p>This tells us that
+<script type="math/tex; mode=display">\begin{align}
+I
+&=\frac{I+I}{2}\\
+&=\frac{1}{2}\int_0^1 \cos(x-\sqrt{1-x^2})dx+\frac{1}{2}\int_0^1 \cos(x-\sqrt{1-x^2})\frac{xdx}{\sqrt{1-x^2}}\\
+&=\frac{1}{2}\int_0^1 \cos(x-\sqrt{1-x^2})\bigg(1+\frac{x}{\sqrt{1-x^2}}\bigg)dx\\
+\end{align}</script>
+</p>
+
+<p>Notice now that if we let $u=x-\sqrt{1-x^2}$, we have
+<script type="math/tex; mode=display">du=\bigg(1+\frac{x}{\sqrt{1-x^2}}\bigg)dx</script>
+If we make this substitution $x-\sqrt{1-x^2}\to u$ into our integral, the endpoints at $0$ and $1$ will change to $-1$ and $1$, leaving us with
+<script type="math/tex; mode=display">\frac{1}{2}\int_{-1}^1 \cos(u)du</script>
+...and this is trivially evaluated, giving us the mysterious result</p>
+
+<p>
+<script type="math/tex; mode=display">\bbox[lightgray,5px]{\int_0^1 \cos(x-\sqrt{1-x^2})dx=\sin(1)}</script>
+</p>
+
+<p>Did you catch the trick? I'll do the second integral so you have another chance to see it. Starting with
+<script type="math/tex; mode=display">\int_0^{\pi/2} \sin(x)\cos(\cos(x)-\sin(x))dx</script>
+I'll make the substitution $x\to \pi/2-x$, giving me the integral
+<script type="math/tex; mode=display">\int_0^{\pi/2} \cos(x)\cos(\cos(x)-\sin(x))dx</script>
+The original integral must be equal to the average of these two integrals, since it is equal to both. Thus, we have
+<script type="math/tex; mode=display">\frac{1}{2}\int_0^{\pi/2} (\sin(x)+\cos(x))\cos(\sin(x)-\cos(x))dx</script>
+Making the substitution $x\to\sin(x)-\cos(x)$, we have
+<script type="math/tex; mode=display">\frac{1}{2}\int_{-1}^{1} \cos(x)dx=\cos(1)</script>
+and we have another interesting solution:</p>
+
+<p>
+<script type="math/tex; mode=display">\bbox[lightgray,5px]{\int_0^1 \sin(x)\cos(\cos(x)-\sin(x))dx=\cos(1)}</script>
+</p>
+
+<p>I've managed to generalize the trick used for these integrals, and I'll just give you the formula immediately and follow it with a proof. I assert that if $E$ is an even function, $\theta$ is an involutory function (like $\pi/2-x$ or $\sqrt{1-x^2}$), $f$ is some function, and $a$ is an arbitrary constant, then</p>
+
+<p>
+<script type="math/tex; mode=display">\bbox[lightgray,5px]{\int_a^{\theta(a)} E(f(x)-f(\theta(x)))f'(x)dx=\int_0^{f(\theta(a))-f(a)}E(x)dx}</script>
+</p>
+
+<p>and here is a proof, using the same method as before with the substitutions $x\to\theta(x)$ and $f(x)-f(\theta(x))\to x$:</p>
+
+<p>
+<script type="math/tex; mode=display">\begin{align}
+I
+&=\int_a^{\theta(a)} E(f(x)-f(\theta(x)))f'(x)dx\\
+&=-\int_a^{\theta(a)} E(f(x)-f(\theta(x)))f'(\theta(x))\theta'(x)dx\\
+&=\frac{1}{2}\int_a^{\theta(a)} E(f(x)-f(\theta(x)))(f'(x)-f'(\theta(x))\theta'(x))dx\\
+&=\frac{1}{2}\int_{f(a)-f(\theta(a))}^{f(\theta(a))-f(a)} E(x)dx\\
+&=\int_{0}^{f(\theta(a))-f(a)} E(x)dx\\
+\end{align}</script>
+</p>
+
+<p>...and this proof really <em>does</em> end my blog post (no continuations this time, I promise).</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

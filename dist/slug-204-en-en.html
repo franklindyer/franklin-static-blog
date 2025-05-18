@@ -1,0 +1,71 @@
+<html>
+<head>
+    <title>A little encoding anomaly</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h3>A little encoding anomaly</h3>
+
+<p>A few days ago I visited the bookstore Barnes &amp; Noble with my girlfriend and we bought three books. I noticed a strange detail in the receipt that they gave us after the purchase: Can you spot it?</p>
+
+<p><center><img src="/img/2023-06-15-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>The first books is called <code>La hipótesis del amor</code> but it was printed <code>La hip≤tesis del amor</code> on the receipt. If you're interested in a little googling puzzle, try and figure out what the cause of this little error could be. I've got my own tentative explanation, and I'll lay it out here.</p>
+
+<p>The first possibility that occurred to me is that it could have something to do with the way the text was encoded. On a computer, the glyphs, or the geometric shapes that are considered individual symbols like the letters of the latin alphabet <code>a,b,c,...,A,B,C,...</code> or the arabic numerals <code>0,1,2,...</code>, are encoded as strings of bit, like just about everything else stored digitally. To convert a digital document into something readable by either displaying glyphs in sequence on the screen or printing them on (say) a receipt, the strings of bits constituting a file need to be converted into a sequence of geometric shapes. </p>
+
+<p>But there are different standards determining how bits are converted into characters. If the program that generates a text file uses one rule to convert between bits and characters while the printer uses another, the printed text could end up being different than the text shown on the screen. My theory, then, is that the program that was used to generate the digital representation of the receipt used a different <a href="https://en.wikipedia.org/wiki/Code_page">code page</a> than the receipt printer. The two code pages would have to be identical when it comes to the most commonly-used characters, such as the characters belonging to the latin alphabet, and differ in how they translate lesser-seen characters. In particular, the bit sequence representing <code>ó</code> according to the code page used by the process that generated the file would have to represent the character <code>≤</code> in the code page used by the printer.</p>
+
+<p>The next step was to go looking for a pair of similar code pages that might have produced this error. One useful reference is the book <em>Fonts and Encodings</em> by Yannis Haralambous, that tells about the history of various different code pages in detail. One of the most well-known codes is ASCII. Originally, it represented each character with a sequence of $7$ bits, which could alternatively be represented as pairs of hexadecimal digits with the first being restricted to the range <code>0-7</code>. Here's a table from Haralambous' book showing the 1967 version of the ASCII code page:</p>
+
+<p><center><img src="/img/2023-06-15-Fig2.png" alt="Fig 2" /></center></p>
+
+<p>You can see that ASCII-1967 is pretty limited: it doesn't include the character <code>ó</code> at all, nor the character <code>≤</code>. (Actually, there is a way of representing accents in ASCII-1967, but it's pretty clunky. The symbol <code>ó</code> could be represented as <code>0x6F0827</code>, in which the backspace character is used to superimpose an <code>o</code> with an apostrophe. You could similarly represent <code>≤</code> as <code>0x3C085F</code>.)</p>
+
+<p>But many of the more commonly-used code pages nowadays are extended versions of ASCII consisting of $8$ bits per character, such that the codes between <code>0x00</code> and <code>0x7F</code> are the same as those used by ASCII, while the codes between <code>0x80</code> and <code>0xFF</code> are particular to the specific extension being used. As a starting point for my search, I looked for the specifications of certain receipt printers, although I didn't know what type was being used in the bookstore. For instance, <a href="http://h10032.www1.hp.com/ctg/Manual/c06524613.pdf">the manual for this printer</a> has a list of character sets on page 14, of which the most relevant ones seemed to be:</p>
+
+<ul>
+<li><code>Code Page 437 US English</code></li>
+<li><code>Code Page 850 Multilingual</code></li>
+<li><code>Code Page 1252 Windows Latin 1</code></li>
+</ul>
+
+<p>By looking at the tables for these code pages, I noticed that code pages <code>437</code> and <code>1252</code> satisfy the necessary requirements. That is, they're both based on ASCII, but the code <code>0xF3</code> represents the character <code>≤</code> in code page <code>437</code> and represents the character <code>ó</code> in code page <code>1252</code>. So, my conjecture is that the process that generated the receipt was using code page <code>1252</code> (this would make sense, since Windows computers are often used in businesses) and the printer was using code page <code>437</code>, probably due to a default configuration. Here are the chunks of the two code pages that aren't inherited from ASCII:</p>
+
+<p><center><img src="/img/2023-06-15-Fig3.png" alt="Fig 3" /></center></p>
+
+<p>If correct, my hypothesis could predict other incorrect substitutions aside from the substitution of <code>≤</code> for <code>ó</code>, for instance a <code>±</code> in the place of <code>ñ</code> or a <code>µ</code> in the place of <code>æ</code>. Well, if I go back to that Barnes &amp; Noble, I'll make sure to buy the book with the largest possible number of characters falling outside of ASCII-1967, to see if my predictions are confirmed.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

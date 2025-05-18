@@ -1,0 +1,194 @@
+<html>
+<head>
+    <title>Non-telescoping Sums</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Non-Telescoping Sums</h2>
+
+<p><em>2017 June 24</em></p>
+
+<blockquote>
+<p>Evaluate the following infinite series:
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{(-1)^{x-1}}{x}</script>
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{1}{x(2x+1)}</script>
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{x}{2^x}</script>
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{x^2}{4^x}</script>
+<script type="math/tex; mode=display">\sum_{x=0}^\infty \frac{\sin(\frac{\pi x}{4})}{e^x}</script>
+</p>
+</blockquote>
+
+<p>This post will address more difficult sums that <em>do not</em> telescope (at least, not easily enough for telescoping to be an efficient method of solving them) and will provide some alternate methods for evaluating them.</p>
+
+<p>First we will deal with the well-know alternating harmonic series
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{(-1)^{x-1}}{x}</script>
+which, unlike the non-alternating harmonic series, converges. The trick in this case is to define a function $S(a)$ as follows:
+<script type="math/tex; mode=display">S(a)=\sum_{x=1}^\infty \frac{a^x}{x}</script>
+Note that the value of our sum is equal to $-S(-1)$. This will come in handy later. Look what happens when we differentiate $S(a)$:
+<script type="math/tex; mode=display">S'(a)=\sum_{x=1}^\infty a^{x-1}</script>
+Look! This is a geometric series, and we know how to evaluate that using the formula for the sum of a geometric series.
+<script type="math/tex; mode=display">S'(a)=\frac{1}{1-a}</script>
+We can now antidifferentiate both sides to get
+<script type="math/tex; mode=display">S(a)=-\ln(1-a)+C</script>
+By taking the case of $S(0)$, we can determine that the constant is $0$ and so
+<script type="math/tex; mode=display">S(a)=-\ln(1-a)</script>
+Remember how we said that our sum is equal to $-S(-1)$? Now we can use our formula to say that the answer is
+<script type="math/tex; mode=display">-S(-1)=\ln(2)</script>
+</p>
+
+<p>We can use a similar approach for the series
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{1}{x(2x+1)}</script>
+We can define $S(a)$ this time as
+<script type="math/tex; mode=display">S(a)=\sum_{x=1}^\infty \frac{a^{2x+1}}{x(2x+1)}</script>
+so that our sum is equal to $S(1)$. By differentiating,
+<script type="math/tex; mode=display">S'(a)=\sum_{x=1}^\infty \frac{a^{2x}}{x}</script>
+<script type="math/tex; mode=display">S'(a)=\sum_{x=1}^\infty \frac{(a^2)^x}{x}</script>
+From the previous summation problem, we found out that
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{a^x}{x}=-\ln(1-a)</script>
+So we can say that
+<script type="math/tex; mode=display">S'(a)=-\ln(1-a^2)</script>
+Then, by integrating, we get
+<script type="math/tex; mode=display">S(a)=-\ln(1+a)-a\ln(1-a^2)+2a+\ln(1-a)+C</script>
+<script type="math/tex; mode=display">S(a)=-\ln(1+a)-a\ln(1-a)-a\ln(1+a)+2a+\ln(1-a)+C</script>
+<script type="math/tex; mode=display">S(a)=-(1+a)\ln(1+a)+2a+(1-a)\ln(1-a)+C</script>
+By observing the case of $S(0)$, we see that $C=0$ and so
+<script type="math/tex; mode=display">S(a)=-(1+a)\ln(1+a)+2a+(1-a)\ln(1-a)</script>
+and now we can just evaluate it at $a=1$, right?</p>
+
+<p>No. Not right. This function isn't exactly defined at $a=1$ because
+<script type="math/tex; mode=display">S(1)=-(1+1)\ln(1+1)+2(1)+(1-1)\ln(1-1)</script>
+<script type="math/tex; mode=display">S(1)=-2\ln(2)+2+(0)\ln(0)</script>
+<script type="math/tex; mode=display">S(1)=-2\ln(2)+2+0\cdot-\infty</script>
+Whoa whoa whoa. What do we do now?</p>
+
+<p>We have to take the <em>limit</em> of $S(a)$ as $a$ approaches $1$, rather than trying to interpret its value literally.
+<script type="math/tex; mode=display">\lim_{a=1} S(a)</script>
+<script type="math/tex; mode=display">=\lim_{a=1} -(1+a)\ln(1+a)+2a+(1-a)\ln(1-a)</script>
+since the $-(1+a)\ln(1+a)+2a$ is well-defined at $a=1$, we can change this to
+<script type="math/tex; mode=display">=-2\ln(2)+2+\lim_{a=1} (1-a)\ln(1-a)</script>
+When we evaluate the limit, we get $0$ as the result. This result can be confirmed graphically by a plot of the graph $y=(1-x)\ln(1-x)$ near $x=1$:</p>
+
+<p><center><img src="/img/2017-6-24-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>Thus our answer is $2-2\ln(2)$, and so
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{1}{x(2x+1)}=2-2\ln(2)</script>
+</p>
+
+<p>Now for the series
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{x}{2^x}</script>
+Let us again define a function $S(a)$:
+<script type="math/tex; mode=display">S(a)=\sum_{x=1}^\infty xa^{x-1}</script>
+Note now that our sum is equal to $\frac{1}{2}S(\frac{1}{2})$. </p>
+
+<p>Uh-oh. There's a problem. Look what happens if we differentiate this time:
+<script type="math/tex; mode=display">S'(a)=\sum_{x=1}^\infty x(x-1)a^{x-2}</script>
+It gets <em>more</em> complicated! What do we do now?\</p>
+
+<p>The problem was that we were doing things in the wrong order - this time, instead of differentiating first, we should <em>integrate</em> first. Look what happens if we do that:
+<script type="math/tex; mode=display">\int S(a)da=C+\sum_{x=1}^\infty a^x</script>
+Look at that! Another geometric series. Now we can use the formula for the sum of a geometric series again to get
+<script type="math/tex; mode=display">\int S(a)da=\frac{1}{1-a}-1+C</script>
+<script type="math/tex; mode=display">\int S(a)da=\frac{a}{1-a}+C</script>
+The $-1$ was added because the sum is from $1$ to $\infty$, so it excludes the first term $a^0=1$ of the series. Now we can differentiate to get a closed-form formula for the sum:
+<script type="math/tex; mode=display">S(a)=\frac{1-a+a}{(1-a)^2}</script>
+<script type="math/tex; mode=display">S(a)=\frac{1}{(1-a)^2}</script>
+Which means that, since our sum is equal to $\frac{1}{2}S(\frac{1}{2})$, the answer is
+<script type="math/tex; mode=display">\frac{1}{2}S\bigg(\frac{1}{2}\bigg)=\frac{1}{2}\frac{1}{(1-\frac{1}{2})^2}</script>
+<script type="math/tex; mode=display">\frac{1}{2}S\bigg(\frac{1}{2}\bigg)=\frac{1}{2}\frac{1}{\frac{1}{4}}</script>
+<script type="math/tex; mode=display">\frac{1}{2}S\bigg(\frac{1}{2}\bigg)=\frac{1}{2}\cdot 4</script>
+<script type="math/tex; mode=display">\frac{1}{2}S\bigg(\frac{1}{2}\bigg)=2</script>
+Which shows that
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{x}{2^x}=2</script>
+</p>
+
+<p>On to the next series:
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{x^2}{4^x}</script>
+This is basically a more complicated version of the previous series, and can be solved in the same way. Again, let
+<script type="math/tex; mode=display">S(a)=\sum_{x=1}^\infty a^{x-1}x^2</script>
+so that our sum is equal to $\frac{1}{4}S(\frac{1}{4})$. Now we can antidifferentiate to get
+<script type="math/tex; mode=display">\int S(a)da=\sum_{x=1}^\infty a^{x}x</script>
+then divide both sides by $a$ so that we can integrate again:
+<script type="math/tex; mode=display">\frac{1}{a}\int S(a)da=\sum_{x=1}^\infty a^{x-1}x</script>
+<script type="math/tex; mode=display">\int \frac{1}{a}\int S(a)dada=\sum_{x=1}^\infty a^{x}</script>
+Again we use the formula for the geometric series...
+<script type="math/tex; mode=display">\int \frac{1}{a}\int S(a)dada=\frac{a}{1-a}</script>
+again we differentiate both sides...
+<script type="math/tex; mode=display">\frac{1}{a}\int S(a)da=\frac{1}{(1-a)^2}</script>
+multiply by $a$...
+<script type="math/tex; mode=display">\int S(a)da=\frac{a}{(1-a)^2}</script>
+differentiate <em>yet again</em>...
+<script type="math/tex; mode=display">S(a)=\frac{(1-a)^2+2(1-a)a}{(1-a)^4}</script>
+<script type="math/tex; mode=display">S(a)=\frac{1-2a+a^2+2a-2a^2}{(1-a)^4}</script>
+<script type="math/tex; mode=display">S(a)=\frac{1-a^2}{(1-a)^4}</script>
+and so
+<script type="math/tex; mode=display">\frac{1}{4}S(\frac{1}{4})=\frac{1}{4}\frac{1-\frac{1}{16}}{(\frac{3}{4})^4}</script>
+<script type="math/tex; mode=display">\frac{1}{4}S(\frac{1}{4})=\frac{1}{4}\frac{\frac{15}{16}}{\frac{81}{256}}</script>
+<script type="math/tex; mode=display">\frac{1}{4}S(\frac{1}{4})=\frac{1}{4}\frac{15\cdot256}{81\cdot16}</script>
+<script type="math/tex; mode=display">\frac{1}{4}S(\frac{1}{4})=\frac{1}{4}\frac{5\cdot16}{27}</script>
+<script type="math/tex; mode=display">\frac{1}{4}S(\frac{1}{4})=\frac{5\cdot4}{27}</script>
+<script type="math/tex; mode=display">\frac{1}{4}S(\frac{1}{4})=\frac{20}{27}</script>
+And so
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{x^2}{4^x}=\frac{20}{27}</script>
+</p>
+
+<p>Onto the last summation problem. This one uses a strategy completely different from any of the others.
+<script type="math/tex; mode=display">\sum_{x=0}^\infty \frac{\sin(\frac{\pi x}{4})}{e^x}</script>
+This is a very strange sum, and it may at first seem very difficult to approach. However, there is a very beautiful identity discovered by Leonhard Euler:
+<script type="math/tex; mode=display">e^{i\theta}=\cos(\theta)+i\sin(\theta)</script>
+where $i$ is the imaginary number $i=\sqrt{-1}$ (we will not prove this here, but perhaps in a later post). This means that the value of our sum is equal to the imaginary part of the complex number
+<script type="math/tex; mode=display">\sum_{x=0}^\infty \frac{e^{\frac{\pi}{4}xi}}{e^x}</script>
+Let's simplify this...
+<script type="math/tex; mode=display">\sum_{x=0}^\infty e^{\frac{\pi}{4}xi-x}</script>
+<script type="math/tex; mode=display">\sum_{x=0}^\infty \Big(e^{\frac{\pi}{4}i-1}\Big)^x</script>
+Lo and behold! Another geometric series. We can now apply our beloved formula for the sum of an infinite geometric series:
+<script type="math/tex; mode=display">\frac{1}{1-e^{\frac{\pi}{4}i-1}}</script>
+or
+<script type="math/tex; mode=display">\frac{e}{e-e^{\frac{\pi}{4}i}}</script>
+Now we can use Euler's formula:
+<script type="math/tex; mode=display">\frac{e}{e-\cos(\frac{\pi}{4})-i\sin(\frac{\pi}{4})}</script>
+<script type="math/tex; mode=display">\frac{e}{e-\frac{1}{\sqrt 2}-\frac{i}{\sqrt 2}}</script>
+<script type="math/tex; mode=display">\frac{e\sqrt 2}{e\sqrt 2-1-i}</script>
+Now, to find the imaginary part, we need to get rid of the $i$ in the denominator:
+<script type="math/tex; mode=display">\frac{(e\sqrt 2)(e\sqrt 2-1+i)}{(e\sqrt 2-1-i)(e\sqrt 2-1+i)}</script>
+<script type="math/tex; mode=display">\frac{(e\sqrt 2)(e\sqrt 2-1)+ie\sqrt 2}{(e\sqrt 2-1)^2+1}</script>
+We can now extract the imaginary part:
+<script type="math/tex; mode=display">\frac{e\sqrt 2}{(e\sqrt 2-1)^2+1}</script>
+And so this is the answer that we are looking for, and
+<script type="math/tex; mode=display">\sum_{x=0}^\infty \frac{\sin(\frac{\pi x}{4})}{e^x}=\frac{e\sqrt 2}{(e\sqrt 2-1)^2+1}</script>
+Many other summation problems involving trigonometric functions can be solved using this identity.</p>
+
+<p>And that concludes this post!</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

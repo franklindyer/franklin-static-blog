@@ -1,0 +1,225 @@
+<html>
+<head>
+    <title>A summary of functional iteration</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>A summary of functional iteration</h2>
+
+<p><em>2017 Nov 4</em></p>
+
+<p>In this post, I will pose a few functional-iteration puzzles, rederive some useful iteration formulas, and discover a few new ones. All of the most important formulas are colored green, so that they will stand out.</p>
+
+<blockquote>
+<p>Find a formula for the <em>nth</em> iterate of each of the following functions:
+<script type="math/tex; mode=display">f_1(x)=x^{\ln(x)}</script>
+<script type="math/tex; mode=display">f_2(x)=x^{\ln(x)+2}</script>
+<script type="math/tex; mode=display">f_3(x)=\ln(e^x+1)</script>
+<script type="math/tex; mode=display">f_4(x)=\ln(e^x+1)+1</script>
+<script type="math/tex; mode=display">f_5(x)=\frac{\ln(e^x+1)+\ln(e^x-1)}{2}</script>
+<script type="math/tex; mode=display">f_6(x)=x+\ln(e^x+2)</script>
+</p>
+</blockquote>
+
+<p>Before getting into any formulas or puzzles, I must remind the reader of the most important principle of functional iteration. If $g,h$ are functions, then
+<script type="math/tex; mode=display">\color{green}{(g^{-1}\circ h\circ g)^{\circ n}=g^{-1}\circ h^{\circ n}\circ g}</script>
+This fundamental property of function composition allows us to reduce difficult problems to easier ones. For example, consider the function
+<script type="math/tex; mode=display">f(x)=\alpha x+\beta</script>
+In a previous post, I iterated this by forming a geometric series - however, it can be done in a much simpler way. Notice that we can rearrange this to obtain
+<script type="math/tex; mode=display">f(x)=\alpha \bigg(x+\frac{\beta}{\alpha-1}\bigg)-\frac{\beta}{\alpha-1}</script>
+for $\alpha\ne 1$. Then, if we define $g$ and $h$ as
+<script type="math/tex; mode=display">g(x)=x+\frac{\beta}{\alpha-1}</script>
+<script type="math/tex; mode=display">h(x)=\alpha x</script>
+we can write
+<script type="math/tex; mode=display">f(x)=(g^{-1}\circ h\circ g)(x)</script>
+and so
+<script type="math/tex; mode=display">f^{\circ n}(x)=(g^{-1}\circ h\circ g)^{\circ n}(x)</script>
+<script type="math/tex; mode=display">f^{\circ n}(x)=(g^{-1}\circ h^{\circ n}\circ g)(x)</script>
+Now we have reduced this problem to finding the <em>nth</em> iterate of $h$, which we can instantly say is
+<script type="math/tex; mode=display">h^{\circ n}(x)=\alpha^n x</script>
+And now we may say that
+<script type="math/tex; mode=display">\begin{align}
+f^{\circ n}(x) & = (g^{-1}\circ h^{\circ n}\circ g)(x) \\
+ & = h^{\circ n}\bigg(x+\frac{\beta}{\alpha-1}\bigg)-\frac{\beta}{\alpha-1} \\
+ & = \alpha^n\bigg(x+\frac{\beta}{\alpha-1}\bigg)-\frac{\beta}{\alpha-1} \\
+ & = \alpha^n x+\frac{\alpha^n -1}{\alpha-1}\beta \\
+\end{align}</script>
+and our final formula is:
+<script type="math/tex; mode=display">\color{green}{f(x)=\alpha x+\beta \implies f^{\circ n}(x)=\alpha^n x+\frac{\alpha^n -1}{\alpha-1}\beta}</script>
+Using the same method, one may derive this analogous formula:
+<script type="math/tex; mode=display">\color{green}{f(x)=\beta x^\alpha \implies f^{\circ n}(x)=\beta^{\frac{\alpha^n -1}{\alpha-1}}x^{\alpha^n}}</script>
+</p>
+
+<p>Now I will move on to iterating a quadratic. Unfortunately, it seems that only a few specific types of quadratics can be effectively iterated. One rather obvious class of quadratic is the set of quadratics in the form
+<script type="math/tex; mode=display">f(x)=\frac{(\alpha x+\beta)^2}{\alpha}-\frac{\beta}{\alpha}</script>
+Notice that we may let $g(x)=ax+b$ and $h(x)=x^2$ to discover that
+<script type="math/tex; mode=display">f^{\circ n}(x)=\frac{1}{\alpha}(\alpha x+\beta)^{2^n}-\frac{\beta}{\alpha}</script>
+Before we make this into a final formula, I would like to rearrange $f$ so that $f$ is written in standard quadratic form:
+<script type="math/tex; mode=display">\begin{align}
+f(x) &= \frac{(\alpha x+\beta)^2}{\alpha}-\frac{\beta}{\alpha} \\
+ &= \frac{\alpha^2 x^2+2\alpha\beta x+\beta ^2 }{\alpha}-\frac{\beta}{\alpha} \\
+ &= \alpha x+2\beta x+\frac{\beta ^2-\beta}{\alpha} \\
+\end{align}</script>
+and, if we let $2\beta=\gamma$,
+<script type="math/tex; mode=display">f(x)=\alpha x+\gamma x+\frac{\gamma ^2-\gamma}{4\alpha}</script>
+and
+<script type="math/tex; mode=display">f^{\circ n}(x)=\frac{1}{\alpha}\bigg(\alpha x+\frac{\gamma}{2}\bigg)^{2^n}-\frac{\gamma}{2\alpha}</script>
+and so we are ready for our third formula:
+<script type="math/tex; mode=display">\color{green}{f(x)=\alpha x+\gamma x+\frac{\gamma ^2-\gamma}{4\alpha}\implies f^{\circ n}(x)=\frac{1}{\alpha}\bigg(\alpha x+\frac{\gamma}{2}\bigg)^{2^n}-\frac{\gamma}{2\alpha}}</script>
+</p>
+
+<p>There is one more special type of quadratic that can be readily evaluated, and it originates from the double-angle formula of the cosine function:
+<script type="math/tex; mode=display">\cos 2\theta=2\cos^2\theta-1</script>
+This allows us to say that
+<script type="math/tex; mode=display">\cos (2\arccos x)=2x^2-1</script>
+for all $x$ with $|x|\le 1$. Do you recognize this as being in the form $g^{-1}\circ h\circ g$? If we let
+<script type="math/tex; mode=display">f(x)=2x^2-1</script>
+<script type="math/tex; mode=display">g(x)=\arccos x</script>
+<script type="math/tex; mode=display">h(x)=2x</script>
+then we may readily state that
+<script type="math/tex; mode=display">f^{\circ n}(x)=\cos(2^n\arccos x)</script>
+However, this can be generalized. If we instead let
+<script type="math/tex; mode=display">f(x)=\alpha x^2+\beta x+\frac{\beta^2-2\beta-8}{4\alpha}=\frac{2}{\alpha}\cos\bigg(2\arccos\frac{2\alpha x+\beta}{4}\bigg)-\frac{\beta}{2\alpha}</script>
+with $g(x)=\arccos \frac{2\alpha x+\beta}{4}$ and $h(x)=2x$, then we may say that
+<script type="math/tex; mode=display">\color{green}{f(x)=\alpha x^2+\beta x+\frac{\beta^2-2\beta-8}{4\alpha}\implies f^{\circ n}(x)=\frac{2}{\alpha}\cos\bigg(2^n\arccos\frac{2\alpha x+\beta}{4}\bigg)-\frac{\beta}{2\alpha}}</script>
+However, this only works for a very small domain, since the inverse cosine function is defined only for inputs between $-1$ and $1$. But this is an easy fix - as a result of Euler's famous formula linking the trigonometric functions to the complex exponential function,
+<script type="math/tex; mode=display">\cosh(ix)=\cos(x)</script>
+and
+<script type="math/tex; mode=display">-i\operatorname{arccosh}(x)=\arccos(x)</script>
+which means that
+<script type="math/tex; mode=display">\alpha x^2+\beta x+\frac{\beta^2-2\beta-8}{4\alpha}=\frac{2}{\alpha}\cosh\bigg(2\operatorname{arccosh}\frac{2\alpha x+\beta}{4}\bigg)-\frac{\beta}{2\alpha}</script>
+and, because of the symmetry of a parabola, we may extend this property past the domain of the inverse hyperbolic cosine function:
+<script type="math/tex; mode=display">\alpha x^2+\beta x+\frac{\beta^2-2\beta-8}{4\alpha}=\frac{2}{\alpha}\cosh\bigg(2\operatorname{arccosh}\bigg|\frac{2\alpha x+\beta}{4}\bigg|\bigg)-\frac{\beta}{2\alpha}</script>
+and so, at last, we may complete our pair of iteration formulas for this type of quadratic:
+<script type="math/tex; mode=display">\color{green}{f(x)=\alpha x^2+\beta x+\frac{\beta^2-2\beta-8}{4\alpha}\implies f^{\circ n}(x)=\frac{2}{\alpha}\cosh\bigg(2^n\operatorname{arccosh}\bigg|\frac{2\alpha x+\beta}{4}\bigg|\bigg)-\frac{\beta}{2\alpha}}</script>
+</p>
+
+<p>The two choices of $g$ and $h$ that I used to iterate these quadratics can also be used for other polynomials. For example, if
+<script type="math/tex; mode=display">f(x)=x^3+3x^2+3x</script>
+then we may write
+<script type="math/tex; mode=display">f(x)=(x+1)^3-1</script>
+and so, by choosing $g(x)=x+1$ and $h(x)=x^3$,
+<script type="math/tex; mode=display">f^{\circ n}(x)=(x+1)^{3^n}-1</script>
+The method using multiple-angle formulas of the cosine function can also be used for other polynomials. In fact, polynomials that are in such a form are called <em>chebyshev polynomials</em>. The <em>nth</em> chebyshev polynomial is defined as the unique polynomial solution to the functional equation
+<script type="math/tex; mode=display">T_n(\cos\theta)=\cos(n\theta),\forall \theta</script>
+</p>
+
+<p>This wonderful method can also be used to find iteration formulas for certain rational functions. For example, consider a rational function in the form
+<script type="math/tex; mode=display">f(x)=\frac{x}{\alpha x+\beta}</script>
+This rational function can be rewritten as
+<script type="math/tex; mode=display">f(x)=\frac{1/\alpha}{\beta\frac{1/\alpha}{x}+1}</script>
+and so, if we let $g(x)=\frac{1/\alpha}{x}$ and $h(x)=\beta x+1$ and use our second formula,
+<script type="math/tex; mode=display">f^{\circ n}(x)=\frac{1/\alpha}{\beta^n\frac{1/\alpha}{x}+\frac{\beta^n-1}{\beta-1}}</script>
+or
+<script type="math/tex; mode=display">f^{\circ n}(x)=\frac{x(\beta-1)}{\beta^n(\beta-1)+\alpha(\beta^n-1)x}</script>
+and so we have another useful formula:
+<script type="math/tex; mode=display">\color{green}{f(x)=\frac{x}{\alpha x+\beta}\implies f^{\circ n}(x)=\frac{x(\beta-1)}{\beta^n(\beta-1)+\alpha(\beta^n-1)x}}</script>
+We can use this special case to write an iteration formula for <em>any</em> first degree rational function. Suppose that
+<script type="math/tex; mode=display">f(x)=\frac{\alpha x+\beta}{x+\gamma}</script>
+Then let us define the function $F$ as
+<script type="math/tex; mode=display">F(x)=f(x+k)-k=\frac{(\alpha-k)x-k^2+(\alpha-\gamma)k+\beta}{x+k+\gamma}</script>
+for some $k$. This is a helpful substitution to make, since $F(x)=f(x+k)-k$ implies that
+<script type="math/tex; mode=display">F^{\circ n}(x)=f^{\circ n}(x+k)-k</script>
+and so if we find an iteration formula for $F$, we may find one for $f$ as well. If we want $F$ to be in the form that we already know how to iterate, we can choose $k$ such that 
+<script type="math/tex; mode=display">-k^2+(\alpha-\gamma)k+\beta=0</script>
+or, by the quadratic formula,
+<script type="math/tex; mode=display">k=\frac{\alpha-\gamma\pm \sqrt{(\alpha-\gamma)^2+4b}}{2}</script>
+So, if we set $k$ equal to that value, we have
+<script type="math/tex; mode=display">F(x)=\frac{(\alpha-k)x}{x+k+\gamma}</script>
+or
+<script type="math/tex; mode=display">F(x)=\frac{x}{\frac{1}{\alpha-k}x+\frac{\gamma+k}{\alpha-k}}</script>
+Now it is in the form that we already know how to iterate, and using the previous formula, we may immediately write
+<script type="math/tex; mode=display">F^{\circ n}(x)=\frac{x\big(\frac{\gamma +k}{\alpha -k}-1\big)}{\big(\frac{\gamma +k}{\alpha -k}\big)^n\big(\frac{\gamma +k}{\alpha -k}-1\big)+\frac{1}{\alpha-k}\big(\big(\frac{\gamma+k}{\alpha-k}\big)^n-1\big)x}</script>
+and, since $F^{\circ n}(x)=f^{\circ n}(x+k)-k$, we have that $f^{\circ n}(x)=F^{\circ n}(x-k)+k$, and so
+<script type="math/tex; mode=display">f^{\circ n}(x)=\frac{(x-k)\big(\frac{\gamma +k}{\alpha -k}-1\big)}{\big(\frac{\gamma +k}{\alpha -k}\big)^n\big(\frac{\gamma +k}{\alpha -k}-1\big)+\frac{1}{\alpha-k}\big(\big(\frac{\gamma+k}{\alpha-k}\big)^n-1\big)(x-k)}+k</script>
+and so we have our final formula:
+<script type="math/tex; mode=display">\color{green}{f(x)=\frac{\alpha x+\beta}{x+\gamma}\implies f^{\circ n}(x)=\frac{(x-k)\big(\frac{\gamma +k}{\alpha -k}-1\big)}{\big(\frac{\gamma +k}{\alpha -k}\big)^n\big(\frac{\gamma +k}{\alpha -k}-1\big)+\frac{1}{\alpha-k}\big(\big(\frac{\gamma+k}{\alpha-k}\big)^n-1\big)(x-k)}+k}</script>
+<script type="math/tex; mode=display">\color{green}{\text{where}\space\space\space\space k=\frac{\alpha-\gamma\pm \sqrt{(\alpha-\gamma)^2+4b}}{2}}</script>
+</p>
+
+<p>Now I will solve the puzzles that I posed at the beginning of the post. The first function was
+<script type="math/tex; mode=display">f_1(x)=x^{\ln(x)}</script>
+To iterate this, one must notice that
+<script type="math/tex; mode=display">x^{\ln(x)}=e^{\ln(x)^2}</script>
+and if we choose $g(x)=\ln(x)$ and $h(x)=x^2$, we have
+<script type="math/tex; mode=display">f_1^{\circ n}(x)=e^{\ln(x)^{2^n}}</script>
+</p>
+
+<p>Now for the second function:
+<script type="math/tex; mode=display">f_2(x)=x^{\ln(x)+2}</script>
+We may rewrite $f_2$ as
+<script type="math/tex; mode=display">f_2(x)=e^{\ln(x)^2+2\ln(x)}</script>
+or
+<script type="math/tex; mode=display">f_2(x)=e^{(\ln(x)+1)^2-1}</script>
+and so, if we let $g(x)=\ln(x)+1$ and $h(x)=x^2$, we have
+<script type="math/tex; mode=display">f_2^{\circ n}(x)=e^{(\ln(x)+1)^{2^n}-1}</script>
+</p>
+
+<p>The third function is
+<script type="math/tex; mode=display">f_3(x)=\ln(e^x+1)</script>
+This problem is not difficult - in fact, I solved it in an earlier post. By letting $g(x)=e^x$ and $h(x)=x+1$, we have
+The third function is
+<script type="math/tex; mode=display">f_3^{\circ n}(x)=\ln(e^x+n)</script>
+</p>
+
+<p>The fourth function is very similar:
+<script type="math/tex; mode=display">f_4(x)=\ln(e^x+1)+1</script>
+It can be rewritten as
+<script type="math/tex; mode=display">f_4(x)=\ln(e\cdot e^x+e)</script>
+and if we let $g(x)=e^x$ and $h(x)=ex+e$ and use our second formula, we have
+<script type="math/tex; mode=display">f_4^{\circ n}(x)=\ln\bigg(e^n\cdot e^x+\frac{e^n-1}{e-1}e\bigg)</script>
+or
+<script type="math/tex; mode=display">f_4^{\circ n}(x)=\ln\bigg(e^{x+n-1}+\frac{e^n-1}{e-1}\bigg)+1</script>
+</p>
+
+<p>Now the fifth function:
+<script type="math/tex; mode=display">f_5(x)=\frac{\ln(e^x+1)+\ln(e^x-1)}{2}</script>
+This can be rewritten as
+<script type="math/tex; mode=display">f_5(x)=\frac{\ln((e^x+1)(e^x-1))}{2}=\frac{\ln(e^{2x}-1)}{2}</script>
+and so, by letting $g(x)=e^{2x}$ and $h(x)=x-1$,
+<script type="math/tex; mode=display">f_5^{\circ n}(x)=\frac{\ln(e^{2x}-n)}{2}</script>
+</p>
+
+<p>Now for the sixth and final function:
+<script type="math/tex; mode=display">f_6(x)=x+\ln(e^x+2)</script>
+This can be written as
+<script type="math/tex; mode=display">f_6(x)=\ln(e^{2x}+2e^x)=\ln((e^x+1)^2-1)</script>
+and so, if we let $g(x)=e^x+1$ and $h(x)=x^2$,
+<script type="math/tex; mode=display">f_6^{\circ n}(x)=\ln((e^x+1)^{2^n}-1)</script>
+</p>
+
+<p>That's all for now! Let me remind you that my solutions to each of these problems were <em>not</em> instantaneous - the solutions you are seeing are polished, thought-out solutions. When trying these problems for the first time, my work was nowhere near as quick and tidy.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<html>
+<head>
+    <title>How to Graph a Donut</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>How to Graph a Donut</h2>
+
+<p><em>2017 Jan 28</em></p>
+
+<blockquote>
+<p>What is the equation of the graph of a torus in the 3D coordinate plane?</p>
+</blockquote>
+
+<p>Suppose one wants to graph a torus with major radius $R$ (the distance from the middle of the torus from the center of one of the circles forming its body) and minor radius $r$ (the radius of one of the small circles forming the body of the torus) in the three-dimensional coordinate plane. If one vertically sliced it in half down the middle, it would look something like this:</p>
+
+<p><center><img src="/img/2017-1-28-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>If one sliced it horizontally down the middle, it would look like this:</p>
+
+<p><center><img src="/img/2017-1-28-Fig2.png" alt="Fig 2" /></center></p>
+
+<p>Each horizontal plane cross section consists of two circles (except for the one made by the tangent planes at the top and bottom), one inside of the other. Let the difference between their radii at height $z$ be the width $w$. The graph of a circle has the equation
+<script type="math/tex; mode=display">\sqrt{x^2+y^2}=a</script>
+Where $a$ is the radius of the circle. However, we want two circles with a middle circle of radius $R$ and a radius difference $w$, so the new equation is 
+<script type="math/tex; mode=display">\sqrt{x^2+y^2}=R\pm \frac{1}{2}w</script>
+or
+<script type="math/tex; mode=display">\mid \sqrt{x^2+y^2}-R\mid=\frac{1}{2}w</script>
+Now I need to express $w$ as a function of $z$, the height. Again, we observe a vertical cross-section of the torus:</p>
+
+<p><center><img src="/img/2017-1-28-Fig3.png" alt="Fig 3" /></center></p>
+
+<p>From the picture, we can see that 
+<script type="math/tex; mode=display">(\frac{1}{2}w)^2+z^2=r^2</script>
+by the pythagorean theorem. By solving for $w$, we obtain
+<script type="math/tex; mode=display">w=2\sqrt{r^2-z^2}</script>
+Now we can plug this in for $w$ in our formula for a horizontal donut cross-section:
+<script type="math/tex; mode=display">\mid \sqrt{x^2+y^2}-R\mid=\frac{1}{2}w</script>
+<script type="math/tex; mode=display">\mid \sqrt{x^2+y^2}-R\mid=\sqrt{r^2-z^2}</script>
+<script type="math/tex; mode=display">(\sqrt{x^2+y^2}-R)^2=r^2-z^2</script>
+And this is our formula for the graph of a torus. Essentially what we did was figure out what one "layer" of the donut looks like at some height $z$ and then stack up infinitely many layers for each value of $z$ to make a smooth donut. Here is our hard-earned donut:</p>
+
+<p><center><img src="/img/2017-1-28-Fig4.png" alt="Fig 4" /></center></p>
+
+<p>Yum!</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

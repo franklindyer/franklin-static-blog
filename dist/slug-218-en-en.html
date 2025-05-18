@@ -1,0 +1,128 @@
+<html>
+<head>
+    <title>A look around Albuquerque in QGIS</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>A look around Albuquerque in QGIS</h2>
+
+<p>As a kid, I would sometimes play games on my grandparents' Wii while staying over at their house. They had one called called <em>Wii Sports Resort</em>, which takes place on an island resort where your avatar can participate in sporty activities like swordfighting, frisbee-throwing, biking, wakeboarding and many others. </p>
+
+<p><center><img src="/img/2024-04-30-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>For some reason, one of these games appealed to me much more than any other: the <em>island flyover</em>, where you could shuttle your character around the island in a cute little plane. It wasn't the flying that appealed to me so much as landmarks scattered around the island that your character could "discover" by flying directly over them. After visiting the "i point" corresponding to a certain landmark, it would appear in a list of all visited locations at the end of your flyover, as seen in this screenshot from the fan wiki:</p>
+
+<p><center><img src="/img/2024-04-30-Fig2.png" alt="Fig 2" /></center></p>
+
+<p>Accessing some of these clandestine locations required a bit of aerial acrobatics, which only made it more tantalizing to complete my collection by visiting the last couple of tucked-away monuments that had so far eluded me. On a psychological level, I'm not sure why this game had such a strong impact on me - but I remember daydreaming about doing a "flyover" of Chattanooga, my family's home at the time, and collecting "i points" at notable locations around town like the Walnut Street Bridge and the Tennessee Aquarium. </p>
+
+<p>I've gone years without thinking about this game, but recently I stumbled across something that has delighted and amused me in the same way. While looking for local tech jobs I came across a posting that asks for experience with GISs. This acronym was unfamiliar to me, but I found out that GIS stands for <strong>geographic information system</strong>, and that these systems are used to query and manipulate spatial data, which may involve either natural features or man-made administrative ones. </p>
+
+<p>Naturally I wondered whether there were any open datasets about Albuquerque (where I currently live), and was astonished to find that the City of Albuquerque publishes <a href="https://www.cabq.gov/gis/geographic-information-systems-data">a bunch of GIS data</a>. Not only this, but I also learned that GIS data can often be queried using the database query language SQL. So of course I had to download several datasets and find out what sorts of whimsical pieces of information could be extracted. The rest of this post will just describe a few of the silly queries I've run on Albuquerque GIS data. I strongly encourage you to look for GIS data on your own city of residence (it probably exists!) and try some queries for yourself. I've chosen to use <a href="https://www.qgis.org/en/site/index.html">QGIS</a> for my own explorations, since it's free and open source.</p>
+
+<p>Before digging in, a brief technical aside. I'm still learning about how GISs work for the first time, but here's my understanding of the basic terminology:</p>
+
+<ul>
+<li>A <strong>vector dataset</strong> consists of points with associated attributes</li>
+<li>A <strong>layer</strong> is a spatial dataset that is thematic in some way</li>
+<li>A <strong>feature</strong> is an element of a vector dataset, which could be a point, a curve or a polygon</li>
+<li>A layer typically has an <strong>attribute table</strong> storing information and metadata about each feature</li>
+</ul>
+
+<p>Vector data might be used to represent discrete features, such as businesses or locations of interest (points), roads or rivers (curves) or parks or bodies of water (polygons). They might be contrasted with raster datasets, which are typically used to represent continuous data that have some distinct value at each position in space, such as elevation or temperature. There seem to be several different formats for storing vector datasets. These include <a href="https://en.wikipedia.org/wiki/Shapefile">shapefiles</a>, <a href="https://en.wikipedia.org/wiki/GeoJSON">GeoJSON</a> and <a href="https://en.wikipedia.org/wiki/Geography_Markup_Language">GML</a>.</p>
+
+<p>One of the most interesting Albuquerque datasets has been the one describing "land use". It took me a while to even download this dataset because I didn't realize what the deceptively bland-sounding name meant. In this dataset we can find information about all of the establishments in ABQ, sorted into <a href="https://coagisweb.cabq.gov/datadownload/ABQlanduse.pdf">pretty granular "land use codes"</a>. Let's start by picking a few different types of businesses and viewing all of the locations in the vicinity of UNM campus falling under each code. </p>
+
+<p>To start with, here's UNM:</p>
+
+<p><center><img src="/img/2024-04-30-Fig3.png" alt="Fig 3" /></center></p>
+
+<p>We can right-click on the <code>landuse</code> layer and choose <code>Open Attribute Table</code> to view the entire dataset, from which we can divide that the column entitled <code>OldLandU_1</code> is probably the one containing the land use codes that we want to check against. Then, by navigating to <code>Edit &gt; Select &gt; Select Features by Expression</code>, we can open a menu that will let us select features using a SQL predicate. </p>
+
+<p>Looking at the list of land use codes linked above, we can see that there are two codes corresponding to fast food restaurants (separated by the presence or absence of a drive-thru). So we can enter the following predicate to select all of the fast-food establishments:</p>
+
+<div class="code">
+OldLandU_1 LIKE '%FAST FOOD%'
+</div>
+
+<p>I've also added labels to the selected features containing the first couple digits of their <code>GlobalID</code> field, so that I can refer to them more easily. Here are the selected results along Central, near UNM campus:</p>
+
+<p><center><img src="/img/2024-04-30-Fig4.png" alt="Fig 4" /></center></p>
+
+<p>As a college undergraduate, <em>of course</em> I can identify several of the fast food restaurants directly next to campus by heart. The building <code>CF5</code>, for instance, is a Wendy's, and <code>145</code> is a Taco Bell. It's kind of a fun challenge to try and remember what each building is, based only on its location and its land use code - I'm pretty sure that <code>B27</code> is a McDonald's and <code>280</code> is a pizza joint, but I might have them backwards. I also find it pretty funny that the Freddy's on central isn't classified as <code>FAST FOOD</code> nor even as a <code>RESTAURANT</code>, but rather as an <code>EATING AND DRINKING ESTAB</code>:</p>
+
+<p><center><img src="/img/2024-04-30-Fig5.png" alt="Fig 5" /></center></p>
+
+<p>Something I've noticed in Albuquerque during my time attending UNM is that since the <a href="https://www.rld.nm.gov/cannabis/cannabis-in-new-mexico/">legalization of marijuana</a> here in NM, dispensaries have been popping up everywhere like weeds (pun intended). I can hardly believe that the demand is enough to support all of them! So of course I wanted to try finding GIS data for the locations of dispensaries throughout Albuquerque. This led me to the <a href="https://www.arcgis.com/apps/dashboards/4be0b05fa6444888b7174e0d92c9747b">Cannabis Retail Location Approvals Map</a>, which shows the locations of proposed dispensaries around Albuquerque as well as their respective review status. It was a <em>huge hassle</em> to figure out how to download the raw data, but I eventually figured it out with the help of <a href="https://jonathanchang.org/blog/downloading-esri-online-shapefiles/">this blog post</a> (thanks Jonathan Chang!). So here are all of the proposed dispensaries around campus, with accepted locations in green and rejected ones in red:</p>
+
+<p><center><img src="/img/2024-04-30-Fig6.png" alt="Fig 6" /></center></p>
+
+<p>Let's use this data to do something a bit more complex involving <em>multiple</em> different layers. The City of Albuquerque lists some <a href="https://www.cabq.gov/city-of-albuquerque-cannabis-equity-workspace/city-of-albuquerque-cannabis-information-1">regulations</a> on Cannabis Retail Locations, including the following:</p>
+
+<ul>
+<li>a cannabis retail establishment cannot be within 300 feet of a school</li>
+<li>a cannabis retail establishment cannot be within 600 feet of another cannabis retail establishment</li>
+<li>an establishment licensed as a "microbusiness" is an exception to the above rule</li>
+<li>an establishment obtaining a "conditional use approval" is also an exception to that rule</li>
+</ul>
+
+<p>Using some of the tools that QGIS offers, we should be able to find out whether there are any dispensaries potentially violating these distance regulations. In particular, the buffer tool, located under <code>Vector &gt; Geoprocessing Tools &gt; Buffer</code>, allows us to create a new layer whose features consist of <em>circles of a given radius</em> surrounding each dispensary. Here's what these circles look like, depicted as little green clouds:</p>
+
+<p><center><img src="/img/2024-04-30-Fig7.png" alt="Fig 7" /></center></p>
+
+<p>Next, we can perform a <em>spatial join</em> operation between layers, which is just like a <code>JOIN</code> in SQL except that it can make use of spatial information as well. <a href="https://gis.stackexchange.com/questions/217444/understanding-join-attributes-by-location-in-qgis">This StackExchange post</a> has some beautiful diagrams in its top-voted answer explaining how these work. In addition to the dispensary layer, I've imported a layer from the CABQ website consisting of points marking the locations of Albuquerque schools. If we join the dispensary buffer layer with the school layer using the <em>intersect</em> predicate, the output should be a layer indicating all of the schools falling within the 300-foot ball surrounding any dispensary.</p>
+
+<p>After carrying out this join myself, I found only a single hit: the <code>Releaf Cannabis CO</code> at <code>1606 Central Ave SE</code>, and a charter school called <code>Tierra Adentro</code> located just across the street from it. But a quick search led me to <a href="https://www.tierraadentronm.org">Tierra Adentro's website</a>, which says that they're currently located at <code>1781 Bellamah Ave NW</code> a couple of miles away. The <code>LASTUPDATE</code> field for this school record is equal to <code>11/9/16</code> in the dataset I downloaded, so the school must have relocated since then.</p>
+
+<p><center><img src="/img/2024-04-30-Fig8.png" alt="Fig 8" /></center></p>
+
+<p>To find pairs of dispensaries falling within 600 feet of <em>each other</em>, we just need to check whether any of these 300-foot balls intersect <em>each other</em> - for if a ball with 300ft radius centered at one point intersects a ball with 300ft radius centered at another point, then those two points must be within 600ft of each other. This means that we should do an inner join of the buffered dispensary layer <em>with itself</em>, and then clean up all of the duplicate pairs of entries ("<code>x</code> is within 600ft of <code>y</code> and <code>y</code> is within 600ft of <code>x</code>") and degenerate entries pairing a dispensary with itself ("<code>x</code> is within 600ft of <code>x</code>"). Each buffered dispensary feature has a unique ID in the <code>objectid</code> column, and a pair of buffered dispensary features appearing in the new joined layer contains the <code>objectid</code> values of both features involved under the respective column names <code>objectid</code> and <code>objectid_2</code>. A neat trick for getting rid of duplicate and degenerate entries is to <code>Filter</code> this new layer on the predicate <code>objectid &lt; objectid_2</code>. (Can you see why this works?)</p>
+
+<p>I find 47 non-duplicated pairs of dispensaries falling within 600 feet of each other. It appears that the dispensaries licensed as microbusinesses have the string <code>MICB</code> or <code>micb</code> as a substring of their <code>state_cannabis_licence_number</code> column, so we can select only the potentially non-compliant venues using the following predicate:</p>
+
+<div class="code">
+NOT (
+    LOWER(state_cannabis_licence_number) LIKE '%micb%'
+    OR LOWER(state_cannabis_licence_number_2) LIKE '%micb%'
+)
+</div>
+
+<p>I find 14 matches when running this query. Upon inspecting them manually, I found that a couple of the entries are obvious flukes (e.g. <code>Leaf &amp; Flower LLC</code> and <code>Leaf &amp; Flower LLC Producer</code> have separate entries but probably correspond to the same business, and <code>Urban Wellness</code> has two entries with distinct ID values). Nevertheless, a few seem to be legitimate counterexamples, like the pair depicted below. Presumably one of these businesses has a "conditional use approval".</p>
+
+<p><center><img src="/img/2024-04-30-Fig9.png" alt="Fig 9" /></center></p>
+
+<p>I'll stop there with the analysis, but I've had a lot of fun tinkering with these datasets in QGIS. This diversion has tickled several different parts of my brain, including my interest in databases, my geometic and topological reasoning, and whatever leftover bits of gray matter once made my younger self so excited at the thought of discovering hidden easter eggs from a bird's-eye view in the <em>Wii Sports</em> island flyover. Now that I think about it, though, I don't remember there being so many cannabis dispensaries on Wuhu island...</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

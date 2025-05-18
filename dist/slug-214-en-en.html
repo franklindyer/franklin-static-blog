@@ -1,0 +1,75 @@
+<html>
+<head>
+    <title>A Galois Theory elevator pitch</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <p>This short post is intended to be the elevator pitch for Galois Theory that I wish someone had given me a long time ago. (Yes, I'm sure this exists out there somewhere already, but I've never found it.)</p>
+
+<p>I think the result that Galois Theory is most famous for, at least in "pop math", is the fact that not all polynomials can be solved using radicals. This is a seriously mind-boggling and tantalizing result. For one, hearing about this result as a high schooler taking algebra or precalculus classes causes serious whiplash, since most of what's done with polynomials in those courses involves, ahem, <em>solving them in terms of radicals</em>, usually with no mention of the fact that this is not always possible. What's also baffling about this result when one first learns about it is the fact that <em>quintics</em> are the cutoff. How come there are algorithms for solving quadratic, cubic, and quartic polynomials using radicals, but degree <em>five</em> is intractible? It feels so arbitrary.</p>
+
+<p>Understanding the insolvability of the quintic requires a lot of mathematical overhead, though. You need to learn group theory, enough to understand what a "solvable group" is, and to understand this you had better have a good grasp of normal subgroups and semidirect products. Then you need to be able to show that certain groups, particularly $S_5$, aren't solvable, which usually involves showing that certain subgroups (e.g. $A_5$) are simple. Then you need to understand the definition of a Galois group, and learn how to compute them. There are techniques for doing this with low-degree polynomials, but it gets difficult fast!</p>
+
+<p>These are things that we've done in my graduate-level abstract algebra class, but that were intimidating enough to deter me from learning more about the topic as a high schooler. But I wish it hadn't! Unsolvability is just one of many curious and unintuitive behaviors of polynomials and their roots. My intention with this post is to describe a couple phenomena that (I hope!) are a little more accessible, yet still illustrate how there is a lot more complexity to polynomial roots than meets the eye in a precalculus class.</p>
+
+<hr>
+
+<p>Imagine that you would also like to do symbolic computation with algebraic numbers, including square roots like $\sqrt 2$ and $\sqrt 3$, cube roots like $\sqrt[3]{2}$, and even roots of polynomials that you don't know how to solve exactly, for instance something like $x^5+x+3$. In theory, you should be able to do this by giving special names to any new algebraic numbers you introduce, and keeping track of the polynomials that they are roots of.</p>
+
+<p>For instance, say you already had a way of representing the rational numbers $\mathbb Q$ computationally, and you would like to also handle expressions involving $\sqrt{2}$. Perhaps you would let the symbol $\alpha$ stand in for $\sqrt{2}$, and you could express more complex expressions that can be built up from rational numbers and $\alpha$ as polynomials or rational functions in $\alpha$. For instance, $1+2\alpha$ stands in for $1+2\sqrt{2}$. The expression $1+\alpha^2$ could be further simplified to just $3$, since you know that $\alpha^2 = 2$. The expression $1/\alpha$ might also be "simplified" to $(1/2)\alpha$: since you know that $\alpha^2 = 2$, you also know that $\alpha\cdot (\alpha/2) = 1$, meaning that $(1/2)\alpha$ is the inverse of $\alpha$. And so on. With a bit of experimentation, you can convince yourself that any rational function of $\alpha$ can actually be simplified down to the form $x+y\alpha$, where $x,y$ are rational numbers, and you can work out an algorithm for doing so.</p>
+
+<p>You may also want to work with splitting fields. A splitting field is a field where <em>all of the roots</em> of a certain polynomial are introduced. For instance, the splitting field of $x^2-2$ is just $\mathbb Q(\sqrt 2)$. The splitting field of $x^4-4$ isn't just $\mathbb Q(\sqrt 2)$ because this polynomial also has some imaginary roots, namely $\pm i\sqrt{2}$, so it's instead $\mathbb Q(\sqrt 2, i)$.</p>
+
+<p>Not all polynomials are going to have roots that can be expressed so nicely in terms of radicals. (Galois Theory tells us this is actually impossible most of the time - but you don't need to know any Galois Theory to know that solving arbitrary polynomials in terms of radicals is <em>hard</em>!) So in order to do symbolic math with polynomial roots, we would probably want to introduce some symbols representing the roots of a polynomial that we want to split, and keep track of the identities that these special values satisfy, to allow us to algorithmically simplify complex expressions involving these symbols. </p>
+
+<p>For instance, as described earlier, to model the splitting field of $x^2-2$, we could express the elements as rational functions of the variable $\alpha$, which stands in for $\sqrt 2$, and remember that this variable satisfies $\alpha^2 - 2=0$ to help us simplify these rational functions as much as possible. Notice that there's no need to introduce a <em>second</em> variable $\beta$ for the other root of the polynomial $x^2-2$, because we know that this other root is just $-\sqrt{2}$, or $-\alpha$. Introducing the second variable would just be redundant, since $x^2-2$ already splits as $(x+\alpha)(x-\alpha)$ when the single root $\alpha$ is added.</p>
+
+<p>This sounds simple enough, right? The problem is that for more complicated polynomials, it's not obvious how many new variables need to be introduced to express their roots if we want to avoid redundancy. Consider for instance the quintic polynomial <script type="math/tex; mode=display">p(x)=x^5-x-1</script> Naively, we might introduce five new variables $\alpha_1,\cdots,\alpha_5$ for the roots of this polynomial, and proceed to do computations using rational expressions of these variables, simplifying when possible using the knowledge that $\alpha_i^5-\alpha_i-1 = 0$. A little less naively, we might use <a href="https://en.wikipedia.org/wiki/Vieta%27s_formulas">Vieta's formulas</a> to notice that the fifth root can be expressed in terms of the other four roots, namely as $\alpha_5 = -\alpha_1-\alpha_2-\alpha_3-\alpha_4$, so we can do without the fifth variable and use just four. (Kind of like how we only needed one new symbol for the splitting field of $x^2-2$.) And this would be perfectly fine!</p>
+
+<p>Then, we might try applying a similar technique to model the splitting field of the irreducible quintic polynomial <script type="math/tex; mode=display">q(x) = x^5+x^4-4x^3-3x^2+3x+1</script> And again, we might use four new variables $\alpha_1,\alpha_2,\alpha_3,\alpha_4$ to represent four of the five roots of this irreducible polynomial. But this time, we would have <em>unwittingly introduced redundancy</em> between the new values that we've added to our model. Why is that? Well, as it turns out, this polynomial's roots are given by <script type="math/tex; mode=display">-2\cos\frac{\pi}{11}, ~ 2\cos\frac{2\pi}{11}, ~ -2\cos\frac{3\pi}{11}, ~ 2\cos\frac{4\pi}{11}, ~ -2\cos\frac{5\pi}{11}</script> and any one of these roots can be shown to generate the other four roots, which can be shown using the double-angle formula for the cosine function. In particular, if we let $\alpha_1,\cdots,\alpha_5$ represent these five roots respectively, then we can express each one in terms of $\alpha_1$ as follows: <script type="math/tex; mode=display">\begin{align}\alpha_2 &= \alpha_1^2 - 2 \\ \alpha_4 &= \alpha_2^2-2 \\ \alpha_3 &= \alpha_4^2 - 2 \\ \alpha_5 &= \alpha_3^2 - 2\end{align}</script> This means that we really only need a single new variable $\alpha$ to express all of the roots of this polynomial in a splitting field. If we introduce any more than that, we'll have caused some redundancy! In particular, if we just add the symbols $\alpha_i$ and remember the identities $q(\alpha_i)=0$, we won't be able to simplify some expressions "as much as we should". For instance, the expression <script type="math/tex; mode=display">\big(\alpha_1^2-2-\alpha_2\big)\big(\alpha_1^2-2-\alpha_3\big)\big(\alpha_1^2-2-\alpha_4\big)\big(\alpha_1^2-2+\alpha_1+\alpha_2+\alpha_3+\alpha_4\big)</script> should simplify down to zero when $\alpha_1,\cdots,\alpha_4$ are distinct roots of this polynomial, since $\alpha_1^2-2$, being another root of $q$, should equal one of the other four roots $\alpha_2,\alpha_3,\alpha_4$ or $-\alpha_1-\alpha_2-\alpha_3-\alpha_4$. But alas, knowing only that $q(\alpha_i)=0$ for each $\alpha_i$ is not enough information to simplify this expression to zero.</p>
+
+<p>Just glancing at a quintic, or more generally an arbitrary polynomial, it's far from obvious how to tell how many new generators will need to be introduced to express all of its roots. This information, however, can be ascertained from a polynomial's Galois group. The Galois group of $p$ is $S_5$, and the fact that four generators are needed for the splitting field of $p$ can be inferred from the fact that there are nontrivial permutations of the set ${0,1,2,3,4}$ that fix any three elements. The Galois group of $q$, on the other hand, is the cyclic group $\mathbb Z_5$, and any cyclic permutation of the numbers ${0,1,2,3,4}$ is determined by the image of a single element.</p>
+
+<p>Here's another difficulty. Suppose you've extended your base field by adding all the roots of a polynomial, and now you want to extend your field again and split another polynomial. For instance, say you've already split the polynomial $p$ from earlier and introduced four new variables $\alpha_1,\alpha_2,\alpha_3,\alpha_4$, and now you want to split the polynomial $x^2-2$, so you add another symbol $\beta$ to stand in for one of its roots. This would be fine.</p>
+
+<p>But it just so happens that if, instead of the polynomial $x^2-2$, you wanted to split $x^2-2869$, you would have just accidentally introduced redundancy again. That is to say, $\beta=\sqrt{2869}$ is irrational, but it can be expressed in terms of the roots of the quintic polynomial $p$ - so this number <em>already belongs to your splitting field</em> without any further additions needed. In particular, <script type="math/tex; mode=display">\bigg(\prod_{i=1}^5 \prod_{i=1}^j (\alpha_i-\alpha_j)\bigg)^2 = 2869</script> because $2869$ is the <a href="https://en.wikipedia.org/wiki/Discriminant">discriminant</a> of the polynomial $p$. Generally, for any irreducible polynomial over an extension of $\mathbb Q$, the product of the squared differences of its roots can be seen to actually belong to the base field, which can be expressed in terms of the polynomial's coefficients. And when this number is <em>not a perfect square</em> in that base field, a new quadratic irrational over that field is introduced. For the polynomial $q$ defined earlier, this is not an issue. That polynomial has discriminant equal to $11^4$, which is already a perfect square.</p>
+
+<p>Once more, this is information that can be read off from the Galois groups of these polynomials. The fact that splitting $p$ "incidentally" introduces new roots to some previously irreducible quadratics over $\mathbb Q$ is connected to the fact that $S_5$ has a normal subgroup $A_5$ that has index $2$. The Galois group $\mathbb Z_5$ of the polynomial $q$, of course, has no proper subgroups at all, so we will never have to worry about introducing new roots to irreducible polynomials of lower degrees when we split $q$.</p>
+
+<p>The best part about these strange properties, in my opinion, is the fact that they can (for the most part) be shown constructively. For instance, for the polynomial $p$, you can prove purely algebraically that when $\alpha$ is one of its roots, then $\alpha^2-2$ is also one of its roots (though this might get a bit messy, and nonconstructive methods are neater). You can also, with a bit of Vieta-style trickery, compute the discriminant of $p$ by hand. To me, this makes these facts feel a lot more "tangible".</p>
+
+<p>Granted, the quintic examples I've given above are still difficult to work with. The exact same phenomena, however, can be observed with the following two cubic polynomials: <script type="math/tex; mode=display">\begin{align}p(x) &= x^3-x-1\\ q(x) &= x^3 + x^2 - 2x - 1\end{align}</script> In this case, the former has Galois group $S_3$, so that its splitting field is generated by <em>any two</em> of its roots (and no fewer), and the latter has Galois group $\mathbb Z_3$, so that its splitting field is generated by <em>any one</em> of its roots. Again, the latter has roots that can be expressed simply in terms of the cosine function, but I leave it to you to figure out how. Here we also have that the discriminant of $p$ is $-23$, a non-square in $\mathbb Q$ that has a square root in the splitting field of $p$, and the discriminant of $q$ is $7^2$, which is already a square in $\mathbb Q$.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

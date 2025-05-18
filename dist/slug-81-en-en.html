@@ -1,0 +1,232 @@
+<html>
+<head>
+    <title>Sums with Binomial Coefficients</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Sums with Binomial Coefficients</h2>
+
+<p><em>2017 July 30</em></p>
+
+<blockquote>
+<p>Find formulas for each of the following partial sums:
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}(-1)^x</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x^2</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x^3</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\frac{1}{x+1}</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\cos\frac{\pi x}{n}</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\sin\frac{\pi x}{n}</script>
+</p>
+</blockquote>
+
+<p>Before we begin, recall these three useful identities regarding the binomial coefficients:
+<script type="math/tex; mode=display">\binom{n}{x}=\binom{n-1}{x-1}+\binom{n-1}{x}</script>
+<script type="math/tex; mode=display">\binom{n}{x}=\binom{n+1}{x}-\binom{n}{x-1}</script>
+<script type="math/tex; mode=display">\binom{n}{x}=\binom{n+1}{x+1}-\binom{n}{x+1}</script>
+The proofs of these identities are trivial. Also, remember that the formula for the binomail coefficient is
+<script type="math/tex; mode=display">\binom{n}{x}=\frac{n!}{x!(n-x)!}</script>
+</p>
+
+<p>Furthermore, one more thing that should be mentioned is that the binomial coefficient
+<script type="math/tex; mode=display">\binom{a}{b}</script>
+is considered, by convention, to be equal to $0$ whenever $b\lt 0$ or $b\gt a$, and since the binomial coefficient is symmetric,
+<script type="math/tex; mode=display">\binom{a}{b}=\binom{a}{a-b}</script>
+</p>
+
+<p>To begin this post, I would like to include a proof of the binomial theorem, which can sometimes help with sums involving binomial coefficients. The binomial theorem states that
+<script type="math/tex; mode=display">(a+b)^n=\sum_{x=0}^n \binom{n}{x}a^xb^{n-x}</script>
+or, because of the symmetry of the binomial coefficient,
+<script type="math/tex; mode=display">(a+b)^n=\sum_{x=0}^n \binom{n}{n-x}a^xb^{n-x}</script>
+and it can be proven rather easily using induction. It is true (trivially) for $n=0$, so we can jump right into the induction step. Suppose that the theorem holds for some $n$ - that is, 
+<script type="math/tex; mode=display">(a+b)^n=\sum_{x=0}^n \binom{n}{n-x}a^xb^{n-x}</script>
+We want to show that its truth for that $n$ implies its truth for $n+1$. This can be done easily be multiplying both sides of the equation by $a+b$:
+<script type="math/tex; mode=display">(a+b)^n(a+b)=(a+b)\sum_{x=0}^n \binom{n}{n-x}a^xb^{n-x}</script>
+Now consider some term in the polynomial expansion of $(a+b)^{n+1}$ containing the term $a^kb^{n-k+1}$. This term can only result from the sum of two such terms after $(a+b)$ is distributed; namely, the sum of the terms
+<script type="math/tex; mode=display">a\cdot \binom{n}{n-k+1}a^{k-1}b^{n-k+1}</script>
+and
+<script type="math/tex; mode=display">b\cdot \binom{n}{n-k}a^{k}b^{n-k}</script>
+and so the value of their sum is
+<script type="math/tex; mode=display">a\cdot\binom{n}{n-k+1}a^{k-1}b^{n-k+1}+b\cdot \binom{n}{n-k}a^{k}b^{n-k}</script>
+<script type="math/tex; mode=display">\binom{n}{n-k+1}a^{k}b^{n-k+1}+\binom{n}{n-k}a^{k}b^{n-k+1}</script>
+<script type="math/tex; mode=display">\bigg(\binom{n}{n-k+1}+\binom{n}{n-k}\bigg)a^{k}b^{n-k+1}</script>
+And, by one of our identities, this is equal to
+<script type="math/tex; mode=display">\binom{n+1}{n-k+1}a^{k}b^{n-k+1}</script>
+and since each term of the sum follows this form, the entire expansion is equal to
+<script type="math/tex; mode=display">(a+b)^{n+1}=\sum_{x=0}^{n+1} \binom{n+1}{n-x+1}a^{x}b^{n-x+1}</script>
+Thus proving the binomial theorem by induction. Now we can begin with our summation problems.</p>
+
+<p>The first two problems are almost trivial if you know the binomial theorem. The first problem
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}</script>
+can be rewritten as
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}1^x1^{n-x}</script>
+and so, by the binomial theorem, it is equal to
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}=(1+1)^n</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}=2^n</script>
+</p>
+
+<p>The second sum
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}(-1)^x</script>
+can be rewritten as
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}(-1)^x1^{n-x}</script>
+Which, by the binomail theorem, is equal to
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}(-1)^x=(1-1)^n</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}(-1)^x=0</script>
+</p>
+
+<p>The first two sums were very easy, but they only get harder from there.</p>
+
+<p>Next up is the sum
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x</script>
+which can be done by expanding the binomial coefficient into its form involving factorials:
+<script type="math/tex; mode=display">\sum_{x=0}^n \frac{n!}{x!(n-x)!}x</script>
+and then cancelling the $x$ with the $x$ on the denominator of the binomial coefficient
+<script type="math/tex; mode=display">\sum_{x=0}^n \frac{n!}{(x-1)!(n-x)!}</script>
+and then factoring $n$ out of the sum to get
+<script type="math/tex; mode=display">n\sum_{x=0}^n \frac{(n-1)!}{(x-1)!(n-x)!}</script>
+<script type="math/tex; mode=display">n\sum_{x=0}^n \binom{n-1}{x-1}</script>
+And since the last term of this sum will be
+<script type="math/tex; mode=display">\binom{n-1}{n}=0</script>
+the sum can be "shortened" to
+<script type="math/tex; mode=display">n\sum_{x=0}^n \binom{n-1}{x-1}</script>
+<script type="math/tex; mode=display">n\sum_{x=0}^{n-1} \binom{n-1}{x-1}</script>
+And since we know that, from our first sum,
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}=2^n</script>
+we can convert our sum to
+<script type="math/tex; mode=display">n2^{n-1}</script>
+and so
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x=n2^{n-1}</script>
+</p>
+
+<p>The next sum is a little bit trickier:
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x^2</script>
+To solve this sum, you need to recognize that
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x^2=\sum_{x=0}^n \binom{n}{x}x+\sum_{x=0}^n \binom{n}{x}x(x-1)</script>
+and so, using the answer to the last problem,
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x^2=n2^{n-1}+\sum_{x=0}^n \binom{n}{x}x(x-1)</script>
+And now we can use the same trick as we did last time and expand the binomial, this time cancelling both $x$ and $x-1$ and extracting $n$ and $n-1$ from the sum:
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x^2=n2^{n-1}+\sum_{x=0}^n \frac{n!}{x!(n-x)!}x(x-1)</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x^2=n2^{n-1}+\sum_{x=0}^n \frac{n!}{(x-2)!(n-x)!}</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x^2=n2^{n-1}+n(n-1)\sum_{x=0}^n \frac{(n-2)!}{(x-2)!(n-x)!}</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x^2=n2^{n-1}+n(n-1)\sum_{x=0}^n \binom{n-2}{x-2}</script>
+and this time we can shorten the sum by the last <em>two</em> terms (because they are both equal to 0) to get
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x^2=n2^{n-1}+n(n-1)\sum_{x=0}^{n-2} \binom{n-2}{x-2}</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x^2=n2^{n-1}+n(n-1)2^{n-2}</script>
+Which simplifies to
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x^2=n(n+1)2^{n-2}</script>
+</p>
+
+<p>The fifth sum takes this even further.
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x^3</script>
+Again, notice that this sum is equal to
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x^3=\sum_{x=0}^n \binom{n}{x}2x-\sum_{x=0}^n \binom{n}{x}3x^2+\sum_{x=0}^n \binom{n}{x}x(x-1)(x-2)</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x^3=2\sum_{x=0}^n \binom{n}{x}x-3\sum_{x=0}^n \binom{n}{x}x^2+\sum_{x=0}^n \binom{n}{x}x(x-1)(x-2)</script>
+Which, by our previous two formulas, is equal to
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x^3=2n2^{n-1}-3n(n+1)2^{n-2}+\sum_{x=0}^n \binom{n}{x}x(x-1)(x-2)</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x^3=n2^n-3n(n+1)2^{n-2}+\sum_{x=0}^n \binom{n}{x}x(x-1)(x-2)</script>
+And using the same trick as before, we can expand the binomial coefficient inside of the sum to get
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x^3=n2^n-3n(n+1)2^{n-2}+\sum_{x=0}^n \frac{n!}{x!(n-x)!}x(x-1)(x-2)</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x^3=n2^n-3n(n+1)2^{n-2}+\sum_{x=0}^n \frac{n!}{(x-3)!(n-x)!}</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x^3=n2^n-3n(n+1)2^{n-2}+n(n-1)(n-2)\sum_{x=0}^n \frac{(n-3)!}{(x-3)!(n-x)!}</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x^3=n2^n-3n(n+1)2^{n-2}+n(n-1)(n-2)\sum_{x=0}^{n-3} \binom{n-3}{x-3}</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x^3=n2^n-3n(n+1)2^{n-2}+n(n-1)(n-2)2^{n-3}</script>
+And after a bit of algebra, this simplifies to
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}x^3=n^2(n+3)2^{n-3}</script>
+</p>
+
+<p>Now we have another sum that uses the same method as the previous three, but in reverse:
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\frac{1}{x+1}</script>
+First expand the binomial to get
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\frac{1}{x+1}=\sum_{x=0}^n \frac{n!}{x!(n-x)!}\frac{1}{x+1}</script>
+and then we can proceed to use a very similar trick:
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\frac{1}{x+1}=\sum_{x=0}^n \frac{n!}{(x+1)!(n-x)!}</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\frac{1}{x+1}=\frac{1}{n+1}\sum_{x=0}^n \frac{(n+1)!}{(x+1)!(n-x)!}</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\frac{1}{x+1}=\frac{1}{n+1}\sum_{x=0}^n \binom{n+1}{x+1}</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\frac{1}{x+1}=\frac{1}{n+1}\bigg(-1+\sum_{x=0}^{n+1} \binom{n+1}{x+1}\bigg)</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\frac{1}{x+1}=\frac{1}{n+1}(2^{n+1}-1)</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\frac{1}{x+1}=\frac{2^{n+1}-1}{n+1}</script>
+</p>
+
+<p>Now for the two most difficult sums - I saved the best for last. First we have the sum
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\cos\frac{\pi x}{n}</script>
+I encourage you to try this sum yourself.</p>
+
+<p>It may be tempting to immediately whip out Euler's identity, but first you should stop and think about what the sum represents. When I first attempted this problem, I headed straight into the realm of complex numbers without even thinking about the sum, and when I finally discovered the result, I felt quite foolish.</p>
+
+<p>Consider the case of the sum for which $n$ is odd. Then the sum contains an even number of terms (sine it starts at $x=0$). Consider some term of the sum
+<script type="math/tex; mode=display">\binom{n}{a}\cos\frac{\pi a}{n}</script>
+for $x=a$. Now consider the term for $x=n-a$:
+<script type="math/tex; mode=display">\binom{n}{n-a}\cos\frac{\pi (n-a)}{n}</script>
+<script type="math/tex; mode=display">=\binom{n}{a}\cos\bigg(\frac{\pi a)}{n}-\pi\bigg)</script>
+and since $cos(\theta-\pi)=-\cos\theta$,
+<script type="math/tex; mode=display">=-\binom{n}{a}\cos\frac{\pi a)}{n}</script>
+It is the opposite of the term for $x=a$! So since, for each $a$ term, the sum also contains a different term for $n-a$, all of the terms cancel out and the sum is equal to zero. The same can be shown for odd $n$ as well, because the middlemost term of the sum would be equal to zero. And so we have
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\cos\frac{\pi x}{n}=0</script>
+</p>
+
+<p>The last sum, however, is non-trivial and has a rather beautiful solution, given that the binomial coefficients do not seem like they would create a sum that condenses to any closed form when multiplied by a trigonometric function. And this time, we will lead our attempt with Euler's identity.
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\sin\frac{\pi x}{n}</script>
+Using Euler's identity, this sum can be converted into
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\sin\frac{\pi x}{n}=\Im\bigg[\sum_{x=0}^n \binom{n}{x}e^\frac{\pi ix}{n}\bigg]</script>
+and using our old friend the binomial theorem, we have
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\sin\frac{\pi x}{n}=\Im\big[(e^\frac{\pi i}{n}+1)^n\big]</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\sin\frac{\pi x}{n}=\Im\big[(\cos\frac{\pi}{n}+i\sin\frac{\pi}{n}+1)^n\big]</script>
+Here's where the tricky part occurs. To continue from here, you need to use the fact that
+<script type="math/tex; mode=display">\frac{\pi}{n}=2\cdot\frac{\pi}{2n}</script>
+and then use the double-angle formulas, like this:
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\sin\frac{\pi x}{n}=\Im\big[(\cos2\cdot\frac{\pi}{2n}+i\sin2\cdot\frac{\pi}{2n}+1)^n\big]</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\sin\frac{\pi x}{n}=\Im\big[(\cos^2\frac{\pi}{2n}-\sin^2\frac{\pi}{2n}+2i\sin\frac{\pi}{2n}\cos\frac{\pi}{2n}+1)^n\big]</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\sin\frac{\pi x}{n}=\Im\big[(\cos^2\frac{\pi}{2n}+2i\sin\frac{\pi}{2n}\cos\frac{\pi}{2n}+1-\sin^2\frac{\pi}{2n})^n\big]</script>
+Then use the fact that $1-\sin^2\theta=\cos^2\theta$ to change this to
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\sin\frac{\pi x}{n}=\Im\big[(\cos^2\frac{\pi}{2n}+2i\sin\frac{\pi}{2n}\cos\frac{\pi}{2n}+\cos^2\frac{\pi}{2n})^n\big]</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\sin\frac{\pi x}{n}=\Im\big[(2\cos^2\frac{\pi}{2n}+2i\sin\frac{\pi}{2n}\cos\frac{\pi}{2n})^n\big]</script>
+Then factor out $2\cos\frac{\pi}{2n}$ from the whole thing to get
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\sin\frac{\pi x}{n}=\Im\big[2^n\cos^n\frac{\pi}{2n}(\cos\frac{\pi}{2n}+i\sin\frac{\pi}{2n})^n\big]</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\sin\frac{\pi x}{n}=2^n\cos^n\frac{\pi}{2n}\Im\big[(\cos\frac{\pi}{2n}+i\sin\frac{\pi}{2n})^n\big]</script>
+Perhaps the hardest part of all in evaluating this sum is knowing the identity known as "De Moivre's Formula":
+<script type="math/tex; mode=display">(\cos\theta+i\sin\theta)^n=\cos n\theta+i\sin n\theta</script>
+I will omit the proof, as it can be done easily using induction. Using it, we have
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\sin\frac{\pi x}{n}=2^n\cos^n\frac{\pi}{2n}\Im\big[\cos n\cdot\frac{\pi}{2n}+i\sin n\cdot\frac{\pi}{2n}\big]</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\sin\frac{\pi x}{n}=2^n\cos^n\frac{\pi}{2n}\Im\big[\cos\frac{\pi}{2}+i\sin\frac{\pi}{2}\big]</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\sin\frac{\pi x}{n}=2^n\cos^n\frac{\pi}{2n}\Im[0+i]</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\sin\frac{\pi x}{n}=2^n\cos^n\frac{\pi}{2n}\Im[i]</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\sin\frac{\pi x}{n}=2^n\cos^n\frac{\pi}{2n}\cdot 1</script>
+<script type="math/tex; mode=display">\sum_{x=0}^n \binom{n}{x}\sin\frac{\pi x}{n}=2^n\cos^n\frac{\pi}{2n}</script>
+And there you have it - a very beautiful formula linking the binomial coefficients to the trigonometric functions.</p>
+
+<p>That's all the summation I'm going to do in this post!</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

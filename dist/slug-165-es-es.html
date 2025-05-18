@@ -1,0 +1,94 @@
+<html>
+<head>
+    <title>Falacias que los informáticos creen sobre los nombres (traducción)</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h3>Falacias que los informáticos creen sobre los nombres</h3>
+
+<p><strong>Noticia:</strong> Lo siguiente es una traducción de un <a href="https://www.kalzumeus.com/2010/06/17/falsehoods-programmers-believe-about-names/">artículo</a> escrito en junio de 2010 por el individuo que algunos llaman "Patrick McKenzie." El hecho de que me he puesto a traducirlo <em>no</em> indica que estoy totalmente de acuerdo con su tésis - solamente me pareció divertido.</p>
+
+<p>John Graham-Cumming escribió un <a href="https://blog.jgc.org/2010/06/your-last-name-contains-invalid.html">artículo</a> hoy quejándose de un sistema informático con el que trabajaba declaró que su nombre contenga carácteres inválidos. Por supuesto que no, porque lo que alguien presenta como su nombre es - por definición - un identificador apropiado. John era comprensiblemente irritado por este asunto, y justificadamente, porque los nombres son partes fundamentales de nuestras identidades, prácticamente por definición.</p>
+
+<p>Yo he vivido por varios años en Japón como programador profesional y he roto muchos sistemas simplemente por ser introducido en ellos. (La mayoría me llama Patrick McKenzie, pero reconocería como correcto cualquier de seis nombres "completos" distintos.) Semejantemente, he trabajado con Big Freaking Enterprises, que, a fuerza de hacer negocios globales, han diseñado sus sistemas para funcionar con todos los nombres. Yo nunca he encontrado un sistema informático que trate los nombres apropiadamente y dudo que un tal exista, a ninguna parte.</p>
+
+<p>Así que, como servicio público, enumero las suposiciones que sus sistemas probablemente hagan sobre los nombres. Todas son falsas. Trata de hacer menos la próxima vez que escribes un sistema que toca los nombres.</p>
+
+<ol>
+<li>Que las personas tengan un solo nombre completo canónico.  </li>
+<li>Que las personas tengan un solo nombre completo que se hagan llamar.  </li>
+<li>Que las personas tengan, en ese instante, un solo nombre completo canónico.  </li>
+<li>Que las personas tengan, en ese instante, un solo nombre completo que se hagan llamar.  </li>
+<li>Que las personas tengan exactamente N nombres, por cualquier número N.  </li>
+<li>Que los nombres de la gente quepan en un cierto espacio determinado.  </li>
+<li>Que los nombres de la gente no cambien.  </li>
+<li>Que los nombres de la gente cambien, pero solamente en un evento de una colección enumerada.  </li>
+<li>Que los nombres de la gente se escriban en ASCII.  </li>
+<li>Que los nombre de la gente se escriban en un solo juego de caracteres.  </li>
+<li>Que los nombres de la gente usen los puntos de código de Unicode.</li>
+<li>Que los nombres de la gente sean sensibles a las mayúsculas.  </li>
+<li>Que los nombres de la gente no sean sensibles a las mayúsculas.  </li>
+<li>Que los nombres de la gente algunas veces tengan prefijos o sufijos, pero se pueda ignorar aquellos sin problemas.  </li>
+<li>Que los nombres de la gente no contengan números.  </li>
+<li>Que los nombres de la gente no se escriban TODO EN MAYÚSCULA.  </li>
+<li>Que los nombres de la gente no se escriban todo en minúscula.  </li>
+<li>Que los nombres de la gente tengan un orden. Que eligir cualquier estilo de ordenación resultaría automáticamente en una ordenación consistente entre todos los sistemas, siempre y cuando todos usen el mismo estilo de ordenación para el mismo nombre.  </li>
+<li>Que los nombres de pila y los apellidos de la gente sean necesariamente distintas.  </li>
+<li>Que las personas tengan apellidos, apellidos de familia, o algo que las personas conocidas como sus parientes compartan.  </li>
+<li>Que los nombres de la gente sean globalmente únicos.  </li>
+<li>Que los nombres de la gente sean casi globalmente únicos.  </li>
+<li>Bueno bueno, pero que seguramente sean los nombres de la gente suficientemente diversos para que ningún millón de gente compartan el mismo nombre.  </li>
+<li>Que mi sistema nunca tendría que gestionar nombres de China.  </li>
+<li>Ni de Japón.  </li>
+<li>Ni de Corea.  </li>
+<li>Ni de Irlanda, ni del Reino Unido, los Estados Unidos, España, México, Brasil, Perú, Rusia, Suecia, Botswana, Sudáfrica, Trinidad, Haití, Francia, ni del Imperio Klingon, todos los cuales tienen esquemas de nombres que son "extraños" en el uso común.  </li>
+<li>Lo del Imperio Klingon era una broma, ¿no?  </li>
+<li>¡Maldito sea tu relativismo cultural! Que las personas en mi sociedad, por los menos, están de acuerdo en una mayoritariamente aceptada norma de nombres.  </li>
+<li>Que exista un algoritmo que transforme los nombres y que se pueda invertir sin pérdidas. (Sí bueno, puedes hacerlo si tu algoritmo devuelve la entrada. Aquí tienes una estrellita.)  </li>
+<li>Que pueda tomar por dado que este diccionario de palabrotas no contenga el nombre de ninguna persona.  </li>
+<li>Que se asignen los nombres al parto.  </li>
+<li>Pues quizá no al parto, sino poco después del parto.  </li>
+<li>Bueno, bueno, dentro de un año después del parto.  </li>
+<li>¿Cinco años?  </li>
+<li>¿Me estás tomando el pelo?  </li>
+<li>Que dos sistemas que contienen datos sobre la misma persona usen el mismo nombre para esta persona.  </li>
+<li>Que dos operaciones para la entrada de datos, dados el nombre de una persona, necesariamente registrarían en un sistema dos cadenas de caracteres iguales a nivel de bits, si el sistema es buen diseñado.  </li>
+<li>Que las personas cuyos nombres rompen mi sistema sean casos atípicos y raros. Deben tener nombres admisibles y bien hechos, como 田中太郎.  </li>
+<li>Que las personas tengan nombres.</li>
+</ol>
+
+<p>Esta lista no es de ninguna manera completa. Si necesitas ejemplos de nombres que refutan las confusiones comunes alistadas arriba, yo te presentaré varios. Siéntete libre de añadir otras falacias en los comentarios, y sugiérele esta entrada a la gente la próxima vez que propongan una idea genial como una tabla en un baso de datos con columnas de "nombre" y "apellido.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

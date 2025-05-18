@@ -1,0 +1,322 @@
+<html>
+<head>
+    <title>Polyhedra in STL and the Conway Operators</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h3>Polyhedra in STL and the Conway Operators</h3>
+
+<p>Since last November, I’ve been working as a research assistant at Leah Buechley’s <a href="https://handandmachine.cs.unm.edu">Hand and Machine</a> computational design lab at UNM. The MO of computational design is to use code to generate two-dimensional designs or three-dimensional structures that are aesthetically appealing or have unique physical properties. There’s a heavy emphasis on the intersection between the abstract, algorithmic side of computer science and the concrete mechanical side: algorithmically designed patterns or structures are manifested in a physical substrate such as textiles, ceramics, or plastic using textile machines or 3D printers. For the past few months I’ve been busy experimenting with the Prusa i3 MK3 3D printer for my job (which is partly why I haven’t written a post in so long), and the purpose of this post is to document some of the interesting problems that I’ve enjoyed solving so far. In particular, I’ve been working on writing a <a href="https://github.com/Hand-and-Machine/polyhedra">Python framework</a> for constructing, manipulating, and transforming 3D polyhedra, which has posed all sorts of cool algorithmic and geometrical puzzles.  </p>
+
+<h4>STL file format <a id="toc-section-1" class="toc-section"></a></a></h4>
+
+<p>One of the first things I learned about was STL, a file format used often in computer-aided design to generate 3D-printable models of solids. A compelling perk of this format is that it can be written in ASCII, and is extremely human-readable. Here’s an example of an ASCII STL file describing a regular tetrahedron of unit side length:  </p>
+
+<div class="code"><code><pre><code><pre>solid unit-regular-tetrahedron    
+facet normal 0.0 0.0 -1.0     
+outer loop  
+vertex 0.5773502691896258 0.0 0.0   
+vertex -0.2886751345948128 -0.5000000000000001 0.0   
+vertex -0.2886751345948132 0.4999999999999999 0.0   
+endloop  
+endfacet  
+facet normal 0.4714045207910318 -0.8164965809277259 0.3333333333333335   
+outer loop  
+vertex -0.2886751345948128 -0.5000000000000001 0.0   
+vertex 0.5773502691896258 0.0 0.0   
+vertex -1.8503717077085938e-17 0.0 0.8164965809277259   
+endloop  
+endfacet  
+facet normal -0.9428090415820632 -3.663549070262141e-16 0.33333333333333354   
+outer loop  
+vertex -0.2886751345948132 0.4999999999999999 0.0   
+vertex -0.2886751345948128 -0.5000000000000001 0.0   
+vertex -1.8503717077085938e-17 0.0 0.8164965809277259   
+endloop  
+endfacet  
+facet normal 0.4714045207910314 0.8164965809277261 0.33333333333333326   
+outer loop  
+vertex 0.5773502691896258 0.0 0.0   
+vertex -0.2886751345948132 0.4999999999999999 0.0   
+vertex -1.8503717077085938e-17 0.0 0.8164965809277259   
+endloop  
+endfacet  
+endsolid unit-regular-tetrahedron  
+</pre></code></pre></code></div>
+
+<p>Here’s what each of these keywords does:<br />
+- <code>solid</code> begins the description of a solid with a specified name, and <code>endsolid</code> marks the end of the description<br />
+- <code>facet</code> marks the beginning of the description of a facet, and <code>endfacet</code> marks the end. A facet of an STL solid is basically the same as a face, but STL facets have a few quirks that I’ll mention momentarily.<br />
+- <code>normal</code> declares the normal vector to a facet.<br />
+- <code>outer loop</code> declares the beginning of a list of vertices, and <code>endloop</code> marks the end of the list.<br />
+- <code>vertex</code> declares a vertex with given coordinates as a vertex of the current facet.  </p>
+
+<p>And finally, here’s what the solid described by this STL file looks like:  </p>
+
+<iframe width="50%" height="400px" src="https://render.githubusercontent.com/view/solid?color_mode=dark&commit=f7b7e91ca1789b4e52688c511f9d13c59b345f83&enc_url=68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f6672616e6b6c696e647965722f73746c2d66696c65732f663762376539316361313738396234653532363838633531316639643133633539623334356638332f756e69742d726567756c61722d7465747261686564726f6e2e73746c&nwo=franklindyer%2Fstl-files&path=unit-regular-tetrahedron.stl&repository_id=348905790&repository_type=Repository#d512d2ac-d16e-409f-b496-acb2ee8ecc2c"></iframe>
+
+<p>This doesn’t work exactly how we would expect it to work at first glance, though. For one thing, all facets must be triangles - no polygons with more than 3 sides are allowed. This means that if you want to generate an STL file for, say, a cube, rather than representing the cube in terms of its 6 faces and their vertices, you would have to dissect each square face into 2 triangles and represent the cube using these 12 triangles. Another curveball is the fact that each facet is only  "visible" from one side, which is determined by the normal vector. Although the above STL model displays a tetrahedron when the vantage point lies outside of the tetrahedron, nothing is visible from a vantage point inside of the solid, since only the "outside" side of each facet is visible. For example, here’s an STL file containing only one triangular facet that is visible from only one side (you might have to drag it around a  little bit before you see anything):  </p>
+
+<iframe width="50%" height="400px" src="https://render.githubusercontent.com/view/solid?color_mode=dark&commit=f7b7e91ca1789b4e52688c511f9d13c59b345f83&enc_url=68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f6672616e6b6c696e647965722f73746c2d66696c65732f663762376539316361313738396234653532363838633531316639643133633539623334356638332f6f6e652d66616365742e73746c&nwo=franklindyer%2Fstl-files&path=one-facet.stl&repository_id=348905790&repository_type=Repository#38b9db16-5823-4a53-b334-2ee6b7a439fd"></iframe>
+
+<p>If you know your trigonometry, manually writing out STL files for more complex solids is easy but quickly becomes tedious. The process of breaking up more complex polygons into triangles and explicitly writing out each triangle’s vertices and normal vector is just <em>begging</em> to be automated. It’s a pretty simple exercise in Python file I/O to write an STL file given a list of vertices and normal vectors for various triangles.  </p>
+
+<p>A less trivial exercise, however, is to write Python code that generates STL triangles <em>given only a list of their points</em> with no normal vector. At first this seems like an ambiguous way to identify a facet, since any triangle defined by three vertices corresponds to <em>two</em> possible facets - one for each flat "side" of the triangle that can be viewed. However, we can disambiguate between the two possible facets by paying attention to the <em>order</em> in which the points of the triangle are listed. In particular, we say that the sequence of points $P_1,P_2,P_3$ pick out the facet of the triangle from which these three points appear in clockwise order around its boundary. Note that the sequences of points $P_2,P_3,P_1$ and $P_3,P_1,P_2$ pick out the same facet as $P_1,P_2,P_3$. However, the sequence $P_1,P_3,P_2$ picks out the <em>opposite</em> facet of the triangle.  </p>
+
+<p><center><img src="/img/2021-03-30-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>Let’s suppose the three vertices of a triangle are given in the order $\vec x, \vec y, \vec z$ and use this to calculate the normal vector of the corresponding facet. The vectors $\vec x - \vec y$ and $\vec z - \vec y$ correspond to two sides of the triangle pointing away from the vertex $\vec y$, and by applying the right-hand rule of vector cross-products, we can see that the normal points in the direction of  </p>
+
+<p>
+<script type="math/tex; mode=display">(\vec x - \vec y)\times (\vec z - \vec y)</script>
+</p>
+
+<p>Knowing this formula, it becomes pretty easy to write Python code computing the facet normal given the three clockwise vertices defining the facet. If we want, we can convert this to a unit normal vector by dividing it by its own magnitude $||(\vec x - \vec y)\times (\vec z - \vec y)||$.  </p>
+
+<h4>Redundancy in storing polyhedra <a id="toc-section-2" class="toc-section"></a></a></h4>
+
+<p>Now that we’ve talked about how STL files and oriented facets work, it’s simple to see how to convert a given solid into an STL file. If we have a list of faces and a list of vertices (in counterclockwise order) for each face, all we need to do is dissect each face into triangles and add these triangles to the STL file. But now the question is - how can we explicitly calculate the vertex coordinates (and which vertices are on each face) of interesting solids that we might want to render using STL, for instance the <a href="https://en.wikipedia.org/wiki/Platonic_solid">Platonic solids</a> or the <a href="https://en.wikipedia.org/wiki/Archimedean_solid">Archimedean solids</a> (or maybe even all of the <a href="https://en.wikipedia.org/wiki/Johnson_solid">Johnson solids</a>)? Or, given a simple solid, how can we transform its vertices and faces to produce a more complex solid that can be rendered as an STL file?  </p>
+
+<p>Part of what I’ve been working on for my job at Hand and Machine is developing a <a href="https://github.com/Hand-and-Machine/polyhedra">Python framework</a> for manipulating polyhedra and converting them to STL files. One of the most salient lessons I’ve learned is the power of redundanct data structures to make more efficient code. For example, in my code, a <code>Solid</code> object is defined mainly by a list of vertices with ID numbers and a list of faces that refer to the vertices by their IDs. A <code>Solid</code> can be built up from nothing by progressively adding vertices and faces that refer to those vertices. Now suppose we want to write a method for the <code>Solid</code> class that returns all of the "neighbors" of a given vertex, that is, all of the vertices that are adjacent to a given vertex along an edge. If a <code>Solid</code> is structured as described above, the following pseudocode describes an algorithm for generating a list of all of the "neighbors" of a given vertex:  </p>
+
+<div class="code"><code><pre>given a vertex v  
+create empty list neighbors   
+for each face f in solid:  
+    if v in f:  
+        get the vertices n1, n2 next to v  
+        add n1, n2 to v  
+return neighbors  
+</pre></code></div>
+
+<p>This algorithm works, but it wastes a lot of time. The complexity is $\mathcal{O}(f)$ where $f$ is the number of faces in the <code>Solid</code>, but most of the faces being checked probably don’t even contain the vertex <code>v</code>. On the other hand, if we change what information is calculated and stored in the <code>Solid</code> object as it is being built, we can implement this functionality in $\mathcal{O}(1)$. Suppose that, in addition to a list of vertices and faces, each <code>Solid</code> object also contains a list of "neighbors" of each vertex, and that these lists are updated each time a new vertex or face is added to the <code>Solid</code>.  Each update costs $\mathcal{O}(1)$ time, leaving the time complexity of building the <code>Solid</code> unchanged - but now getting the neighbors of a vertex is as easy as returning a pre-built list, which is trivially $\mathcal{O}(1)$. Even though these lists of vertex neighbors contribute no new information about the <code>Solid</code> that wasn’t already present in its vertex and face lists (i.e. they are redundant), they drastically speed up the process of finding vertex neighbors!  </p>
+
+<p>For similar reasons, I’ve incorporated redundant data structures for each of the following pieces of information as well:  </p>
+
+<ul>
+<li>The total number of vertices in the <code>Solid</code>  </li>
+<li>Lists of all faces containing a given vertex  </li>
+<li>Lists of all faces containing a given pair of vertices  </li>
+<li>The number of vertices in each face   </li>
+<li>The position of a given vertex on a given face, given the vertex’s ID  </li>
+</ul>
+
+<p>The last two pieces of information aren’t stored in <code>Solid</code>, but rather in each <code>Face</code> object.  </p>
+
+<h4>Conway polyhedron operators <a id="toc-section-3" class="toc-section"></a></a></h4>
+
+<p>Generating all of the Platonic solids was an interesting challenge, and I wrote a few "helper" functions to abstract some commonly-occurring geometric constructions, but most interesting challenges came when I started working on the Archimedean solids. Many Archimedean solids can be obtained by applying an (intuitively) simple operation to a Platonic solid. For instance, several Archimedean solids are just truncated versions of their Platonic counterparts - that is, Platonic solids with the corners chopped off. For example, truncating the corners of the (Platonic) cube yields the (Archimedean) truncated cube:  </p>
+
+<p><center><img src="/img/2021-03-30-Fig2.png" alt="Fig 2" /></center></p>
+
+<p>By writing a function to chop the corners off of any <code>Solid</code>, I could generate the following Archimedean solids in one swoop, rather than constructing their faces and vertices manually:  </p>
+
+<ul>
+<li>truncated tetrahedron  </li>
+<li>cuboctahedron  </li>
+<li>truncated cube  </li>
+<li>truncated octahedron  </li>
+<li>icosidodecahedron  </li>
+<li>truncated dodecahedron  </li>
+<li>truncated icosahedron  </li>
+</ul>
+
+<p>It turns out that the truncation operator is just one of many polyhedron operations called the <a href="https://en.wikipedia.org/wiki/Conway_polyhedron_notation#Original_operations">Conway polyhedron operations</a> that can be used to manipulate existing polyhedra. Another one is called the "expand" operaton, which pushes all of the polyhedron’s faces away from its center and then "fills in the gaps" with more faces. The rhombicuboctahedron and rhombicosidodecahedron can be obtained by applying the "expand" operator to the cube and the dodecahedron respectively. The "snub" operator is similar to the "expand" operator, but it involves twisting the faces in addition to translating them outward, and it can be used to generate the snub cube and snub dodecahedron. In addition to their utility for generating the Archimedean solids from the Platonic solids, the Conway operators are just fun to play with, and can be used to create all sorts of intricate and symmetrical solids from simpler ones.  </p>
+
+<p>One more important note before we get into the weeds - the Conway polyhedron operations are actually topological, not geometrical. In other words, they tell us how to change the ways in which the faces/edges/vertices of a solid are connected to each other, but not where the vertices of the new solid should be situated in space. They operate on <em>the graph</em> of a solid, not its manifestation in 3-space. For example, the "kis" operation tells us to create a new vertex for each face, and connect the vertices of each face to the new vertex corresponding to this face. But there are many solids in 3-space that fit this description, because the "new points" can be placed anywhere. Here two different solids that could result from applying the "kis" operation to a cube:  </p>
+
+<iframe height="400px" width="50%" src="https://render.githubusercontent.com/view/solid?color_mode=dark&commit=3738ee747a0d470f32ae826397bb1758b22eae21&enc_url=68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f6672616e6b6c696e647965722f73746c2d66696c65732f333733386565373437613064343730663332616538323633393762623137353862323265616532312f637562652d7370696b652d6f75742e73746c&nwo=franklindyer%2Fstl-files&path=cube-spike-out.stl&repository_id=348905790&repository_type=Repository#bad21473-c115-438f-bd77-d0ff0c2acecb"></iframe>
+
+<iframe height="400px" width="50%" src="https://render.githubusercontent.com/view/solid?color_mode=dark&commit=3738ee747a0d470f32ae826397bb1758b22eae21&enc_url=68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f6672616e6b6c696e647965722f73746c2d66696c65732f333733386565373437613064343730663332616538323633393762623137353862323265616532312f637562652d7370696b652d696e2e73746c&nwo=franklindyer%2Fstl-files&path=cube-spike-in.stl&repository_id=348905790&repository_type=Repository#bb6fdbf8-1838-46cc-ac86-c60a8ff16f6b"></iframe>
+
+<p>Similarly, with the truncation operator described earlier, there is a choice for each vertex about "how deep" and at what angle each vertex is "chopped off". This means that most of the Conway operations I’ve implemented take additional arguments that parametrize the result of the operation in some way (by allowing the user to specify, for example, the depth of truncation or the "spikiness" of a solid produced by truncation).  </p>
+
+<h4>The kis operator <a id="toc-section-4" class="toc-section"></a></a></h4>
+
+<p>To get warmed up, here’s pseudocode describing my implementation of the "kis" operator, which was by far the easiest:  </p>
+
+<div class="code"><code><pre>given a solid s and a height h  
+create a new empty solid s’  
+for each face f in s:  
+    let c be the centroid of f  
+    let n be the unit normal vector of f  
+    p = c + n * h  
+    for each vertex v in f:  
+        let v’ be the next vertex of f counterclockwise from v  
+        let f’ be the face defined by v, v’, p  
+        add f’ to s’  
+return s’  
+</pre></code></div>
+
+<p>This algorithm is $\mathcal{O}(n)$ where $n$ is the number of vertices of the solid. For large values of <code>h</code>, this will generate increasingly "spiky" solids, whereas for negative <code>h</code>, it will generate a "caved in" version of the original (the first example with the cube corresponds to positive <code>h</code>, and the second to negative <code>h</code>). When <code>h</code> equals zero, we’ll get a solid with four times as many faces that looks identical to the original because many of the faces will be coplanar to each other. This algorithm is pretty simple, but there’s one important thing worth pointing out - where I defined <code>f’</code> as the face defined by the vertices <code>v’, v, p</code>, note that <em>this order matters</em> since our "faces" are actually <em>facets</em> whose orientations are defined by the order in which their vertices are listed. Recall that for the "outside sides" of our solid to be visible, their vertices must be listed in counterclockwise order as viewed from the outside. Take a moment to visualize a free-floating face in space, a point <code>p</code> elevated some height <code>h</code> above this face, and two vertices <code>v, v’</code> in counterclockwise order on the perimeter of this face, and convince yourself that the facet <code>v, v’, p</code> appear in counterclockwise order as viewed from outside the solid, whereas <code>v’, v, p</code> <em>do not</em> appear counterclockwise.  </p>
+
+<h4>The truncation operator <a id="toc-section-5" class="toc-section"></a></a></h4>
+
+<p>Next, here’s my pseudocode algorithm for truncation. It’s greatly simplified, and several of the steps are trickier than they seem, which I’ll comment on afterwards.  </p>
+
+<div class="code"><code><pre>given a solid s and a proportion p  
+copy s into the new solid s’  
+for each vertex v in s:  
+    let evs be the list of vectors pointing from each of v’s neighbors towards v  
+    let uevs be the list of unit vectors corresponding to the vectors in evs  
+    let cut be the normalized average of all unit vectors in uevs  
+    let projs be the list of the projections of each vector in evs onto cut  
+    let minproj be the length of the shortest vector in projs  
+    d = p * minproj  
+    replace s’ by the solid formed by truncating vertex v from s’ with a cut depth of d  
+</pre></code></div>
+
+<p>Intuitively, this algorithm calculates the direction in which each truncation cut will be made (the average direction of the edges connected to a given vertex), figures out how deep each cut can be made without colliding with any adjacent vertices, and makes cut that are a proportion <code>p</code> of this maximum depth for each vertex. This part is easy and algorithmically uninteresting - it’s just a bunch of vector algebra. The hard part is in the details of the last line. How do we find the solid formed by truncating a single vertex of another solid?  </p>
+
+<p>My first attempt was to write a more general function which, given a solid and a plane, would find the solids formed by slicing that solid across the given plane. Then I used this function to make a plane slice near each of the solid’s vertices, "chopping off" each of its vertices. My plane-slice algorithm, however, was horribly inefficient, and only worked reliably for convex solids. This is because a plane slice at one vertex of a concave solid may also intersect the solid somewhere else, "accidentally" chopping off more than the tip of one vertex.  </p>
+
+<p>Here’s one of the earlier algorithms that I used - it works for convex as well as concave solids, but contains an inefficient step:  </p>
+
+<div class="code"><code><pre>given a solid s, a vertex v on s, and a depth d  
+create an empty solid s’  
+let uevs be the list of unit vectors pointing from each of v’s neighbors towards v  
+let cut be the normalized average of all unit vectors in uevs  
+cut = -cut  
+p = v + depth * cut  
+let pl be the plane defined by the point p and the normal vector cut  
+let newvs be the list of points at which pl intersects the edges connected to v  
+sort the points in newvs in clockwise order about the vector cut  
+add the face defined by the points in newvs to s’  
+for each face f in s containing v:  
+    let p1, p2 be the points on f adjacent to v, in counterclockwise order  
+    let q1 be the point where pl intersects the edge from p1 to v (already calculated in newvs)  
+    let q2 be the point where pl intersects the edge from v to p2 (already calculated in newvs)  
+    let pts be a copy of the list of vertices in f  
+    in pts, replace v with the points q1, q2 in that order  
+    add the face defined by the points in pts to s’  
+add all faces of s not containing the vertex v to s’  
+</pre></code></div>
+
+<p>The inefficient step here is <code>sort the points in newvs in clockwise order about the vector cut</code>. Because it involves sorting a set of $n$ points where $n$ is the number of neighbors of <code>v</code>, it will be $\mathcal{O}(n\log n)$, whereas the rest of the algorithm is $\mathcal{O}(n)$. If we could find a way to get these points in clockwise order without having to sort them, it would lower the complexity of the entire function! (In practice, a complexity of $\mathcal{O}(n\log n)$ isn't actually that bad compared to $\mathcal{O}(n)$ - probably the most computationally costly step is computing all of the angles between the vectors, not sorting them, even though the latter asymptotically dominates the former for <em>very</em> large polyhedra. Thanks to my friend CJ for pointing this out!)  </p>
+
+<p>It turns out that it’s possible to build the list <code>newvs</code> in such a way that the points appear in the correct order without performing the expensive operation of sorting them. This can be accomplished using the following steps:  </p>
+
+<div class="code"><code><pre>let newvs be an empty list  
+let avs be an empty list  
+let av be any vertex adjacent to v  
+repeat a number of times equal to the number of neighbors of v:  
+    add av to avs  
+    get the face containing the edge from v to av, in that order  
+    let av’ be the vertex before v (counterclockwise) on that face  
+    av = av’  
+for each vertex v’ in avs:  
+    let newv be the point where the plane pl intersects the plane joining v to v’  
+    add newv to newvs  
+</pre></code></div>
+
+<p>The list ‘avs’ will contain the neighbor vertices of <code>v</code> in such a way that their respective edges with <code>v</code> <em>wrap counterclockwise</em> about the "corner" at <code>v</code>, or clockwise about <code>cut</code>, which points towards the interior of the solid. Why does the construction turn out this way? It leverages information about clockwise/counterclockwise orientation already stored within the solid, namely the fact that the vertices of each face are listed in counterclockwise order as viewed from the outside. This means that if we draw a star-shaped path through <code>v</code> and its neighbors in such a way that it always moves in the direction opposite the orientation of the edges of the faces, it will wind about <code>v</code> in a counterclockwise orientation. Here’s a diagram to help visualize what’s going on:   </p>
+
+<p><center><img src="/img/2021-03-30-Fig3.png" alt="Fig 3" /></center></p>
+
+<p>This algorithm is $\mathcal{O}(n)$ in the number of neighbors $n$ of the vertex <code>v</code>. Note that the steps like <code>get the face containing the edge...</code> can be completed in $\mathcal{O}(1)$ time because of some of the redundant data structures built into the solid, described at the end of the previous section. This brings the complexity of the whole truncation algorithm down to $\mathcal{O}(n^2)$.  </p>
+
+<h4>The dual operator, and face smoothing <a id="toc-section-6" class="toc-section"></a></a></h4>
+
+<p>There’s one more operator I’d like to discuss, which is the dual operator. The (topological) dual of a solid is formed by replacing each of the faces with vertices and each of the vertices with faces, in such a way that two vertices are connected by an edge if and only if their corresponding faces shared an edge, and two faces share an edge if and only if their corresponding vertices were connected by an edge. There are lots of nice relationships between the Platonic and Archimedean solids in terms of the dual operator: for example, the cube and the regular octahedron are duals of each other, as are the regular dodecahedron and the regular icosahedron.   </p>
+
+<p><center><img src="/img/2021-03-30-Fig4.png" alt="Fig 4" /></center></p>
+
+<p>The most obvious way to find the dual of a solid is to compute the centroid of each face and draw edges connecting each pair of centroids corresponding to faces that border each other. We can write this algorithm in pseudocode as follows:  </p>
+
+<div class="code"><code><pre>given a solid s  
+create a new empty solid s’  
+for each face f in s:  
+    let c be the centroid of f  
+    add c as a vertex of s’  
+for each edge e in s:  
+    let f1, f2 be the faces on either side of e  
+    add an edge to s’ joining the centroids of f1 and f2  
+</pre></code></div>
+
+<p>This algorithm is $\mathcal{O}(n)$ in the number of faces $n$ on the original solid. So what’s the big deal? This algorithm seems simple enough, right?  </p>
+
+<p>Well, the resulting collection of vertices and edges will <em>topologically</em> be the dual of the original solid, but it’s not even guaranteed to be a well-defined 3D polyhedron. This is because this process does not guarantee that a collection of vertices that are connected by edges to form a face are actually <em>coplanar</em>. In other words, for some input solids <code>s</code>, the above process results in <code>s’</code> having "degenerate faces" whose vertices don’t actually lie in the same plane! These "degenerate faces" can be rendered in STL by splitting them up into multiple nondegenerate triangular faces, but although this makes it possible to visualize the resulting solid in 3D, it alters its topology so that it is no longer the <em>topological</em> dual of the original solid. Here’s a picture of one of the Archimedean solids and its dual with degenerate faces:  </p>
+
+<iframe src="https://render.githubusercontent.com/view/solid?color_mode=dark&commit=9006c84487734b808370c685ddea2559ba10075c&enc_url=68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f6672616e6b6c696e647965722f73746c2d66696c65732f393030366338343438373733346238303833373063363835646465613235353962613130303735632f72686f6d62696375626f637461686564726f6e2e73746c&nwo=franklindyer%2Fstl-files&path=rhombicuboctahedron.stl&repository_id=348905790&repository_type=Repository#cb3d4d72-d392-41ae-8432-d28b58c946d2" width="50%" height="400px"></iframe>
+
+<iframe src="https://render.githubusercontent.com/view/solid?color_mode=dark&commit=9006c84487734b808370c685ddea2559ba10075c&enc_url=68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f6672616e6b6c696e647965722f73746c2d66696c65732f393030366338343438373733346238303833373063363835646465613235353962613130303735632f6475616c2d72686f6d62696375626f637461686564726f6e2e73746c&nwo=franklindyer%2Fstl-files&path=dual-rhombicuboctahedron.stl&repository_id=348905790&repository_type=Repository#e70c0a5b-797f-459f-b7cf-c77d774afb9a" width="50%" height="400px"></iframe>
+
+<p>If you could stick your fingers into that picture and shift the solid’s vertices and faces around manually, it almost feels like you could "shimmy" them around a little bit to make all of the triangles line up and the degenerate faces become regular faces. But this is not a precise mathematical algorithm. We need to find a way to turn degenerate faces whose vertices are <em>almost</em> coplanar into faces whose vertices are, in fact, coplanar.  </p>
+
+<p>The easiest way to make sure a bunch of vertices lie in the same plane is to pick a plane and project them onto it. Consider one face $F$ with points $P_1, P_2,..., P_n$ that are not coplanar. For a face that is nondegenerate, the plane in which all of its points lie is precisely that plane which passes through that face’s centroid and is normal to the normal vector to that face. Now, $F$ doesn’t exactly have a centroid since its vertices are noncoplanar - but the centroid of an ordinary face can be found by averaging the coordinates of its vertices, so we can generalize by saying that the "centroid" of $F$ is the point found by averaging the coordinates of $P_1,P_2,...,P_n$. Call this "centroid" $C^\star$. Similarly, $F$ doesn’t exactly have a normal vector - but the triangle $\triangle P_1P_2P_3$ has a normal vector, and so does the triangle $\triangle P_2P_3P_4$, and so on, so we might call the vector formed by averaging the normal vectors of each of these triangles the "normal vector" of $F$. Let’s denote this "degenerate normal vector" $\vec{n}^\star$. Now we can project each point $P_i$ onto the plane defined by $C^\star$ and $\vec{n}^\star$ to obtain a set of points that are both coplanar and reasonably close to the originals. The projection of the point $P_i$ onto this plane can be calculated as  </p>
+
+<p>
+<script type="math/tex; mode=display">C^\star + \text{proj}_{\vec{n}^\star}(\overrightarrow{C^\star P_i})</script>
+</p>
+
+<p>So, now we’ve come up with a way to "planarize" the vertices of one degenerate face. But we have another problem: all of the faces of a solid are connected to each other. If $F_1$ and $F_2$ share some vertices, and we planarize $F_1$ and then planarize $F_2$, the vertices of $F_1$ might not be coplanar anymore, since we will have shifted a few of them while planarizing $F_2$. Is there a way to planarize all faces of our solid at once, so that we don’t "mess up" previously planarized faces?  </p>
+
+<p>Suppose $P_i$ is some point on our solid, and $F_a$ and $F_b$ are two degenerate faces containing it. Define $P_{ia}’$ to be the image of the point $P_i$ when $F_a$ is planarized, and $P_{ib}’$ be the image of $P_i$ when $F_b$ is planarized. The fact that $P_{ia}’$ and $P_{ib}’$ are not necessarily equal is why we’re in trouble - the planarizations of two degenerate faces might disagree with each other. So why don’t we compromise by averaging these images with each other? More precisely, if the point $P_i$ is on the faces $F_{a_1}, F_{a_2}, ... F_{a_k}$, then the "compromise point" formed by averaging its images under the planarization of each face is given by  </p>
+
+<p>
+<script type="math/tex; mode=display">\bar{P_{i}’} = \frac{1}{k}\sum_{n=1}^k P_{ia_k}’</script>
+</p>
+
+<p>(Where the points are summed componentwise.) Now, if we replace each point $P_{i}$ by the point $\bar{P_{i}’}$, we still aren’t guaranteed a solid with nondegenerate faces, but we should get something <em>closer</em> to a nondegenerate solid - the degenerate faces should be "smoothed out" to some extent as each of the vertices of each face are shifted towards a common plane. If we apply this process many times, hopefully the degenerate faces will become smooth enough that their irregularities are no longer noticeable, and they become approximately equal to nondegenerate faces. Remember the degenerate dual of the Archimedean solid we saw earlier? Here’s what happens when we repeatedly apply this smoothing algorithm:  </p>
+
+<iframe src="https://render.githubusercontent.com/view/solid?color_mode=dark&commit=9006c84487734b808370c685ddea2559ba10075c&enc_url=68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f6672616e6b6c696e647965722f73746c2d66696c65732f393030366338343438373733346238303833373063363835646465613235353962613130303735632f6475616c2d72686f6d62696375626f637461686564726f6e2d736d6f6f74686564312e73746c&nwo=franklindyer%2Fstl-files&path=dual-rhombicuboctahedron-smoothed1.stl&repository_id=348905790&repository_type=Repository#e204d9a1-528e-403d-83b6-c7cb6f7d17ea" width="50%" height="400px"></iframe>
+
+<iframe src="https://render.githubusercontent.com/view/solid?color_mode=dark&commit=9006c84487734b808370c685ddea2559ba10075c&enc_url=68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f6672616e6b6c696e647965722f73746c2d66696c65732f393030366338343438373733346238303833373063363835646465613235353962613130303735632f6475616c2d72686f6d62696375626f637461686564726f6e2d736d6f6f74686564322e73746c&nwo=franklindyer%2Fstl-files&path=dual-rhombicuboctahedron-smoothed2.stl&repository_id=348905790&repository_type=Repository#a3133e0e-74eb-4559-9047-7fe34052802a" width="50%" height="400px"></iframe>
+
+<iframe src="https://render.githubusercontent.com/view/solid?color_mode=dark&commit=9006c84487734b808370c685ddea2559ba10075c&enc_url=68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f6672616e6b6c696e647965722f73746c2d66696c65732f393030366338343438373733346238303833373063363835646465613235353962613130303735632f6475616c2d72686f6d62696375626f637461686564726f6e2d736d6f6f74686564332e73746c&nwo=franklindyer%2Fstl-files&path=dual-rhombicuboctahedron-smoothed3.stl&repository_id=348905790&repository_type=Repository#8fcc21ce-dbe8-4386-ba85-37ad459b2ee0" width="50%" height="400px"></iframe>
+
+<p>After only three iterations, it’s hard to tell the difference, and after even more iterations, the vertices of each face are so close to being planar that we’ve essentially solved the problem. The best part is that this algorithm isn’t just restricted to degenerate polyhedra obtained by applying the dual operator. Given any collection of points and edges haphazardly scattered in 3D space, we can apply this algorithm to smooth it out into a nice nondegenerate polyhedron. Of course, this won’t work for configurations of points and edges that aren’t <em>topologically</em> polyhedral (e.g. if their faces aren’t closed or something nasty like that), or if the points of each face aren’t even close to being planar.  </p>
+
+<h4>Conclusion <a id="toc-section-7" class="toc-section"></a></a></h4>
+
+<p>There are several other challenges that I didn’t have time to write about in this post, such as  </p>
+
+<ul>
+<li>the specific geometrical tools/functions that I wrote to help construct the original Platonic/Archimedean solids  </li>
+<li>dealing with floating-point errors when storing vertex coordinates  </li>
+<li>algorithmically computing the convex hull of a set of points  </li>
+<li>a few other Conway operators that I implemented, such as the "expand" and "snub" operators  </li>
+</ul>
+
+<p>Also, I’ve been 3D printing many of the polyhedra I’ve designed while working on this framework, and 3D printing has introduced some interesting puzzles of its own. More recently I’m experimenting with directly editing the GCODE of 3D prints, or the files that dictate the exact movements that the machine must take to create a particular structure. Perhaps that will be the topic of a future blog post.  </p>
+
+<p>Please enjoy the following polyhedra in parting, which were constructed by repeatedly applying different Conway operators to Platonic and Archimedean solids:  </p>
+
+<iframe width="50%" height="400px" src="https://render.githubusercontent.com/view/solid?color_mode=dark&commit=f46755d636525cf2829364b6e8f6c2961a0ae07e&enc_url=68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f6672616e6b6c696e647965722f73746c2d66696c65732f663436373535643633363532356366323832393336346236653866366332393631613061653037652f636f6f6c2d736f6c69642d6578616d706c65312e73746c&nwo=franklindyer%2Fstl-files&path=cool-solid-example1.stl&repository_id=348905790&repository_type=Repository#32ff5869-ca70-4b97-a7d1-ec14dff9c3d2"></iframe>
+
+<iframe width="50%" height="400px" src="https://render.githubusercontent.com/view/solid?color_mode=dark&commit=f46755d636525cf2829364b6e8f6c2961a0ae07e&enc_url=68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f6672616e6b6c696e647965722f73746c2d66696c65732f663436373535643633363532356366323832393336346236653866366332393631613061653037652f636f6f6c2d736f6c69642d6578616d706c65322e73746c&nwo=franklindyer%2Fstl-files&path=cool-solid-example2.stl&repository_id=348905790&repository_type=Repository#2eaf4c80-5167-46a2-adbd-ffb4d58b9290"></iframe>
+
+<iframe width="50%" height="400px" src="https://render.githubusercontent.com/view/solid?color_mode=dark&commit=f46755d636525cf2829364b6e8f6c2961a0ae07e&enc_url=68747470733a2f2f7261772e67697468756275736572636f6e74656e742e636f6d2f6672616e6b6c696e647965722f73746c2d66696c65732f663436373535643633363532356366323832393336346236653866366332393631613061653037652f636f6f6c2d736f6c69642d6578616d706c65332e73746c&nwo=franklindyer%2Fstl-files&path=cool-solid-example3.stl&repository_id=348905790&repository_type=Repository#7b299c7a-3d0b-45fe-8f97-ba667816e65a"></iframe>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

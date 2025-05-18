@@ -1,0 +1,106 @@
+<html>
+<head>
+    <title>Blue Eyes and Common Knowledge</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Blue Eyes and Common Knowledge</h2>
+
+<p>This blog post is centered around a logic puzzle that appears on xkcd’s website entitled <a href="https://www.xkcd.com/blue_eyes.html">“Blue Eyes: The Hardest Logic Puzzle in the World.”</a> The rules of the puzzle read as follows:</p>
+
+<blockquote>
+<p>A group of people with assorted eye colors live on an island. They are all perfect logicians -- if a conclusion can be logically deduced, they will do it instantly. No one knows the color of their eyes. Every night at midnight, a ferry stops at the island. Any islanders who have figured out the color of their own eyes then leave the island, and the rest stay. Everyone can see everyone else at all times and keeps a count of the number of people they see with each eye color (excluding themselves), but they cannot otherwise communicate. Everyone on the island knows all the rules in this paragraph.</p>
+<p>On this island there are 100 blue-eyed people, 100 brown-eyed people, and the Guru (she happens to have green eyes). So any given blue-eyed person can see 100 people with brown eyes and 99 people with blue eyes (and one with green), but that does not tell him his own eye color; as far as he knows the totals could be 101 brown and 99 blue. Or 100 brown, 99 blue, and he could have red eyes.</p>
+<p>The Guru is allowed to speak once (let's say at noon), on one day in all their endless years on the island. Standing before the islanders, she says the following:</p>
+<p>"I can see someone who has blue eyes.</p>
+<p>Who leaves the island, and on what night?</p>
+<p>There are no mirrors or reflecting surfaces, nothing dumb. It is not a trick question, and the answer is logical. It doesn't depend on tricky wording or anyone lying or guessing, and it doesn't involve people doing something silly like creating a sign language or doing genetics. The Guru is not making eye contact with anyone in particular; she's simply saying "I count at least one blue-eyed person on this island who isn't me.</p>
+<p>And lastly, the answer is not "no one leaves.</p>
+</blockquote>
+
+<p>While this certainly isn’t “the hardest logic puzzle in the world,” it may be the most counterintuitive, because it seems impossible for anyone to deduce their eye color after hearing something they already knew from the Guru. Even after I solved the puzzle, it took me a couple of weeks to reach an intuitive understanding of the answer. I encourage the reader to work on the puzzle and try to solve it before moving on.</p>
+
+<p>If you get stuck, here’s a little hint:</p>
+
+<blockquote>
+<p>Try the same problem with fewer people, like one person of each eye color, or two people of each eye color. If you find a solution, can you generalize it to larger groups of people.</p>
+</blockquote>
+
+<p>Now I assume that the reader has at least attempted the puzzle for him/herself, and I will explain a solution. After explaining the solution, I’ll try to provide an intuitive explanation for why the Guru’s seemingly obvious remark actually provided the islanders with new information and allowed them to leave, and I’ll also go into some variations on the problem.</p>
+
+<p>First of all, I think it’s worth making the trivial observation that if and when any blue-eyed person leaves, they will all leave together (and the same applies for brown-eyed people), since they are all privy to exactly the same information.</p>
+
+<p>As I suggested in the hint, to solve this problem we should start by considering a simpler case. First, let’s suppose that only one blue-eyed islander and one brown-eyed islander are on the island. The outcome in this case is obvious: once the Guru says that there is at least one blue-eyed person on the island, the blue-eyed person will know instantly that his eyes are blue, since he only sees a person with brown eyes. The brown-eyed person must stay behind, eternally unable to know his own eye color, since nobody has so much as mentioned anyone with brown eyes.</p>
+
+<p>Now suppose that there are two blue-eyed islanders and two brown-eyed islanders. Each blue-eyed islander sees two other brown-eyed islanders and one other blue-eyed islander, so neither of the blue-eyed islanders knows instantly after the Guru’s declaration that he has blue eyes, since he sees one other person with blue eyes. Thus, after one night on the island, nobody leaves. But now each blue-eyed islander has observed that the other blue-eyed islander has not left the island and therefore was not able to deduce his own eye color, meaning that he must see someone with blue eyes other than himself. This allows both blue-eyed islanders to happily leave on the second night, each having deduced that the other saw his blue eyes.</p>
+
+<p>By now, it should be clear that the brown-eyed people on the island have basically no importance in the problem - they aren’t getting enough information to leave, and they aren’t giving the blue-eyed islanders any information. So let’s keep considering simpler problems with three, four, and more blue-eyed islanders, but let’s take the brown-eyed islanders out of the picture.</p>
+
+<p>Suppose now that we have three blue-eyed islanders. Any one of the blue-eyed islanders will observe the two other blue-eyed islanders and, knowing what we’ve determined above regarding the case of two blue-eyed islanders, will reason as follows: “If I don’t have blue eyes, then those two will both leave on the second night. So if they don’t leave on the second night, I must also have blue eyes, and then I can leave.” Then, after each blue-eyed islander observes that the others don’t leave after the first two nights, all three of them leave on the third night.</p>
+
+<p>By now, you may have guessed the general solution: when there are $n$ blue-eyed islanders, all of them will leave on the $n$ th night. We can prove this by induction. When there are $n$ blue-eyed islanders, each of them will observe $n-1$ other blue-eyed islanders and reason: “If I don’t have blue eyes, then those guys will all leave together on the $n-1$ st night. So if they don’t leave then, I must have blue eyes and I can leave.” Then, after nobody leaves for $n-1$ nights, they all leave on night $n$.</p>
+
+<p>So that’s the answer to the puzzle! All $100$ blue-eyed islanders will leave together on night $100$. Case closed.</p>
+
+<p>But wait, there’s still something funny going on here. Somehow, the Guru told everybody something that they all already knew, and yet it allowed them to deduce some new information. The inductive proof given above is certainly valid, but what does the Guru’s seemingly useless piece of obvious information contribute?</p>
+
+<p>Well, notice that in each of the simpler examples and in the inductive statement above, the islanders’ reasoning didn’t just make use of information about each others’ eye colors, but also about each others’ <em>knowledge</em>. By observing whether or not other islanders had been able to deduce their own eye color, they were able to deduce their own.</p>
+
+<p>To better explain this, I need to introduce a bit of notation and terminology. Suppose we have $n$ blue-eyed people on the island enumerate $1,2,3,...,n$. If $\phi$ is some logical statement (like “someone on this island has blue eyes”), define $E_i(\phi)$ to be the logical statement “person $i$ knows $\phi$,” and define $E(\phi)$ to be the statement “everyone on the island knows $\phi$.” This would entail that $E(E(\phi))$ is the statement “everyone on the island knows that everyone on the island knows $\phi$,” and $E(E(E(\phi)))$ is the statement “everyone on the island knows that everyone on the island knows that everyone on the island knows $\phi$,” and so on.</p>
+
+<p>Finally, define the statement $C(\phi)$ to be the union of all of the statements $\phi,E(\phi),E(E(\phi)),$ and so on. It can be alternatively define as the statement that satisfies the “equation” $C(\phi)=\phi\land E(C(\phi))$. If $C(\phi)$ is true, then $\phi$ is true, everyone knows $\phi$, everyone knows that everyone knows $\phi$, and so on, and it is said that $\phi$ is <em>common knowledge.</em></p>
+
+<p>Let $\beta$ denote the statement “at least one person on the island has blue eyes.” At the beginning of the puzzle, before the Guru says anything, everyone on the island knows $\beta$, and, for that matter, also knows $E(\beta),$ $E(E(\beta))$, and $E(E(E(\beta)))$ (let’s denote $k$ nestings of $E$ as $E^k$, so that this last statement is $E^{k}(\beta)$). However, $\beta$ is <em>not</em> common knowledge!</p>
+
+<p>Here’s why. Let’s ignore all of the brown-eyed people on the island and suppose that I’m blue-eyed person number $1$. I see $49$ other blue-eyed people on the island, and believe the following: </p>
+
+<blockquote>
+<p>“I might not have blue eyes, so there could be either $99$ or $100$ blue-eyed people on this island. If I don’t have blue eyes, then person number $2$ sees $98$ other blue-eyed people and believes that there are either $98$ or $99$ other blue-eyed people. Then he would believe that if his eyes aren’t blue, person number $3$ sees $97$ other blue-eyed people and believes that there are either $97$ or $98$ blue-eyed people, and so on. Thus, inductively, it’s possible that person $2$ thinks it’s possible that person $3$ thinks it’s possible that person $4$ thinks it’s possible that... that person $100$ thinks it’s possible that there are either $0$ or $1$ blue-eyed people on this island.“</p>
+</blockquote>
+
+<p>Ah-ha! In this nested hypothetical scenario, person $50$ does not know that $\beta$ is true, meaning that $E^{99}(\beta)$ is not true, since my reasoning went $99$ hypothetical layers deep. But when the Guru stands before all $100$ people and proclaims $\beta$, not only does everyone know $\beta$, but everyone also knows $E^{k}(\beta)$ for all $k$. In other words, even though everyone already knew $\beta$, the Guru turned $\beta$ into <em>common knowledge</em>, providing everyone with the new piece of information $C(\beta)$.</p>
+
+<p>I’ll wrap up this post with a few more puzzles. They’re all modified versions of the blue-eyes puzzle, and they should all help the reader gain a better intuition about the meta-reasoning that was used to solve the original.</p>
+
+<blockquote>
+<p><em>Puzzle 1:‌</em> Suppose that there are $100$ blue-eyed people, and the Guru says the same thing as before, but one of the islanders very conspicuously plugs his ears and does not hear the Guru. Who leaves the island (if anyone) and when?</p>
+<p><em>Puzzle 2:</em> Suppose that there are $100$ blue-eyed islanders as in the original problem, but this time the Guru says “everyone on this island sees someone with blue eyes.” Then when will everyone leave together? What if the Guru says instead “I see at least $5$ people with blue eyes on this island?”</p>
+<p><em>Puzzle 3:</em> Suppose that, once again, there are $100$ blue-eyed islanders as in the original problem. This time, it is common knowledge that Steve, one of the islanders, is color-blind. The Guru says, as before, “I see someone with blue eyes.” Who leaves the island, and when?</p>
+<p><em>Puzzle 4:</em> As an extension of Puzzle 3, suppose that there are $m$ people with blue eyes and $n$ people with brown eyes on the island; that it is common knowledge that $k$ of the blue-eyed people are color blind (and everyone knows which ones they are), and that the Guru says “I see least $p$ people with blue eyes.” For which values of $m,n,k,p$ will which people be able to leave, and when?</p>
+<p><em>Puzzle 5:</em> Suppose that there are $100$ blue-eyed people, $100$ brown-eyed people, $30$ green-eyed people, and $10$ red-eyed people on the island. Suddenly the Guru (who has purple eyes) announces the following statement to everybody: "I am the only person on this island with a unique eye color." Who leaves the island, and when?</p>
+<p><em>Puzzle 6:</em> Suppose a blue-eyed person and a brown-eyed person are on an island together, and you are the Guru. Can you think of a statement to say that will allow both islanders to leave on the $10$ th night, no earlier and no later? How about the $n$ th night, for arbitrary $n$?</p>
+</blockquote>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

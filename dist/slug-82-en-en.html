@@ -1,0 +1,172 @@
+<html>
+<head>
+    <title>Inverse Trigonometric Identities</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Inverse Trigonometric Identities</h2>
+
+<p><em>2017 July 10</em></p>
+
+<blockquote>
+<p>Using the inverse trigonometric functions and trigonometric identities, solve the following for $x$ in terms of $y$:
+<script type="math/tex; mode=display">y=a\cos^2 x+b\sin^2 x</script>
+<script type="math/tex; mode=display">y=a\cos x+b\sin^2 x</script>
+<script type="math/tex; mode=display">y=a\cos x+b\sin x</script>
+</p>
+</blockquote>
+
+<p>As you most likely know, there are an <em>abundance</em> of interesting and relevant formulas and identities surrounding the trigonometric functions. In this post I will be solving the three general trigonometric equations posed at the beginning using some of these identities, and then I will be showing how to extend some of them</p>
+
+<p>First are the translation identities:
+<script type="math/tex; mode=display">\sin(\theta)=\cos\bigg(\frac{\pi}{2}-\theta\bigg)</script>
+<script type="math/tex; mode=display">\csc(\theta)=\sec\bigg(\frac{\pi}{2}-\theta\bigg)</script>
+<script type="math/tex; mode=display">\tan(\theta)=\cot\bigg(\frac{\pi}{2}-\theta\bigg)</script>
+</p>
+
+<p>Then the pythagorean identities:
+<script type="math/tex; mode=display">\sin^2 \theta+\cos^2\theta=1</script>
+<script type="math/tex; mode=display">\tan^2\theta+1=\sec^2\theta</script>
+<script type="math/tex; mode=display">\cot^2\theta+1=\csc^2\theta</script>
+</p>
+
+<p>Then the half-angle formulas:
+<script type="math/tex; mode=display">\sin^2 \frac{\theta}{2}=\frac{1-\cos\theta}{2}</script>
+<script type="math/tex; mode=display">\cos^2 \frac{\theta}{2}=\frac{1+\cos\theta}{2}</script>
+</p>
+
+<p>Then, finally, the sum-angle formulas:
+<script type="math/tex; mode=display">\sin(\theta+\phi)=\sin\theta\cos\phi+\sin\phi\cos\theta</script>
+<script type="math/tex; mode=display">\cos(\theta+\phi)=\cos\theta\cos\phi-\sin\theta\sin\phi</script>
+<script type="math/tex; mode=display">\tan(\theta+\phi)=\frac{\tan\theta+\tan\phi}{1-\tan\theta\tan\phi}</script>
+</p>
+
+<p>I will not list the difference-angle and double-angle formulas, since they can be easily derived from the sum-angle formulas.</p>
+
+<p>First, I will tackle the first two of the problems listed at the beginning of the post. The first two are not very difficult, but the third one had me stumped for quite some time. If we want to solve
+<script type="math/tex; mode=display">y=a\cos^2 x+b\sin^2 x</script>
+for $x$ in terms of $y$, we need only make use of the pythagorean identities. If we rearrange this to form
+<script type="math/tex; mode=display">y=a(\cos^2 x+\sin^2 x)+(b-a)\sin^2 x</script>
+Then we can use the first pythagorean identity to convert this into an equation with only one trigonometric function:
+<script type="math/tex; mode=display">y=a(1)+(b-a)\sin^2 x</script>
+<script type="math/tex; mode=display">y=a+(b-a)\sin^2 x</script>
+and now we can readily invert it:
+<script type="math/tex; mode=display">\sin^2 x=\frac{y-a}{b-a}</script>
+<script type="math/tex; mode=display">x=\arcsin\sqrt{\frac{y-a}{b-a}}</script>
+</p>
+
+<p>Now it's time for the second one:
+<script type="math/tex; mode=display">y=a\cos x+b\sin^2 x</script>
+We will again use the pythagorean identity, but in a different way. This time, we will use the fact that since
+<script type="math/tex; mode=display">\cos^2\theta+\sin^2\theta=1</script>
+then
+<script type="math/tex; mode=display">\sin^2\theta=1-\cos^2\theta</script>
+and so, by substitution, our original equation can be turned into
+<script type="math/tex; mode=display">y=a\cos x+b(1-\cos^2x)</script>
+<script type="math/tex; mode=display">y=a\cos x+b-b\cos^2x</script>
+<script type="math/tex; mode=display">b\cos^2 x-a\cos x-b+y</script>
+And we have just reduced it to a quadratic, which can be solved using the quadratic formula:
+<script type="math/tex; mode=display">\cos x=\frac{a\pm\sqrt{a^2-4b(y-b)}}{2b}</script>
+<script type="math/tex; mode=display">x=\arccos \frac{a\pm\sqrt{a^2-4b(y-b)}}{2b}</script>
+</p>
+
+<p>Now for the third equation:
+<script type="math/tex; mode=display">y=a\cos x+b\sin x</script>
+Though it seems much simpler than the other two, this one is actually much more difficult. It, too, involves a "trick" and a trigonometric identity, but it does not use the pythagorean identity. Before I give it away, you should try this problem - once you discover the trick, the result can be very satisfying.</p>
+
+<p>To solve this, you must convert the equation into this equivalent equation:
+<script type="math/tex; mode=display">\frac{y}{\sqrt{a^2+b^2}}=\frac{a}{\sqrt{a^2+b^2}}\cos x+\frac{b}{\sqrt{a^2+b^2}}\sin x</script>
+Now we will need to use another identity - one that I did not mention at the beginning of the post:
+<script type="math/tex; mode=display">\sin \arccos \theta=\sqrt{1-\theta^2}</script>
+which means that
+<script type="math/tex; mode=display">\sin \arccos \frac{b}{\sqrt{a^2+b^2}}=\sqrt{1-\frac{b^2}{a^2+b^2}}=\frac{a}{\sqrt{a^2+b^2}}</script>
+And so we can again transform our equation into the equivalent equation
+<script type="math/tex; mode=display">\frac{y}{\sqrt{a^2+b^2}}=\sin\bigg(\arccos\frac{b}{\sqrt{a^2+b^2}}\bigg)\cos x+\cos\bigg(\arccos\frac{b}{\sqrt{a^2+b^2}}\bigg)\sin x</script>
+Now recall the sum-angle formula
+<script type="math/tex; mode=display">\sin(\theta+\phi)=\sin\theta\cos\phi+\sin\phi\cos\theta</script>
+And so, finally, we can convert our equation into
+<script type="math/tex; mode=display">\frac{y}{\sqrt{a^2+b^2}}=\sin\bigg(x+\arccos\frac{b}{\sqrt{a^2+b^2}}\bigg)</script>
+and, at last,
+<script type="math/tex; mode=display">x=\arcsin\bigg(\frac{y}{\sqrt{a^2+b^2}}\bigg)-\arccos\frac{b}{\sqrt{a^2+b^2}}</script>
+And that concludes our set of three trigonometric equations to solve.</p>
+
+<p>Now I would like to turn to the subject of identities surrounding the inverse trigonometric functions. For most of the identities applying to the sine, cosine, and tangent functions, there are analogous identities regarding their partial inverses. For example, we have the pythagorean identity
+<script type="math/tex; mode=display">\sin^2 \theta+\cos^2 \theta =1</script>
+which we can rearrange to get
+<script type="math/tex; mode=display">\sin^2 \theta=1-\cos^2 \theta</script>
+Now we will implement the trick that we will use to derive many of our inverse trigonometric identities. Let
+<script type="math/tex; mode=display">\phi = \sin^2\theta=1-\cos^2\theta</script>
+Then we can solve for $\theta$ in terms of $\phi$:
+<script type="math/tex; mode=display">\phi=\sin^2\theta</script>
+<script type="math/tex; mode=display">\arcsin\sqrt\phi=\theta</script>
+However, if we use $1-\cos^2\theta$ instead of $\sin^2\theta$, we end up with
+<script type="math/tex; mode=display">\phi=1-\cos^2\theta</script>
+<script type="math/tex; mode=display">\arccos\sqrt{1-\phi}=\theta</script>
+and so, transitively,
+<script type="math/tex; mode=display">\arcsin\sqrt\phi=\arccos\sqrt{1-\phi}</script>
+</p>
+
+<p>There are many more identities like this. I will not derive any more of them, though, since they can all be derived in the same way. Here is a list of all that I have derived, so that you may try a few for yourself:
+<script type="math/tex; mode=display">\arcsin \phi=\frac{\pi}{2}-\arccos \phi</script>
+<script type="math/tex; mode=display">\arctan |\phi|=\frac{\pi}{2}-\arctan\bigg|\frac{1}{x}\bigg|</script>
+<script type="math/tex; mode=display">\arctan (-|\phi|)=-\frac{\pi}{2}-\arctan\bigg(-\bigg|\frac{1}{x}\bigg|\bigg)</script>
+<script type="math/tex; mode=display">\arccos\sqrt{\phi}=\frac{1}{2}\arccos(2\phi-1)</script>
+<script type="math/tex; mode=display">\arcsin\sqrt{\phi}=\frac{1}{2}\arcsin(2\phi-1)+\frac{\pi}{4}</script>
+<script type="math/tex; mode=display">\arctan\sqrt{\phi-1}=\arccos\frac{1}{\sqrt \phi}</script>
+</p>
+
+<p>The final three identities that I will reveal regarding the inverse trigonometric functions involve sums of inverse trigonometric functions. First is
+<script type="math/tex; mode=display">\arccos a+\arccos b</script>
+This formula is easily derived. Simply convert the expression into
+<script type="math/tex; mode=display">=\arccos\cos(\arccos a+\arccos b)</script>
+and then use the sum-angle formula:
+<script type="math/tex; mode=display">=\arccos(\cos(\arccos a)\cos(\arccos b)-\sin(\arccos a)\sin(\arccos b))</script>
+<script type="math/tex; mode=display">=\arccos(ab-\sqrt{(1-a^2)(1-b^2)})</script>
+and so
+<script type="math/tex; mode=display">\arccos a+\arccos b=\arccos(ab-\sqrt{(1-a^2)(1-b^2)})</script>
+</p>
+
+<p>Be warned - because of the imperfect nature of the inverse trigonometric functions, this identity is sometimes faulty.</p>
+
+<p>I will not derive the last two sum identities - you may try them, if you like, but their derivations are almost exactly the same.
+<script type="math/tex; mode=display">\arcsin a+\arcsin b=\arcsin(a\sqrt{1-b^2}+b\sqrt{1-a^2})</script>
+<script type="math/tex; mode=display">\arctan a+\arctan b=\arctan\bigg(\frac{a+b}{1-ab}\bigg)</script>
+</p>
+
+<p>The last equality in particular leads to some particularly beautiful identities, such as
+<script type="math/tex; mode=display">\arctan \frac{1}{2}+\arctan \frac{1}{3}=\frac{\pi}{4}</script>
+</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

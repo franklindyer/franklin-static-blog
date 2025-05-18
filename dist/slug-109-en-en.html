@@ -1,0 +1,74 @@
+<html>
+<head>
+    <title>Area of a Regular Polygon</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Area of a Regular Polygon</h2>
+
+<p><em>2016 Nov 8</em></p>
+
+<blockquote>
+<p>Derive a formula for the area of a regular polygon, given the side length and number of sides.</p>
+</blockquote>
+
+<p>Let a regular polygon with <em>n</em> sides have side length <em>l</em> and apothem <em>a</em>. By a general formula, the area of this polygon is given by
+<script type="math/tex; mode=display">A=\frac{1}{2}lan</script> However, when finding the area of such a polygon, it can be tiresom to solve for the apothem given the side length and the number of sides, so we can make a general formula. If a cut is made from each vertex of the polygon to the center, it will be cut up into $n$ congruent isoscles triangles looking like this:</p>
+
+<p><center><img src="/img/2016-11-8-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>We can now cut each of these triangles in half with an altitute and end up with $2n$ right triangles that look like this:</p>
+
+<p><center><img src="/img/2016-11-8-Fig2.png" alt="Fig 2" /></center></p>
+
+<p>Now that we have a right triangle, we can use right triangle trigonometry to say that</p>
+
+<p>
+<script type="math/tex; mode=display">tan(\frac{360}{2n})=\frac{l}{2a}</script>
+<script type="math/tex; mode=display">2a=\frac{l}{tan(\frac{180}{n})}</script>
+<script type="math/tex; mode=display">a=\frac{l}{2tan(\frac{180}{n})}</script>
+</p>
+
+<p>When we plug this into our original formula, we get</p>
+
+<p>
+<script type="math/tex; mode=display">A=\frac{1}{2}lan</script>
+<script type="math/tex; mode=display">A=\frac{1}{2}l(\frac{l}{2tan(\frac{180}{n})})n</script>
+<script type="math/tex; mode=display">A=\frac{l^2n}{4tan(\frac{180}{n})}</script>
+</p>
+
+<p>Which gives us a formula for the area of a regular polygon given only the side length and the number of sides.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

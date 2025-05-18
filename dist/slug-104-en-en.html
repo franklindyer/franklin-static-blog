@@ -1,0 +1,100 @@
+<html>
+<head>
+    <title>Iterated Functions</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Iterated Functions</h2>
+
+<p><em>2017 Jan 12</em></p>
+
+<p>Have you ever wonder what happens when you plug a function into itself, and then do it again, and again, over and over and over again?</p>
+
+<p>Let's start with a bit of notation. The composition of two functions $f$ and $g$ is denoted $(f\circ g)$. Let's call the composition of a function $f$ with itself the <em>second iterate</em> of $f$ and, for the sake of compactness, denote it by $f^2$ rather than $(f\circ f)$. Similarly, we will replace $(f\circ f\circ f)$ with $f^3$ and call it the <em>third iterate</em> of $f$, and so on. Also, since $f^{-1}$ denotes the inverse of $f$, let $f^{-n}$ denote the nth iterate of the inverse of $f$. Finally, by convention, we will let $f^0(x)=x$.</p>
+
+<p>After playing around with the mechanics of these functions, one notices many properties similar to those of exponents. For example, the composition $(f^m\circ f^n)$ is equal to $f^{m+n}$. Additionally, if the mth iterate of $f$, $f^m$, is iterated $n$ times, the result is $f^{mn}$.</p>
+
+<p>Now let's look at something a little less abstract. Consider the function $f(x)=x+1$. We can see easily that each time we iterate this function, we will be adding 1 to our previous output, so we can state that $f^n(x)=x+n$. Note that this result holds even for negative $n$, because the inverse of $f$ is $f^{-1}(x)=x-1$.</p>
+
+<p>Consider the function $f(x)=x+2$. The first couple iterates of this function are
+<script type="math/tex; mode=display">f^2(x)=(x+2)+2=x+4</script>
+<script type="math/tex; mode=display">f^3(x)=(x+4)+2=x+6</script>
+<script type="math/tex; mode=display">f^4(x)=(x+6)+2=x+8</script>
+It is easy to see that $f^n(x)=x+2n$. In fact, I believe that we can come up with a general formula for any function of the form $f(x)=x+c$. If we iterate it but leave $c$ as an arbitrary constant, we can notice enough of a pattern to design a formula:
+<script type="math/tex; mode=display">f^2(x)=(x+c)+c=x+2c</script>
+<script type="math/tex; mode=display">f^2(x)=(x+2c)+c=x+3c</script>
+<script type="math/tex; mode=display">...</script>
+<script type="math/tex; mode=display">f^n(x)=x+cn</script>
+</p>
+
+<p>That function wasn't very challenging to work with. Let's try a function of the form $f(x)=cx$. By iterating this, we can see that
+<script type="math/tex; mode=display">f^2(x)=c(cx)=c^2x</script>
+<script type="math/tex; mode=display">f^2(x)=c(c^2x)=c^3x</script>
+<script type="math/tex; mode=display">...</script>
+<script type="math/tex; mode=display">f^n(x)=c^nx</script>
+</p>
+
+<p>Finally, let's try finding a formula for linear functions of the form $f(x)=cx+d$ where $d$ is also a constant.
+<script type="math/tex; mode=display">f^2(x)=c(cx+d)+d=c^2x+cd+d</script>
+<script type="math/tex; mode=display">f^2(x)=c(c^2x+cd+d)=c^3x+c^2d+cd+d</script>
+<script type="math/tex; mode=display">...</script>
+<script type="math/tex; mode=display">f^n(x)=c^nx+c^{n-1}d+c^{n-2}d+...+c^2d+cd+d</script>
+</p>
+
+<p>We can manipulate this result to make it into a closed-form formula.
+<script type="math/tex; mode=display">f^n(x)=c^nx+d(c^{n-1}+c^{n-2}+...+c^2+c+1)</script>
+</p>
+
+<p>It is obvious now that $c$ is forming the summation of a geometric series. The formula for a summation of the form $1+a+a^2+...+a^n$ is $\frac{a^{n+1}-1}{a-1}$, so we can condense our formula to
+<script type="math/tex; mode=display">f^n(x)=c^nx+d(\frac{c^n-1}{c-1})</script>
+</p>
+
+<p>Analogous formulas exist for functions of other types. For example, if $f(x)=x^c$, then
+<script type="math/tex; mode=display">f^2(x)=(x^c)^c=x^{c^2}</script>
+<script type="math/tex; mode=display">f^3(x)=(x^{c^2})^c=x^{c^3}</script>
+<script type="math/tex; mode=display">...</script>
+<script type="math/tex; mode=display">f^n(x)=x^{c^n}</script>
+</p>
+
+<p>and if $f(x)=cx^d$, then
+<script type="math/tex; mode=display">f^2(x)=c(cx^d)^d=c^{d+1}x^{d^2}</script>
+<script type="math/tex; mode=display">f^3(x)=c(c^{d+1}x^{d^2})^d=c^{d^2+d+1}x^{d^3}</script>
+<script type="math/tex; mode=display">...</script>
+<script type="math/tex; mode=display">f^n(x)=c^{1+d+d^2+...+d^{n-1}}x^{d^n}</script>
+<script type="math/tex; mode=display">f^n(x)=c^{\frac{d^n-1}{d-1}}x^{d^n}</script>.</p>
+
+<p>This is very interesting and I would like to revisit it later to try and find more types of functions that I can iterate.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

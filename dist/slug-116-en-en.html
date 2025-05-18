@@ -1,0 +1,159 @@
+<html>
+<head>
+    <title>An Auction Problem</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>An Auction Problem</h2>
+
+<p>In this post, I will explore a simple game theory problem modeling an auction with an arbitrary number of bidders. After solving it, I will also consider a few interesting variations on the problem.</p>
+
+<p>In a traditional <strong>auction</strong>, a seller displays goods to a crowd of bidders, who compete to make the highest offer for the good. The bidder who makes the highest offer for the good gets to take it, with the downside that they have to pay whatever exorbitant amount they offered for it (the losers don’t have to pay anything). Clearly, a real auction has numerous non-mathematical factors affecting gameplay (social pressures, pride, etc.), but I will not consider these. Instead, I will simplify the situation into a more tractable problem that can be addressed using probability and game theory.</p>
+
+<p>A bidder won’t bid very much for a good if it doesn’t appeal to him/her, and whether or not (and how much) a good appeals to a particular bidder is unpredictable for our purposes. Thus, it seems appropriate to assign each bidder a random <strong>valuation</strong> of the good, measuring the maximum amount of money that the bidder would be willing to pay for the good. If we have $n$ bidders, then the valuations $v_i$ for $1\le i\le n$ for each good will be distributed uniformly across $[0,1]$ (this is actually a rather unrealistic distribution since one would expect the distribution of peoples’ actual preferences to be more skewed and to vary widely from one good to the next, but it simplifies the problem nicely). If a player wins the auction with a valuation of $v_i$ and a bid of $b_i$, then their “profit” or “surplus” will be equal to $v_i-b_i$ (having paid $b_i$ for a good that was worth $v_i$ to them, he/she will have essentially gained $v_i-b_i$ dollars). Thus, we may assume that each bidder will play “rationally” in a way that maximizes their expected surplus $v_i-b_i$.</p>
+
+<p>Each bidder will have a strategy $b_i:[0,1]\mapsto [0,1]$ mapping their valuation of the good to the bid that they will pay for it. Clearly, $b_i$ will be increasing, since bidders who could benefit less from owning a good will offer less for it. We may also deduce that $b_i(0)=0$, since a bidder who will not benefit from owning the good will not risk having to pay anything for it by making a bid.</p>
+
+<p>There are a multitude of possible strategies that bidders could play, and they will constantly be modifying their own strategies to adapt to other bidders’ strategy changes in order to optimize their own surplus. Eventually, however, their strategies will tend towards an equilibrium at which no bidder has an incentive to change his/her strategy. This is called a <strong>Bayesian Nash Equilibrium</strong> - when each player’s strategy is the optimal strategy given each other player’s strategy, meaning that no player has an incentive to unilaterally change his/her strategy. I will assume that at this equilibrium, all bidders are playing the same strategy (since all bidders are indistinguishable in this game).</p>
+
+<p>Let’s denote this equilibrium strategy by $b(v)$.
+We’ve already noted that $b(v)$ must be increasing. It must also be continuous, and we can see why by predicting the contradictory implications of having a discontinuous $b(v)$. So suppose that $b(v)$ is discontinuous. Since it is increasing, this means that it must have a “jump” discontinuity, jumping from one value $b_-$ to a greater value $b_+$ suddenly without taking on any of the intermediate values. If this were the case, a players would in fact have an incentive to make an offer equal to one of the intermediate values, since doing so would result in the same probability of winning as a bidder offering $b_+$, but at a lower cost. Thus, the strategy $b$ would not be the optimal response and could not be an equilibrium strategy, so $b$ must be continuous. It is also the case that $b$ must be differentiable, but I will not prove that here, and will instead take it as an assumption.</p>
+
+<p>To summarize the above, we are looking for a strategy $b$ mapping valuations to optimal offers so that if all bidders are playing strategy $b$, each is already playing optimally given the other players’ strategies. Suppose that I am one of these bidders, and I choose to bid $\beta$, while all other players bid according to the strategy $b$. Then my expected surplus, given my valuation $v$ of the good and my bid $\beta$, would be equal to</p>
+
+<p>
+<script type="math/tex; mode=display">\mathbb E[\text{surplus}|v,\beta]=(v-\beta)[b^{-1}(\beta)]^{n-1}</script>
+</p>
+
+<p>Because I only get the good if all other players bid less than I do, which occurs if and only if $b(v_i)&lt;\beta$ for each $v_i$, or if $v_i&lt;b^{-1}(\beta)$ for each $v_i$. Since each $v_i$ is uniformly distributed and there are $n-1$ of these, the probability of this occurring is equal to $[b^{-1}(\beta)]^{n-1}$, hence the expected surplus given above. If I choose the optimal value of $\beta$, then we should have
+<script type="math/tex; mode=display">\frac{d\mathbb E}{d\beta}=0</script>
+or
+<script type="math/tex; mode=display">-[b^{-1}(\beta)]^{n-1}+\frac{(v-\beta)(n-1)[b^{-1}(\beta)]^{n-2}}{b’(b^{-1}(\beta))}=0</script>
+or, simplifying further,
+<script type="math/tex; mode=display">b^{-1}(\beta)\cdot b’(b^{-1}(\beta))=(v-\beta)(n-1)</script>
+Since $b$ is the equilibrium strategy, we have that $\beta=b(v)$ should be my optimal choice. Plugging this value in gives us the differential equation
+<script type="math/tex; mode=display">vb’(v)=(v-b(v))(n-1)</script>
+or
+<script type="math/tex; mode=display">vb’(v)+(n-1)b(v)=(n-1)v</script>
+Solving this differential equation yields the following general solution:
+<script type="math/tex; mode=display">b(v)=\frac{n-1}{n}v+\frac{C}{v^{n-1}}</script>
+where $C$ is an arbitrary constant. Since, as mentioned earlier, we know that $b(0)=0$, we can see that $C$ must equal zero, and we have the answer
+<script type="math/tex; mode=display">b(v)=\frac{n-1}{n}v</script>
+That’s it! After all that work, we just end up with this simple answer. Knowing this, we can calculate the expected surplus of each player:
+<script type="math/tex; mode=display">\mathbb E[v_i-b(v_i)]=\int_0^1 \frac{v}{n}\cdot v^{n-1}dv=\frac{1}{n(n+1)}</script>
+We may similarly calculate the expected income of the seller. Since the CPDF of the maximum valuation is equal to $v^{n}$, its PDF is equal to $nv^{n-1}$ and the expected income of the seller is
+<script type="math/tex; mode=display">\int_0^1 \frac{n-1}{n}v\cdot nv^{n-1}dv=\frac{n-1}{n+1}</script>
+</p>
+
+<p>Now that we’ve solved this problem, let’s add a twist to it and see what happens. Suppose now that bidders are obligated to pay a small fee of $\epsilon\in [0,1)$ each time they make a bid, but they can choose to abstain (or, equivalently, make a bid of $0$) and not pay the fee $\epsilon$. In this case, not only does $b(0)=0$, but $b(v)$ also equals zero for some small nonzero values of $v$ as well (for instance, if my valuation is less than $\epsilon$, then I certainly won’t participate, since I stand to gain less than I’m paying in fees). Now we must modify our assumptions. This time, $b(v)$ will equal zero for all $v<v_0$ for some threshold $v_0$, and for $v>v_0$ it will satisfy the same conditions as before - it will be increasing, continuous, and differentiable.</p>
+
+<p>For now, we will solve the problem in terms of $v_0$ (whose value depends on $\epsilon$) as if we already knew what it is, and later we will solve for its value. This time, my expected value given my valuation $v$ and bid $\beta$ is equal to</p>
+
+<p>
+<script type="math/tex; mode=display">\mathbb E[\text{surplus}|v,\beta]=(v-\beta)[b^{-1}(\beta)]^{n-1}-\epsilon</script>
+</p>
+
+<p>if $v&gt;v_0$, and it is equal to zero if $v &lt; v_0$. If we suppose that $v&gt;v_0$, we may maximize $\mathbb E$ in the same manner as before, and when we differentiate $\mathbb E$, the $\epsilon$ will vanish and we will end up with the same differential equation as before, with the same general solution:</p>
+
+<p>
+<script type="math/tex; mode=display">b(v)=\frac{n-1}{n}v+\frac{C}{v^{n-1}}</script>
+</p>
+
+<p>where $C$ is some arbitrary constant. But this time, instead of setting $b(0)=0$, we will set $b(v_0)=0$, since $b$ is a piecewise function and only the branch for $v\ge v_0$ satisfies the differential equation that we just solved. Solving for the value of $C$ that makes $b(v_0)=0$, we get $C=-\frac{n-1}{n}v_0$, which gives us</p>
+
+<p>
+<script type="math/tex; mode=display">b(v)=\frac{n-1}{n}\bigg[v-\frac{v_0^n}{v^{n-1}}\bigg]</script>
+</p>
+
+<p>Now, to find the equilibrium strategy, all we need to do is solve for $v_0$. To do this, notice that $v_0$ is also the value of $v$ satisfying $\mathbb E[\text{surplus}|v=v_0]=0$, since the expected value is negative for $v &lt; v_0$ (which is why a bidder with $v&lt; v_0$ refuses to bid). Thus, we have</p>
+
+<p>
+<script type="math/tex; mode=display">0=\mathbb E[\text{surplus}|v=v_0]=v_0^n-\epsilon</script>
+</p>
+
+<p>which gives us the critical value $v_0=\epsilon^{1/n}$, and finally, the equilibrium strategy:</p>
+
+<p>
+<script type="math/tex; mode=display">b(v)=\frac{n-1}{n}\bigg[v-\frac{v_0^n}{v^{n-1}}\bigg]</script>
+</p>
+
+<p>for $v &gt; v_0$, and $b(v)=0$ for $v &lt; v_0$. Just as before, we can calculate the expected surplus of a bidder. I’ll omit the algebra this time - here is the expected surplus of each bidder:</p>
+
+<p>
+<script type="math/tex; mode=display">\frac{1-\epsilon(n+1)+n\epsilon^{1+1/n}}{n(n+1)}</script>
+</p>
+
+<p>Similarly, if we assume that the “bidding fees” are being paid to the seller, here is the expected income of the bidder during a single round:</p>
+
+<p>
+<script type="math/tex; mode=display">\frac{n-1+(n+1)\epsilon-2n\epsilon^{1+1/n}}{n+1}</script>
+</p>
+
+<p>Interestingly, if we treat the seller as a player and assume that he/she is also working to maximize his/her profits, we can use the function above to calculate the value of $\epsilon$ that the seller should charge. Differentiating the above with respect to $\epsilon$ and solving results in the value $\epsilon=2^{-n}$, with an average income per round of</p>
+
+<p>
+<script type="math/tex; mode=display">\frac{n-1+2^{-n}}{n+1}</script>
+</p>
+
+<p>Now let’s consider one more simple variation of the original auction problem. This time, instead of a traditional sealed-bid auction, we will consider a <strong>Vickrey Auction</strong>, which proceeds the same way as the original auction, except that the winning bidder pays not the price that he/she offered, but instead the price offered by the <em>next-highest</em> bidder.</p>
+
+<p>This time, if I am a bidder with valuation $v$, my expected surplus, when I make a bid of $\beta$, is equal to</p>
+
+<p>
+<script type="math/tex; mode=display">\mathbb E[\text{surplus}|v,\beta]=v^{n-1}\int_0^{b^{-1}(\beta)} (v-b(x))\cdot \frac{(n-1)x^{n-2}}{v^{n-1}}dx=\int_0^{b^{-1}(\beta)} (v-b(x))\cdot (n-1)x^{n-2}dx</script>
+</p>
+
+<p>if $b$ is again the optimal strategy, since $v-b(x)$ would be the surplus given $v$ and $x$ (the second-highest bid), and since $(n-1)x^{n-2}$ is the CPDF of the second-highest valuation. Differentiating the above with respect to $\beta$ and setting it equal to zero yields the following equation:</p>
+
+<p>
+<script type="math/tex; mode=display">\frac{(v-\beta)(n-1)[b^{-1}(\beta)]^{n-2}}{b’(b^{-1}(\beta))}=0</script>
+</p>
+
+<p>Since $b(0)=0$ and $b$ is strictly increasing, we have that the only possible solution is $b(v)=v$. This is a rather amazing result - at equilibrium, all players will have an incentive to bid “honestly,” offering an amount equal to their own valuation! Even more amazing is the fact that the Vickrey Auction is “revenue equivalent” to the original auction that we considered; that is, the expected payoffs of bidders at equilibrium and the expected revenue of the seller are <em>exactly the same</em> as for the other auction. To prove this, simply integrate the expected value $\mathbb E$ shown above from $v=0$ to $v=1$, and observe that the result is $\frac{1}{n(n+1)}$.</p>
+
+<p>If we add a tax $\epsilon$ to the Vickrey Auction, it remains revenue-equivalent to the original auction with tax. However, there is an unusual property of $b(v)$ in the Vickrey Auction with tax that is worth noting: it is <em>not continuous.</em> More specifically, there exists a critical value $v_0$ such that $b(v)=0$ for $v &lt; v_0$, but $b(v)=v$ for all $v &gt; v_0$. To understand why this isn’t continuous, notice that unlike in the original auction, small changes in the amount offered will not result in small changes in a bidder’s surplus, since the bidder’s surplus is not “directly tied” to his/her own bid (but rather the bid of the next-highest bidder), meaning that the argument for continuity used earlier no longer applies. I will not actually calculate this critical $v_0$ value here, but any curious reader should be able to do so.</p>
+
+<p>That is the final example that I will consider in this blog post, but there are numerous other variations on auctions that I am interested in considering perhaps in a future post (and that the reader may want to try working out for him/herself):</p>
+
+<ul>
+<li>An auction in which bidders pay a tax that is a percentage of their bid, rather than a fixed value</li>
+<li>An auction in which the bidders’ valuations of the good are not uniformly distributed</li>
+<li>An auction in which two or more goods are offered at a time, and bidders must choose which good to bid on</li>
+<li>An auction in which all bidders pay what they offer, regardless of whether or not they win</li>
+<li>An auction in which the winning bidder pays the average bid rather than his/her own bid</li>
+<li>An auction in which bidders can pay a fee to have other bidders disqualified</li>
+</ul>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

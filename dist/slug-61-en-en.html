@@ -1,0 +1,226 @@
+<html>
+<head>
+    <title>Sums Involving Arithmetic Functions</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Sums Involving Arithmetic Functions</h2>
+
+<p><em>2018 September 1</em></p>
+
+<p>In this post, I will evaluate a few interesting sums involving the arithmetic functions $\tau,\sigma,\sigma_a,\mu,$ and $\varphi$, whose definitions and basic properties were described in <a href="/post/60">the previous post.</a></p>
+
+<p>I will consider first sums of the following form, in which the index of the sum ranges over the positive divisors of a positive integer $n$:
+<script type="math/tex; mode=display">\sum_{d|n} f(d)</script>
+For example, we have
+<script type="math/tex; mode=display">\sum_{d|6}f(6)=f(1)+f(2)+f(3)+f(6)</script>
+More generally, we shall consider sums in the form
+<script type="math/tex; mode=display">\sum_{d|n} f(d)g\big(\frac{n}{d}\big)</script>
+This type of sum is itself a function of $n$, and is called the Dirichlet Convolution of two arithmetic functions $f$ and $g$, or more briefly, $f$ convolved with $g$, and is written as $(f*g)(n)$.</p>
+
+<p>There are a few properties of this "convolution" operation that are useful in finding the values of some of the sums. For example, we have the easy-to-prove property
+<script type="math/tex; mode=display">f*g=g*f</script>
+Which results from the fact that if $d$ is a divisor of $n$, then $n/d$ is also a divisor of $n$. We also have, trivially, that convolution distributes over addition:
+<script type="math/tex; mode=display">f*(g+h)=(f*g)+(f*h)</script>
+It is also true that convolution is associative, which can be demonstrated as follows:
+<script type="math/tex; mode=display">\begin{align}
+(f*(h*g))(n)
+&=(f*(g*h))(n)\\
+&=\sum_{d|n}f(d)\sum_{d'|n/d}g(d')h\big(\frac{n}{dd'}\big)\\
+&=\sum_{d|n}\sum_{d'|n/d}f(d)g(d')h\big(\frac{n}{dd'}\big)\\
+&=\sum_{d'|n}\sum_{d|n/d'}f(d)g(d')h\big(\frac{n}{dd'}\big)\\
+&=\sum_{d'|n}g(d')\sum_{d|n/d'}f(d)h\big(\frac{n}{dd'}\big)\\
+&=(g*(f*h))(n)\\
+&=((f*h)*g)(n)
+\end{align}</script>
+</p>
+
+<p>There is one more basic but extremely useful property of Dirichlet convolution that remains to be proven; namely, that if $f,g$ are multiplicative, then $f*g$ is also multiplicative. This is proven as follows: if $m,n\in\mathbb N$ are coprime, then any divisor of $mn$ can be expressed uniquely as the product of a divisor of $m$ and a divisor of $n$. Thus, we have</p>
+
+<p>
+<script type="math/tex; mode=display">\begin{align}
+(f*g)(mn)
+&=\sum_{d|mn}f(d)g\big(\frac{mn}{d}\big)\\
+&=\sum_{d_m|m,d_n|n}f(d_md_n)g\big(\frac{mn}{d_m d_n}\big)\\
+&=\sum_{d_m|m,d_n|n}f(d_m)f(d_n)g\big(\frac{m}{d_m}\big)g\big(\frac{n}{d_n}\big)\\
+&=\sum_{d_m|m,d_n|n}f(d_m)g\big(\frac{m}{d_m}\big)f(d_n)g\big(\frac{n}{d_n}\big)\\
+&=\bigg(\sum_{d_m|m}f(d_m)g\big(\frac{m}{d_m}\big)\bigg)\bigg(\sum_{d_n|n}f(d_n)g\big(\frac{n}{d_n}\big)\bigg)\\
+&= (f*g)(m)\cdot(f*g)(n)
+\end{align}</script>
+</p>
+
+<p>and we are done. Let's put this result to use deriving a couple of summation formulae. Consider first the sum
+<script type="math/tex; mode=display">\sum_{d|n}\varphi(d)</script>
+Because we know that this sum, as a function of $n$, is multiplicative (since $\varphi$ is multiplicative, as proven in my last post), we need only calculate it for $n$ a prime power, and then we may determine all of its other values using prime factorization. We know that
+<script type="math/tex; mode=display">\varphi(p^k)=p^k-p^{k-1}</script>
+where $p$ is prime and $k\gt 0$, so we have that if $n=p^k$ is a prime power, the sum is equal to
+<script type="math/tex; mode=display">1+(p-1)+(p^2-p)+...+(p^k-p^{k-1})</script>
+since the divisors of any prime power are precisely the powers of that prime less than it. This sum then telescopes, giving simply a value of $p^k=n$, showing us that the value of this sum is simply the identity function for arguments that are powers of a prime. But since the sum must be a multiplicative function of $n$, it must be the identity function for all natural numbers $n$, so we have
+<script type="math/tex; mode=display">\sum_{d|n}\varphi(d)=n</script>
+for all $n\in\mathbb N$.</p>
+
+<p>If we define the function $\epsilon(n):=\delta_{1n}$, then we have the following identity as well:
+<script type="math/tex; mode=display">\sum_{d|n}\mu(d)=\epsilon(n)</script>
+This can be proven even more easily, so I will omit the proof; simply calculate the sum for values of $n$ that are prime powers and exploit the multiplicativity of the sum and $\epsilon$.</p>
+
+<p>By expressing the following two sums as $\varphi * 1$ and $\mu * 1$, and using the definition of $\sigma_a$ as $\text{id}_a*1$, where $\text{id}_a(n)=n^a$, and then applying the previously derived properties of convolution, we may derive the values of a few more interesting sums, such as
+<script type="math/tex; mode=display">\sum_{d|n}\tau(d)\varphi\big(\frac{n}{d}\big)</script>
+I encourage the reader to pause for a moment and try to calculate this sum in terms of $n$.</p>
+
+<p>The answer is, of course, $\sigma$. This sum is equal to $\varphi<em>\tau=\varphi</em>1<em>1=\text{id}</em>1=\sigma$. Similarly, we have that $\varphi*\sigma_a=\sigma_{a+1}$.</p>
+
+<p>As another interesting sum, consider
+<script type="math/tex; mode=display">\sum_{d|n}\ln(d)</script>
+This one can be done with a totally different strategy. Despite the strange nature of this sum, it can be evaluated using what is perhaps the most used tool in the evaluation of sums: telescoping. We may write this sum as
+<script type="math/tex; mode=display">\frac{1}{2}\sum_{d|n}\ln(d)+\frac{1}{2}\sum_{d|n}\ln(d)</script>
+And, since $n/d$ is a divisor of $n$ whenever $d$ is a divisor of $n$, we may make a substitution in one of these sums:
+<script type="math/tex; mode=display">\frac{1}{2}\sum_{d|n}\ln(d)+\frac{1}{2}\sum_{d|n}\ln\big(\frac{n}{d}\big)</script>
+By rewriting this as follows, the telescoping becomes apparent:
+<script type="math/tex; mode=display">\frac{1}{2}\sum_{d|n}\ln(d)+\frac{1}{2}\sum_{d|n}\ln(n)-\ln(d)</script>
+By combining the sums, we have that this is equal to
+<script type="math/tex; mode=display">\frac{\ln(n)}{2}\sum_{d|n}1=\frac{\tau(n)\ln(n)}{2}</script>
+</p>
+
+<p>Now for a more general formula, which returns to the non-telescoping techniques used earlier. Consider what would happen if we nested two of these sums, like this:
+<script type="math/tex; mode=display">\sum_{d|n}\sum_{d'|d}f(d')g(d)</script>
+More concisely written, this is $f<em>g</em>1$. Of course, with what we know so far, we can rearrange this by exploting the associativity and commutativity of convolution. However, there is a trick used in many of my previous blog posts when evaluating sums or integrals that would be nice to use here; namely, reversing the order of summation. It is unclear how to do this at first glance, since the indices of the inner sum are dependent on the index of the outer sum. However, it can be done, as we shall see in a moment. And, although doing so is not particularly useful for calculating these types of sums, it is handy for finding relationships between them.</p>
+
+<p>Here is the sum under consideration again:
+<script type="math/tex; mode=display">\sum_{d|n}\sum_{d'|d}f(d')g(d)</script>
+To invert the order of summation, we would like to obtain something in the following form:
+<script type="math/tex; mode=display">\sum_{d'|n}f(d')\cdot(\text{something})</script>
+To determine the coefficient of the $f(d')$ term in this sum, we must turn to the original double sum. We can see that $f(d')$ appears only when $d'|d$, or when $d=kd'$ for some natural number $k$. To find all $d$ corresponding to some $d'$, we must let $k$ vary in a way that ensures that $kd'$ still divides $n$, which is accomplished by imposing the restriction that $k|n/d'$. Thus, we have the following:
+<script type="math/tex; mode=display">\sum_{d|n}\sum_{d'|d}f(d')g(d)=\sum_{d'|n}f(d')\sum_{k|n/d'}g(kd')</script>
+or
+<script type="math/tex; mode=display">\sum_{d|n}\sum_{d'|d}f(d')g(d)=\sum_{d'|n}\sum_{k|n/d'}f(d')g(kd')</script>
+This can lead to some interesting formulae. For example, letting $g(n)=n^a$ and $f(n)=n^b$, we have
+<script type="math/tex; mode=display">\sum_{d|n}\sum_{d'|d}d'^bd^a=\sum_{d'|n}\sum_{k|n/d'}d'^bk^a d'^a</script>
+Which can be simplified, through a simple substitution, to
+<script type="math/tex; mode=display">\sum_{d|n}d^a \sigma_b(d)=n^{a+b}\sum_{d|n}\frac{\sigma_a(d)}{d^{a+b}}</script>
+Some interesting special cases of this formula include the case of $b=0$ and $a=1$:
+<script type="math/tex; mode=display">\sum_{d|n}d\tau(d)=n\sum_{d|n}\frac{\sigma(d)}{d}</script>
+Or the special case of $b=0$ and $a=-1$:
+<script type="math/tex; mode=display">\frac{1}{n}\sum_{d|n}\sigma(d)=\sum_{d|n}\frac{\tau(d)}{d}</script>
+There is another interesting formula that I discovered by using both the more general formula above and the value of the telescoping sum calculated earlier. By letting $f(n)=1$ and $g(n)=\ln(n)$ and making lots of cancellations, we get the following interesting identity:
+<script type="math/tex; mode=display">\sum_{d|n}\tau(d)\ln(d)=\frac{2\ln(n)}{3}\sum_{d|n}\tau(d)</script>
+Now I would like to move on from sums in the form
+<script type="math/tex; mode=display">\sum_{d|n}f(d)g\big(\frac{n}{d}\big)</script>
+to number-theoretical sums in the following form:
+<script type="math/tex; mode=display">\sum_{ax+by=n}f(a,b,x,y)</script>
+This notation is a bit confusing, so it warrants a bit of explanation; the sum ranges over all of the positive integer solutions $(a,b,x,y)$ to the diophantine equation $ax+by=n$, where $n$ is some fixed positive integer. This choice of sum may seem arbitrary, but as we will see, it can lead to some interesting results.</p>
+
+<p>As I mentioned before, as our "trick" to evaluate sums of this sort we will use the beloved trick of telescoping once more - but it's a very complicated form of telescoping. Let's take this general sum and split it into three sums:
+<script type="math/tex; mode=display">\sum_{\underset{a=b}{ax+by=n}}f(a,b,x,y)+\sum_{\underset{a>b}{ax+by=n}}f(a,b,x,y)+\sum_{\underset{a< b}{ax+by=n}}f(a,b,x,y)</script>
+Let us denote these three sums by $S_{a=b}$, $S_{a&gt;b}$, and $S_{a&lt; b}$, and the total sum, or the sum of the three smaller ones, as $S$. We have
+<script type="math/tex; mode=display">\begin{align}
+S_{a< b}
+&=\sum_{\underset{a< b}{ax+by=n}}f(a,b,x,y)\\
+&=\sum_{\underset{a< b}{a(x+y)+(b-a)y=n}}f(a,b,x,y)\\
+\end{align}</script>
+Now make the substitutions $x+y\to x$ and $b-a\to b$, resulting in the equality
+<script type="math/tex; mode=display">S_{a< b}=\sum_{\underset{y< x}{ax+by=n}}f(a,b+a,x-y,y)</script>
+Then, by symmetry, we may swap $a$ with $x$ and $b$ with $y$, resulting in the sum
+<script type="math/tex; mode=display">S_{a< b}=\sum_{\underset{b< a}{ax+by=n}}f(x,x+y,a-b,b)</script>
+Now compare this with the sum $S_{b&lt; a}$:
+<script type="math/tex; mode=display">S_{b< a}=\sum_{\underset{b< a}{ax+by=n}}f(a,b,x,y)</script>
+If we sum the two, we get
+<script type="math/tex; mode=display">S_{a< b}+S_{b< a}=\sum_{\underset{b< a}{ax+by=n}}f(a,b,x,y)+f(x,x+y,a-b,b)</script>
+Okay, you may be thinking: just great, so we've rearranged the sum. What do we have now? Looks like nothing significant.</p>
+
+<p>Wrong! Notice that all this time, we've left $f$ as a totally ambiguous function, with no restrictions imposed on it whatsoever. So now, to make this sum telescope, let's choose $f$ satisfying the following function equation:
+<script type="math/tex; mode=display">f(a,b,x,y)+f(x,x+y,a-b,b)=0</script>
+That's right - if $f$ satisfies this, then the whole summand of the previous sum disappears, and we have
+<script type="math/tex; mode=display">S_{a<b}+S_{b<a}=0</script>
+Giving us the equality
+<script type="math/tex; mode=display">S=S_{a=b}</script>
+Let's take a closer look at this sum. We may write it as
+<script type="math/tex; mode=display">S_{a=b}=\sum_{a(x+y)=n}f(a,a,x,y)</script>
+Which can be written, interestingly, as
+<script type="math/tex; mode=display">\sum_{d|n, d>1}\sum_{x=1}^{d-1}f\big(\frac{n}{d},\frac{n}{d},x,d-x\big)</script>
+which can be found by making the substitution $ad=n$.</p>
+
+<p>Thus, we have that if $f$ satisfies the functional equation
+<script type="math/tex; mode=display">f(a,b,x,y)+f(x,x+y,a-b,b)=0</script>
+Then we have the following equality:
+<script type="math/tex; mode=display">S=\sum_{ax+by=n}f(a,b,x,y)=\sum_{d|n, d>1}\sum_{x=1}^{d-1}f\big(\frac{n}{d},\frac{n}{d},x,d-x\big)</script>
+Still, who cares? We don't even know of any functions satisfying that.</p>
+
+<p>Well, now it's time to actually put this formula to use. I will only use it to derive a single summation formula involving $\sigma$, and then provide another formula as a suggested exercise - perhaps too much work for only two formulae, but hey, they're pretty cool formulae.</p>
+
+<p>First, let's define the function $\theta: \mathbb Z^4\mapsto \mathbb Z^4$ as follows:
+<script type="math/tex; mode=display">\theta(a,b,x,y)=(x,x+y,a-b,b)</script>
+Then, the functional equation we have for $f$ can be written as
+<script type="math/tex; mode=display">f(a,b,x,y)+(f\circ \theta)(a,b,x,y)</script>
+Then, if you mess around with $\theta$, you'll see that a miracle has occurred - $\theta$ satisfies the beautiful property
+<script type="math/tex; mode=display">\theta^{\circ 12}(a,b,x,y)=(a,b,x,y)</script>
+That's right - it is 12-involutory! More specifically, we have
+<script type="math/tex; mode=display">\theta^{\circ 2}(a,b,x,y)=(a-b,a,-y,x+y)\\\theta^{\circ 3}(a,b,x,y)=(-y,x,-b,a)\\\theta^{\circ 4}(a,b,x,y)=(-b,a-b,-x-y,x)\\\theta^{\circ 5}(a,b,x,y)=(-x-y,-y,-a,a-b)\\\theta^{\circ 6}(a,b,x,y)=(-a,-b,-x,-y)\\\theta^{\circ 7}(a,b,x,y)=(-x,-x-y,-a+b,-b)\\\theta^{\circ 8}(a,b,x,y)=(-a+b,-a,y,-x-y)\\\theta^{\circ 9}(a,b,x,y)=(y,-x,b,-a)\\\theta^{\circ 10}(a,b,x,y)=(b,-a+b,x+y,-x)\\\theta^{\circ 11}(a,b,x,y)=(x+y,y,a,-a+b)</script>
+This is indeed a miracle! Because, if we let $g:\mathbb Z^4\mapsto \mathbb R$ be arbitrary, and we define $f$ as follows, $f$ is guaranteed to satisfy the desired functional equation:</p>
+
+<p>
+<script type="math/tex; mode=display">f(a,b,x,y)= \sum_{k=0}^{11} (g\circ \theta^{k})(a,b,x,y)</script>
+</p>
+
+<p>You might be thinking "eww, gross." Don't worry, I'm thinking that as well. This seems too complicated and messy to produce in any nice results.</p>
+
+<p>Wrong again! Let's choose, for example, $g(a,b,x,y)=ab$ as our function (luckily, we've found a solution to our functional equation in terms of <em>arbitrary</em> $g$, so we can just pick whatever $g$ we want and see what we get). If we plug $g(a,b,x,y)=ab$ into the above definition of $f$ (ewww!) and conveniently hop over to Wolfram to see what it turns out to be, we get
+<script type="math/tex; mode=display">f(a,b,x,y)=2a^2-2ab+2b^2-2x^2-2xy-2y^2</script>
+Okay, that's less gross. Let's put this into our sum and see what we get:
+<script type="math/tex; mode=display">\sum_{ax+by=n}2a^2-2ab+2b^2-2x^2-2xy-2y^2</script>
+Seems pretty unremarkable, and gross to deal with... until you notice that, since $a$ and $x$ are interchangable in the diophantine equation that defines the sum, we may "rearrange" the sum to get
+<script type="math/tex; mode=display">\sum_{ax+by=n}2x^2-2xy+2y^2-2x^2-2xy-2y^2</script>
+Which cancels nicely to
+<script type="math/tex; mode=display">-4\sum_{ax+by=n}xy</script>
+Now we may write this in terms of our beloved arithmetic functions using the following easily-established formula:
+<script type="math/tex; mode=display">\sum_{ax+by=n}f_1(a)f_2(b)f_3(x)f_4(y)=\sum_{k=1}^{n-1}(f_1*f_3)(n)\cdot (f_2*f_4)(k-n)</script>
+Meaning that our sum becomes
+<script type="math/tex; mode=display">-4\sum_{k=1}^{n-1}\sigma(k)\sigma(n-k)</script>
+Now let's have a look at the other side of the equality:
+<script type="math/tex; mode=display">\sum_{d|n, d>1}\sum_{x=1}^{d-1}f\big(\frac{n}{d},\frac{n}{d},x,d-x\big)</script>
+After evaluating $f$ and simplifying, we get
+<script type="math/tex; mode=display">\sum_{d|n, d>1}\sum_{x=1}^{d-1}\frac{2n^2}{d^2}-2d^2-2x^2+2dx</script>
+Evaluating the inner sum, we have
+<script type="math/tex; mode=display">\sum_{d|n, d>1}(d-1)\frac{2n^2}{d^2}-2(d-1)d^2-\frac{d(d-1)(2d-1)}{3}+d^2(d-1)</script>
+Now, using the formulae for the sum of the powers of the first $k$ natural numbers and the definition of $\sigma_a$, we may express this in terms of $\sigma_a$ as follows:
+<script type="math/tex; mode=display">-\frac{5\sigma_3(n)+(1-6n)\sigma(n)}{3}</script>
+Thus, we have the following equality:
+<script type="math/tex; mode=display">-4\sum_{k=1}^{n-1}\sigma(k)\sigma(n-k)=-\frac{5\sigma_3(n)+(1-6n)\sigma(n)}{3}</script>
+Now, dividing both sides by $-4$, we have our gem:
+<script type="math/tex; mode=display">\sum_{k=1}^{n-1}\sigma(k)\sigma(n-k)=\frac{5\sigma_3(n)+(1-6n)\sigma(n)}{12}</script>
+Beautiful! As promised, here is another formula that can be similarly derived, as a suggested exercise for the reader:
+<script type="math/tex; mode=display">\sum_{k=1}^{n-1}\sigma(k)\sigma_3(n-k)=\frac{7}{80}\sigma_5(n)+\bigg(\frac{n}{8}-\frac{1}{24}\bigg)\sigma_3(n)+\frac{1}{240}\sigma(n)</script>
+...and with that, I conclude this blog post!</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

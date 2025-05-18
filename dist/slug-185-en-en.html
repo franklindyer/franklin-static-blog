@@ -1,0 +1,173 @@
+<html>
+<head>
+    <title>Analysis of growth orders of sequences</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h3>Analysis of growth orders of sequences</h3>
+
+<p>This post is meant as a short exposition of a mathematical exploration of mine that I didn't have time to write up during my (busy!) Fall semester. It's an attempt to formalize our notion of "growth orders" of sequences, and equip this formalization with useful structure that allows for algebraic manipulation. It also touches on the following question: if we know "how fast" a sequence $a_n$ grows, how can we determine how fast the sequence of partial sums <script type="math/tex; mode=display">\sum_{k=1}^n a_k</script> grows? We will consider sequences of positive real numbers $(a_n)\subset\mathbb{R}^+$, letting $\mathcal{S}(\mathbb{R}^+)$ denote the set of sequences on $\mathbb{R}^+$.  </p>
+
+<p>We'll spend a lot of time at the beginning of this post rigorously setting up the scaffolding needed to define and manipulate growth orders of sequences as algebraic objects. This may seem like a needlessly fastidious treatment of an idea that seems pretty intuitive (especially to engineers and computer scientists, who use growth-order estimates all the time). However, at the end of the post, I'll use the structure we've built to derive a new technique of determining the asymptotic behavior of partial sums. Below are some asymptotic formulas that we'll derive: take a crack at proving them yourself before continuing!  </p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{k=1}^n \frac{\sqrt{k}}{\log^2(k+1)}=\Theta\Big(\frac{n^{3/2}}{\log^2(n)}\Big)</script>
+</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{k=2}^{n}\frac{\sqrt{\log\log k}}{k} = \Theta(\log n\cdot \sqrt{\log\log n})</script>
+</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{k=4}^n \frac{1}{k\cdot\log k\cdot\log\log\log k} = \Theta\Big(\frac{\log\log n}{\log\log\log n}\Big)</script>
+</p>
+
+<p>As a teaser, at the very end I'll give a simple rule for determining the growth order of sums of products of nested logarithms. I'll state it without proof, but it can be proven using the techniques laid out in this post.  </p>
+
+<h4>Defining growth orders <a id="toc-section-1" class="toc-section"></a></h4>
+
+<p>The first order of business is to formalize our concept of a "growth order". This can be done by defining an <a href="https://en.wikipedia.org/wiki/Equivalence_relation">equivalence relation</a> on the set of sequences on $\mathbb{R}^+$ that identifies sequences with the same "asymptotic behavior" with each other. Then, rather than dealing with individual sequences, we can use the equivalence classes as our objects of study, since they represent "growth orders" in the abstract. We'll define an equivalence relation $\mathcal{S}(\mathbb{R}^+)$ as follows: if $(a_n),(b_n)\in \mathcal{S}(\mathbb{R}^+)$, we say that $(a_n)$ and $(b_n)$ have the same <strong>growth order</strong> if any of the following (equivalent) conditions holds:  </p>
+
+<ul>
+<li>$a_n=\Theta(b_n)$  </li>
+<li>$b_n=\Theta(a_n)$  </li>
+<li>$a_n=\mathcal{O}(b_n)$ and $b_n=\mathcal{O}(a_n)$  </li>
+<li>For some positive constants $C_1,C_2$, $a_n$ is bounded between $C_1 b_n$ and $C_2 b_n$ for all $n\in\mathbb N$  </li>
+<li>$a_n/b_n$ and $b_n/a_n$ are both bounded  </li>
+</ul>
+
+<p>and we denote this relationship by writing $(a_n)\sim (b_n)$. (I've included multiple equivalent definitions in case anyone reading is unfamiliar with big-O or big-Theta notation - you can read about these notations <a href="https://en.wikipedia.org/wiki/Big_O_notation">here</a>.)  </p>
+
+<p>We can easily verify that this is an equivalence relation using the fifth definition above. First of all, reflexivity holds, because $a_n/a_n=1$ is clearly bounded. This relation is symmetric, because $a_n/b_n$ and $b_n/a_n$ both being bounded is obviously equivalent to $b_n/a_n$ and $a_n/b_n$ both being bounded. Transitivity is the trickiest to verify, but it is still no problem: if $(a_n)\sim (b_n)$ and $(b_n)\sim (c_n)$, then we may let $M_1,M_2,M_3,$ and $M_4$ be upper bounds on $a_n/b_n$, $b_n/a_n$, $b_n/c_n$, and $c_n/b_n$ respectively. Then, by multiplying the first and third inequalities, we have that $a_n/c_n$ is bounded above by $M_1 M_3$, and by multiplying the second and fourth inequalities, we have that $c_n/a_n$ is bounded above by $M_2 M_4$. Thus, $(a_n)\sim (c_n)$, meaning that transitivity holds as well, and we do indeed have an equivalence relation.  </p>
+
+<p>Since we have an equivalence relation, we can now define <a href="https://en.wikipedia.org/wiki/Equivalence_class">equivalence classes</a> of sequences that have the same growth order. If $\alpha=(a_n)\in\mathcal{S}(\mathbb{R}^+)$ is a sequence, then we will denote by $[\alpha]$ the equivalence class of $\alpha$. (We may sometimes denote this by $[a_n]$ as well.)  </p>
+
+<h4>Operations on growth orders <a id="toc-section-2" class="toc-section"></a></h4>
+
+<p><strong>Note:</strong> as a convention, if $\alpha=(a_n),\beta=(b_n)$ are sequences in $\mathcal{S}(\mathbb{R}^+)$, when we write expressions involving operations on $\alpha$ and $\beta$, we mean these as elementwise operations on the two sequences, so that $\alpha+\beta$ denotes $(a_n+b_n)$ and $\alpha/\beta$ denotes $(a_n/b_n)$, for example.  </p>
+
+<p>Our intuition tells us that arithmetic on growth-order classes of sequences should work more or less the same way as it does on the sequences themselves. For instance, we might like to define a sort of "addition" on growth orders by defining <script type="math/tex; mode=display">[\alpha]+[\beta]:=[\alpha+\beta]</script> so that the sum of two growth orders is equal to the growth order of the sum of two sequences taken from the respective growth-order classes. However, it takes a little bit of work to show that this is actually well-defined. If $\alpha_1,\alpha_2$ are two sequences of growth order $[\alpha]$, and $\beta_1,\beta_2$ are two sequences of growth order $[\beta]$, how do we know that $[\alpha_1+\beta_1]$ and $[\alpha_2+\beta_2]$ are necessarily the same growth class? If $\alpha_1,\alpha_2,\beta_1,\beta_2$ can be chosen in such a way that $[\alpha_1+\beta_1]\ne [\alpha_2+\beta_2]$, then our notion of addition is not well-defined, since $[\alpha]+[\beta]$ could have multiple different values depending on the choices of representative sequences used from the classes $[\alpha]$ and $[\beta]$.  </p>
+
+<p>Thankfully, it is actually straightforward to verify that $[\alpha_1+\beta_1]=[\alpha_2+\beta_2]$ whenever $[\alpha_1]=[\alpha_2]$ and $[\beta_1]=[\beta_2]$. If $M_1,M_2,M_3,M_4$ are upper bounds for $\alpha_1/\alpha_2$, $\alpha_2/\alpha_1$, $\beta_1/\beta_2$, and $\beta_2/\beta_1$ respectively, then it follows that <script type="math/tex; mode=display">\frac{\alpha_1+\beta_1}{\alpha_2+\beta_2}\leq \frac{M_1\alpha_2 + M_3\beta_2}{\alpha_2+\beta_2}\leq \max(M_1,M_3)</script> and <script type="math/tex; mode=display">\frac{\alpha_2+\beta_2}{\alpha_1+\beta_1}\leq \frac{M_2\alpha_1 + M_4\beta_1}{\alpha_1+\beta_1}\leq \max(M_2,M_4)</script> implying that $[\alpha_1+\beta_1]=[\alpha_2+\beta_2]$, since both quotients are bounded.  </p>
+
+<p>We may also define multiplication on growth orders as follows: <script type="math/tex; mode=display">[\alpha]\cdot [\beta]:=[\alpha\cdot\beta]</script> and, once again, it is straightforward (but not completely trivial) to verify that this well-defines multiplication. Once again, if $M_1,M_2,M_3,$ and $M_4$ are upper bounds for $\alpha_1/\alpha_2$, $\alpha_2/\alpha_1$, $\beta_1/\beta_2$, and $\beta_2/\beta_1$, it follows that <script type="math/tex; mode=display">\frac{\alpha_1\beta_1}{\alpha_2\beta_2}\leq \frac{\alpha_1}{\alpha_2}\cdot \frac{\beta_1}{\beta_2} \leq M_1 M_3</script> and <script type="math/tex; mode=display">\frac{\alpha_2\beta_2}{\alpha_1\beta_1}\leq \frac{\alpha_2}{\alpha_1}\cdot \frac{\beta_2}{\beta_1} \leq M_2 M_4</script> meaning that $[\alpha_1\beta_1]=[\alpha_2\beta_2]$, as desired. As it happens, since we are working with sequences of positive real numbers, we can also define reciprocals of growth orders: <script type="math/tex; mode=display">\frac{1}{[\alpha]}:=\bigg[\frac{1}{\alpha}\bigg]</script> I won't go through the motions of proving that this is well-defined as well, but it can be done in the same vein as the above proofs.  </p>
+
+<p>As an example of a case in which things do <em>not</em> work out quite how we would like them to, suppose that we tried to define exponentiation of growth orders by defining the growth-order exponentiation $[\alpha]^{[\beta]}$ to be equal to $[\alpha^\beta]$. But this is <em>not</em> independent of the choice of sequences from each of the growth-order classes. For instance, consider the constant sequences $\alpha_1=(1)$ and $\alpha_2=(2)$, which clearly have the same growth order, and the linearly growing sequence $\beta=(n)$. Even though $[\alpha_1]=[\alpha_2]$, the classes $[\alpha_1^\beta]=[1^n]=[1]$ and $[\alpha_2^\beta]=[2^n]$ are not the same - in fact, they are as different as boundedness and exponential growth!  </p>
+
+<p>Let's define one more operation on growth orders - this time, we'll consider one which is not a direct analogue to an arithmetic operation on numbers. If $\alpha=(a_n)$ is a sequence, denote by $\Sigma\alpha$ the sequence of partial sums of that sequence: <script type="math/tex; mode=display">\Sigma\alpha = \bigg(\sum_{i=1}^n a_i\bigg)</script> Let us then define a "summation operation" on growth orders as follows: <script type="math/tex; mode=display">\Sigma[\alpha]:=[\Sigma\alpha]</script> To show that this is well-defined, we just need to show that the growth order of $\Sigma\alpha$ depends only on the growth order of $\alpha$. Consider two arbitrary sequences $\alpha_1,\alpha_2\in[\alpha]$ with the same growth order, and let $M_1,M_2$ be upper bounds for $\alpha_1/\alpha_2$ and $\alpha_2/\alpha_1$ respectively. Then we have that <script type="math/tex; mode=display">\frac{\Sigma\alpha_1}{\Sigma\alpha_2} = \frac{\sum_{i=1}^n a_i}{\sum_{j=1}^n a_j'}\leq \frac{\sum_{i=1}^n M_1 a_i'}{\sum_{j=1}^n a_j'} = M_1</script> and <script type="math/tex; mode=display">\frac{\Sigma\alpha_2}{\Sigma\alpha_1} = \frac{\sum_{j=1}^n a_j'}{\sum_{i=1}^n a_i}\leq \frac{\sum_{j=1}^n M_2 a_j}{\sum_{i=1}^n a_i} = M_2</script> so we have that $[\Sigma\alpha_1]=[\Sigma\alpha_2]$ as desired, meaning that $\Sigma[\alpha]$ is well-defined. In fact, the upper bounds on these quotients are precisely the same as the upper bounds on the quotients of $\alpha_1$ and $\alpha_2$.  </p>
+
+<h4>An ordering on growth orders <a id="toc-section-3" class="toc-section"></a></h4>
+
+<p>One of the most common things to think about with regard to the growth orders of sequences is whether one sequence grows "faster" or "slower" than another. To formalize this notion, we need to impose another bit of structure on our growth-order classes: a partial ordering. If $[\alpha]$ and $[\beta]$ are two growth orders, let us say that $[\beta]$ "grows at least as fast" as $[\alpha]$, denoting this relationship by $[\alpha]\leq [\beta]$, if $\alpha/\beta$ is a bounded sequence.   </p>
+
+<p>It is straightforward to define that our definition of this relation $\leq$ on growth-order classes satisfies all three properties necessary for a partial ordering. First of all, it is reflexive, since $\alpha/\alpha$ is always a constant sequence, and therefore bounded. Secondly, it is antisymmetric, for if $[\alpha]\leq [\beta]$ and $[\beta]\leq [\alpha]$, then both $\alpha/\beta$ and $\beta/\alpha$ are bounded, meaning that $[\alpha]=[\beta]$ by the definition of our equivalence relation. Finally, transitivity is satisfied, because if $\alpha/\beta$ is bounded above by $M_1$ and $\beta/\gamma$ is bounded above by $M_2$, then $\alpha/\gamma$ is bounded above by $M_1 M_2$.  </p>
+
+<p>Note that this ordering is only a <em>partial ordering</em>, not a <em>total ordering</em>. That is, there exist some pairs of sequences of which neither is "at least as fast" as the other. For instance, consider the sequences <script type="math/tex; mode=display">a_n = n^{(-1)^n} ~ ~ ~ ~ ~ ~ b_n = n^{(-1)^{n+1}}</script> These sequences alternate between very large and very small values in such a way that $a_n$ is large when $b_n$ is small and vice versa, so that neither $a_n/b_n$ nor $b_n/a_n$ is bounded.  </p>
+
+<p>The next step is to determine how $\leq$ interacts with the operations that we've defined on growth orders. I'll omit the proofs in this section, but we can prove that <script type="math/tex; mode=display">[\alpha]\leq [\beta] \implies [\alpha]+[\gamma] \leq [\beta]+[\gamma]</script> and <script type="math/tex; mode=display">[\alpha]\leq [\beta]\implies [\alpha][\gamma]\leq [\beta][\gamma]</script> and, of course, that <script type="math/tex; mode=display">[\alpha]\leq [\beta] \implies [1/\alpha]\geq [1/\beta]</script> Each of these can be proven as exercises, if the reader is interested.  </p>
+
+<h4>Observations on the growth of partial sums <a id="toc-section-4" class="toc-section"></a></h4>
+
+<p>A natural question (at least for someone like me, who is very interested in partial sums and asymptotics) is whether there is some simple heuristic that can be used to calculate the order of growth of partial sums of arbitrary "naturally occurring" sequences. One technique of determining the asymptotic behavior of partial sums is to approximate them by integrals - that is, for sufficiently well-behaved functions $f:\mathbb R^+\to\mathbb R^+$, we can often conclude that <script type="math/tex; mode=display">\sum_{k=1}^n f(i) \sim C\times\int_1^n f(x)dx</script> for some constant $C&gt;0$. For instance, this technique (among others) allows us to derive the following well-known growth order classifications, which I will not prove:   </p>
+
+<p>
+<script type="math/tex; mode=display">\Sigma [n^p] = [n^{p+1}] ~ ~ ~ ~ ~\forall p > -1</script>
+<script type="math/tex; mode=display">\Sigma [\log^p n] = [n\log^p n] ~ ~ ~ ~ ~ \forall p\in\mathbb R</script>
+<script type="math/tex; mode=display">\Sigma [1/n] = [\log n]</script>
+<script type="math/tex; mode=display">\Sigma [1/n^p] = [1] ~ ~ ~ ~ ~ \forall p>1</script>
+</p>
+
+<p>By observing examples like these, we may notice some patterns. For instance, it <em>appears</em> that, for any sequence $\alpha$ growing faster than $1/n$ (that is, $[\alpha] &gt; [1/n]$), the growth order of the partial sums of $\alpha$ can be obtained by simply multiplying by $n$: <script type="math/tex; mode=display">\Sigma [\alpha] = [n][\alpha] = [na_n]</script> At least, this has been the case for all of the examples we've seen above for which $[\alpha] &gt; [1/n]$. Is this true in general? If so, how can we go about proving it?  </p>
+
+<p>This observation suggests that when considering the asymptotics of the partial sums of a sequence $\Sigma[\alpha]$, it might be helpful to consider the expression <script type="math/tex; mode=display">\frac{\Sigma [\alpha]}{[\alpha]}</script> which represents the factor by which the growth order of $\alpha$ increases when its partial sums are taken. In particular, our above observation suggests that this ratio is simply equal to $[n]$ for a large class of sequences. Might there be other classes of sequences for which $\Sigma[\alpha]/[\alpha]$ has some fixed growth order?  </p>
+
+<p>This line of inquiry led me to prove the following theorem:  </p>
+
+<blockquote>
+<p><strong>Theorem.</strong> If $[\alpha]\leq [\beta]$ and if $[\beta/\alpha]$ contains some monotone increasing sequence, then <script type="math/tex; mode=display">\frac{\Sigma[\alpha]}{[\alpha]} \geq \frac{\Sigma[\beta]}{[\beta]}</script>
+</p>
+</blockquote>
+
+<p>In other words, this theorem states that the mapping of growth orders $[\alpha]\mapsto \Sigma[\alpha]/[\alpha]$ is a <em>monotone decreasing</em> function with respect to the partial order that we've defined (on certain sets of sequences, namely those for which either $[\beta/\alpha]$ or $[\alpha/\beta]$ contains a monotone increasing sequence for every comparable pair of sequences $\alpha,\beta$ in the set). It isn't immediately obvious why this fact is helpful, but I'll explain that after proving the theorem.  </p>
+
+<p>Suppose that $[\alpha]\leq [\beta]$ for two sequences $\alpha,\beta$. Then there necessarily exists a third sequence $\gamma$ with $[\gamma]\geq 1$ for which $\beta=\gamma\alpha$. (In particular, this sequence is given by $\gamma=\beta/\alpha$.) By hypothesis, there exists a monotone sequence $(c_n)\in [\gamma]$. Thus, if we choose the sequence $(a_n)\in [\alpha]$ arbitrarily, we have that <script type="math/tex; mode=display">\sum_{k=1}^n c_k a_k \leq \sum_{k=1}^n c_n a_k = c_n \sum_{k=1}^n a_k</script> which implies that $\Sigma [\gamma][\alpha] \leq [\gamma]\Sigma[\alpha]$. However, if we divide both sides of this inequality by $[\gamma][\alpha]$ (which is valid because of the inequality rules discussed earlier), we have that <script type="math/tex; mode=display">\frac{\Sigma[\gamma][\alpha]}{[\gamma][\alpha]}\leq \frac{\Sigma[\alpha]}{[\alpha]}</script> or, since $\beta=\gamma\alpha$, <script type="math/tex; mode=display">\frac{\Sigma [\beta]}{\beta} \leq \frac{\Sigma [\alpha]}{\alpha}</script> and hence, the theorem is proven.   </p>
+
+<h4>Squeezing arguments applied to log sums <a id="toc-section-5" class="toc-section"></a></h4>
+
+<p>Now - why is this theorem helpful? Since we have shown that the function $[\alpha]\mapsto \Sigma [\alpha]/[\alpha]$, which we may denote $f[\alpha]$, is a monotone decreasing transformation on certain classes of sequences, we know that if $f[\alpha]=f[\beta]$ for some growth orders $[\alpha]$ and $[\beta]$, then it follows that if $\gamma$ is some sequence whose growth order is between than of $\alpha$ and $\beta$ (that is, $[\alpha]\leq [\gamma]\leq [\beta]$), then it follows that $f[\alpha]\geq f[\gamma] \geq f[\beta]$ - but if $f[\alpha] = f[\beta]$, then this inequality implies that $f[\gamma]$ is the same!  </p>
+
+<p>That was very abstract, so let's consider a specific example. We already know that $\Sigma [1] = [n]$ and $\Sigma [n] = [n^2]$. This means that $f[1] = f[n] = [n]$. Hence, we may conclude that for any sequence $[\alpha]$ with $[1]\leq [\alpha]\leq [n]$ (that is, sequences whose growth is between stagnation and linear growth), we have that $f[\alpha]=[n]$, meaning that <script type="math/tex; mode=display">\Sigma[\alpha] = [n][\alpha]</script> So, for instance, consider the sequence <script type="math/tex; mode=display">a_n = \frac{\sqrt{n}}{\log^2(n+1)}</script> If we wanted to determine the asymptotic behavior of the partial sums of $a_n$, the integral technique mentioned earlier would not be much help, since the function <script type="math/tex; mode=display">\frac{\sqrt{x}}{\log^2(x+1)}</script> doesn't have any easy closed-form integral (at least, none that I know of). However, it is easy to see that it grows faster than a constant function and slower than a linear function, so $1\leq [a_n]\leq [n]$. Additionally, the auxiliary condition for our theorem (namely, that the ratio between any two growth orders have a monotone representative) is also easy to verify in this case. Thus, we have that $\Sigma [a_n] = [n][a_n]$, meaning that <script type="math/tex; mode=display">\sum_{k=1}^n \frac{\sqrt{k}}{\log^2(k+1)}=\Theta\Big(\frac{n^{3/2}}{\log^2(n)}\Big)</script> Let's consider another example. The integral approximation technique allows us to derive the following two asymptotic formulae:  </p>
+
+<p>
+<script type="math/tex; mode=display">\Sigma \Big[\frac{1}{n}\Big] = [\log n]</script>
+</p>
+
+<p>
+<script type="math/tex; mode=display">\Sigma \Big[\frac{\log n}{n}\Big] = [\log^2 n]</script>
+</p>
+
+<p>which means that  </p>
+
+<p>
+<script type="math/tex; mode=display">f\Big[\frac{1}{n}\Big] = f\Big[\frac{\log n}{n}\Big] = n\log n</script>
+</p>
+
+<p>Hence, for any sequence (satisfying the auxiliary condition) whose growth order is between $[1/n]$ and $[\log n /n]$, the growth order of its partial sums is simply $[n\log n]$ times the growth order of the sequence. This allows us to deduce that, for example,  </p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{k=2}^{n}\frac{\sqrt{\log\log k}}{k} = \Theta(\log n\cdot \sqrt{\log\log n})</script>
+</p>
+
+<p>In other words, if we can trap a sequence's growth order between two other, better-understood sequences with the same ratio $\Sigma[\alpha]/\alpha$, it is then straightforward for us to determine the growth rate of that sequence, since its ratio must be the same. Pretty neat, huh? As an exercise, you can try to use this technique to prove the following formulae:  </p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{k=4}^n \frac{1}{k\cdot\log k\cdot\log\log\log k} = \Theta\Big(\frac{\log\log n}{\log\log\log n}\Big)</script>
+</p>
+
+<p>In fact, we can use this technique to prove a simple rule for determining the asymptotic behavior of the partial sums of sequences with the growth order of  </p>
+
+<p>
+<script type="math/tex; mode=display">a_n = n^{p_0}\cdot (\log n)^{p_1}\cdot (\log\log n)^{p_2}\cdot ... \cdot (\overbrace{\log\cdots\log}^{k\text{ nested logs}}n)^{p_k}</script>
+</p>
+
+<p>for arbitrary $p_0,...,p_k\in\mathbb R$. The rule is as follows:  </p>
+
+<blockquote>
+<p>Extend $p_0,p_1,...$ to an infinite sequence which is eventually zero. Determine the smallest value of $i$ for which $p_i\ne -1$, and let this value be $i=j$. If $p_j &lt; -1$, then the partial sums converge and therefore have constant growth order. If $p_j &gt; -1$, then multiply the sequence by a factor of <script type="math/tex; mode=display">n \cdot (\log n) \cdot ... \cdot (\overbrace{\log\cdots\log}^{j\text{ nested logs}}(n))</script> and the resulting sequence has the same growth order as the sequence of partial sums of $a_n$.  </p>
+</blockquote>
+
+<p>And that's all for this post! I've written a sequel, which you can read <a href="/post/186">here</a>. </p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

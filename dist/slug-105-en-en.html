@@ -1,0 +1,98 @@
+<html>
+<head>
+    <title>The Lemniscate</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>The Lemniscate</h2>
+
+<p><em>2016 Dec 27</em></p>
+
+<p>After creating a tilted parabola, I started looking into other types of graphs that are also loci of points. A <em>locus</em> is a set of all points fulfilling some specific condition, like the parabola, the locus of all points equidistant from the focus point and the directrix line. One simple locus is a circle, which is the locus of all points some given distance from another point, the center of the circle. Another example is the <em>ellipse</em>, which is the locus of all points the sum of whose distances from two foci is equal to a constant. Here is an example of what an ellipse might look like:</p>
+
+<p><center><img src="/img/2016-12-27-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>Another type of locus is the <em>hyperbola</em>, which is the locus of all points the difference of whose distances from each of two foci is equal to a constant. Here is a hyperbola:</p>
+
+<p><center><img src="/img/2016-12-27-Fig2.png" alt="Fig 2" /></center></p>
+
+<p>After studying the ellipse and hyperbola for a only a short time, I began to get bored, because almost everything that there was to know about the ellipse and hyperbola was already discovered. So I decided to make my own locus, which was the locus of all points the product of whose distances from each of two foci was equal to a constant. I decided to let the foci be the points $(x_0,0)$ and $(-x_0,0)$ (so that it would be symmetric about the y-axis) and let this be equation of the locus:</p>
+
+<p>
+<script type="math/tex; mode=display">\sqrt{y^2+(x-x_0)^2}*\sqrt{y^2+(x-x_0)^2}=c</script>
+</p>
+
+<p>As I played around with this graph, I found that it makes three basic types of shapes. The first consists of two disjoint closed curves that are vaguely egg-shaped,</p>
+
+<p><center><img src="/img/2016-12-27-Fig3.png" alt="Fig 3" /></center></p>
+
+<p>the second consists of two pointed closed curves sharing a single point,</p>
+
+<p><center><img src="/img/2016-12-27-Fig4.png" alt="Fig 4" /></center></p>
+
+<p>and the third consists of a single closed curve that is pinched in the middle.</p>
+
+<p><center><img src="/img/2016-12-27-Fig5.png" alt="Fig 5" /></center></p>
+
+<p>In order to determine when it takes each of these shaped, I decided to define the line equidistant from each of the lemniscate's foci as the <em>axis</em> of the lemniscate. I could then classify each shape by the number of times it intersected its axis: the first shape does not intersect its axis, the second intersects it at $1$ point, and the third intersects it at $2$ points. I could then determine algebraically when each shape would occur by setting $x$ to $0$ (because when the lemniscate is symmetric about the y-axis, the points at which it intersects its axis are at $x=0$). Then I could obtain a simpler expression by solving for the y-position at which the lemniscate would intersect its axis: </p>
+
+<p>
+<script type="math/tex; mode=display">\sqrt{y^2+(-x_0)^2}*\sqrt{y^2+{x_0}^2}=c</script>
+<script type="math/tex; mode=display">\sqrt{y^2+{x_0}^2}*\sqrt{y^2+{x_0}^2}=c</script>
+<script type="math/tex; mode=display">y^2+{x_0}^2=c</script>
+<script type="math/tex; mode=display">y^2=c-{x_0}^2</script>
+</p>
+
+<p>Now, in order to generalize my findings for any lemnicate not necessarily lying on the x-axis or symmetric about the y-axis, I decided to let $d$ be the distance  between the foci so that $d=2x_0$ and ${x_0}^2=\frac{1}{4}d^2$, and I replaced
+<script type="math/tex; mode=display">y^2=c-{x_0}^2</script>
+with
+<script type="math/tex; mode=display">y^2=c-\frac{1}{4}d^2</script>
+Then I could easily determine when each of the shapes would be made because</p>
+
+<ol>
+<li>
+<p>When $c&lt;\frac{1}{4}d^2$, $c-\frac{1}{4}d^2$ would be a negative number. This means that $y^2$ would have to be equal to a negative number, and there would be no real intersections between the lemniscate and its axis.</p>
+</li>
+<li>
+<p>When $c=\frac{1}{4}d^2$, $c-\frac{1}{4}d^2$ would be zero. This means that $y^2$ would have to be equal to 0, and there would be exactly one intersection (i.e. at $y=0$).</p>
+</li>
+<li>
+<p>When $c&gt;\frac{1}{4}d^2$, $c-\frac{1}{4}d^2$ would be a positive number. This means that $y^2$ would have to be equal to a positive number, and there would be exactly two intersections with ordinates $y=+\sqrt{c-\frac{1}{4}d^2}$ and $y=-\sqrt{c-\frac{1}{4}d^2}$.</p>
+</li>
+</ol>
+
+<p>That's all I'm doing with the lemniscate for now, but it is a very interesting subject and I will surely return to it later.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

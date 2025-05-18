@@ -1,0 +1,260 @@
+<html>
+<head>
+    <title>Dirichlet Series</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Dirichlet Series</h2>
+
+<p><em>2018 April 12</em></p>
+
+<p>In this post, I plan to introduce a few new special functions that appear in number theory and some infinite series identities that they satisfy. In particular, I will show some links between these number-theoretical functions and the Riemann Zeta function, and introduce a more general type of series, the Dirichlet Series, which is closely tied to the Zeta function. Finally, at the end, I will calculate a couple of series that require cumulative knowledge of Dirichlet Series and the Zeta function.</p>
+
+<p>Recall the series definition of the <strong>Riemann Zeta function</strong>:
+<script type="math/tex; mode=display">\zeta(s):=\sum_{n=1}^\infty \frac{1}{n^s}</script>
+This is a specific case of a more general <em>type</em> of series: the <strong>Dirichlet Series</strong>. The Dirichlet Series for a function $f$ is defined as
+<script type="math/tex; mode=display">D(f,s):=\sum_{n=1}^\infty \frac{f(n)}{n^s}</script>
+We can see immediately the trivial result
+<script type="math/tex; mode=display">D(1,s)=\zeta(s)</script>
+Fear not, it gets much more interesting than this. Next, consider the Dirichlet Series
+<script type="math/tex; mode=display">D((-1)^n,s)</script>
+It can be calculated as follows:
+<script type="math/tex; mode=display">\begin{align}
+D((-1)^n,s)
+&= \sum_{n=1}^\infty \frac{(-1)^n}{n^s}\\
+&= \sum_{n=1}^\infty \frac{1+(-1)^n}{n^s}-\sum_{n=1}^\infty \frac{1}{n^s}\\
+&= \sum_{n=1}^\infty \frac{2}{(2n)^s}-\sum_{n=1}^\infty \frac{1}{n^s}\\
+&= (2^{1-s}-1)\sum_{n=1}^\infty \frac{1}{n^s}\\
+&= (2^{1-s}-1)\zeta(s)\\
+\end{align}</script>
+Thus, we have
+<script type="math/tex; mode=display">D((-1)^n,s)=(2^{1-s}-1)\zeta(s)</script>
+</p>
+
+<p>I will now calculate a couple of interesting Dirichlet series involving the $\gcd$ function, which I will later generalize. They can be calculated using a bit of combinatorics. One of the simplest examples is
+<script type="math/tex; mode=display">D(\gcd(2,n),s)\sum_{n=1}^\infty \frac{\gcd(2,n)}{n^s}</script>
+Notice that $\gcd(2,n)$ is equal to $1$ if $n$ is odd and $2$ if $n$ is even. This allows us to rewrite the sum as
+<script type="math/tex; mode=display">\sum_{n=1}^\infty \frac{1}{n^s}+\sum_{n=1}^\infty \frac{1}{(2n)^s}</script>
+This works because each term with an odd index occurs once (in the first series) and each term with an even index occurs twice (once in the first series and once in the second). Thus, we have
+<script type="math/tex; mode=display">D(\gcd(2,n),s)=(1+2^{-s})\zeta(s)</script>
+Now consider the slightly more complicated example of
+<script type="math/tex; mode=display">D(\gcd(6,n),s)\sum_{n=1}^\infty \frac{\gcd(6,n)}{n^s}</script>
+It can be evaluated in the same way by noticing that $\gcd(6,n)$ is equal to $1$ if $n$ is divisible by neither $2$ or $3$, $2$ if $n$ is divisible by $2$ but not $3$, $3$ if $n$ is divisible by $3$ but not $2$, and $6$ if $n$ is divisible by $6$. From this, we may write the series as
+<script type="math/tex; mode=display">\sum_{n=1}^\infty \frac{1}{n^s}+\sum_{n=1}^\infty \frac{1}{(2n)^s}+\sum_{n=1}^\infty \frac{2}{(3n)^s}+\frac{2}{(6n)^s}</script>
+All terms whose indices are coprime to $6$ are added once by the first series. The terms whose indices are divisible by $2$ but not $3$ are added once by the first series and once by the second series, counting each a total of twice. The terms whose indices are divisible by $3$ but not $2$ are added once by the first series and twice by the third series, counting each a total of three times. Finally, the terms whose indices are divisible by $6$ are added once by the first series, once by the second, twice by the third, and twice by the fourth, counting each a total of $6$ times as desired. Thus, we have
+<script type="math/tex; mode=display">D(\gcd(2,n),s)=(1+2^{-s}+2\cdot 3^{-s}+2\cdot 6^{-s})\zeta(s)</script>
+</p>
+
+<p>I would now like to define a couple of number-theoretical functions that I will use later in the post. First is the <strong>divisor function</strong> $\sigma_\alpha (n)$, defined as the sum of the $\alpha$ th powers of the divisors of $n$ (including $1$ and $n$). defined using mathematical language, this is
+<script type="math/tex; mode=display">\sigma_\alpha (n):=\sum_{d|n} d^\alpha</script>
+This function is <strong>multiplicative</strong>, meaning that for any coprime positive integers $m$ and $n$, the function satisfies
+<script type="math/tex; mode=display">\sigma_\alpha (mn)=\sigma_\alpha (m)\sigma_\alpha (n)</script>
+The special case $\sigma_0 (n)$ is sometimes written simply as $d(n)$, and is just the number of divisors of $n$.</p>
+
+<p>Next is Euler's <strong>totient function</strong> $\phi(n)$, defined as the number of positive integers less than $n$ that are coprime to $n$ (including $1$). It satisfies a few interesting identities that we will use, including the identity
+<script type="math/tex; mode=display">\sum_{d|n}\phi(d)=n</script>
+for any positive integer $n$. The totient function is also multiplicative.</p>
+
+<p>The function $\Omega(n)$ counts the number of prime factors of $n$ <em>with</em> multipliticy, and the function $\omega(n)$ counts the number of prime factors of $n$ <em>without</em> multiplicity. The first function satisfies
+<script type="math/tex; mode=display">\Omega(mn)=\Omega(m)+\Omega(n)</script>
+for <em>any</em> positive integers $m$ and $n$, and the second satisfies
+<script type="math/tex; mode=display">\omega(mn)=\omega(m)+\omega(n)</script>
+for coprime positive integers $m$ and $n$. The <strong>Liouville function</strong> $\lambda(n)$ is defined as
+<script type="math/tex; mode=display">\lambda(n):=(-1)^{\Omega(n)}</script>
+It is <em>also</em> multiplicative.</p>
+
+<p>Many of these properties are pretty easy to prove (except for the proof that $\phi(n)$ is multiplicative, which gave me a bit of trouble), so I won't prove them, and I'll dive right in to the infinite series.</p>
+
+<p>Briefly returning to the $\gcd$ series considered earlier, the strategy I used can be generalized, which yields the easily-proven result
+<script type="math/tex; mode=display">D(\gcd(m,n),s)=\zeta(s)\sum_{d|m}\frac{\phi(d)}{d^s}</script>
+</p>
+
+<p>This follows directly from the previously described propert of the Totient function:
+<script type="math/tex; mode=display">\sum_{d|n}\phi(d)=n</script>
+Now it's time for some more interesting Dirichlet series.</p>
+
+<p>First recall the following elementary property of infinite series
+<script type="math/tex; mode=display">\bigg(\sum_{m=1}^\infty a_m\bigg)\bigg(\sum_{n=1}^\infty b_n\bigg)=\sum_{m,n=1}^\infty a_m b_n</script>
+This can be used to prove a couple very interesting and useful properties regarding number theoretical series. I will begin with a simple strategy for evaluating series of these type. This strategy is limited, so I will only do a few series, but I will later introduce a much more effective strategy that can be used for all of them.</p>
+
+<p>Suppose $f(n)$ is some function, and $g(n)$ is the function defined as
+<script type="math/tex; mode=display">g(n):=\sum_{d|n}f(d)</script>
+Then consider the following:
+<script type="math/tex; mode=display">\begin{align}
+D(f,s)
+&= \sum_{n=1}^\infty \frac{f(n)}{n^s}\\
+&= \frac{\zeta(s)}{\zeta(s)}\sum_{n=1}^\infty \frac{f(n)}{n^s}\\
+&= \frac{1}{\zeta(s)}\bigg(\sum_{m=1}^\infty \frac{1}{m^s}\bigg)\bigg(\sum_{n=1}^\infty \frac{f(n)}{n^s}\bigg)\\
+&= \frac{1}{\zeta(s)}\sum_{m,n=1}^\infty \frac{f(n)}{(mn)^s}\\
+&= \frac{1}{\zeta(s)}\sum_{n=1}^\infty \frac{1}{n^s}\sum_{m|n}f(m)\\
+&= \frac{1}{\zeta(s)}\sum_{n=1}^\infty \frac{g(n)}{n^s}\\
+&= \frac{D(g,s)}{\zeta(s)}\\
+\end{align}</script>
+We can use this to calculate the Dirichlet series of the Euler Totient function mentioned earlier, using this property that I also stated earlier:
+<script type="math/tex; mode=display">\sum_{d|n}\phi(d)=n</script>
+Letting $f(n)=\phi(n)$ and $g(n)=n$, we have
+<script type="math/tex; mode=display">D(\phi(n),s)=\frac{D(n,s)}{\zeta(s)}</script>
+or
+<script type="math/tex; mode=display">D(\phi(n),s)=\frac{\zeta(s-1)}{\zeta(s)}</script>
+This can also be used to calculate the Dirichlet series of the Mobius function, since
+<script type="math/tex; mode=display">\sum_{d|n}\mu(d)</script>
+is equal to $1$ if $n=1$ and $0$ otherwise. This allows us to say that
+<script type="math/tex; mode=display">D(\mu(n),s)=\frac{1}{\zeta(s)}</script>
+I'll do one more example. Since $\sigma_a$ is defined as
+<script type="math/tex; mode=display">\sigma_\alpha (n):=\sum_{d|n} d^\alpha</script>
+we have that
+<script type="math/tex; mode=display">D(n^a,s)=\frac{D(\sigma_a(n),s)}{\zeta(s)}</script>
+of course, the LHS is
+<script type="math/tex; mode=display">D(n^a,s)=\sum_{n=1}^\infty \frac{n^a}{n^s}=\zeta(s-a)</script>
+so we have the result
+<script type="math/tex; mode=display">D(\sigma_a(n),s)=\zeta(s)\zeta(s-a)</script>
+This strategy can be used to a greater extent - for example, it can be used to calculate generally the value of $D(\sigma_a(n),s)$ for any $a$. However, for more difficult Dirichlet series like $D(d(n^2),s)$ or $D(d^2(n),s)$, it is advisable to use the following technique.</p>
+
+<p>Recall the property of infinite series mentioned earlier. I will now use it to develop a much more useful strategy, especially those with multiplicative summands. Suppose that the function $f(n)$ is multiplicative and that we are considering the infinite series
+<script type="math/tex; mode=display">\sum_{n=1}^\infty f(n)</script>
+Since every positive integer has a unique prime factorization, this can be written as follows, where $p_i$ is the ith prime number:
+<script type="math/tex; mode=display">\sum_{p_i \space\text{prime},\space m_i\in\mathbb N} f(p_1^{m_1} p_2^{m_2}... p_k^{m^k}...)</script>
+Or, since $f$ is multiplicative,
+<script type="math/tex; mode=display">\sum_{p_i \space\text{prime},\space m_i\in\mathbb N} f(p_1^{m_1})f(p_2^{m_2})...f(p_k^{m^k})...</script>
+Using the property of series mentioned earlier, this is equal to
+<script type="math/tex; mode=display">\bigg(\sum_{m_1=0}^\infty f(p_1^{m_1})\bigg)\bigg(\sum_{m_2=0}^\infty f(p_2^{m_2})\bigg)...</script>
+or, rearranging a bit,
+<script type="math/tex; mode=display">\prod_{p \space\text{prime}}(f(1)+f(p)+f(p^2)+...)</script>
+Since $f(1)=1$ for every multiplicative function $f$, this is equal to
+<script type="math/tex; mode=display">\prod_{p \space\text{prime}}(1+f(p)+f(p^2)+...)</script>
+Thus, for any multiplicative function $f$, as long as the series converges, we have
+<script type="math/tex; mode=display">\sum_{n=1}^\infty f(n)=\prod_{p \space\text{prime}}(1+f(p)+f(p^2)+...)</script>
+As a corrolary of this, we have the famous product representation of the Riemann Zeta function:
+<script type="math/tex; mode=display">\zeta(s)=\prod_{p \space\text{prime}}\bigg(1+\frac{1}{p^s}+\frac{1}{p^{2s}}+...\bigg)=\prod_{p\space\text{prime}}\frac{1}{1-p^{-s}}</script>
+However, we can do some other cool stuff with it. For example, consider the infinite series
+<script type="math/tex; mode=display">D(d(n),s)=\sum_{n=1}^\infty \frac{d(n)}{n^s}</script>
+Since $d(n)$ is multiplicative, and since $d(p^k)=k+1$ for any prime $p$ and nonnegative integer $k$, we have the following:
+<script type="math/tex; mode=display">\begin{align}
+D(d(n),s)
+&= \sum_{n=1}^\infty \frac{d(n)}{n^s}\\
+&= \prod_{p\space\text{prime}} \bigg(1+\frac{d(p)}{p^s}+\frac{d(p^2)}{p^{2s}}+...\bigg)\\
+&= \prod_{p\space\text{prime}} \bigg(1+\frac{2}{p^s}+\frac{3}{p^{2s}}+...\bigg)\\
+&= \prod_{p\space\text{prime}} \frac{1}{(1-p^{-s})^2}\\
+&= \zeta^2(s)\\
+\end{align}</script>
+I won't put this in a box, because we've already derived a more general Dirichlet series for $\sigma_a$, but it is a good example of how to use this technique. Though this technique can be applied to more exotic series (as I will show in a moment), the earlier technique provides a much more elegant derivation of $D(\sigma_a(n),s)$, whereas this one gets very ugly with algebra.</p>
+
+<p>As an example of a more exotic Dirichlet series, consider $D(\sigma_a(n^2),s)$. Since $\sigma_a(p^k)=\frac{1-p^{a(k+1)}}{1-p^a}$ for $p$ prime, we have that
+<script type="math/tex; mode=display">\begin{align}
+D(\sigma_a(n^2),s)
+&= \sum_{n=1}^\infty \frac{\sigma_a(n^2)}{n^s}\\
+&= \prod_{p\space\text{prime}} \bigg(1+\frac{\sigma_a(p^2)}{p^s}+\frac{\sigma_a(p^4)}{p^{2s}}+...\bigg)\\
+&= \prod_{p\space\text{prime}} \bigg(1+\frac{1}{p^s}\frac{1-p^{3a}}{1-p^a}+\frac{1}{p^{2s}}\frac{1-p^{5a}}{1-p^a}+...\bigg)\\
+&= \prod_{p\space\text{prime}} \bigg(1+\frac{p^{-s}}{1-p^{-s}}\frac{1}{1-p^a}-\frac{p^a}{1-p^a}\frac{p^{2a-s}}{1-p^{2a-s}}\bigg)\\
+&= \prod_{p\space\text{prime}} \bigg(\frac{(1-p^{-s})(1-p^{2a-s})(1-p^a)+p^{-s}(1-p^{2a-s})-p^{3a-s}(1-p^{-s})}{(1-p^{-s})(1-p^{2a-s})(1-p^a)}\bigg)\\
+&= \prod_{p\space\text{prime}} \bigg(\frac{-p^{2a-s}+p^{a-s}-p^a+1}{(1-p^{-s})(1-p^{2a-s})(1-p^a)}\bigg)\\
+&= \prod_{p\space\text{prime}} \bigg(\frac{(1-p^a)(1+p^{a-s})}{(1-p^{-s})(1-p^{2a-s})(1-p^a)}\bigg)\\
+&= \prod_{p\space\text{prime}} \bigg(\frac{(1+p^{a-s})}{(1-p^{-s})(1-p^{2a-s})}\bigg)\\
+&= \prod_{p\space\text{prime}} \bigg(\frac{(1-p^{2a-2s})}{(1-p^{-s})(1-p^{2a-s})(1-p^{a-s})}\bigg)\\
+&= \frac{\zeta(s)\zeta(s-2a)\zeta(s-a)}{\zeta(2s-2a)}
+\end{align}</script>
+</p>
+
+<p>The last step of the above chain of equalities is justified by the product representation of the Zeta function that we obtained earlier. We now have
+<script type="math/tex; mode=display">D(\sigma_a(n^2),s)=\frac{\zeta(s)\zeta(s-2a)\zeta(s-a)}{\zeta(2s-2a)}</script>
+</p>
+
+<p>The following formula involving the divisor sum function can be derived in a similar way, and was first derived by Ramanujan:</p>
+
+<p>
+<script type="math/tex; mode=display">D(\sigma_a(n)\sigma_b(n),s)=\frac{\zeta(s)\zeta(s-a)\zeta(s-b)\zeta(s-a-b)}{\zeta(2s-a-b)}</script>
+</p>
+
+<p>Because the derivation is very similar and the algebra involved is horrendous, I will skip the derivation of this one. Instead, I will derive just two more Dirichlet series using this method: $D(\lambda(n),s)$ and $D(\mu^2(n),s)$. These two take much less time to derive because the algebra is so much less complicated. By the definition of the Liouville function, we have that $\lambda(p^k)=(-1)^k$. Thus, since the Lioville function is multiplicative, we have
+<script type="math/tex; mode=display">\begin{align}
+D(\lambda(n),s)
+&= \sum_{n=1}^\infty \frac{\lambda(n)}{n^s}\\
+&= \prod_{p\space\text{prime}} \bigg(1+\frac{\lambda (p)}{p^s}+\frac{\lambda(p^2)}{p^{2s}}+...\bigg)\\
+&= \prod_{p\space\text{prime}} \bigg(1-\frac{1}{p^s}+\frac{1}{p^{2s}}+...\bigg)\\
+&=\prod_{p\space\text{prime}} \frac{1}{1+p^{-s}}\\
+&=\prod_{p\space\text{prime}} \frac{1-p^{-s}}{1-p^{-2s}}\\
+&=\frac{\zeta(2s)}{\zeta(s)}\\
+\end{align}</script>
+</p>
+
+<p>which gives us the result
+<script type="math/tex; mode=display">D(\lambda(n),s)=\frac{\zeta(2s)}{\zeta(s)}</script>
+</p>
+
+<p>Now, for the last example, I will consider $D(\mu^2(n),s)$. By the definition of $\mu(n)$, it is trivial that $\mu(p^k)$ is equal to $1$ if $k=0,1$ and $0$ if $k\ge 2$. Thus, we have</p>
+
+<p>
+<script type="math/tex; mode=display">\begin{align}
+D(\mu^2(n),s)
+&= \sum_{n=1}^\infty \frac{\mu^2(n)}{n^s}\\
+&= \prod_{p\space\text{prime}} \bigg(1+\frac{\mu^2 (p)}{p^s}+\frac{\mu^2(p^2)}{p^{2s}}+...\bigg)\\
+&= \prod_{p\space\text{prime}} \bigg(1+\frac{1}{p^s}\bigg)\\
+&= \prod_{p\space\text{prime}} \bigg(1+p^{-s}\bigg)\\
+&= \prod_{p\space\text{prime}} \frac{1-p^{-2s}}{1-p^{-s}}\\
+&= \frac{\zeta(s)}{\zeta(2s)}\\
+\end{align}</script>
+</p>
+
+<p>and so we have</p>
+
+<p>
+<script type="math/tex; mode=display">D(\mu^2(n),s)=\frac{\zeta(s)}{\zeta(2s)}</script>
+</p>
+
+<p>Interestingly, these last two Dirichlet series were reciprocals of each other.</p>
+
+<p>These Dirichlet series can be used to derive the values of some even <em>more</em> exotic infinite series (as if these weren't exotic enough already). For example, I will demonstrate how to derive the value of the series
+<script type="math/tex; mode=display">\sum_{n=1}^\infty \mu(n)\ln\cosh\frac{\alpha}{n}</script>
+...where $\alpha$ is a constant. Recall that $\ln\cosh(x)$ has a series expansion in terms of the Zeta function:
+<script type="math/tex; mode=display">\ln\cosh(x)=\sum_{k=1}^\infty\frac{(2^{2k}-1)(-1)^{k+1}\zeta(2k)x^{2k}}{k\pi^{2k}}</script>
+It follows from this that our series is equal to
+<script type="math/tex; mode=display">\sum_{n=1}^\infty \mu(n) \sum_{k=1}^\infty\frac{\alpha^{2k}(2^{2k}-1)(-1)^{k+1}\zeta(2k)}{k\pi^{2k} n^{2k}}</script>
+By swapping the order of summation, this is equal to
+<script type="math/tex; mode=display">\sum_{k=1}^\infty \frac{\alpha^{2k}(2^{2k}-1)(-1)^{k+1}\zeta(2k)}{k\pi^{2k}} \sum_{n=1}^\infty\frac{\mu(n)}{n^{2k}}</script>
+Look! The innermost series is the Dirichlet series of $\mu(n)$, which we know is the reciprocal of the Zeta function. So we have
+<script type="math/tex; mode=display">\sum_{k=1}^\infty \frac{\alpha^{2k}(2^{2k}-1)(-1)^{k+1}\zeta(2k)}{k\pi^{2k}}\frac{1}{\zeta(2k)}</script>
+The $\zeta(2k)$ cancels, and we are left with
+<script type="math/tex; mode=display">\sum_{k=1}^\infty \frac{\alpha^{2k}(2^{2k}-1)(-1)^{k+1}}{k\pi^{2k}}</script>
+Of course, this is a familiar series (Maclaurin series of the natural logarithms) and can be evaluated to obtain the weird formula</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{n=1}^\infty \mu(n)\ln\cosh\frac{1}{n}=\ln\frac{\pi^2+4\alpha^2}{\pi^2+\alpha^2}</script>
+</p>
+
+<p>That wraps this post up! I shall leave the reader with a little Dirichlet series puzzle to work on. The question is this: can you find a number-theoretical function $f(n)$ (you may have to define it independently of the functions mentioned earlier) that has the Dirichlet series
+<script type="math/tex; mode=display">D(f(n),s)=\frac{1}{\zeta(2s)}\space\text{?}</script>
+</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

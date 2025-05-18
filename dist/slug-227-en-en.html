@@ -1,0 +1,110 @@
+<html>
+<head>
+    <title>A shitpost about Unicode's superscript digits</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>A shitpost about Unicode's superscript digits</h2>
+
+<p>I was writing some C++ code to do computations involving polynomials. For my own gratification, I wanted to write a function that would pretty-print polynomials to my terminal, given a vector of coefficients. Naturally, I thought I'd use the special Unicode characters <code>⁰¹²³⁴⁵⁶⁷⁸⁹</code> to make the exponents look good, because <code>x⁵</code> looks a lot nicer than <code>x^5</code>. I started by writing a function for translating a digit between 0 and 9 into its Unicode superscript counterpart.</p>
+
+<div class="code"><code><pre>
+char digit_superscript(int d) {
+   // some stuff here...
+}
+</pre></code></div>
+
+<p>But no, that won't work. Unicode characters encoded using UTF8 can actually occupy up to four bytes. A <code>char</code> can only hold one byte, so I had to return a <code>string</code> instead.</p>
+
+<div class="code"><code><pre>
+string digit_superscript(int d) {
+   // some stuff here...
+}
+</pre></code></div>
+
+<p>The easy (and probably performant) way of doing this would be to list out all ten cases and return the corresponding Unicode character. But that would be really ugly and repetitive code, and I don't care about how efficiently my polynomials are printed. I remembered an old trick that has served me well when working with ASCII: to get the nth letter of the alphabet, you can start with <code>'a'</code> and simply add $n$, because the letters <code>a..z</code> are consecutive. So perhaps I could get the superscript digit for $d$ by starting with the code point for <code>⁰</code> and adding $d$.</p>
+
+<p>The character <code>⁰</code> is code point <code>U+2070</code>, which is encoded in UTF8 as the bytes <code>e2 81 b0</code>. So I gave this a try:</p>
+
+<div class="code"><code><pre>
+string digit_superscript(int d) {
+   string num = "\xe2\x81\xb0";
+   num.at(2) += d;
+   return num;
+}
+</pre></code></div>
+
+<p>And I tested the function by trying to print out the digits from zero through nine:</p>
+
+<div class="code"><code><pre>
+int main() {
+   for (int i = 0; i < 10; i++)
+      cout << digit_superscript(i);
+   cout << "\n";
+}
+</pre></code></div>
+
+<p>The output was <code>⁰ⁱ⁲⁳⁴⁵⁶⁷⁸⁹</code>. What the fuck?</p>
+
+<p>That's right: the Unicode superscript digits are not consecutive. The superscript zero is <code>U+2070</code>, but <code>U+2071</code> is the superscript "i" character <code>ⁱ</code>. Even better, the code points <code>U+2072</code> and <code>U+2073</code> are not mapped to any character at all right now, just "reserved for future use". The superscript digits <code>⁴⁵⁶⁷⁸⁹</code>, however, are fortunate enough to occupy the consecutive code points from <code>U+2074</code> through <code>U+2079</code>.</p>
+
+<p>So what's the deal with <code>¹²³</code>? <a href="https://en.wikipedia.org/wiki/Unicode_subscripts_and_superscripts#Superscripts_and_subscripts_block">According to Wikipedia</a> they are inherited from the encoding ISO-8859-1, which was a single-byte encoding extending ASCII that possessed these three superscript digits and <em>none of the other seven</em>. Unicode was considerate enough to allow the ISO-8859-1 characters to retain their code points in its Latin-1 block, with the unfortunate consequence that the superscript digits <code>¹²³</code> be separated from their bretheren by 8000 or so characters. But hey, at least <code>⁰</code> has <code>ⁱ</code> to keep it company. They're vaguely related, right? You know, because they're both superscripted... things?</p>
+
+<p>Not only that, but <code>¹²³</code> were not even consecutive in ISO-8859-1. The characters <code>²³</code> are <code>U+00B2</code> and <code>U+00B3</code>, but <code>¹</code> is <code>U+00B9</code>. Lovely.</p>
+
+<p><center><img src="/img/2024-11-10-Fig1.jpeg" alt="Fig1" /></center></p>
+
+<p>Alright, back to coding. I was able to use the offset trick for the digits <code>⁰⁴⁵⁶⁷⁸⁹</code> but the digits <code>¹²³</code> have to be treated as their own special case.</p>
+
+<div class="code"><code><pre>
+string digit_superscript(int d) {
+   switch (d) {
+      case 1:
+         return "\u00b9";
+      case 2:
+         return "\u00b2";
+      case 3:
+         return "\u00b3";
+      default:
+         string num = "\xe2\x81\xb0";
+         num.at(2) += d;
+         return num;
+   }
+}
+</pre></code></div>
+
+<p>How <em>disgusting</em>...</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

@@ -1,0 +1,115 @@
+<html>
+<head>
+    <title>More on Iterated Functions</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>More on Iterated Functions</h2>
+
+<p><em>2017 April 4</em></p>
+
+<p>After using iterated functions to calculate the amortization formulas, they've caught my interest again (no pun intended). This post, unfortunately, will be little more than a list of questions and concerns about iterated functions that I have been posing to myself, aside from one enormously helpful realization.</p>
+
+<p>The thing that I noticed was that there is a whole class of functions that can be easily iterated: functions of the form
+<script type="math/tex; mode=display">f(x)=(g\circ h\circ g^{-1})(x)</script>
+</p>
+
+<p>where $g(x)$ and $h(x)$ are other functions. Something very special happens when we compose it with itself:
+<script type="math/tex; mode=display">f^2(x)=(g\circ h\circ g^{-1}\circ g\circ h\circ g^{-1})(x)</script>
+</p>
+
+<p>The $g$ and $g^{-1}$ undo each other and we are left with
+<script type="math/tex; mode=display">f^2(x)=(g\circ h\circ h\circ g^{-1})(x)</script>
+<script type="math/tex; mode=display">f^2(x)=(g\circ h^2\circ g^{-1})(x)</script>
+</p>
+
+<p>In fact, this beautiful property holds for any number of iterations since $g$ and $g^{-1}$ undo each other every time $f(x) is iterated:
+<script type="math/tex; mode=display">f^n(x)=(g\circ h^n\circ g^{-1})(x)</script>
+</p>
+
+<p>This is incredibly useful, since it allows us to iterate any function of this form, so long as we know how to iterate $h(x)$. One classic example of the iteration of a function of this type is the right triangle spiral problem. In this problem, one starts off with an isoscles right triangle with unit leg length. Then one constructs another right triangle with one leg of unit length and one leg made of the hypotenuse of the previous triangle. This process is repeated to create more and more triangles, and the problem is to find the length of the longest leg of the <em>n</em>th triangle.</p>
+
+<p><center><img src="/img/2017-4-4-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>We can see that $f(1)=1$ easily, and that, by the pythagorean theorem, the leg length of each triangle is the hypotenuse length of the previous triangle. This means that the function mapping each leg length to the leg length of the next triangle is
+<script type="math/tex; mode=display">f(x)=\sqrt{x^2+1}</script>
+and the leg length of the <em>n</em>th triangle will be
+<script type="math/tex; mode=display">f^{n-1}(1)</script>
+</p>
+
+<p>We can rearrange $f(x)$ so that it is in the form <script type="math/tex; mode=display">f(x)=(g\circ h\circ g^{-1})(x)</script> where $g(x)=\sqrt{x}$ and $h(x)=x+1$, so when we iterate $f(x)$, we will get
+<script type="math/tex; mode=display">f^n(x)=\sqrt{x^2+n}</script>
+</p>
+
+<p>because $h^n(x)=x+n$. Now we can find $f^{n-1}(1)$:
+<script type="math/tex; mode=display">f^{n-1}(1)=\sqrt{n}</script>
+</p>
+
+<p>and the long leg length of the <em>n</em>th triangle is given by $\sqrt n$. Another example is the iteration of the "softplus" function
+<script type="math/tex; mode=display">f(x)=\ln(e^x+1)</script>
+</p>
+
+<p>which turns out to be 
+<script type="math/tex; mode=display">f^n(x)=\ln(e^x+n)</script>
+</p>
+
+<p>since $\ln$ and $e^x$ cancel each other, but the <em>1</em>s stack up with each iteration.</p>
+
+<p>That's the development that I've made. Here are my questions that have yet to be answered:</p>
+
+<ol>
+<li>
+<p>It seems that many polynomial functions simply won't iterate nicely, such as $f(x)=x^2+1$. How can I determine whether or not a polynomial has an iteration formula, and what are the iteration formulas for the polynomials for which I can do this? If I can't find iteration formulas for some polynomial functions, can I find fractional iterates?</p>
+</li>
+<li>
+<p>Rational functions of the form $f(x)=\frac{ax+b}{cx+d}$ iterate in a really interesting way that seems to be connected somehow to the fibonacci numbers. Can I use this to write an iteration formula for functions of that form?</p>
+</li>
+<li>
+<p>Some functions, like the function $f(x)=-x$, seem to not have any half-iterates that don't involve imaginary numbers. How do I determine the existence of a function's half-iterate?</p>
+</li>
+<li>
+<p>One interesting class of functions is the class of <em>involutory</em> functions, or functions that are their own inverses. How many of these functions are there? What are their properties? Are their functions with the property that $f^3(x)=x$ or $f^4(x)=x$?</p>
+</li>
+<li>
+<p>Some functions, when iterated, aren't perfectly represented by their iteration formula because of discrepancies in domain and range. How can I detect such discrepancies? Can I formulate a general rule?</p>
+</li>
+<li>
+<p>Are there ways that I can find a large iterate of a function for a specific value without writing it out by hand or finding an iteration formula?</p>
+</li>
+</ol>
+
+<p>I hope to revisit these topics in later posts.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<html>
+<head>
+    <title>Topología para la genética</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h3>Topología para la genética</h3>
+
+<p>En <a href="https://franklin.dyer.me/post/203">una entrada anterior</a> he tratado <a href="https://math.stackexchange.com/questions/31859/what-concept-does-an-open-set-axiomatise">una interpretación de la topología</a> que me parece muy esclarecedor. En breve:</p>
+
+<ul>
+<li>Un elemento $x\in X$ de un espacio topológico representa una entidad cuya identidad tal vez no se puede saber con exactitud.</li>
+<li>Un entorno $N$ de un punto $x\in X$ del espacio topológico representa un conjunto que es tal que se puede <em>confirmar</em> que $x\in N$ a pesar de no conocer la identidad de $x$ con exactitud.</li>
+<li>Un conjunto abierto $U\subset X$ es un conjunto <em>semidecidible</em>, es decir, un conjunto que es entorno de todos sus puntos, o un conjunto que describe una propiedad que se puede confirmar para cada punto que la posea.</li>
+<li>El conjunto vacío $\varnothing$ es abierto porque no contiene ningún punto y el conjunto total $X$ es abierto porque contiene todos los puntos.</li>
+<li>Una unión de abiertos $U_i$ es abierto, porque al verificar que $x$ pertenezca a algún $U_i$ concreto, se habrá verificado que pertenece a la unión.</li>
+<li>Una intersección <em>finita</em> de abiertos es abierto, porque al verificar que $x$ pertenezca a cada uno de ellos a su vez, se habrá verificado que pertenece a su intersección.</li>
+</ul>
+
+<p>Anteriormente consideré esta interpretación en términos computacionales - se ha tratado de propiedades que se puede <em>computar</em> sabiendo sólo la identidad de una entidad hasta precisión finita, por ejemplo en las representaciones aproximadas de números reales. Pero en esta entrada quiero ampliar esta punto de vista usando la topología para modelar no sólo propiedades computacionales sino también observaciones empíricas sobre sistemas naturales cuyo estado interno no se puede saber con certeza desde fuera. En concreto, veremos como se la puede usar para describir la <em>genética</em>, siendo el datos "oculto" la información genética de un organismo, a la que sólo se puede acceder de forma limitada a través de la manera en la que se manifiesta en las características físicas del organismo.</p>
+
+<h4>Fundamentos genéticos <a id="toc-section-1" class="toc-section"></a></a></h4>
+
+<p>Primero introducimos un poco de terminología de la genética. Los organismos que se reproducen sexualmente suelen recibir varios copias de sus genes de sus padres y en particular los organismos  diploides poseen dos copias de cada cromosoma, siendo uno de cada padre. Si la sucesión de ADN que controla un gen concreto del organismo está localizado en una ubicación de un cromosoma, se dice que esta ubicación es el <strong>locus</strong> de este gen. Los distintos posibles secuencias de ADN que pueden ocupar ese locus  y constituir ese gen se llaman los <strong>alelos</strong> del gen. Cuando un organismo se reproduce con otro, su cría recibe un cromosoma de cada padre y se suele suponer que el que se recibe de cada padre está seleccionado al azar.</p>
+
+<p>Entonces, ¿qué sucede si un organismo diploide posee dos <em>distintos</em> alelos del mismo gen, uno en cada cromosoma? Pues lo que se observa con frecuencia es que uno de los alelos sea <strong>dominante</strong> y que otro sea <strong>recesivo</strong>, de tal manera que la manifestación de la característica física que codifica el gen está determinada por la presencia o la ausencia de la variante dominante. La combinación de alelos que posee un organismo se llama su <strong>genotipo</strong> mientras que la característica que presenta por causa de estos genes se llama su <strong>fenotipo</strong>.</p>
+
+<p>Por ejemplo, entre los genes de una planta floreciente, puede que en el gen que determina la producción de pigmentos morados en la flor tenga un posible alelo ($P$) que provoca la producción del pigmento y otro ($p$) que no. En este caso basta una única copia del alelo que produce el pigmento para que se manifieste el color morado en las flores. Así que, tanto las plantas del genotipo $PP$ como las del genotipo $Pp$ tendrán flores moradas mientras que sólo las plantas del genotipo $pp$ manifestarán flores blancas (sin pigmento). Los organismos con dos copias del mismo alelo se llaman <strong>homocigotos</strong> mientras que los que tienen distintos alelos se llaman <strong>heterocigotos</strong>.</p>
+
+<p><center><img src="/img/2023-07-15-Fig1.png" alt="Fig 1" /></center></p>
+
+<h4>Aporte topológico <a id="toc-section-2" class="toc-section"></a></a></h4>
+
+<p>El aspecto interesante de este mecanismo de herencia en cuanto a la topología y su capacidad de modelar el conocimiento parcial es que <em>no se puede deducir directamente el genotipo de un organismo de su fenotipo</em>. Por ejemplo, dada una planta con una flor blanca, se sabe que su genotipo es seguramente $pp$, pero dada una planta con una flor blanca, no se sabe (a lo menos de inmediato) si su genotipo es $PP$ o $Pp$.</p>
+
+<p>Pero aunque los genotipos $PP$ y $Pp$ le corresponden al mismo fenotipo no cabría decir que sean <em>indistinguibles</em> un organismo con genotipo $PP$ y uno con genotipo $Pp$. Por ejemplo, al reproducir con otra planta de flores blancas, producirán descendientes con distribuciones de colores distintas. Un cruce $PP\times pp$ sólo puede producir descendientes del genotipo $Pp$ y con flores moradas, pero un cruce $Pp\times pp$ puede producir tanto descendientes del genotipo $Pp$ (flores moradas) como descendientes del genotipo $pp$ (flores blancas).</p>
+
+<p><center><img src="/img/2023-07-15-Fig2.png" alt="Fig 2" /></center></p>
+
+<p>Por tanto, si se tiene una planta con flores moradas y de genotipo desconocido, se la cruza con una planta con flores blancas, y se obtiene así una planta con flores blancas, la primera planta tendría que tener el genotipo $Pp$. Pero fíjate que si esa planta original con flores moradas en la realidad tiene genotipo $PP$, <em>no hay procedimiento que permite concluir con certeza que es homocigoto</em>. Una planta $PP$ se comporta de manera indistinguible de una planta $Pp$ que, por muy improbable que sea, siempre pasa el alelo $P$ a sus descendientes. La cuestión de distinguir entre una planta $PP$ y una $Pp$ es entonces más liada que determinar si son "distinguibles" o "indistinguibles" - es que una $Pp$ se puede distinguir de un $PP$ pero una $PP$ no se puede distinguir de un $Pp$. </p>
+
+<p>El esquema conceptual que utiliza la topología para expresar "conjuntos semidecidibles" como conjuntos abiertos nos permite describir este fenómeno en formato breve. El problema de extraer información sobre el genotipo de un organismo se puede representar como un espacio topológico con tres elementos: los tres genotipos $PP$, $Pp$ y $pp$. Acabamos de comentar que si se tiene una planta con genotipo $pp$ se lo sabrá de inmediato por el color de sus flores, así que ${pp}$ debe ser un conjunto abierto. Además, dado una planta con genotipo $PP$ o $Pp$ se sabrá de inmediato que tiene <em>uno</em> de estos dos genotipos por el color de sus flores, y por tanto ${PP, Pp}$ debe ser conjunto abierto. Finalmente, si se tiene una planta heterocigota $Pp$ se puede confirmar su genotipo observando que produce descendientes con flores blancas, así que ${Pp}$ debe ser un abierto. Lo que resulta es la siguiente topología en el conjunto ${PP, Pp, pp}$:</p>
+
+<p><center><img src="/img/2023-07-15-Fig3.png" alt="Fig 3" /></center></p>
+
+<p>Fíjate que una topología en el conjunto de genotipos nos da una manera concisa y exhaustiva de expresar qué tipo de conocimiento podemos poseer en cada circunstancia posible. A continuación veremos unos ejemplos teóricos de particularidades que pueden complicar la herencia y cómo influyen en la topología que usamos para expresar el conocimiento verificable que se puede obtener.</p>
+
+<h4>Dominancia incompleta <a id="toc-section-3" class="toc-section"></a></a></h4>
+
+<p><strong>Dominancia incompleta</strong> es un fenómeno en el que se puede observar una diferencia entre los fenotipos de un homocigoto dominante y un heterocigoto para alguna característica. Por ejemplo, en el caso del color de las flores, si dos copias del alelo dominante $P$ resultan en una producción de pigmento que supera por mucho la producción de pigmento que se logra con una sola copia, entonces puede que los heterocigotos presenten un color más tenue, así:</p>
+
+<p><center><img src="/img/2023-07-15-Fig4.png" alt="Fig 4" /></center></p>
+
+<p>Si fuera así esta característica entonces podríamos distinguir fácilmente entre todos los posibles genotipos simplemente observando el fenotipo, pues a cada fenotipo le correspondería un único genotipo. Por tanto la topología que corresponde a este locus sería la <em>topología discreta</em> en tres puntos:</p>
+
+<p><center><img src="/img/2023-07-15-Fig5.png" alt="Fig 5" /></center></p>
+
+<p>En este caso la dominancia incompleta trivializa el problema, pero hay casos más complicados en los que produce comportamiento interesante. Por ejemplo, hay un gene que controla el color del pelaje en los conejos con cuatro alelos distintos $C,c^\mathtt{ch}, c^\mathtt{h}, c$ que tienen el siguiente comportamiento:</p>
+
+<ul>
+<li>$C$ produce una enzima que fabrica pigmento normalmente, la cual resulta en pelo negro por todo el cuerpo.</li>
+<li>$c^\mathtt{ch}$ produce una enzima menos eficaz que produce pigmento en una menor cantidad, la cual resulta en pelo gris (a menos que haya otra enzima que produce pigmento en mayor cantidad).</li>
+<li>$c^\mathtt{h}$ produce una enzima muy sensible a la temperatura que no funciona en absoluto en altas temperaturas. Por tanto, sólo produce pigmento en las extremidades del conejo (las patas y las orejas) y en esos sitios lo produce normalmente.</li>
+<li>$c$ produce una enzima que no funciona para nada.</li>
+</ul>
+
+<p>Fíjate que en la presencia del alelo $C$ no se puede observar directamente la presencia de ninguno de los otros alelos, pues se producirá pigmento negro en grandes cantidades por todo el pelaje del conejo. Por eso se dice que $C$ es <em>completamente dominante</em> a los otros tres alelos. Por otro lado, $c^\mathtt{ch}$ es <em>incompletamente dominante</em> a $c^\mathtt{h}$, como en el genotipo heterocigoto con estos dos alelos, se puede observar una mezcla de las dos características - pelaje negro en las extremidades y pelaje gris por el resto del cuerpo. He tenido un poco de dificultad en encontrar buenas fuentes en el internet que describen sin ambigüedad las relaciones de dominancia entre los cuatro alelos de este gen, pero a partir de ahora vamos a suponer que resultan en los $5$ fenotipos siguientes, que es lo que he entendido yo según lo que he leído:</p>
+
+<p><center><img src="/img/2023-07-15-Fig6.png" alt="Fig 6" /></center></p>
+
+<p>Si es así, entonces la topología que se podría usar para describir lo que se puede deducir sobre el genotipo de un conejo con certeza es la siguiente:</p>
+
+<p><center><img src="/img/2023-07-15-Fig7.png" alt="Fig 7" /></center></p>
+
+<p>¿Ves por qué? Para cada abierto de este diagrama y cada elemento de éste ¿puedes describir una observación que confirmaría la pertenencia del genotipo de un organismo a ese abierto?</p>
+
+<h4>Epistasia <a id="toc-section-4" class="toc-section"></a></a></h4>
+
+<p>Se puede considerar también multiples características de un organismo a la vez que son codificadas por distintos genes. Por ejemplo, si un gen con alelos $A,a$ controla el color del pelo de una persona y un gen con alelos $B,b$ controla el color de sus ojos, pues como ya sabemos las topologías en los conjuntos ${AA,Aa,aa}$ y ${BB,Bb,bb}$ que obtenemos considerando estas características por separados, podemos obtener la topología en el conjunto <script type="math/tex; mode=display">\begin{Bmatrix} AABB & AaBB & aaBB \\ AABb & AaBb & aaBb \\ AAbb & Aabb & aabb
+\end{Bmatrix}</script> que describe la consideración simultánea de las dos características a la vez, tomando la <em>topología producto</em> en este conjunto. En este caso la topología es:</p>
+
+<p><center><img src="/img/2023-07-15-Fig8.png" alt="Fig 8" /></center></p>
+
+<p>El término <strong>epistasia</strong> se refiere a una interacciones entre genes en el que el genotipo con respecto a uno de los genes influye en la expresión de un fenotipo codificado por otro gen, a diferencia del ejemplo anterior en el que las dos características son independientes. Por ejemplo, suponemos esta vez que un gen con alelos $A,a$ controla el color del pelo mientras que un gen con alelos $B,b$ controla si una persona es calvo o no (suponiendo que ser calvo es dominante). En este caso se tiene que la segunda característica puede <em>ocultar</em> el fenotipo con respecto a la primera característica - si una persona es calvo, da igual el color que tendría su pelo si lo tuviera porque no se lo puede observar. En este caso el mapeo de genotipo a fenotipo es el siguiente:</p>
+
+<p><center><img src="/img/2023-07-15-Fig9.png" alt="Fig 9" /></center></p>
+
+<p>En una topología finita como las que vamos considerando, se puede considerar el <strong>abierto básico</strong> $B_g$ sobre cada punto $g$, o sea el abierto más pequeño que contenga ese punto, o la intersección de todos los abiertos que lo contienen. Para un genotipo $g$, el básico $B_g$ representa el conocimiento más específico que se puede llegar a tener sobre un organismo de ese genotipo. Es un buen rompecabezas determinar cuáles exactamente son los conjuntos abiertos (básicos) en la topología que corresponde a esta combinación de características. La topología que he calculado yo es la siguiente:</p>
+
+<p><center><img src="/img/2023-07-15-Fig10.png" alt="Fig 10" /></center></p>
+
+<p>El caso más interesante para considerar era $aaBB$, es decir el genotipo cuyo abierto básico es el más grande, o sea el genotipo de una persona sobre la que se puede deducir lo más mínimo. Podemos describir los $9$ abiertos básicos $B_g$ de esta topología en términos de las observaciones sobre una persona de genotipo $g$ que nos llevamos a concluir la pertenencia de su genotipo a $B_g$:</p>
+
+<ol>
+<li>$B_\mathtt{aabb}$ incluye personas con pelo castaño.</li>
+<li>$B_\mathtt{AAbb}$ incluye personas con pelo rubio.</li>
+<li>$B_\mathtt{Aabb}$ incluye personas con pelo rubio que pueden tener hijos de pelo castaño al reproducir con alguien de pelo castaño.</li>
+<li>$B_\mathtt{aaBb}$ incluye personas calvas que pueden tener hijos de pelo castaño al reproducir con alguien de pelo castaño.</li>
+<li>$B_\mathtt{AABb}$ incluye personas calvas que pueden tener hijos de pelo rubio al reproducir con alguien de pelo castaño.</li>
+<li>$B_\mathtt{AaBb}$ incluye personas calvas que pueden tener tanto hijos de pelo castaño como hijos de pelo rubio al reproducir con alguien de pelo castaño.</li>
+<li>$B_\mathtt{AABB} = B_\mathtt{AaBB}$ incluye personas calvas que pueden tener hijos que pertenecen a $B_\mathtt{AaBb}$.</li>
+<li>$B_\mathtt{aaBB}$ incluye todas personas calvas. Es decir, $aaBB$ no se puede distinguir de ningún otro genotipo de una persona calva (aunque éstos a veces de pueden distinguir entre sí).</li>
+</ol>
+
+<p>Para abordar una posible confusión: tal vez de parece que el conjunto ${aaBB, aaBb, AaBB, AaBb}$ debe ser también abierto, como estos son los únicos genotipos que se pueden cruzar con $AAbb$ para obtener un hijo con uno de los genotipos de $B_\mathtt{aaBb} = {aaBb, AaBb}$, y como esto es otro abierto se podrá verificar cuando su hijo tiene un genotipo de $B_\mathtt{aaBb}$. Pero esto no es un experimento válido porque para estar seguro del resultado habrá que estar seguro de haber cruzado definitivamente con una persona del genotipo $AAbb$. Pero este genotipo no es verificable. No se podrá observar que la persona con la que se está reproduciendo tiene genotipo $AAbb$, sino sólo que pertenece a $B_\mathtt{AAbb} = {AAbb, Aabb}$, y si se cruza cualquiera persona calva con una persona de un genotipo que puede ser o $AAbb$ o $Aabb$ el resultado puede ser un hijo de $B_\mathtt{aaBb}$. Es por eso que $B_\mathtt{aaBB}$ no es ${aaBB, aaBb, AaBB, AaBb}$ sino el conjunto de todos los genotipos que corresponden a ser calvo.</p>
+
+<h4>Ejercicios <a id="toc-section-5" class="toc-section"></a></a></h4>
+
+<p>Aquí están algunos casos adicionales para considerar. Son puramente teóricos y no sé si tienen base en la genética real.</p>
+
+<ol>
+<li>Imagínate que hay tres alelos $A_0,A_1,A_2$ de un gen que codifican tres fenotipos distintos y que son tales que que $A_0$ es totalmente dominante sobre $A_1$, $A_1$ es totalmente dominante sobre $A_2$ y $A_2$ es totalmente dominante sobre $A_0$. ¿Puedes dibujar la topología en los $6$ genotipos posibles que describe lo que se puede deducir sobre el genotipo de un organismo? </li>
+<li>Considera el caso de las flores que tratamos al principio de la entrada, pero esta vez supón que hay una enfermedad (que no se hereda y que se contagia al azar) que causa que una planta tenga flores azules no obstante de su genotipo. Cada planta puede tener cualquier uno de los tres genotipos $PP, Pp, pp$ pero también puede o tener la enfermedad o no tenerla, así que hay $6$ estados posibles y sólo dos posibles colores. Encuentra la topología correspondiente. ¿Qué tal si la enfermedad produce siempre flores moradas? ¿Flores blancas?</li>
+<li>Considera de nuevo el ejemplo de los genes del color de pelo y de ser calvo. ¿Cuál sería la topología si ser calvo es recesivo en vez de dominante?</li>
+</ol>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

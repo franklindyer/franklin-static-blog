@@ -1,0 +1,249 @@
+<html>
+<head>
+    <title>Solving Functional Equations</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Solving Functional Equations</h2>
+
+<p><em>2017 May 31</em></p>
+
+<blockquote>
+<p>Find non-constant functions $f$, $g$, $h$, $j$, $k$, and $m$ that have the following properties:
+<script type="math/tex; mode=display">f(x)+f(2x)=2x</script>
+<script type="math/tex; mode=display">g(2x)+2g(x)=0</script>
+<script type="math/tex; mode=display">h(x)-2h(\frac{2}{x})=\frac{1}{2x}</script>
+<script type="math/tex; mode=display">2j(x)+j(2x+1)=3x-5</script>
+<script type="math/tex; mode=display">k(3x)+7k(x)=x^2+4x-1</script>
+<script type="math/tex; mode=display">m(3x-1)-2m(2-x)=3x^2-x+10</script>
+</p>
+</blockquote>
+
+<p>An interesting topic to explore is the concept of a <em>functional equation</em> in which one solves for a function of a variable rather than for the variable itself. </p>
+
+<p>Before I go into the examples I must first clarify a technique that I will frequently use. If we have $(f \circ g)(x)$ set equal to some function $h(x)$, we can change $x \to g^{-1}(x)$ to get
+<script type="math/tex; mode=display">f(x)=(h \circ g^{-1})(x)</script>
+</p>
+
+<p>and the truth of the statement will still hold. I will refer to this as "making a substitution".</p>
+
+<p>An easy example is
+<script type="math/tex; mode=display">\frac{1}{2}f(x)+4=x</script>
+</p>
+
+<p>where we can easily solve for $f(x)$ to obtain $f(x)=2x-8$. However, the complications arise when expressions containing $x$ other than just $x$ itself occur within the parentheses of $f(x)$. For example, this is the case in the functional equation
+<script type="math/tex; mode=display">f(\ln x)+3=\sin x</script>
+</p>
+
+<p>However, this still is not very difficult because we can make a substitution to get
+<script type="math/tex; mode=display">f(x)=\sin(e^x)-3</script>
+</p>
+
+<p>Which is the solution. However, the trickiest ones occur when multiple instances of the function occur in the equation, each with different inputs, like in the equation
+<script type="math/tex; mode=display">f(x)+f(2x)=2x</script>
+</p>
+
+<p>This puzzle stumped me for a while, and when I realized how simple it was, I was very frustrated with myself. In these types of puzzles, a very helpful strategy can be to guess that the function is of a certain type. For example, in this problem, we might guess that $f$ is in the form
+<script type="math/tex; mode=display">f(x)=ax</script>
+</p>
+
+<p>where $a$ is a constant. We want to solve for $a$, and if we can find a solution for $a$ that is <em>independent of</em> $x$, then we have solved the problem. Let's set up the problem this way:
+<script type="math/tex; mode=display">ax+2ax=2x</script>
+</p>
+
+<p>If we divide both sides of the equation by $x$, then we have
+<script type="math/tex; mode=display">a+2a=2</script>
+<script type="math/tex; mode=display">3a=2</script>
+<script type="math/tex; mode=display">a=\frac{2}{3}</script>
+</p>
+
+<p>So
+<script type="math/tex; mode=display">f(x)=\frac{2}{3}x</script>
+</p>
+
+<p>The answer is so simple! In my original attempt, I got an answer of
+<script type="math/tex; mode=display">f(x)=\frac{2}{3}x+\frac{1}{3}\cos(\frac{\pi}{\ln 2}\ln x)</script>
+</p>
+
+<p>Which is indeed a solution, but is far more complicated than it need be. Here is another functional equation:
+<script type="math/tex; mode=display">g(2x)+2g(x)=0</script>
+</p>
+
+<p>we can rearrange this to get
+<script type="math/tex; mode=display">g(2x)=-2g(x)</script>
+</p>
+
+<p>Now we can employ another useful strategy. It can often be useful to define the function to be some value at some point, and then solve for all other values and use a recurrence relation to solve for the function. If we let $g(1)=1$, then we have
+<script type="math/tex; mode=display">g(2)=-2</script>
+<script type="math/tex; mode=display">g(4)=4</script>
+<script type="math/tex; mode=display">g(8)=-8</script>
+<script type="math/tex; mode=display">g(16)=16</script>
+</p>
+
+<p>We can quickly observe the pattern
+<script type="math/tex; mode=display">g(2^x)=(-2)^x</script>
+</p>
+
+<p>By substitution, we have
+<script type="math/tex; mode=display">g(x)=(-2)^{\log_2 x}</script>
+<script type="math/tex; mode=display">g(x)=2^{\log_2 x}*(-1)^{\log_2 x}</script>
+<script type="math/tex; mode=display">g(x)=x(-1)^{\log_2 x}</script>
+</p>
+
+<p>This is a little bit messy, since we have a negative base raised to a power that can sometimes be irrational. However, the real purpose of the $(-1)^{\log_2 y}$ is to yield a number of opposite sign after every power of $2$. Its fluctuation can be replicated by that of the sine function. This fluctuation occurs in the same way if we replace it with $\sin(\pi \log_2 x)$ or $\sin(\frac{\pi}{\ln 2}\ln x)$, since it will be $1$ at every even power of $2$ and $-1$ at every odd power of $2$. So we have
+<script type="math/tex; mode=display">g(x)=x\sin(\frac{\pi}{\ln 2}\ln x)</script>
+</p>
+
+<p>Luckily enough, the property holds for all values of $x$, and can be verified algebraically. </p>
+
+<p>That problem reveals another handy technique. Often, in functional equation problems, a negative number to an irrational exponent may come up, and in these cases, the trigonometric functions can come in handy, since they demonstrate similar fluctuating behavior.</p>
+
+<p>Here is another example which can be solved with another very useful method:
+<script type="math/tex; mode=display">h(x)-2h(\frac{2}{x})=\frac{1}{2x}</script>
+</p>
+
+<p>If we start with this equation and make the substitution $x \to \frac{2}{x}$, we get
+<script type="math/tex; mode=display">h(\frac{2}{x})-2h(x)=\frac{1}{4}x</script>
+</p>
+
+<p>This can be solved like a system of equations. Let us multiply the first equation by $2$ to get
+<script type="math/tex; mode=display">2h(x)-4h(\frac{2}{x})=\frac{1}{x}</script>
+</p>
+
+<p>and then add our two simultaneous equations to get
+<script type="math/tex; mode=display">h(\frac{2}{x})-2h(x)+2h(x)-4h(\frac{2}{x})=\frac{1}{4}x+\frac{1}{x}</script>
+<script type="math/tex; mode=display">-3h(\frac{2}{x})=\frac{1}{4}x+\frac{1}{x}</script>
+</p>
+
+<p>we substitute $x \to \frac{2}{x}$ again to get
+<script type="math/tex; mode=display">-3h(x)=\frac{1}{2x}+\frac{1}{2}x</script>
+</p>
+
+<p>and now we can solve for $h(x)$:
+<script type="math/tex; mode=display">h(x)=-\frac{1}{6}(x+\frac{1}{x})</script>
+</p>
+
+<p>In fact, if we have a functional equation of the form
+<script type="math/tex; mode=display">af(x)+b(f\circ g)(x)=h(x)</script>
+</p>
+
+<p>where $g$ is <em>n-involutory</em>, it can be solved in a similar way.</p>
+
+<p>Here is a very interesting method that can be applied to solving polynomial functional equations. First we start with the very simplest case... a polynomial of degree one. Suppose we have
+<script type="math/tex; mode=display">2j(x)+j(2x+1)=3x-5</script>
+</p>
+
+<p>This can be easily solved if we assume that $j(x)$ takes the form $ax+b$, where $a, b$ are constants. If we assume this, we can substitute and solve for $a$ and $b$:
+<script type="math/tex; mode=display">2(ax+b)+a(2x+1)+b=3x-5</script>
+<script type="math/tex; mode=display">2ax+2b+2ax+a+b=3x-5</script>
+<script type="math/tex; mode=display">4ax+a+3b=3x-5</script>
+So we have that
+<script type="math/tex; mode=display">4a=3</script>
+<script type="math/tex; mode=display">a+3b=-5</script>
+By solving the system, we get $a=\frac{3}{4}$ and $b=-\frac{23}{12}$, so
+<script type="math/tex; mode=display">j(x)=\frac{3}{4}x-\frac{23}{12}</script>
+</p>
+
+<p>Okay, that one was easy. How about this:
+<script type="math/tex; mode=display">k(3x)+7k(x)=x^2+4x-1</script>
+</p>
+
+<p>That's a second degree polynomial. We could assume that $k(x)$ takes the form $ax^2+bx+c$, but... that would take a <em>really</em> long time to work out. There is an easier way to do this, and it involves another trick. Watch what happens when we differentiate both sides:
+<script type="math/tex; mode=display">3k'(3x)+7k'(x)=2x+4</script>
+</p>
+
+<p>Look at that! Now all we have to do is solve for $k'(x)$, which will be linear. We can say that $k'(x)=ax+b$ for some constants $a$ and $b$, so we have
+<script type="math/tex; mode=display">3(3ax+b)+7(ax+b)=2x+4</script>
+<script type="math/tex; mode=display">9ax+3b+7ax+7b=2x+4</script>
+<script type="math/tex; mode=display">16ax+10b=2x+4</script>
+</p>
+
+<p>and we have $a=\frac{1}{8}$ and $b=\frac{2}{5}$. Then
+<script type="math/tex; mode=display">k'(x)=\frac{1}{8}x+\frac{2}{5}</script>
+</p>
+
+<p>and, by antidifferentiation, we get
+<script type="math/tex; mode=display">k(x)=\frac{1}{16}x^2+\frac{2}{5}x+c</script>
+</p>
+
+<p>where $c$ is some constant. We can now solve for $c$ using our original functional equation. We have
+<script type="math/tex; mode=display">k(3x)+7k(x)=x^2+4x-1</script>
+</p>
+
+<p>which means that
+<script type="math/tex; mode=display">c+7c=-1</script>
+<script type="math/tex; mode=display">8c=-1</script>
+<script type="math/tex; mode=display">c=-\frac{1}{8}</script>
+</p>
+
+<p>and so our final answer will be
+<script type="math/tex; mode=display">k(x)=\frac{1}{16}x^2+\frac{2}{5}x-\frac{1}{8}</script>
+</p>
+
+<p>Here is a more difficult example.
+<script type="math/tex; mode=display">m(3x-1)-2m(2-x)=3x^2-x+10</script>
+</p>
+
+<p>By differentiating, we get
+<script type="math/tex; mode=display">3m'(3x-1)+2m'(2-x)=6x-1</script>
+</p>
+
+<p>Again, let $m(x)=ax+b$, and so
+<script type="math/tex; mode=display">3a(3x-1)+3b+2a(2-x)+2b=6x-1</script>
+<script type="math/tex; mode=display">9ax-3a+3b+4a-2ax+2b=6x-1</script>
+<script type="math/tex; mode=display">7ax+a+5b=6x-1</script>
+</p>
+
+<p>Which gives us $a=\frac{6}{7}$ and $b=-\frac{5}{7}$. Then we have
+<script type="math/tex; mode=display">m'(x)=\frac{6}{7}x-\frac{5}{7}</script>
+</p>
+
+<p>and
+<script type="math/tex; mode=display">m(x)=\frac{3}{7}x^2-\frac{5}{7}x+c</script>
+</p>
+
+<p>From our original functional equation, we can see that
+$c-2c=10$
+$c=-10$</p>
+
+<p>and so we have, as a final answer,
+<script type="math/tex; mode=display">m(x)=\frac{3}{7}x^2-\frac{5}{7}x-10</script>
+</p>
+
+<p>This can be applied to any functional equation in which the answer is a polynomial, regardless of the degree of the polynomial. Perhaps it could even be applied when some of the terms have fractional or negative exponents.</p>
+
+<p>Okay, that's about all I've got on functional equations for now. There are also some functional equation problems asking for all functions displaying a certain property regarding $f(x+y)$ or $f(xy)$, but I'll save those for a later post. Another topic that I may explore later are functional <em>systems</em> of equations in which one must solve for two or more functions, given two equations.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

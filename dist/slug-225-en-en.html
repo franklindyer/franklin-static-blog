@@ -1,0 +1,337 @@
+<html>
+<head>
+    <title>Garbage collection by reference counting in a simple Lisp-like language</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Garbage collection by reference counting in a simple Lisp-like language</h2>
+
+<p>I first learned to program in Python and Java, and when I started programming in C for the first time and had to deal with manual memory management, it made me start to wonder about all of the bookkeeping that must have been happening behind the scenes in higher-level languages. Since then, I've been wanting to understand garbage collection on a deeper level. This is part of my long journey to deeply understand <a href="https://franklin.dyer.me/post/231">computer programming at a lower level</a>.</p>
+
+<p>In this post, I'll describe a recent project of mine in which I wrote a very basic programming language that is similar to Lisp/Scheme and uses <strong>reference counting</strong> for garbage collection. Mind you, this is not the kind of garbage collection algorithm that Java uses. Apparently <a href="https://en.wikipedia.org/wiki/Reference_counting#Python">Python <em>does</em> use reference counting</a>, but it also needs to detect reference cycles, which is a complexity that we won't have to deal with in our language since it doesn't allow mutation. In any case, this project has been one step in the direction of understanding garbage collection more generally.</p>
+
+<p>You can find my source code in <a href="https://github.com/franklindyer/pairadise">this GitHub repo</a>.</p>
+
+<h3>The Pairadise language <a id="toc-section-1" class="toc-section"></a></h3>
+
+<p>I was trying to think of a project that would give me some practical experience implementing reference counting, but I don't enjoy writing parsers. So I settled on a very simple Lisp-like language of my own invention whose only values are <code>NULL</code> and pairs of other values. The only built-ins for this language are:</p>
+
+<ul>
+<li><code>empty</code>, which evaluates to the null value.</li>
+<li><code>pair(expr1,expr2)</code> which evaluates to a pair whose left and right elements are defined by <code>expr1</code> and <code>expr2</code>, respectively.</li>
+<li><code>let(expr1, \x expr2[x])</code> which evaluates to the value obtained by substituting <code>expr1</code> for the free variable <code>x</code> in the expression <code>expr2[x]</code> with free variable <code>x</code>.</li>
+<li><code>cond(expr1, expr2, \x,y expr3[x,y])</code> which is basically a case-split on whether <code>expr1</code> is null or a pair. If <code>expr1</code> evaluates to null, it returns the result of evaluating <code>expr2</code>, but if it evaluates to a pair, it returns the result of substituting the left-side for <code>x</code> and the right-side for <code>y</code> in <code>expr3[x,y]</code>.</li>
+<li><code>fix(expr1, \x expr2[x])</code> implements fixed-point iteration, repeatedly substituting values for <code>x</code> in the expression <code>expr2[x]</code> with free variable <code>x</code> until arriving at a fixed point, starting with the initial value obtained by evaluating <code>expr1</code>.</li>
+<li><code>in</code> evaluates to a pair value read from standard input, with <code>(_,_)</code> used to represent pairs and <code>*</code> used to represent the null value.</li>
+</ul>
+
+<p>If you're familiar with the formal syntax for describing the statics and dynamics of a programming language (as in Harper's <em>Practical Foundations for Programming Languages</em>), you might find it easier to read than my informal descriptions. If not, you can just skip past the gobbledygook below. I'm only just beginning to learn about this formalism myself, so I might have gotten them wrong... but here is how I would describe the statics of this language:</p>
+
+<p>
+<script type="math/tex; mode=display">\dfrac{}{\Gamma \vdash \texttt{empty} : \texttt{PAIR}}</script>
+</p>
+
+<p>
+<script type="math/tex; mode=display">\dfrac{\Gamma\vdash e_1 : \texttt{PAIR} ~ ~ ~ \Gamma\vdash e_2:\texttt{PAIR}}{\Gamma \vdash \texttt{pair}(e_1,e_2) : \texttt{PAIR}}</script>
+</p>
+
+<p>
+<script type="math/tex; mode=display">\dfrac{\Gamma\vdash e_1 : \texttt{PAIR} ~ ~ ~ \Gamma,x:\texttt{PAIR}\vdash e_2:\texttt{PAIR}}{\Gamma \vdash \texttt{let}(e_1,x.e_2) : \texttt{PAIR}}</script>
+</p>
+
+<p>
+<script type="math/tex; mode=display">\dfrac{\Gamma\vdash e_1 : \texttt{PAIR} ~ ~ ~ \Gamma\vdash e_2 : \texttt{PAIR} ~ ~ ~ \Gamma,x:\texttt{PAIR},y:\texttt{PAIR}\vdash e_3:\texttt{PAIR}}{\Gamma \vdash \texttt{cond}(e_1,e_2,x.y.e_3) : \texttt{PAIR}}</script>
+</p>
+
+<p>
+<script type="math/tex; mode=display">\dfrac{\Gamma\vdash e_1 : \texttt{PAIR} ~ ~ ~ \Gamma\vdash e_2:\texttt{PAIR}}{\Gamma \vdash \texttt{fix}(e_1,e_2) : \texttt{PAIR}}</script>
+</p>
+
+<p>
+<script type="math/tex; mode=display">\dfrac{}{\Gamma \vdash \texttt{in} : \texttt{PAIR}}</script>
+</p>
+
+<p>And here is how I would describe the dynamics (except for the expression <code>in</code>, which I'm not sure how to describe since it is not referentially transparent, drawing its value from input):</p>
+
+<p>
+<script type="math/tex; mode=display">\dfrac{}{\texttt{PAIR}(\ast) ~ \text{val}}</script>
+</p>
+
+<p>
+<script type="math/tex; mode=display">\dfrac{\texttt{PAIR}(p_1) ~ \text{val} ~ ~ ~ \texttt{PAIR}(p_2) ~ \text{val}}{\texttt{PAIR}((p_1,p_2)) ~ \text{val}}</script>
+</p>
+
+<p>
+<script type="math/tex; mode=display">\dfrac{(p_1,p_2) = p ~ \text{pair}}{\texttt{pair}(\texttt{PAIR}(p_1), \texttt{PAIR}(p_2)) \mapsto \texttt{PAIR}(p)}</script>
+</p>
+
+<p>
+<script type="math/tex; mode=display">\dfrac{e_1\mapsto e_1'}{\texttt{pair}(e_1,e_2)\mapsto \texttt{pair}(e_1',e_2)}</script>
+</p>
+
+<p>
+<script type="math/tex; mode=display">\dfrac{e_1 ~ \text{val} ~ ~ ~ e_2\mapsto e_2'}{\texttt{pair}(e_1,e_2)\mapsto \texttt{pair}(e_1,e_2')}</script>
+</p>
+
+<p>
+<script type="math/tex; mode=display">\dfrac{e_1\mapsto e_1'}{\texttt{let}(e_1,x.e_2)\mapsto \texttt{let}(e_1',x.e_2)}</script>
+</p>
+
+<p>
+<script type="math/tex; mode=display">\dfrac{e_1 ~ \text{val}}{\texttt{let}(e_1,x.e_2)\mapsto [e_1/x]e_2}</script>
+</p>
+
+<p>
+<script type="math/tex; mode=display">\dfrac{e_1 \mapsto \texttt{PAIR}(*)}{\texttt{cond}(e_1,e_2,x.y.e_3)\mapsto e_2}</script>
+</p>
+
+<p>
+<script type="math/tex; mode=display">\dfrac{e_1 \mapsto \texttt{PAIR}(p) ~ ~ ~ (p_1,p_2) = p ~ \text{pair}}{\texttt{cond}(e_1,e_2,x.y.e_3)\mapsto [\texttt{PAIR}(p_1)/x][\texttt{PAIR}(p_2)/y]e_3}</script>
+</p>
+
+<p>
+<script type="math/tex; mode=display">\dfrac{e_1 \mapsto e_1'}{\texttt{fix}(e_1,x.e_2)\mapsto \texttt{fix}(e_1',x.e_2)}</script>
+</p>
+
+<p>
+<script type="math/tex; mode=display">\dfrac{e_1 ~ \text{val} ~ ~ ~ [e_1/x]e_2 \mapsto e_1}{\texttt{fix}(e_1,x.e_2)\mapsto e_1}</script>
+</p>
+
+<p>
+<script type="math/tex; mode=display">\dfrac{e_1 ~ \text{val}}{\texttt{fix}(e_1,x.e_2)\mapsto \texttt{fix}([e_1/x]e_2,x.e_2)}</script>
+</p>
+
+<p>If anyone reading this knows type systems better than I do, please correct my attempt. :-)</p>
+
+<p>Anyways. I don't like coming up with funny names for things, but I'm giving this language a name because it's too awkward to keep saying "my toy programming language". For the sake of this blog post I'm (sarcastically) dubbing the language <em>Pairadise</em> because all of its values are based on pairs, and programming in it absolutely <em>does not</em> make you feel like you are in paradise.</p>
+
+<p>To give you an example of what a program looks like in Pairadise (ha), here's a program that takes a number as input and doubles it. In this language, I represent numbers as pair trees that are "heavy on the right", with zero being <code>*</code>, one being <code>(*,*)</code>, two being <code>(*,(*,*))</code>, three being <code>(*,(*,(*,*)))</code> and so on.</p>
+
+<div class="code"><pre><code>
+let(
+    in,
+    \x0 cond(
+        fix(
+            pair(x0,empty),
+            \x1 cond(
+                x1,
+                empty,
+                \x2,x3 cond(
+                    x2,
+                    pair(empty,x3),
+                    \x4,x5 pair(x5,pair(empty,pair(empty,x3)))
+                )
+            )
+        ),
+        empty,
+        \x1,x2 x2
+    )
+)
+</code></pre></div>
+
+<p>Yeah, it's ugly, I know. But I like the challenge of constructing programs out of the simplest building blocks possible, which has the added benefit of requiring me to do the least amount of tedious parsing possible! Here's another program, which computes the triangular numbers $1+2+\cdots + n$:</p>
+
+<div class="code"><pre><code>
+let(
+    in,
+    \x0 cond(
+        fix(
+            pair(x0,empty),
+            \x1 cond(
+                x1,
+                empty,
+                \x2,x3 cond(
+                    x2,
+                    x1,
+                    \x4,x5 pair(
+                        x5,
+                        cond(
+                            fix(
+                                pair(x2,x3),
+                                \x6 cond(
+                                    x6,
+                                    empty,
+                                    \x7,x8 cond(
+                                        x7,
+                                        x6,
+                                        \x9,x10 pair(x10,pair(empty,x8))
+                                    )
+                                )
+                            ),
+                            empty,
+                            \x6,x7 x7
+                        )
+                    )
+                )
+            )
+        ),
+        empty,
+        \x1,x2 x2
+    )
+)
+
+</code></pre></div>
+
+<p>Yowza! If you're looking for a challenge and are willing to indulge this bare-bones language, see if you can write a Pairadise program that takes an arbitrary value as input and <em>mirrors</em> it. For example, <code>(*,(*,*))</code> should become <code>((*,*),*)</code>, and <code>(*,((*,*),*))</code> should become <code>((*,(*,*)),*)</code>. (My solution has 405 characters excluding whitespace.)</p>
+
+<h3>Algorithm for reference counting <a id="toc-section-2" class="toc-section"></a></h3>
+
+<p>The basic idea behind reference counting is as follows: when a structure is allocated in memory, up until the time when it is freed, a running count is maintained of the number of pointers to it that exist at any given time. When it is created, its reference count equals 1. From that point onwards, no pointer to that structure may be copied without first incrementing its reference count, and no pointer to that structure may be erased without first decrementing its reference count. Once the reference count reaches zero, the structure is deallocated - and this can occur without risk of leaving behind a dangling pointer, because there should be no pointers left to dereference once the reference count becomes zero.</p>
+
+<p>Of course, we cannot really free a piece of memory <em>after</em> the reference count becomes zero, because we need a pointer to a structure in order to dereference it. Instead, we free the memory in the moment when its last remaining pointer would be erased.</p>
+
+<p>In Pairadise, the only values are pairs and the empty value. Each pair may contain pointers to up to two other pairs, meaning that when a pair is finally freed due to its reference count reaching zero, up to two more pointers will be erased. This could result in yet more pairs being freed, which could result in even more pointers being erased and more pairs being freed, and so on.</p>
+
+<p>Here's an example. If we had a value corresponding to the nested pair expression <code>((*,*),((*,*),(*,*)))</code>, the memory allocated for it might look like this:</p>
+
+<p><center>
+<img src="/img/2024-09-30-Fig1.png" alt="Fig 1" />
+</center></p>
+
+<p>If the pointer to this value were suddenly deleted, this would trigger a recursive deletion of every structure in this tree. These pair structures would be freed in the following sequence:</p>
+
+<p><center>
+<img src="/img/2024-09-30-Fig2.png" alt="Fig 2" />
+</center></p>
+
+<p><center>
+<img src="/img/2024-09-30-Fig3.png" alt="Fig 3" />
+</center></p>
+
+<p>In this example, the pairs involved in the structure and their respective pointers comprise a tree. However, I allow memory to be <em>shared</em> between values in my implementation, meaning that values might not always be trees - they could be arbitrary <a href="https://en.wikipedia.org/wiki/Directed_acyclic_graph">directed acyclic graphs</a>. For example, in the value <code>(((*,*),(*,*)),((*,*),(*,*)))</code>, all of the pairs could be stored disjointly in memory:</p>
+
+<p><center>
+<img src="/img/2024-09-30-Fig4.png" alt="Fig 4" />
+</center></p>
+
+<p>or the subvalues of shape <code>((*,*),(*,*))</code> could overlap in memory:</p>
+
+<p><center>
+<img src="/img/2024-09-30-Fig5.png" alt="Fig 5" />
+</center></p>
+
+<p>or all of the subvalues of shape <code>(*,*)</code> could overlap in memory instead:</p>
+
+<p><center>
+<img src="/img/2024-09-30-Fig6.png" alt="Fig 6" />
+</center></p>
+
+<p>And so on. </p>
+
+<h3>Implementation of reference counting <a id="toc-section-3" class="toc-section"></a></h3>
+
+<p>The reference counting algorithm is straightforward enough to describe, but while implementing it in C, it's easy to lose track of pointers. I had to debug several memory leaks and double-free bugs.</p>
+
+<p>In the end, I found that the best way of keeping track was to write just a few helper functions that manipulate pair pointers while maintaining the correct reference counts, and then use them almost exclusively for handling pair pointers. I used the following three functions:</p>
+
+<div class="code"><pre><code>
+void delete_pair_pointer(pair_val** pointer);
+void assign_pair_pointer(pair_val** pointer, pair_val* pointee)
+pair_val* new_pair_val()
+</code></pre></div>
+
+<p>The <code>delete_pair_pointer</code> function is used to "delete" a pair pointer passed by reference by replacing its value with <code>NULL</code> and updating the refcount of the corresponding pair, freeing it and recursing when appropriate. The <code>assign_pair_pointer</code> is used to <em>copy</em> a pair pointer to another pair pointer, incrementing the refcount. Finally, <code>new_pair_val</code> is the only function that I allowed myself to use for creating brand new pair pointers, and is the only place where <code>malloc</code> is called to allocate pair values. It initializes the reference count the new pair value to 1, corresponding to the single pointer returned by <code>new_pair_val</code>.</p>
+
+<p>To give you an example, under my self-imposed restriction to use these functions exclusively, the following code would <em>not be allowed</em>:</p>
+
+<div class="code"><pre><code>
+pair_val* pv1, pv2;
+pv1 = new_pair_val();
+pv2 = pv1;
+</code></pre></div>
+
+<p>because the assignment <code>pv2 = pv1</code> duplicates the pointer in <code>pv1</code> without updating the reference count accordingly. Instead, the following code should be used to accomplish the same result while maintaining the correct refcounts:</p>
+
+<div class="code"><pre><code>
+pair_val* pv1, pv2;
+pv1 = new_pair_val();
+assign_pair_pointer(&pv2, pv1)
+</code></pre></div>
+
+<p>There is a sneaky "gotcha" that makes it a little bit tricky to use these functions <em>exclusively</em> for creation and destruction of <code>pair_val</code> pointers: a <code>pair_val*</code> can be lost just by <em>going out of scope</em>. And if a non-null <code>pair_val*</code>goes out of scope, then it is lost without its refcount being decremented. For example, in this code:</p>
+
+<div class="code"><pre><code>
+if (condition) {
+    pair_val* pv = new_pair_val();
+    // Do some things with pv...
+}
+</code></pre></div>
+
+<p>at the end of the <code>if</code> block, <code>pv</code> goes out of scope, destroying the pointer it holds. This could result in a <code>pair_val</code> residing in memory somewhere with a refcount of $1$ but no pointers pointing to it, causing a memory leak, since this <code>pair_val</code> could never be freed. Instead, non-null <code>pair_val*</code> variables must be <em>deleted</em> using <code>delete_pair_pointer</code> before they go out of scope.</p>
+
+<div class="code"><pre><code>
+if (condition) {
+    pair_val* pv = new_pair_val();
+    // Do some things with pv...
+    delete_pair_pointer(&pv);
+    // Now pv is NULL when it goes out of scope
+}
+</code></pre></div>
+
+<p>The one exception is when a <code>pair_val*</code> variable goes out of scope in the body of a function <em>that returns its value</em>. The local variable holding the pointer goes out of scope when the function returns, but a <em>new</em> pointer is returned from the function, so when a <code>pair_val*</code> is returned from a function where it goes out of scope, there is a net zero gain/loss of pointers to its memory. For example, if we have a function that looks like this:</p>
+
+<div class="code"><pre><code>
+pair_val* f() {
+    pair_val* pv = new_pair_val();
+    // Do some stuff with pv...
+    return pv;
+}
+</code></pre></div>
+
+<p>and when <code>f()</code> is called, a pointer is lost when <code>pv</code> goes out of scope, but one is also gained from <code>pv</code> being returned. Note that this means it is <em>illegal</em> to call <code>f()</code> alone without assigning its value to some variable, because this would result in the return value of <code>f</code> being lost, and hence an incorrect refcount. Instead, whenever <code>f</code> is called, it must appear on the right-hand side of an assignment <code>somevar = f()</code>.</p>
+
+<p>I won't go through my code line-by-line, but you can see the most important bits of it <a href="https://github.com/franklindyer/pairadise/blob/main/refcount_eval.c">here</a>. While working on it, I couldn't help thinking of how nice it would be for all of these constraints to be enforced by the compiler, so that I wouldn't have to spend time debugging segfaults or memory leaks caused by careless violations of these rules. This makes me appreciate languages like Rust that use <a href="https://en.wikipedia.org/wiki/Substructural_type_system">linear type systems</a> to track ownership at compile-time.</p>
+
+<h3>Some pretty graphs of pair value lifetimes <a id="toc-section-4" class="toc-section"></a></h3>
+
+<p>Since every <code>malloc</code> of a <code>pair_val*</code> occurs in <code>new_pair_val</code>, and every <code>free</code> of a <code>pair_val*</code> occurs in <code>delete_pair_pointer</code>, it is very easy to have the interpreter log every allocation and deallocation. Just for shits and giggles, I've written a simple Python script to convert a log of these debug statements into a <a href="https://en.wikipedia.org/wiki/Gantt_chart">Gantt chart</a> that shows the lifetimes of each chunk of allocated memory, some of which are allocated and freed multiple times. For example, this is what the chart looks like when my natural-number doubling program is called on <code>(*,(*,(*,*)))</code>:</p>
+
+<p><center>
+<img src="/img/2024-09-30-Fig7.png" alt="Fig 7" />
+</center></p>
+
+<p>Here's what the malloc lifetimes look like when my triangular-number program is called on the input <code>(*,(*,(*,(*,*))))</code>:</p>
+
+<p><center>
+<img src="/img/2024-09-30-Fig8.png" alt="Fig 8" />
+</center></p>
+
+<p>And here's what the malloc lifetimes look like when my tree-reflecting program is called on the input <code>(*,(((*,*),(*,*)),*))</code>:</p>
+
+<p><center>
+<img src="/img/2024-09-30-Fig9.png" alt="Fig 9" />
+</center></p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<html>
+<head>
+    <title>Island Bomb Problem</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>The Island Bomb Problem</h2>
+
+<p><em>2016 Nov 20</em></p>
+
+<blockquote>
+<p>Suppose, in the middle of an ocean, there lies an island in the shape of an equilateral triangle with a side length of $10$ miles. A tiny village sits in the circumcenter of the island. The village is in the shape of a circle with a radius of $0.5$ miles. A plane carrying a bomb flies over the island and drops it at a random point on the island. The bomb destroys anything within $3.5$ miles of wherever it lands. What is the probability that part or all of the village is destroyed?</p>
+</blockquote>
+
+<p>Here is a diagram illustrating the problem:</p>
+
+<p><center><img src="/img/2016-11-20-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>Since the radius of the village is $0.5$ miles and the blast radius of the bomb is $3.5$ miles, if the bomb lands within $4$ miles of the center of the village, the villagge will be damaged, so we can update our diagram to look like this:</p>
+
+<p><center><img src="/img/2016-11-20-Fig2.png" alt="Fig 2" /></center></p>
+
+<p>The probability that it will damage the village is equal to the area of the overlap between the circle and the triangle (the places at which it could land on the island that would damage the village) divided by the area of the triangle (the area in which it might land). The area of the triangle is easily found by our regular polygon area formula:</p>
+
+<p>
+<script type="math/tex; mode=display">A=\frac{l^2n}{4tan(\frac{180}{n})}</script>
+<script type="math/tex; mode=display">A=\frac{(10)^2(3)}{4tan(\frac{180}{(3)})}</script>
+<script type="math/tex; mode=display">A=\frac{300}{4tan(60)}</script>
+<script type="math/tex; mode=display">A=\frac{300}{4\sqrt{3}}</script>
+<script type="math/tex; mode=display">A=25\sqrt{3}</script>
+</p>
+
+<p>Now comes the tricky part: finding the area of the overlap. By drawing line segments from the center of the circle to two of the points at which it intersects the triangle, we construct an isoscles triangle. The altitude length of this small isoscles triangle is equal to the apothem of the island, which is $\frac{5\sqrt{3}}{3}$. We can now draw the following diagram:</p>
+
+<p><center><img src="/img/2016-11-20-Fig3.png" alt="Fig 3" /></center></p>
+
+<p>The triangle $\triangle ACD$ is a right triangle with $\overline{AD}=\frac{5\sqrt{3}}{3}$ and $\overline{AC}=4$. By using the pythagorean theorem, we find that </p>
+
+<p>
+<script type="math/tex; mode=display">\overline{CD}=\sqrt{(4)^2-(\frac{5\sqrt{3}}{3})^2}=\sqrt{16-\frac{75}{9}}=\frac{\sqrt{69}}{3}</script>
+</p>
+
+<p>And by the formula for the area of a triangle, the area of one of the right triangles is </p>
+
+<p>
+<script type="math/tex; mode=display">A=\frac{1}{2}bh=\frac{1}{2}(\frac{\sqrt{69}}{3})(\frac{5\sqrt{3}}{3})</script>
+<script type="math/tex; mode=display">A=\frac{5\sqrt{23}}{6}</script>
+</p>
+
+<p>And the area of one of the isoscles triangles formed by two of the right triangle is </p>
+
+<p>
+<script type="math/tex; mode=display">A=\frac{5\sqrt{23}}{3}</script>
+</p>
+
+<p>There are three isoscles triangles that are formed this way, because the circle intersects the island triangle in six points, and they are all congruent, so the area of all three triangles together is</p>
+
+<p>
+<script type="math/tex; mode=display">A=5\sqrt{23}</script>
+</p>
+
+<p>Now the area that remains for use to find is the area of the three congruent sectors of the circle in between each of the pairs of isoscles triangles. In order to find their areas, we must find the angles of each of the sectors, and in order to do this, we must find the sum of the angles opposite the bases of each of the isocles triangles (i.e., $\angle BAC$). We can use triangle trigonometry to do this by noticing that</p>
+
+<p>
+<script type="math/tex; mode=display">\angle BAC=2\angle BAD</script>
+<script type="math/tex; mode=display">\angle BAC=2sin^{-1}(\frac{\frac{\sqrt{69}}{3}}{4})</script>
+<script type="math/tex; mode=display">\angle BAC=2sin^{-1}(\frac{\sqrt{69}}{12})</script>
+<script type="math/tex; mode=display">\angle BAC\approx 87.612^{\circ}</script>
+</p>
+
+<p>Now we can use the sector area formula to find the area of all three of the sectors:</p>
+
+<p>
+<script type="math/tex; mode=display">A=\pi r^2*\frac{\theta}{360^{\circ}}</script>
+<script type="math/tex; mode=display">A=\pi (4)^2*\frac{(360-3*87.612)^{\circ}}{360^{\circ}}</script>
+<script type="math/tex; mode=display">A=\pi 16*\frac{(97.164)^{\circ}}{360^{\circ}}</script>
+<script type="math/tex; mode=display">A\approx 13.567</script>
+</p>
+
+<p>Then the total shaded area is the area of the three sectors together plus the area of the
+three triangles together:</p>
+
+<p>
+<script type="math/tex; mode=display">A\approx 13.567+5\sqrt{23}</script>
+</p>
+
+<p>Then the spatial probability is</p>
+
+<p>
+<script type="math/tex; mode=display">P\approx \frac{13.567+5\sqrt{23}}{25\sqrt{3}}</script>
+<script type="math/tex; mode=display">P\approx 0.8671</script>
+</p>
+
+<p>So there is about an $86.71\%$ chance that the village will be damaged.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

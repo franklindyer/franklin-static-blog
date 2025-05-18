@@ -1,0 +1,110 @@
+<html>
+<head>
+    <title>Ein Shitpost über die Hochzahlen in Unicode</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Ein Shitpost über die Hochzahlen in Unicode</h2>
+
+<p>Ich setzte mich daran, ein Bisschen Code in C++ zu schreiben, um mit Polynomen zu rechnen. Zu meinem eigenen Nutzen wollte ich eine Funktion schreiben, die die als Koeffizientvektoren kodierte Polynomen in eineme Terminal schön abbilden könne. Natürlich hatte ich die Absicht, die speziale Unicode-Zeichen <code>⁰¹²³⁴⁵⁶⁷⁸⁹</code> dazu zu benützen, weil <code>x⁵</code> sehr schöner als <code>x^5</code> aussieht. Anfänglich entwickelte ich eine Funktion, die jede Ziffer von 0 bis 9 in sein hochgestelltes Gegenstück von Unicode beziehungsweise übersetzen könnte.</p>
+
+<div class="code"><code><pre>
+char digit_superscript(int d) {
+   // some stuff here...
+}
+</pre></code></div>
+
+<p>Aber das klappt nicht. Jedes mit UTF8 codierte Unicode-Zeichen kann aus bis vier Bytes bestehen. Ein <code>char</code> kann nur ein einziges Byte enthalten und deshalb musste ich stattdessen ein <code>string</code> zurückgeben.</p>
+
+<div class="code"><code><pre>
+string digit_superscript(int d) {
+   // some stuff here...
+}
+</pre></code></div>
+
+<p>Am einfachsten (und wahrscheinlich am schnellsten) könnte man zehn hartkodierte Fälle auflisten und das angemessene Unicode-Zeichen in jedem Fall zurückgeben. Solcher Code wäre doch sehr unangenehm und repetitiv und es ist mir egal, wie schell meine Polynomen gedruckt werden. Mir fiel eine alte Methode ein, die mir gute Dienste bei der Bearbeitung von ASCII-Zeichen geleistet hat: um den n-te Buchstabe vom Alphabet zu holen, kann man einfach $n$ mit dem Zeichen <code>'a'</code> versetzen, weil die Buchstaben <code>a..z</code> konsekutiv sind. Vielleicht könnte man die Hochzahl $d$ von einem mit $d$ versetzten Zeichen <code>⁰</code> erreichen.</p>
+
+<p>Dem Unicode-Zeichen <code>⁰</code> entspricht das Codepoint <code>U+2070</code>, das in UTF8 mit den Bytes <code>e2 81 b0</code> kodiert wird. Ich probierte es aus:</p>
+
+<div class="code"><code><pre>
+string digit_superscript(int d) {
+   string num = "\xe2\x81\xb0";
+   num.at(2) += d;
+   return num;
+}
+</pre></code></div>
+
+<p>Dann versuchte ich, die Ziffer ab null bis neun abzubilden, um diese Funktion zu prüfen:</p>
+
+<div class="code"><code><pre>
+int main() {
+   for (int i = 0; i < 10; i++)
+      cout << digit_superscript(i);
+   cout << "\n";
+}
+</pre></code></div>
+
+<p>Die Ausgabe: <code>⁰ⁱ⁲⁳⁴⁵⁶⁷⁸⁹</code>. Verdammt nochmal!</p>
+
+<p>So ist es: die Unicode-Hochzahlen sind gar nicht konsekutiv. Das hochgestellte Nullzeichen hat das Codepoint <code>U+2070</code> aber dem Codepoint <code>U+2071</code> entspricht das hochstellte "i"-Zeichen <code>ⁱ</code>. Damit nicht genug, die Codepoints <code>U+2072</code> und <code>U+2073</code> entsprechen gar keinen Zeichen und sie sind "für spätere Nutzung reserviert". Glücklicherweise bewohnen die Hochzahlen <code>⁴⁵⁶⁷⁸⁹</code> die konsekutive Codepoints von <code>U+2074</code> bis <code>U+2079</code>.</p>
+
+<p>Was ist denn mit <code>¹²³</code> los? <a href="https://en.wikipedia.org/wiki/Unicode_subscripts_and_superscripts#Superscripts_and_subscripts_block">Laut Wikipedia</a> sind sie von der Codierung ISO-8859-1, die eine einbytige ASCII erweiternde Codierung mit nur diesen drei Hochzahlen und keinen von den anderen ist, übergenommen. Um diese Kodierung zu beachten hat Unicode die ISO-8859-1-Zeichen ihre beziehungsweise Codepoints in seinem Block Latin-1 behalten gelassen, aber diese Entscheidung hat eine peinliche Folge: die Hochzahlen <code>¹²³</code> sind ungefähr 8000 Codepoints von ihren Geschwistern getrennt. Mindestens hat <code>⁰</code> den Sonderling <code>ⁱ</code> als Gesellschaft. Sie sind irgendwie verwandt, nicht wahr? Weil sie beide so hochgeschriebene...  Dinge sind?</p>
+
+<p>Es kommt noch dicker: innerhalb ISO-8859-1 sind <code>¹²³</code> auch nicht konsekutiv. Die Zeichen <code>²³</code> sind <code>U+00B2</code> und <code>U+00B3</code> aber <code>¹</code> ist <code>U+00B9</code>. Na, ausgezeichnet.</p>
+
+<p><center><img src="/img/2024-11-10-Fig1.jpeg" alt="Fig1" /></center></p>
+
+<p>Zurück zum Programmieren: Für die Ziffern <code>⁰⁴⁵⁶⁷⁸⁹</code> benutzte ich die Versetzens-Technik aber für die Ziffern <code>¹²³</code> waren abgesonderte Spezialfälle nötig. </p>
+
+<div class="code"><code><pre>
+string digit_superscript(int d) {
+   switch (d) {
+      case 1:
+         return "\u00b9";
+      case 2:
+         return "\u00b2";
+      case 3:
+         return "\u00b3";
+      default:
+         string num = "\xe2\x81\xb0";
+         num.at(2) += d;
+         return num;
+   }
+}
+</pre></code></div>
+
+<p>Wie <em>schrecklich</em>...</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

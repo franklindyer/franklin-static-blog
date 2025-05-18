@@ -1,0 +1,357 @@
+<html>
+<head>
+    <title>Recursive Generative Art with Pycairo</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h3>Iterative Generative Art with Pycairo</h3>
+
+<p>Lately I've been playing around with Pycairo, a neat package for Python that is great for creating aesthetically pleasing geometric art. In particular, we can define loops and recursive functions that use Pycairo's drawing capabilities to create deeply nested images that resemble fractals. In this post, I'll share some pieces of generative art that I've created using this technique, the code used to create them, and a few math problems related to the randomnness and nested structure of these images. I'm <em>not</em> going to talk about the basics of Pycairo, but even so, this post should be accessible to anyone who is familiar with Python but not Pycairo. I personally didn't start learning Pycairo by taking a tutorial, but rather by looking at examples of other people's code.</p>
+
+<h4>Repeated Polygon Substitution <a id="toc-section-1" class="toc-section"></a></h4>
+
+<p>Fractals are commonly created by starting with a simple geometric object and repeatedly applying some simple transformation to the object. See, for instance, the <a href="https://en.wikipedia.org/wiki/Koch_snowflake">Koch Snowflake</a> or the <a href="https://en.wikipedia.org/wiki/Cantor_set">Cantor Set</a>. The former can be created by repeatedly adjoining smaller and smaller triangles to the sides of an increasingly complex polygon, and the latter is formed by repeatedly deleting the middle thirds of line segments.</p>
+
+<p>Now I'd like to approximate a fractal that uses a rhombus (with angles of $60^\circ$ and $120^\circ$) as its "starting point" and repeatedly applies the following transformation:</p>
+
+<p><center><img src="/img/2020-08-16-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>After the image on the left is transformed into the image on the right, each rhombus in the image on the right would be transformed in the same way (accounting for rotation), resulting in the following "second generation" image:</p>
+
+<p><center><img src="/img/2020-08-16-Fig2.png" alt="Fig 2" /></center></p>
+
+<p>In order to generate image like this, the first thing we need to do is create a function that draws rhombi. Mathematically, we can define the shape and position of a rhombus using four parameters that we will pass to our rhombus-drawing function:</p>
+
+<ul>
+<li>The coordinates <code>pos = (x0, y0)</code> of one vertex of the rhombus, which we will call the "terminal vertex".  </li>
+<li>The side length <code>length</code> of the rhombus (all sides of a rhombus have equal length).  </li>
+<li>The angular "tilt" <code>tilt</code> of the rhombus. More specifically, the angle that its "terminal side" makes with the horizontal.  </li>
+<li>The angular width <code>ang_width</code> of the rhombus, or the size of the angle at the terminal vertex.  </li>
+</ul>
+
+<p><center><img src="/img/2020-08-16-Fig3.png" alt="Fig 3" /></center></p>
+
+<p>If we want our image to look pretty, we also need to specify what <em>color</em> we want our rhombus to be, so this should be a fifth argument to our rhombus-drawing function. Without further adieu, here's our rhombus-drawing function:</p>
+
+<p><code><pre></p>
+
+<p>def draw_rhombus(ctx, pos, length, tilt, ang_width, color=[0, 0, 0]):
+    x0, y0 = pos
+    x1, y1 = x0 + np.cos(tilt) * length, y0 + np.sin(tilt) * length
+    x2, y2 = x1 + np.cos(tilt + ang_width) * length, y1 + np.sin(tilt + ang_width) * length
+    x3, y3 = x0 + np.cos(tilt + ang_width) * length, y0 + np.sin(tilt + ang_width) * length
+    ctx.move_to(x0, y0)
+    ctx.line_to(x1, y1)
+    ctx.line_to(x2, y2)
+    ctx.line_to(x3, y3)
+    ctx.line_to(x0, y0)
+    ctx.set_source_rgba(*color)
+    ctx.fill()</p>
+
+<p></pre></code></p>
+
+<p>The variable pairs <code>x0, y0</code> through <code>x3, y3</code> refer to the coordinates of the vertices of the rhombus, with the first pair being provided as an argument to the function, and the other three being calculated using elementary trig from the angles and side length passed as arguments. You might have noticed that this function has an extra argument called <code>ctx</code>. That's the Cairo Context object, which contains methods like <code>line_to</code>, <code>set_source_rgba</code>, and <code>fill</code> that actually allow us to create images. This will be defined later, just before we actually execute any of our fractal-drawing functions.</p>
+
+<p>Next, we need a function that accepts a rhombus as its argument and returns three rhombi with which it is to be replaced. This time, instead of giving the function distinct arguments for each defining characteristic of the rhombus, we'll represent a rhombus as a <em>list</em> of these parameters, which will be passed to the function as a single argument. More explicitly, each rhombus will be represented by a list of the form <code>[pos, length, tilt, ang_width]</code>. Here's the function:</p>
+
+<p><code><pre></p>
+
+<p>def replace_rhombus(rhomb):
+    pos, length, theta, phi = rhomb
+    x0, y0 = pos
+    x1, y1 = x0 + np.cos(theta) * length, y0 + np.sin(theta) * length
+    x3, y3 = x0 + np.cos(theta + phi) * length, y0 + np.sin(theta + phi) * length
+    rhomb1 = [pos, length / np.sqrt(3), theta + phi/2, phi]
+    rhomb2 = [(x3, y3), length / np.sqrt(3), theta - 3*phi/2, phi]
+    rhomb3 = [(x1, y1), length / np.sqrt(3), theta + phi/2, phi]
+    return([rhomb1, rhomb2, rhomb3])</p>
+
+<p></pre></code></p>
+
+<p>This function is pretty straightforward, and the bulk of its complexity consists of trig calculations. Let's move on to the third and final function.</p>
+
+<p>The last function will generate an array of rhombi that starts out with only one rhombus but grows longer and longer as each rhombus in the array is replaced by three smaller rhombi using the <code>replace_rhombus</code> function. Finally, after repeating this process a specified number of times, it will draw all of the rhombi in the array. Let's take a look:</p>
+
+<p><code><pre></p>
+
+<p>def generate_fractal(ctx, num_iter):
+    rhombi = [[(275, 100), 700, np.pi/6, np.pi/3]]
+    for i in range(0, num_iter):
+        new_rhombi = []
+        for x in rhombi: new_rhombi += replace_rhombus(x)
+        rhombi = new_rhombi
+    counter = 0
+    for r in rhombi:
+        counter += 1
+        draw_rhombus(ctx, *r, color = COLORS[counter % 2])</p>
+
+<p></pre></code></p>
+
+<p>In the first line of the function, an array containing our initial rhombus is created. Then a loop is executed that use the <code>replace_rhombus</code> function to replace the previous array of rhombi with a new array in which each old rhombus is replaced by its three "daughter" rhombi. This is carried out <code>num_iter</code> times, and then <code>draw_rhombus</code> is used to draw each rhombus in the array (I've also set it up to alternate between colors while drawing rhombi in the array, just for aesthetic effect). <code>COLORS</code> is an array of RGB colors establishing a color scheme that I've defined at the beginning of the file. As the array of rhombi is looped through, <code>counter</code> is incremented and the color used for each rhombus is determined by <code>counters % 2</code>, which alternates between two values.</p>
+
+<p>Now, to finish up, we need to define the <code>main</code> function and call it to execute the program.</p>
+
+<p><code><pre></p>
+
+<p>def main():
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 1200, 1200)
+    ctx = cairo.Context(surface)
+    ctx.set_source_rgb(1, 1, 1)
+    ctx.paint()
+    generate_fractal(ctx, NUM_ITER)
+    surface.write_to_png("gallery/rhomb_fractal_"+str(NUM_ITER)+".png")</p>
+
+<p>if <strong>name</strong> == "<strong>main</strong>":
+    main()</p>
+
+<p></pre></code></p>
+
+<p>This function defines the Cairo ImageSurface object, the Context <code>ctx</code> that is passed into all of the functions we call, calls the <code>generate_fractal</code> function, and saves the image to a PNG file. Like <code>COLORS</code>, <code>NUM_ITER</code> is another variable defined elsewhere specifying the "depth" (number of iterations) of the image.</p>
+
+<p>Now that we're finished, let's generate some pretty pictures! You've already seen what the first and second generations look like. Here are generations 3 through 8:</p>
+
+<p><center><img src="/img/2020-08-16-Fig4.png" alt="Fig 4" /></center>
+<center><img src="/img/2020-08-16-Fig5.png" alt="Fig 5" /></center>
+<center><img src="/img/2020-08-16-Fig6.png" alt="Fig 6" /></center>
+<center><img src="/img/2020-08-16-Fig7.png" alt="Fig 7" /></center>
+<center><img src="/img/2020-08-16-Fig8.png" alt="Fig 8" /></center>
+<center><img src="/img/2020-08-16-Fig9.png" alt="Fig 9" /></center></p>
+
+<p>We can also mess around with the color scheme or increase the number of colors used for the rhombi. Here are 3- and 4-color versions of the sixth-generation figure, which I created by altering the color scheme <code>COLORS</code> and replacing <code>COLORS[counter % 2]</code> with <code>COLORS[counter % 3]</code> and <code>COLORS[counter % 4]</code>, respectively.</p>
+
+<p><center><img src="/img/2020-08-16-Fig10.png" alt="Fig 10" /></center>
+<center><img src="/img/2020-08-16-Fig11.png" alt="Fig 11" /></center></p>
+
+<p>Finally, here are a couple of mathematical questions about the strange object we've just created:</p>
+
+<ul>
+<li>If the original "zeroth-generation" rhombus has unit area, what is the area of the figure created after $n$ generations? (The answer is simpler than it might seem.)  </li>
+<li>If the original rhombus has unit area, what is the <em>perimiter</em> of the figure created after $n$ generations? (This one is trickier.)  </li>
+<li>Why does the 3-colored tiling look "more regular" than the 2-colored and 4-colored tilings? Why don't any two rhombi of the same color touch each other in the 3-colored tiling?  </li>
+</ul>
+
+<h4>Image Shuffling <a id="toc-section-2" class="toc-section"></a></h4>
+
+<p>So far we haven't made use of recursion yet, but we will do so in the following example. As before, we will begin with an ordinary, unaltered figure and repeatedly apply a transformation to it. This time, our starting image will be our old friend the iguana, <a href="https://franklin.dyer.me/post/147">whom we've mutilated once before in an older blog post</a>. Here's the handsome fellow in his natural state:</p>
+
+<p><center><img src="/img/2020-08-16-Fig12.png" alt="Fig 12" /></center></p>
+
+<p>A square image like this can be "shuffled" by cutting it up into quadrants and rearranging the quadrants, say, like this:</p>
+
+<p><center><img src="/img/2020-08-16-Fig13.png" alt="Fig 13" /></center></p>
+
+<p>Then we can repeat this process by dissecting each of the four quadrants into quadrants themselves and rearranging these quadrants in the same way, and then dissecting and rearranging those quadrants, and so on. If we repeat this transformation one more time on the quadrants of this image, we get the following "second-generation" picture:</p>
+
+<p><center><img src="/img/2020-08-16-Fig14.png" alt="Fig 14" /></center></p>
+
+<p>Something very interesting and unexpected happens when we repeat this process many times, but before giving it away, let's take a look at the code. Here's the first key function used in my code:</p>
+
+<p><code><pre></p>
+
+<p>def draw_square_img(ctx, pos, side, img, corner):
+    ctx.save()
+    x0, y0 = pos
+    xc, yc = corner
+    ctx.move_to(x0, y0)
+    ctx.line_to(x0 + side, y0)
+    ctx.line_to(x0 + side, y0 + side)
+    ctx.line_to(x0, y0 + side)
+    ctx.line_to(x0, y0)
+    picture = cairo.ImageSurface.create_from_png(img)
+    ctx.set_source_surface(picture, xc, yc)
+    ctx.clip()
+    ctx.paint()
+    ctx.restore()
+    picture = 0</p>
+
+<p></pre></code></p>
+
+<p>This function is pretty simple: given a coordinate position for the corner of the square <code>pos = (x0, y0)</code>, a side length <code>side</code>, an image <code>img</code>, and another coordinate position <code>corner = (xc, yc)</code> for the corner of the image, this function paints a square section of that image. Cairo aligns a copy of the image such that its corner coincides with the point specified by <code>pos</code>, and then it will draw a square with side length <code>side</code> and a corner at the point <code>corner</code> and <em>restrict</em> the image to that square. This way, we can choose not only the position of the square, but also which piece of image appears in it.</p>
+
+<p>The next function is where the interesting recursion happens:</p>
+
+<p><code><pre></p>
+
+<p>def shuffled_img(ctx, depth, pos, side, img, corner):
+    x0, y0 = pos
+    xc, yc = corner
+    if depth == 0:
+        draw_square_img(ctx, pos, side, img, corner)
+    else:
+        shuffled_img(ctx, depth - 1, (x0, y0), side/2, img, (xc - side/2, yc - side/2))
+        shuffled_img(ctx, depth - 1, (x0, y0 + side/2), side/2, img, (xc - side/2, yc + side/2))
+        shuffled_img(ctx, depth - 1, (x0 + side/2, y0), side/2, img, (xc + side/2, yc - side/2))
+        shuffled_img(ctx, depth - 1, (x0 + side/2, y0 + side/2), side/2, img, (xc +  side/2, yc + side/2))</p>
+
+<p></pre></code></p>
+
+<p>The arguments of this function are the context <code>ctx</code> (as usual), the depth <code>depth</code> of the recursion, or the number of times the "shuffling" operation is to take place, the position <code>pos</code> of the corner of the square containing the final image, the side length <code>side</code> of the square containing the final image, the image <code>img</code> to be shuffled, and the position <code>corner</code> of the image's corner before it is restricted to the specified square. If <code>depth</code> is equal to zero, then <em>no</em> transformations are applied to the image, and so the function simply draws the image unaltered inside of a square with the specified parameters. However, if <code>depth</code> is greater than zero, <em>four separate instances</em> of this same function are called again, one for each of the squares four quadrants, each with the <code>depth</code> parameter decremented by one. This is where the recursion occurs - the function calls four separate instances of itself, each of which calls four separate instances of the function again, and so on, until <code>depth</code> reaches zero and each of the "subquadrants" is filled with an unaltered version of a section of the image.</p>
+
+<p>All that we have to do now is create and call the <code>main</code> function.</p>
+
+<p><code><pre> </p>
+
+<p>def main():
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 1200, 1200)
+    ctx = cairo.Context(surface)
+    ctx.set_source_rgb(1, 1, 1)
+    ctx.paint()
+    shuffled_img(ctx, NUM_ITER, (200, 200), 800, "seeds/iguana.png", (0, 0))
+    surface.write_to_png("gallery/shuffled_ig_"+str(NUM_ITER)+".png")</p>
+
+<p>if <strong>name</strong> == "<strong>main</strong>":
+    main()</p>
+
+<p></pre></code></p>
+
+<p>As before, this function sets up the ImageSurface, creates a Cairo context, creates the background color, and generally sets everything up before calling the principal function. Then <code>shuffled_img</code> is called and saved to a PNG file. The variable <code>NUM_ITER</code> is a variable specifying the "depth" of image transformation, assigned elsewhere in the code.</p>
+
+<p>We're done! We've seen what the first- and second-generation images look like, so now let's see generations 3 through 6:</p>
+
+<p><center><img src="/img/2020-08-16-Fig15.png" alt="Fig 15" /></center>
+<center><img src="/img/2020-08-16-Fig16.png" alt="Fig 16" /></center>
+<center><img src="/img/2020-08-16-Fig17.png" alt="Fig 17" /></center>
+<center><img src="/img/2020-08-16-Fig18.png" alt="Fig 18" /></center></p>
+
+<p>Do you see something strange happening here? The more times this transformation is applied, the more it looks like an inverted version of the original image! Can you figure out why this happens?</p>
+
+<p>By making slight changes to the <code>shuffled_img</code> function, we can iterate different transformations as well. For example, consider the following alternate way of shuffling the four quadrants of a square:</p>
+
+<p><center><img src="/img/2020-08-16-Fig19.png" alt="Fig 19" /></center></p>
+
+<p>Below are generations 2 though 6 of iterated shuffling:</p>
+
+<p><center><img src="/img/2020-08-16-Fig20.png" alt="Fig 20" /></center>
+<center><img src="/img/2020-08-16-Fig21.png" alt="Fig 21" /></center>
+<center><img src="/img/2020-08-16-Fig22.png" alt="Fig 22" /></center>
+<center><img src="/img/2020-08-16-Fig23.png" alt="Fig 23" /></center>
+<center><img src="/img/2020-08-16-Fig24.png" alt="Fig 24" /></center></p>
+
+<p>Once again, something recognizable has somehow emerged from apparent chaos - the longer we repeat the process, the more it appears that the image is just being rotated $90^\circ$ counterclockwise. Can you explain how the chosen permutation of quadrants caused this regular pattern to emerge?</p>
+
+<p>Alright, so if recursively applying the previous two types of "shuffle" have respectively resulted in the image being inverted and rotated $90^\circ$ counterclockwise, can you predict what the image will look like after repeating the following "shuffle," without skipping ahead to look at the results?</p>
+
+<p><center><img src="/img/2020-08-16-Fig25.png" alt="Fig 25" /></center></p>
+
+<p>If you think you've come up with a prediction, scroll down to see generations 2 through 6 of this type of shuffle:</p>
+
+<p><center><img src="/img/2020-08-16-Fig26.png" alt="Fig 26" /></center>
+<center><img src="/img/2020-08-16-Fig27.png" alt="Fig 27" /></center>
+<center><img src="/img/2020-08-16-Fig28.png" alt="Fig 28" /></center>
+<center><img src="/img/2020-08-16-Fig29.png" alt="Fig 29" /></center>
+<center><img src="/img/2020-08-16-Fig30.png" alt="Fig 30" /></center></p>
+
+<p>Okay, it was a trick question - this type of shuffle doesn't actually end up producing anything nice and regular, just a fractally scrambled mess. This doesn't suit our friend the iguana very well, but if we instead apply this transformation to a simple linear gradient between two colors, we end up with a beautiful and rather mesmerizing fractal of color:</p>
+
+<p><center><img src="/img/2020-08-16-Fig31.png" alt="Fig 31" /></center></p>
+
+<h4>Randomly Nested Boxes <a id="toc-section-3" class="toc-section"></a></h4>
+
+<p>The third and final class of generative geometrical art that we'll play with incorporates <em>randomness</em> in addition to recursivity. For that reason, it suggests all sorts of interesting probabilistic questions, so get ready for math puzzles.</p>
+
+<p><a href="https://en.wikipedia.org/wiki/Piet_Mondrian">Mondrian style art</a> that consists of geometric shapes (specifically boxes) filled with solid colors lends itself to automatic generation with Pycairo. Although we're not going to try to imitate Mondrian, what we create here will be similar in that it will consist solely of monochromatic geometric shapes. It's easy to generate lots of random colored shapes, but the challenge is to make a program that generates pictures that are actually aesthetically pleasing.</p>
+
+<p>In this design, we'll start with an empty square, which is transformed in one of three different ways: either</p>
+
+<ul>
+<li>it is left completely empty, or  </li>
+<li>it is divided into four square quadrants, or</li>
+<li>a colored circle is inscribed in the square.</li>
+</ul>
+
+<p><center><img src="/img/2020-08-16-Fig32.png" alt="Fig 32" /></center></p>
+
+<p>These transformations take place with respective probabilities $p_1$, $p_2$, and $p_3$ (such that $p_1 + p_2 + p3 = 1$). If the first or third transformations occur, the process terminates and the picture is finished. If the second transformation occurs, then the same process is applied to each of the four quadrants into which the square is divided. Clearly, this second transformation is where the recursion would take place in the code: the function that randomly applies one of these three transformations would have to call four more instances of itself (one for each quadrant) should the second transformation be randomly selected.</p>
+
+<p>Because the code used to create these images is so similar to that used in the previous section, I won't go through it here (if you want, you can try creating it yourself as an exercise). However, there is one issue that should be addressed: how do we know that this process will terminate? Couldn't these squares go on splitting into quadrants forever, causing an infinite loop? In practice, this can be avoided by setting a <em>minimum size</em> for splitting (such that if a square's size is smaller than the minimum, it <em>cannot</em> divide into four quadrants). In theory, however, this gives rise to an interesting math problem.</p>
+
+<p>If there were no minimum splitting size and the squares were free to split at arbitrarily small sizes, with a splitting probability of $p_2$, what would be the chance of an infinite loop? In other words, how likely would it be that the image produced by this process would have <em>infinite depth</em>? See if you can work out the answer yourself - I'll write out my solution after showing off some of the pictures produced by this process.</p>
+
+<p>Here are some designs created with $(p_1, p_2, p_3) = (0.1, 0.7, 0.2)$:</p>
+
+<p><center><img src="/img/2020-08-16-Fig33.png" alt="Fig 33" /></center>
+<center><img src="/img/2020-08-16-Fig34.png" alt="Fig 34" /></center>
+<center><img src="/img/2020-08-16-Fig35.png" alt="Fig 35" /></center></p>
+
+<p>And here are some with $(p_1, p_2, p_3) = (0.3, 0.6, 0.1)$:</p>
+
+<p><center><img src="/img/2020-08-16-Fig36.png" alt="Fig 36" /></center>
+<center><img src="/img/2020-08-16-Fig37.png" alt="Fig 37" /></center>
+<center><img src="/img/2020-08-16-Fig38.png" alt="Fig 38" /></center></p>
+
+<p>As you can see from the second example, there's always a chance that this program will output something "boring." This could be remedied by, say, <em>forcing</em> the original square to split at least a certain number of times, but we won't do that here, since we can always rerun the code if it produces insatisfactory results.</p>
+
+<p>This can also be made more interesting by introducing new possible transformations. For example, in addition to the three we've been using so far, we could add this alternate splitting operation:</p>
+
+<p><center><img src="/img/2020-08-16-Fig39.png" alt="Fig 39" /></center></p>
+
+<p>If we do this, we must introduce a fourth probability $p_4$ for this transformation, and impose the condition that $p_1+p_2+p_3+p_4=1$. For comparison with the earlier images that only used the four-quadrant split, here are three images formed using $(p_1, p_2, p_3, p_4) = (0.2, 0, 0.1, 0.7)$:</p>
+
+<p><center><img src="/img/2020-08-16-Fig40.png" alt="Fig 40" /></center>
+<center><img src="/img/2020-08-16-Fig41.png" alt="Fig 41" /></center>
+<center><img src="/img/2020-08-16-Fig42.png" alt="Fig 42" /></center></p>
+
+<p>And here are three with $(p_1, p_2, p_3, p_4) = (0.2, 0.4, 0.1, 0.3)$:</p>
+
+<p><center><img src="/img/2020-08-16-Fig43.png" alt="Fig 43" /></center>
+<center><img src="/img/2020-08-16-Fig44.png" alt="Fig 44" /></center>
+<center><img src="/img/2020-08-16-Fig45.png" alt="Fig 45" /></center></p>
+
+<p>I'm not sure why I find these designs so aesthetically pleasing and fun to look at - it probably has something to do with self-similarity and deeply nested levels of detail.</p>
+
+<p>Okay, now time for some math! To restate the question from earlier: in the original version of the recursion (with only a four-quadrant split and no six-square split, i.e. $p_4=0$), given the value of $p_2$, what is the probability that the process repeats infinitely many times and the structure becomes infinitely "deep"?</p>
+
+<p>Let $q$ be the probability of eventual termination. Obviously, the process terminates if it <em>does not split</em> on the very first iteration, and this occurs with probability $(1-p_2)$. Further, even if it splits (with probability $p_2$), it could still terminate if the subprocesses in each of the four quadrants terminates, which occurs with probability $q^4$. Therefore, we have that</p>
+
+<p>
+<script type="math/tex; mode=display">q = 1-p_2 + p_2\cdot q^4</script>
+</p>
+
+<p>So the probability of eventual termination is the solution of the above quartic in $q$, which is bound to get a little bit messy (quartic equations are nasty to solve). However, we can neatly express $p_2$ in terms of $q$:</p>
+
+<p>
+<script type="math/tex; mode=display">p_2 = \frac{1-q}{1-q^4} = \frac{1}{(1+q)(1+q^2)}</script>
+</p>
+
+<p>By plugging in possible values of $q$ like $q=1/2$ and calculating $p_2$ using the above equation, we can determine, for example, that setting $p_2 = 8/15$ results in a 50/50 chance of the process terminating. Furthermore, it tells us that if $p_2$ is less than $1/4$, then the process will terminate with probability $1$.</p>
+
+<p>To conclude this blog post, here are two more probability puzzles about the process we've described in this section:</p>
+
+<ul>
+<li>In the original version described (with $p_4 = 0$), if $p_2 &lt; 1/4$ and the process is guaranteed to terminate (with probability $1$), what is the expected number of circles, in terms of $p_2$ and $p_3$?  </li>
+<li>In the original version of the process, let $c_0$ be the probability that the final image has $0$ circles and $c_1$ the probability that it has exactly $1$ circle. Calculate $c_1$ in terms of $p_2$, $p_3$, and $c_0$.</li>
+</ul>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<html>
+<head>
+    <title>Random Variables Part 3: Continuous Distributions</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Random Variables Part 3: Continuous Distributions</h2>
+
+<p><em>2018 November 3</em></p>
+
+<p>Having discussed some common discrete distributions in the previous post, I will now briefly list some interesting <strong>continuous distributions</strong> for continuous random variables. I will start, however, with a few words about something that applies to both continuous and discrete random variables.</p>
+
+<p>Suppose we have two independent random variables $X,Y$ with respective probability mass/density functions $p_X$ and $p_Y$, and we wish to consider the random variable formed by their sum, or $X+Y$. I have remarked in a previous post that since $X,Y$ are independent, we have
+<script type="math/tex; mode=display">\mathbb E[X+Y]=\mathbb E[X]+\mathbb E[Y]</script>
+and
+<script type="math/tex; mode=display">\sigma_{X+Y}^2=\sigma_X^2+\sigma_Y^2</script>
+However, we have not yet found a formula for $p_{X+Y}$. This formula, which is easy to confirm, is as follows:
+<script type="math/tex; mode=display">p_{X+Y}(t)=\frac{\sum_{x}p_X(x)p_Y(t-x)}{\sum_{x,t} p_X(x)p_Y(t-x)}</script>
+...if we choose to let $p_Y(y)=0$ for any $y\notin S$ (which is often a useful convention to use). Similarly, we have that if $X,Y$ are continuous random variables, then
+<script type="math/tex; mode=display">p_{X+Y}(t)=\frac{\int_{-\infty}^{\infty}p_X(x)p_Y(t-x)dx}{\int_{-\infty}^{\infty}\int_{-\infty}^{\infty}p_X(x)p_Y(t-x)dxdt}</script>
+This integral formula for the PDF of a sum of two independent continuous random variables will be used later to justify the Gamma Distribution, and to demonstrate a remarkable property of the Normal Distribution.</p>
+
+<p>First, as promised, we shall consider the <strong>Gaussian Distribution</strong>, or the <strong>Normal Distribution</strong>. We say that a random variable $X$ follows the Normal Distribution with mean $\mu$ and variance $\sigma^2$, or $X\sim N(\mu,\sigma^2)$, if it has the probability density function
+<script type="math/tex; mode=display">p_X(x)=\frac{1}{\sigma\sqrt{2\pi}}e^{-(x-\mu)^2/2\sigma^2}</script>
+One may verify using the value of the famous Gaussian Integral that
+<script type="math/tex; mode=display">\int_0^\infty p_X(x)dx=1</script>
+as required of a probability density function. We may demonstrate that $X$ does indeed have mean $\mu$ by doing the following:
+<script type="math/tex; mode=display">\begin{align}
+\mathbb E[X]
+&=\int_{-\infty}^\infty xp_X(x)dx\\
+&=\frac{1}{\sigma\sqrt{2\pi}}\int_{-\infty}^\infty xe^{(x-\mu)^2/2\sigma^2}dx\\
+&=\frac{1}{\sigma\sqrt{2\pi}}\int_{-\infty}^\infty (x+\mu)e^{x^2/2\sigma^2}dx\\
+&=\frac{1}{\sigma\sqrt{2\pi}}\int_{-\infty}^\infty xe^{x^2/2\sigma^2}dx+\mu\cdot \frac{1}{\sigma\sqrt{2\pi}}\int_{-\infty}^\infty e^{x^2/2\sigma^2}dx\\
+&=\mu\cdot \frac{1}{\sigma\sqrt{2\pi}}\int_{-\infty}^\infty e^{x^2/2\sigma^2}dx\\
+&=\mu\int_{-\infty}^\infty p_X(x)dx\\
+&=\mu\\
+\end{align}</script>
+which proves the desired result. One can prove the formula for the variance of $X$ algebraically as well, so I will omit the proof. A miscellaneous interesting property of the Normal Distribution is that it is symmetric about its mean (as is obvious from its PDF), meaning that its median is equal to its mean.</p>
+
+<p>It is not immediately apparent why this probability distribution is useful or necessary, but this will become clear later when I discuss the Central Limit Theorem.</p>
+
+<p>The next distribution, which I shall mention only briefly, is the <strong>Lognormal Distribution</strong>. We say that a continuous random variable $X\gt 0$ follows the Lognormal Distribution with parameters $\mu$ and $\sigma^2$ if the random variable $\ln(X)\sim N(\mu,\sigma^2)$. The mean of a lognormally distributed random variable is given by
+<script type="math/tex; mode=display">\mathbb E[X]=e^{\mu+\sigma^2/2}</script>
+and the variance is given by
+<script type="math/tex; mode=display">\sigma_X^2=(e^{\sigma^2}-1)e^{2\mu+\sigma^2}</script>
+In the interest of time, I will waste no more test on the lognormal distribution and move on to the two other continuous distributions under consideration.</p>
+
+<p>Next up is the <strong>Exponential Distribution,</strong> which is the continuous analogue of the discrete Geometric Distribution. If a continuous random variable $X$ follows the Exponential Distribution with parameter $\lambda$, or $X\sim \text{Exp}(\lambda)$, then the PDF of $X$ is given by
+<script type="math/tex; mode=display">p_X(x)=\lambda e^{-\lambda x}</script>
+for $x\gt 0$. One may easily verify that the integral of this PDF from $0$ to $\infty$ is equal to $1$, as desired. This distribution is often used to model the amount of time elapsed before a certain event occurs, or the <strong>waiting time</strong>, like the time elapsed between consecutive visits to a website. Appropriately, if $X\sim \text{Exp}(\lambda)$, then 
+<script type="math/tex; mode=display">P(X\gt x)=P(X\gt x+y\space |\space X\gt y)</script>
+which is called the <strong>lack of memory</strong> property of an exponentially distributed random variable.</p>
+
+<p>Now suppose that one wanted to define a random variable to model the amount of time elapsed before a certain event (the waiting time between whose occurrences follows an exponential distribution) occurs $n$ times. This is how the <strong>Gamma Distribution</strong> is defined. If $X$ models this situation, then $X$ follows the Gamma Distribution with parameters $n$ and $\lambda$, or $X\sim \Gamma (n,\lambda)$. By interpreting $X$ in the given scenario, $X$ may be expressed as a sum of random variables
+<script type="math/tex; mode=display">X=X_1+X_2+...+X_n</script>
+where $X_i\sim\text{Exp}(\lambda)$. Now we may use the discussion of the PDF of a sum of random variables from the beginning of the post to determine the PDF $p_X$ in terms of $n$ and $\lambda$. Clearly, if $n=1$, then $X$ is simply distributed exponentially. However, if $n=2$, then we may let $X_1$ and $X_2$ be exponentially distributed random variables with parameter $\lambda$, and express $X=X_1+X_2$. Then, using the formula established at the beginning of this post, we have that
+<script type="math/tex; mode=display">\begin{align}
+p_X(x)
+&=\frac{\int_0^{x} p_{X_1}(t)p_{X_2}(x-t)dt}{\int_0^{\infty}\int_0^{x} p_{X_1}(t)p_{X_2}(x-t)dtdx}\\
+&=\frac{\lambda^2 \int_0^{x} e^{-\lambda x}dt}{\lambda^2 \int_0^{\infty}\int_0^{x} e^{-\lambda x}dtdx}\\
+&=\frac{\lambda^2 xe^{-\lambda x}}{\lambda^2 \int_0^{\infty}xe^{-\lambda x}dx}\\
+&=\lambda^2 xe^{-\lambda x}\\
+\end{align}</script>
+Similarly, if $n=3$, we may express $X$ as a sum of a random variable following the Gamma Distribution with parameters $n=2$ and $\lambda$ and a random variable following the exponential distribution with parameter $\lambda$, giving us
+<script type="math/tex; mode=display">\begin{align}
+p_X(x)
+&=\frac{\int_0^{x} p_{X_1}(t)p_{X_2}(x-t)dt}{\int_0^{\infty}\int_0^{x} p_{X_1}(t)p_{X_2}(x-t)dtdx}\\
+&=\frac{\lambda^4 \int_0^{x} t(x-t)e^{-\lambda x} dt}{\lambda^4 \int_0^{\infty}\int_0^{x} t(x-t)e^{-\lambda x}dtdx}\\
+&=\frac{\lambda^3 x^2 e^{-\lambda x}}{2}\\
+\end{align}</script>
+If we kept going, we could show using induction and our nifty formula for the PDF of a sum of random variables that, for an arbitrary value of $n$, the PDF of $X\sim\Gamma(n,\lambda)$ is
+<script type="math/tex; mode=display">p_X(x)=\frac{\lambda^n x^{n-1} e^{-\lambda x}}{(n-1)!}</script>
+which might be generalized for non-integer $n$ as
+<script type="math/tex; mode=display">p_X(x)=\frac{\lambda^n x^{n-1} e^{-\lambda x}}{\Gamma(n)}</script>
+hence its name, the Gamma Distribution.</p>
+
+<p>I shall conclude this blog post by establishing an interesting property of the Gaussian Distribution, and using this to form an intuitive explanation and a statement of the famous Central Limit Theorem.</p>
+
+<p>Suppose that $X,Y$ are both independent Gaussian variables with respective means and variances $\mu_X$, $\mu_Y$, $\sigma_X^2$, and $\sigma_Y^2$. Then consider the random variable $X+Y$. As we know, its PDF $p_{X+Y}(t)$ is proportional to the following function of $t$:
+<script type="math/tex; mode=display">\int_{-\infty}^\infty e^{-(x-\mu_X)^2/2\sigma_X^2}e^{-(t-x-\mu_Y)^2/2\sigma_Y^2}dx</script>
+Because the constant of proportionality of a PDF is determined by the restriction that the integral of the PDF over the sample space must equal $1$, we may neglect all multiplied constants as we evaluate this integral, a useful fact which will make it a little bit less messy to evaluate. Let us rewrite this integral as
+<script type="math/tex; mode=display">\int_{-\infty}^\infty \exp\bigg[-\frac{(x-\mu_X)^2}{2\sigma_X^2}-\frac{(t-x-\mu_Y)^2}{2\sigma_Y^2}\bigg]dx</script>
+Expanding both of the summed expressions inside of the exponential, completing the square, and taking advantage of the Gaussian integral, all while removing constant factors, eventually (after much algebraic manipulation that I will not show) yields the following:
+<script type="math/tex; mode=display">\exp\bigg[-\frac{(t-\mu_X-\mu_Y)^2}{2(\sigma_X^2+\sigma_Y^2)}\bigg]</script>
+...which, up to a constant factor, is the PDF of a Gaussian random variable with mean $\mu_X+\mu_Y$ and variance $\sigma_X^2+\sigma_Y^2$. In other words (or symbols), if $X,Y$ are independent with $X\sim N(\mu_X,\sigma_X^2)$ and $Y\sim N(\mu_Y,\sigma_Y^2)$, then $X+Y\sim N(\mu_X+\mu_Y,\sigma_X^2+\sigma_Y^2)$. So the sum of two Gaussian random variables is still a Gaussian random variable!</p>
+
+<p>With most other distributions, as you sum two or more independent random variables following that distribution, the distribution of the sum of random variables changes and no longer follows the original distributions. However, for the Normal distribution, the distribution of the sum of random variables is the same as the distribution for the summed variables, though the parameters may change. Thus, the Gaussian Distribution is a "fixed point" of sorts when it comes to distributions that change as multiple random variables are summed. In other areas of mathematics, as a process is repeated many times, the output tends towards a fixed point, which suggests that as many independent and identically distributed random variables are added together, the distribution of their sum should behave like a normal distribution.</p>
+
+<p>This is a highly non-rigorous and only semi-intuitive argument, but it turns out that what it seems to imply is actually true, and remarkably so. The <strong>Central Limit Theorem</strong> states that the average of $n$ independent and identically distributed variables with mean $\mu$ and variance $\sigma^2$ approximately follows the Normal Distribution with parameters $\mu$ and $\sigma^2/n$, or $\bar{X}\sim N(\mu, \sigma^2/n)$, approximately. This theorem is very useful for approximating the distribution of the sum of a large number of independent and identically distributed random variables, and constructing something called a "confidence interval" which allows one to predict the mean of a population by only observing samples. Perhaps these shall become the content of a later post.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

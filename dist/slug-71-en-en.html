@@ -1,0 +1,340 @@
+<html>
+<head>
+    <title>The Gamma and Digamma functions</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>The Gamma and Digamma functions</h2>
+
+<p><em>2018 March 10</em></p>
+
+<p>Before I get into the definitions and the properties of these two functions, I must first introduce a new mathematical constant: the <strong>Euler-Mascheroni</strong> constant
+<script type="math/tex; mode=display">\gamma\approx 0.57721566...</script>
+This constant is defined as follows:
+<script type="math/tex; mode=display">\gamma := \lim_{n\to\infty} (H_n-\ln(n))</script>
+where $H_n$ are the harmonic numbers.</p>
+
+<p>I will now establish an integral representation of the Euler-Mascheroni constant which will prove to be useful later on. Recall that the harmonic numbers $H_n$ are given by
+<script type="math/tex; mode=display">H_n=\int_0^1 \frac{1-x^n}{1-x}dx=\int_0^1\frac{1-(1-x)^n}{x}dx</script>
+and recall that
+<script type="math/tex; mode=display">\ln(n)=\int_{1/n}^1 \frac{dx}{x}</script>
+Recall also the value of the limit
+<script type="math/tex; mode=display">\lim_{n\to\infty}\bigg(1+\frac{x}{n}\bigg)^n=e^x</script>
+which will come into play shortly.</p>
+
+<p>By definition, we have
+<script type="math/tex; mode=display">\begin{align}\gamma 
+&= \lim_{n\to\infty} \bigg(\int_0^1\frac{1-(1-x)^n}{x}dx-\int_{1/n}^1 \frac{dx}{x}\bigg)\\
+&= \lim_{n\to\infty} \bigg(\int_0^{1/n}\frac{1-(1-x)^n}{x}dx+\int_{1/n}^1\frac{1-(1-x)^n}{x}dx-\int_{1/n}^1 \frac{dx}{x}\bigg)\\
+&= \lim_{n\to\infty} \bigg(\int_0^{1/n}\frac{1-(1-x)^n}{x}dx-\int_{1/n}^1\frac{(1-x)^n}{x}dx\bigg)\\
+&= \lim_{n\to\infty} \bigg(\int_0^{1}\frac{1-(1-\frac{x}{n})^n}{x}dx-\int_{1}^n\frac{(1-\frac{x}{n})^n}{x}dx\bigg)\\
+&= \lim_{n\to\infty} \bigg(\int_0^{1}\frac{1-e^{-x}}{x}dx-\int_{1}^n\frac{e^{-x}}{x}dx\bigg)\\
+&= \int_0^{1}\frac{1-e^{-x}}{x}dx-\int_{1}^\infty \frac{e^{-x}}{x}dx\\
+\end{align}</script>
+</p>
+
+<p>and so</p>
+
+<p>
+<script type="math/tex; mode=display">\bbox[lightgray,5px]
+{
+\gamma=\int_0^{1}\frac{1-e^{-x}}{x}dx-\int_{1}^\infty \frac{e^{-x}}{x}dx
+}</script>
+</p>
+
+<p>This is the integral representation that I was looking for! Now I will get into the definitions and properties of the gamma and digamma functions, and the Euler-Mascheroni constant will show up eventually - just wait.</p>
+
+<p>In my <a href="/post/85">previous post</a> about the Gamma and Lambert-W functions, I introduced the <strong>Gamma function</strong>, but did not explore its properties in much depth. Here is its definition:</p>
+
+<p>
+<script type="math/tex; mode=display">\Gamma(z):=\int_0^\infty x^{z-1}e^{-x}dx</script>
+</p>
+
+<p>For positive integer $z$, it holds that
+<script type="math/tex; mode=display">\Gamma(z)=(z-1)!</script>
+and, in general, the gamma function has the property
+<script type="math/tex; mode=display">\Gamma(z+1)=z\Gamma(z)</script>
+which I demonstrated in my other post by integrating by parts. It also has the special value
+<script type="math/tex; mode=display">\Gamma(1/2)=\sqrt{\pi}</script>
+which is the famed "Gaussian integral." </p>
+
+<p>Before moving on to the digamma function, I would like to prove the following property of the gamma function, relating it to the <strong>Beta function</strong> $\mathrm{B}(a,b)$:
+<script type="math/tex; mode=display">\mathrm{B}(a,b):=\int_{0}^1 x^{a-1}(1-x)^{b-1}dx=\frac{\Gamma(a)\Gamma(b)}{\Gamma(a+b)}</script>
+Here is the proof:
+<script type="math/tex; mode=display">\begin{align}
+\Gamma(a)\Gamma(b)
+&=\int_0^\infty \int_0^\infty x^{a-1}y^{b-1}e^{-x-y}dydx\\
+&=4\int_0^\infty \int_0^\infty x^{2a-1}y^{2b-1}e^{-x^2-y^2}dydx\\
+&=4\int_0^{\pi/2} \int_0^\infty (r\cos\theta)^{2a-1}(r\sin\theta)^{2b-1}e^{-r^2} rdrd\theta\\
+&=4\int_0^{\pi/2} \int_0^\infty r^{2a+2b-1}\cos^{2a-1}(\theta)\sin^{2b-1}(\theta)e^{-r^2} drd\theta\\
+&=2\int_0^{\pi/2} \int_0^\infty r^{a+b-1}\cos^{2a-1}(\theta)\sin^{2b-1}(\theta)e^{-r} drd\theta\\
+&=2\bigg(\int_0^{\pi/2} \cos^{2a-1}(\theta)\sin^{2b-1}(\theta) d\theta\bigg) \bigg(\int_0^\infty r^{a+b-1}e^{-r}dr\bigg)\\
+&=2\bigg(\int_0^{\pi/2} \cos^{2a-1}(\theta)\sin^{2b-1}(\theta) d\theta\bigg) \Gamma(a+b)\\
+&=2\Gamma(a+b)\int_0^{1} \cos^{2a-1}(\arcsin x)\sin^{2b-1}(\arcsin x) \frac{dx}{\sqrt{1-x^2}}\\
+&=2\Gamma(a+b)\int_0^{1} (1-x^2)^{a-1}x^{2b-1} dx\\
+&=\Gamma(a+b)\int_0^{1} (1-x)^{a-1}x^{b-1} dx\\
+&=\Gamma(a+b)\mathrm{B}(a,b)\\
+\end{align}</script>
+and so
+<script type="math/tex; mode=display">\Gamma(a)\Gamma(b)=\Gamma(a+b)\mathrm{B}(a,b)</script>
+and
+<script type="math/tex; mode=display">\bbox[lightgray,5px]
+{
+\mathrm{B}(a,b)=\frac{\Gamma(a)\Gamma(b)}{\Gamma(a+b)}
+}</script>
+</p>
+
+<p>This result can be used to prove Legendre's famous duplication formula for the Gamma Function, which expresses $\Gamma(2z)$ in terms of $\Gamma(z)$ and $\Gamma(z+1/2)$. Recall the definition of the Beta function:
+<script type="math/tex; mode=display">\mathrm{B}(a,b):=\int_{0}^1 x^{a-1}(1-x)^{b-1}dx</script>
+By substituting $x\to x^2$ in the definite integral, this is equivalent to
+<script type="math/tex; mode=display">\mathrm{B}(a,b)=2\int_{0}^1 x^{2a-1}(1-x^2)^{b-1}dx=\frac{\Gamma(a)\Gamma(b)}{\Gamma(a+b)}</script>
+Notice also that, by substituting $x\to \frac{1+x}{2}$ in the original integral, we have
+<script type="math/tex; mode=display">\mathrm{B}(a,b)=\frac{1}{2}\int_{-1}^1 \bigg(\frac{1+x}{2}\bigg)^{a-1}\bigg(\frac{1-x}{2}\bigg)^{b-1}dx</script>
+and, as a consequence,
+<script type="math/tex; mode=display">\begin{align}
+\mathrm{B}(z,z)
+&=\frac{1}{2}\int_{-1}^1 \bigg(\frac{1+x}{2}\bigg)^{z-1}\bigg(\frac{1-x}{2}\bigg)^{z-1}dx\\
+&=\frac{1}{2^{2z-1}}\int_{-1}^1 (1+x)^{z-1} (1-x)^{z-1}dx\\
+&=2^{1-2z}\int_{-1}^1 (1-x^2)^{z-1}dx\\
+&=2^{1-2z}\cdot 2\int_{0}^1 (1-x^2)^{z-1}dx\\
+&=2^{1-2z}\mathrm{B}(1/2,z)\\
+\end{align}</script>
+Thus, we have
+<script type="math/tex; mode=display">\mathrm{B}(z,z)=2^{1-2z}\mathrm{B}(1/2,z)</script>
+Now, by using the representation of the Beta function in terms of the Gamma function, we have
+<script type="math/tex; mode=display">\frac{\Gamma(z)\Gamma(z)}{\Gamma(2z)}=\frac{2^{1-2z}\Gamma(1/2)\Gamma(z)}{\Gamma(z+1/2)}</script>
+which can be rearranged to obtain</p>
+
+<p>
+<script type="math/tex; mode=display">\bbox[lightgray,5px]
+{
+\Gamma(2z)=\frac{2^{2z-1}\Gamma(z)\Gamma(z+1/2)}{\sqrt \pi}
+}</script>
+</p>
+
+<p>which is the final form of the Gamma function's duplication formula.</p>
+
+<p>Now I will introduce the <strong>Digamma</strong> function, defined as
+<script type="math/tex; mode=display">\psi(z):=\frac{d}{dz}\ln \Gamma(z)=\frac{\Gamma'(z)}{\Gamma(z)}</script>
+I will start by calculating a few values of the digamma function - this is where the Euler-Mascheroni constant starts to appear. Since the Gamma function is defined as
+<script type="math/tex; mode=display">\Gamma(z):=\int_0^\infty x^{z-1}e^{-x}dx</script>
+we have
+<script type="math/tex; mode=display">\Gamma'(z)=\int_0^\infty x^{z-1}e^{-x}\ln(x)dx</script>
+and so
+<script type="math/tex; mode=display">\psi(z)=\Gamma(z)\int_0^\infty x^{z-1}e^{-x}\ln(x)dx</script>
+Let us first endeavour to calculate the value of $\psi(1)$:
+<script type="math/tex; mode=display">\psi(1)=\int_0^\infty e^{-x}\ln(x)dx</script>
+Using integration by parts, we have
+<script type="math/tex; mode=display">\begin{align}
+\psi(1)
+&=\int_0^\infty e^{-x}\ln(x)dx\\
+&=\int_0^1 e^{-x}\ln(x)dx+\int_1^\infty e^{-x}\ln(x)dx\\
+&=\bigg[(1-e^{-x})\ln(x)\bigg]_0^1-\int_0^1 \frac{1-e^{-x}}{x}dx+\int_1^\infty e^{-x}\ln(x)dx\\
+&=-\int_0^1 \frac{1-e^{-x}}{x}dx+\int_1^\infty e^{-x}\ln(x)dx\\
+&=-\int_0^1 \frac{1-e^{-x}}{x}dx+\bigg[-e^{-x}\ln(x)\bigg]_1^\infty +\int_1^\infty \frac{e^{-x}}{x}dx\\
+&=-\int_0^1 \frac{1-e^{-x}}{x}dx+\int_1^\infty \frac{e^{-x}}{x}dx\\
+&=-\int_0^1 \frac{1-e^{-x}}{x}dx+\int_1^\infty \frac{e^{-x}}{x}dx\\
+&=-\gamma\\
+\end{align}</script>
+</p>
+
+<p>The last step in this equality is justified by the integral representation of $\gamma$ that we obtained earlier. Thus, we have
+<script type="math/tex; mode=display">\psi(1)=-\gamma</script>
+</p>
+
+<p>We <em>could</em> go back and calculate $\psi(2)$, $\psi(3)$, and so on, but there's a shortcut to do this. Remember this recurrence for the gamma function that I mentioned earlier?
+<script type="math/tex; mode=display">\Gamma(z+1)=z\Gamma(z)</script>
+By taking the natural logarithm of both sides, we have
+<script type="math/tex; mode=display">\ln\Gamma(z+1)=\ln\Gamma(z)+\ln(z)</script>
+and by differentiating both sides with respect to $z$,
+<script type="math/tex; mode=display">\psi(z+1)=\psi(z)+\frac{1}{z}</script>
+This tells us that, for any positive integer $n$,
+<script type="math/tex; mode=display">\psi(n)=-\gamma+H_{n-1}</script>
+where $H_n$ are the harmonic numbers.</p>
+
+<p>Observe the following. Since
+<script type="math/tex; mode=display">\psi(z+1)-\psi(z)=\frac{1}{z}</script>
+as previously proven, we have that
+<script type="math/tex; mode=display">\sum_{n=1}^N \frac{1}{n}=\psi(N+1)-\psi(1)=\psi(N+1)+\gamma</script>
+Furthermore, we also have that
+<script type="math/tex; mode=display">\sum_{n=1}^N \frac{1}{n+z}=\psi(N+z+1)-\psi(z+1)</script>
+By subtracting these two equations, we have
+<script type="math/tex; mode=display">\sum_{n=1}^N \frac{1}{n}-\frac{1}{n+z}=\psi(N+1)+\gamma-\psi(N+z+1)+\psi(z+1)</script>
+<script type="math/tex; mode=display">\sum_{n=1}^N \frac{1}{n}-\frac{1}{n+z}=(\psi(N+1)-\psi(N+z+1))+\psi(z+1)+\gamma</script>
+Now we let $N\to\infty$. As $N$ grows large, the term on the RHS inside of the parentheses approaches zero, and so we are left with
+<script type="math/tex; mode=display">\sum_{n=1}^\infty \frac{1}{n}-\frac{1}{n+z}=\psi(z+1)+\gamma</script>
+Thus, we are left with the series representation for the digamma function:</p>
+
+<p>
+<script type="math/tex; mode=display">\bbox[lightgray,5px]
+{
+\psi(z)=-\gamma+\sum_{n=0}^\infty\frac{1}{n+1}-\frac{1}{n+z}
+}</script>
+</p>
+
+<p>Believe it or not, a <em>closed form</em> for the digamma function can be found for rational arguments. Though its derivation is a bit of a slog, I shall power through it for you. Using the series representation that we just derived, we have
+<script type="math/tex; mode=display">\begin{align}
+\psi(p/q)
+&= -\gamma+\sum_{n=0}^\infty \frac{1}{n+1}-\frac{1}{n+\frac{p}{q}}\\
+&= -\gamma+\sum_{n=0}^\infty \frac{1}{n+1}-\frac{q}{qn+p}\\
+&= -\gamma+\sum_{n=0}^\infty\frac{1}{n+1}-\frac{q}{qn+p}\\
+&= -\gamma+\lim_{x\to 1^-}\sum_{n=0}^\infty\frac{x^{n}}{n+1}-\frac{qx^{n}}{qn+p}\\
+\end{align}</script>
+Now recall my <a href="/post/71">old blog post</a> in which I devised a strategy for evaluating infinite series in the form
+<script type="math/tex; mode=display">\sum_{n=0}^\infty \frac{x^{qn+p}}{qn+p}</script>
+for natural numbers $p$ and $q$. I will not explain the methods I use again in this post, so if you do not understand, I encourage you to go back to the old post. Using the complex roots of unity $\omega_n$, defined as
+<script type="math/tex; mode=display">\omega_n:=e^{2\pi i/n}=\cos\frac{2\pi}{n}+i\sin\frac{2\pi}{n}</script>
+and using the fact that
+<script type="math/tex; mode=display">\sum_{n=0}^\infty \frac{x^{n}}{n+1}=-\frac{\ln(1-x)}{x}</script>
+one can derive the following formula, for natural numbers $q$ and $p$ with $p\lt q$:
+<script type="math/tex; mode=display">\sum_{n=0}^\infty \frac{x^{qn+p-1}}{qn+p}=-\frac{1}{q}\sum_{d=0}^{q-1} \frac{\omega_q^{(1-p)d}\ln(1-\omega_q^d x)}{\omega_q^d x}</script>
+Thus, it follows from this that
+<script type="math/tex; mode=display">\sum_{n=0}^\infty \frac{x^{n}}{qn+p}=-\frac{x^{(1-p)/q}}{q}\sum_{d=0}^{q-1} \frac{\omega_q^{(1-p)d}\ln(1-\omega_q^d x^{1/q})}{\omega_q^d x^{1/q}}</script>
+and so, continuing the chain of equalities that I began earlier,
+<script type="math/tex; mode=display">\begin{align}
+\psi(p/q)
+&= -\gamma+\lim_{x\to 1^-}\sum_{n=0}^\infty\frac{x^{n}}{n+1}-\frac{qx^{n}}{qn+p}\\
+&= -\gamma+\lim_{x\to 1^-}\bigg[-\frac{\ln(1-x)}{x}+x^{(1-p)/q}\sum_{d=0}^{q-1} \frac{\omega_q^{(1-p)d}\ln(1-\omega_q^d x^{1/q})}{\omega_q^d x^{1/q}}\bigg]\\
+&= -\gamma+\lim_{x\to 1^-}\bigg[-\frac{\ln(1-x)}{x}+x^{(1-p)/q}\ln(1-x^{1/q})+x^{(1-p)/q}\sum_{d=1}^{q-1} \frac{\omega_q^{(1-p)d}\ln(1-\omega_q^d x^{1/q})}{\omega_q^d x^{1/q}}\bigg]\\
+&= -\gamma+\lim_{x\to 1^-}\bigg[-\frac{\ln(1-x)}{1}+1^{(1-p)/q}\ln(1-x^{1/q})+x^{(1-p)/q}\sum_{d=1}^{q-1} \frac{\omega_q^{(1-p)d}\ln(1-\omega_q^d x^{1/q})}{\omega_q^d x^{1/q}}\bigg]\\
+&= -\gamma+\lim_{x\to 1^-}\bigg[-\ln(1-x)+\ln(1-x^{1/q})+x^{(1-p)/q}\sum_{d=1}^{q-1} \frac{\omega_q^{(1-p)d}\ln(1-\omega_q^d x^{1/q})}{\omega_q^d x^{1/q}}\bigg]\\
+&= -\gamma+\lim_{x\to 1^-}\bigg[-\ln((1-x^{1/q})(1+x^{1/q}+x^{2/q}+...+x^{(q-1)/q}))+\ln(1-x^{1/q})+x^{(1-p)/q}\sum_{d=1}^{q-1} \frac{\omega_q^{(1-p)d}\ln(1-\omega_q^d x^{1/q})}{\omega_q^d x^{1/q}}\bigg]\\
+&= -\gamma+\lim_{x\to 1^-}\bigg[-\ln(1+x^{1/q}+x^{2/q}+...+x^{(q-1)/q})+x^{(1-p)/q}\sum_{d=1}^{q-1} \frac{\omega_q^{(1-p)d}\ln(1-\omega_q^d x^{1/q})}{\omega_q^d x^{1/q}}\bigg]\\
+&= -\gamma-\ln(1+1^{1/q}+1^{2/q}+...+1^{(q-1)/q})+\lim_{x\to 1^-}\bigg[x^{(1-p)/q}\sum_{d=1}^{q-1} \frac{\omega_q^{(1-p)d}\ln(1-\omega_q^d x^{1/q})}{\omega_q^d x^{1/q}}\bigg]\\
+&= -\gamma-\ln(q)+\lim_{x\to 1^-}\bigg[x^{(1-p)/q}\sum_{d=1}^{q-1} \frac{\omega_q^{(1-p)d}\ln(1-\omega_q^d x^{1/q})}{\omega_q^d x^{1/q}}\bigg]\\
+&= -\gamma-\ln(q)+\sum_{d=1}^{q-1} \frac{\omega_q^{(1-p)d}\ln(1-\omega_q^d)}{\omega_q^d}\\
+&= -\gamma-\ln(q)+\sum_{d=1}^{q-1} \omega_q^{-pd}\ln(1-\omega_q^d)\\
+\end{align}</script>
+</p>
+
+<p>Yuck, look at that nasty algebra. Just look away for a moment and take a little break. Here are a few more formulas that I am going to use in just a moment:
+<script type="math/tex; mode=display">\ln(a+bi)=\frac{\ln(a^2+b^2)}{2}+i\arctan\frac{b}{a}</script>
+<script type="math/tex; mode=display">\cot \frac{x}{2}=\frac{\sin(x)}{1-\cos(x)}</script>
+<script type="math/tex; mode=display">2-2\cos(2x)=4\sin^2(x)</script>
+<script type="math/tex; mode=display">\arctan \cot x=\frac{\pi}{2}-x,\space\space\space x\in [0,\pi)</script>
+<script type="math/tex; mode=display">\sum_{d=1}^{q-1} \cos\frac{2\pi p d}{q}=-1,\space\space\space p,q\in\mathbb N</script>
+<script type="math/tex; mode=display">\sum_{d=1}^{q-1} \sin\frac{2\pi p d}{q}=0,\space\space\space p,q\in\mathbb N</script>
+<script type="math/tex; mode=display">\sum_{d=1}^{q-1} \frac{\pi d}{q}\sin\frac{2\pi p d}{q}=-\frac{\pi}{2}\cot\frac{\pi p}{q},\space\space\space p,q\in\mathbb N</script>
+</p>
+
+<p>These formulas are all pretty easy to derive, so I won't derive them for you. Keep an eye out for them as I continue the derivation - I'm not going to point them out.</p>
+
+<p>Ready? Here we go.</p>
+
+<p>
+<script type="math/tex; mode=display">\begin{align}
+\psi(p/q)
+&= -\gamma-\ln(q)+\sum_{d=1}^{q-1} \omega_q^{-pd}\ln(1-\omega_q^d)\\
+&= -\gamma-\ln(q)+\sum_{d=1}^{q-1} \bigg(\cos \frac{2\pi pd}{q}-i\sin \frac{2\pi pd}{q}\bigg)\ln\bigg(1-\cos \frac{2\pi d}{q}-i\sin \frac{2\pi d}{q}\bigg)\\
+&= -\gamma-\ln(q)+\sum_{d=1}^{q-1} \bigg(\cos \frac{2\pi pd}{q}-i\sin \frac{2\pi pd}{q}\bigg) \bigg(\frac{\ln((1-\cos(2\pi d/q))^2+\sin^2 (2\pi d/q))}{2}-i\arctan \frac{\sin(2\pi d/q)}{1-\cos(2\pi d/q)} \bigg)\\
+&= -\gamma-\ln(q)+\sum_{d=1}^{q-1} \bigg(\cos \frac{2\pi pd}{q}-i\sin \frac{2\pi pd}{q}\bigg) \bigg(\frac{\ln(2-2\cos(2\pi d/q))}{2}-i\arctan \frac{\sin(2\pi d/q)}{1-\cos(2\pi d/q)} \bigg)\\
+&= -\gamma-\ln(q)+\sum_{d=1}^{q-1} \bigg(\cos \frac{2\pi pd}{q}-i\sin \frac{2\pi pd}{q}\bigg) \bigg(\frac{\ln(4\sin^2(\pi d/q))}{2}-i\arctan \frac{\sin(2\pi d/q)}{1-\cos(2\pi d/q)} \bigg)\\
+&= -\gamma-\ln(q)+\sum_{d=1}^{q-1} \bigg(\cos \frac{2\pi pd}{q}-i\sin \frac{2\pi pd}{q}\bigg) \bigg(\ln(2\sin(\pi d/q))-i\arctan \frac{\sin(2\pi d/q)}{1-\cos(2\pi d/q)} \bigg)\\
+\end{align}</script>
+Because $\psi(p/q)$ is a real number for rational $p/q$, it follows that the right side of the equality is a real number, and so we may ignore the imaginary parts of each term of the summation, since they are guaranteed to cancel out to zero. Thus, we have
+<script type="math/tex; mode=display">\begin{align}
+\psi(p/q)
+&= -\gamma-\ln(q)+\sum_{d=1}^{q-1} \Re\bigg[\bigg(\cos \frac{2\pi pd}{q}-i\sin \frac{2\pi pd}{q}\bigg) \bigg(\ln(2\sin(\pi d/q))-i\arctan \frac{\sin(2\pi d/q)}{1-\cos(2\pi d/q)} \bigg)\bigg]\\
+&= -\gamma-\ln(q)+\sum_{d=1}^{q-1} \bigg(\cos \frac{2\pi pd}{q} \ln(2\sin(\pi d/q))-\sin \frac{2\pi pd}{q} \arctan \frac{\sin(2\pi d/q)}{1-\cos(2\pi d/q)}\bigg)\\
+&= -\gamma-\ln(q)+\sum_{d=1}^{q-1} \bigg(\cos \frac{2\pi pd}{q} \ln(2\sin(\pi d/q))-\sin \frac{2\pi pd}{q} \arctan \cot\frac{\pi d}{q}\bigg)\\
+&= -\gamma-\ln(q)+\sum_{d=1}^{q-1} \bigg(\cos \frac{2\pi pd}{q} \ln(2\sin(\pi d/q))-\sin \frac{2\pi pd}{q} \arctan \cot\frac{\pi d}{q}\bigg)\\
+&= -\gamma-\ln(q)+\sum_{d=1}^{q-1}\cos \frac{2\pi pd}{q} \ln(2)+\sum_{d=1}^{q-1} \bigg(\cos \frac{2\pi pd}{q} \ln(\sin(\pi d/q))-\sin \frac{2\pi pd}{q} \arctan \cot\frac{\pi d}{q}\bigg)\\
+&= -\gamma-\ln(q)-\ln(2)+\sum_{d=1}^{q-1} \bigg(\cos \frac{2\pi pd}{q} \ln(\sin(\pi d/q))-\sin \frac{2\pi pd}{q} \arctan \cot\frac{\pi d}{q}\bigg)\\
+&= -\gamma-\ln(2q)+\sum_{d=1}^{q-1} \bigg(\cos \frac{2\pi pd}{q} \ln(\sin(\pi d/q))-\sin \frac{2\pi pd}{q} \bigg(\frac{\pi}{2}-\frac{\pi d}{q}\bigg)\bigg)\\
+&= -\gamma-\ln(2q)+\sum_{d=1}^{q-1}\sin \frac{2\pi pd}{q} \bigg(\frac{\pi d}{q}-\frac{\pi}{2}\bigg)+\sum_{d=1}^{q-1} \bigg(\cos \frac{2\pi pd}{q} \ln(\sin(\pi d/q))\bigg)\\
+&= -\gamma-\ln(2q)-\frac{\pi}{2}\cot\frac{\pi p}{q}+\sum_{d=1}^{q-1} \cos \frac{2\pi pd}{q} \ln \sin \frac{\pi d}{q}\\
+\end{align}</script>
+</p>
+
+<p>This is it! This is the result we've been working towards!</p>
+
+<p>
+<script type="math/tex; mode=display">\bbox[lightgray,5px]
+{
+\psi(p/q)= -\gamma-\ln(2q)-\frac{\pi}{2}\cot\frac{\pi p}{q}+\sum_{d=1}^{q-1} \cos \frac{2\pi pd}{q} \ln \sin \frac{\pi d}{q}
+}</script>
+</p>
+
+<p>Of course, this only works for $p/q\in (0,1)$. However, if we want it to work for all rational numbers, we can simply use its recurrence
+<script type="math/tex; mode=display">\psi(z+1)-\psi(z)=\frac{1}{z}</script>
+to say that</p>
+
+<p>
+<script type="math/tex; mode=display">\psi(n+p/q)= -\gamma-\ln(2q)-\frac{\pi}{2}\cot\frac{\pi p}{q}+\sum_{d=1}^{q-1} \cos \frac{2\pi pd}{q} \ln \sin \frac{\pi d}{q}+\sum_{k=0}^{n-1} \frac{1}{k+\frac{p}{q}}</script>
+</p>
+
+<p>or</p>
+
+<p>
+<script type="math/tex; mode=display">\psi(-n+p/q)= -\gamma-\ln(2q)-\frac{\pi}{2}\cot\frac{\pi p}{q}+\sum_{d=1}^{q-1} \cos \frac{2\pi pd}{q} \ln \sin \frac{\pi d}{q}+\sum_{k=0}^{n-1} \frac{1}{k-\frac{p}{q}}</script>
+</p>
+
+<p>Using these two formulas, it is easy to verify that, for any rational number $r$,</p>
+
+<p>
+<script type="math/tex; mode=display">\psi(1-r)-\psi(r)=\pi\cos(\pi r)</script>
+</p>
+
+<p>Since the digamma function is continuous except at nonpositive integers, this property must necessarily extend to all <em>real</em> numbers, meaning that</p>
+
+<p>
+<script type="math/tex; mode=display">\bbox[lightgray,5px]
+{
+\psi(1-z)-\psi(z)=\pi\cos(\pi z)
+}</script>
+</p>
+
+<p>By integrating both sides of this with respect to $z$, we get
+<script type="math/tex; mode=display">\ln\Gamma(1-z)+\ln\Gamma(z)=-\ln(\sin z)+C</script>
+By taking $z=1/2$, we can solve and obtain $C=\ln\pi$, giving us
+<script type="math/tex; mode=display">\ln\Gamma(1-z)+\ln\Gamma(z)=-\ln(\sin z)+\ln\pi</script>
+and, by exponentiating both sides, we get the famous Gamma function reflection formula:
+<script type="math/tex; mode=display">\bbox[lightgray,5px]
+{
+\Gamma(z)\Gamma(1-z)=\frac{\pi}{\sin(\pi z)}
+}</script>
+</p>
+
+<p>I conclude this post with an exercise for the reader. Using this reflection formula, can you calculate the value of the following integral?</p>
+
+<p>
+<script type="math/tex; mode=display">\int_0^1 \ln \Gamma(z)dz</script>
+</p>
+
+<p><strong>NOTE:</strong> This is called <strong>Raabe's Integral</strong>, and the more general form
+<script type="math/tex; mode=display">\int_a^{a+1} \ln \Gamma(z)dz</script>
+can also be evaluated.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

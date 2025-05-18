@@ -1,0 +1,149 @@
+<html>
+<head>
+    <title>Topology for genetics</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h3>Topology for genetics</h3>
+
+<p>In <a href="https://franklin.dyer.me/post/203">a previous post</a> I discussed <a href="https://math.stackexchange.com/questions/31859/what-concept-does-an-open-set-axiomatise">an interpretation of topology</a> that I find really enlightening. In brief:</p>
+
+<ul>
+<li>An element $x\in X$ of a topological space represents an entity whose identity we may not be able to know with certainty.</li>
+<li>A neighborhood $N$ of a point $x\in X$ in the topological space represents a set with the property that we <em>can verify</em> that $x\in N$ despite not knowing the exact identity of $x$.</li>
+<li>An open set $U\subset X$ is a <em>semidecidable</em> set, that is, a set that is a neighborhood of all of its points, or a set describing a property that can be verified for each point possessing it.</li>
+<li>The empty set $\varnothing$ is open because it doesn't contain any points, and the full space $X$ is open because it contains all of the points.</li>
+<li>A union of open sets $U_i$ is open because as soon as we verify that $x$ belongs to some specific $U_i$, we will have verified that it belongs to the union.</li>
+<li>A <em>finite</em> intersection of open sets is open, because as soon as we verify that $x$ belongs to each one of them, we will have verified that it belongs to their intersection.</li>
+</ul>
+
+<p>Earlier, I considered this interpretation in computational terms - it had to do with which properties can be <em>computed</em> knowing only the identity of an element up to a finite amount of precision, for instance in approximate representations of real numbers. But in this post, I'd like to extend this perspective by using topology to model not only computational properties but also empirical observations of natural systems whose internal state can't be deduced with certainty from the outside. In particular, we'll see how it can be used to describe <em>genetics</em>, in such a way that the "hidden" data consists of the genetic information of an organism, which can only be accessed in a limited way through the way it manifests itself in the organism's physical traits.</p>
+
+<h4>Genetics background <a id="toc-section-1" class="toc-section"></a></a></h4>
+
+<p>First let's introduce a bit of terminology from genetics. Sexually reproducing organisms typically receive various copies of genes from their parents, and in particular, diploid organisms have two copies of each chromosome, one from each parent. If the DNA sequence controlling a specific gene is situated at a particular location on a chromosome, we say that this location is the <strong>locus</strong> of the gene. The different possible DNA sequences that could comprise this locus are called the <strong>alleles</strong> of the gene. When one organism reproduces with another, the child receives one chromosome from each parent, and a common assumption is that the chromosome received from each parent is randomly selected.</p>
+
+<p>So, what happens if a diploid organism has two <em>different</em> alleles for the same gene, with one on each of its chromosomes? What's been often observed is that one of the alleles ends up being <strong>dominant</strong> while the other is <strong>recessive</strong>, so that the appearance of the physical characteristic encoded by the gene is determined by the presence or absence of the dominant variant.  An organism's combination of alleles is called its <strong>genotype</strong> while the collection of characteristics that it presents as a result of its genes is called its <strong>phenotype</strong>.</p>
+
+<p>For example, among the genes of a flowering plant, it might be the case that the gene determining the production of purple pigment has one possible allele ($P$) that causes the pigment to be produced and another one ($p$) that doesn't. In this case, just a single copy of the pigment-producing allele is enough for the purple color to appear in the flowers. Thus, the plants with genotype $PP$ as well as the plants with genotype $Pp$ will have purple flowers, while the plants with genotype $pp$ will have while flowers (with no pigment). The organisms with two copies of the ame allele are called <strong>homozygotes</strong> while those with different alleles are called <strong>heterozygotes</strong>.</p>
+
+<p><center><img src="/img/2023-07-15-Fig1.png" alt="Fig 1" /></center></p>
+
+<h4>Topological relevance <a id="toc-section-2" class="toc-section"></a></a></h4>
+
+<p>The interesting aspect of this inheritance mechanism when it comes to topology and its ability to model incomplete knowledge is the fact that <em>an organism's genotype cannot be deduced directly from its phenotype</em>. For example, given a plant with white flowers, you know that its genotype is definitely $pp$, but given a plant with a purple flower, it's not immediately clear whether its genotype is $PP$ or $Pp$.</p>
+
+<p>But although the genotypes $PP$ and $Pp$ correspond to the same phenotype, it wouldn't be accurate to say that an organism with genotype $PP$ is <em>intistinguishable</em> from an organism of genotype $Pp$. For instance, upon reproducing with another plant with white flowers, they would produce offspring with different color distributions. A cross $PP\times pp$ can only produce descendants of genotype $Pp$ having purple flowers, but a cross $Pp\times pp$ can result in descendants with genotype $Pp$ (purple flowers) as well as descendants of genotype $pp$ (white flowers).</p>
+
+<p><center><img src="/img/2023-07-15-Fig2.png" alt="Fig 2" /></center></p>
+
+<p>Thus, if we have a plant with purple flowers and unknown genotype, we cross it with a white-flowered plant, and we observe that the child has white plants, then the original plant must have had the genotype $Pp$. But notice that if this original purple-flowered plant has genotype $PP$, <em>there is no experiment that lets us conclude with certainty that it is a homozygote.</em> A $PP$ plant behaves indistinguishably from a plant $Pp$ that always passes its $P$ allele to its children, as improbable as that may be. The problem of distinguishing between a $PP$ plant and a $Pp$ plant is thus more nuanced than determining if they are "distinguishable" or "indistinguishable". Rather, $Pp$ can be distinguished from $PP$, but $PP$ cannot be distinguished from $Pp$. </p>
+
+<p>The conceptual framework used in topology to express "semidecidable sets" as open sets allows us to concisely describe this phenomenon. The problem of extracting information about an organism's genotype can be represented as a topological space with three elements: the three genotypes $PP$, $Pp$ and $pp$. We already pointed out that if we have a plant with genotype $pp$, we'll know its genotype immediately from the color of its flowers, meaning that ${pp}$ should be an open set. Further, given a plant of genotype $PP$ or $Pp$, we'll know immediately that it has <em>one</em> of these two genotypes by looking at its flower color, and therefore ${PP, Pp}$ should also be an open set. Finally, if we have a heterozygote plant $Pp$, we can confirm its genotype observing that it produces white-flowered offspring, hence ${Pp}$ should be open as well. This results in the following topology on the set ${PP, Pp, pp}$:</p>
+
+<p><center><img src="/img/2023-07-15-Fig3.png" alt="Fig 3" /></center></p>
+
+<p>Note that the topology on the set of genotypes gives us a concise and exhaustive way of expressing what kind of knowledge can be acquired in each circumstance. Shortly we'll see some theoretical examples of quirks that can complicate inheritance and how they impact the topology used to express the "verifiable knowledge" to be had.</p>
+
+<h4>Incomplete dominance <a id="toc-section-3" class="toc-section"></a></a></h4>
+
+<p><strong>Incomplete dominance</strong> is a phenomenon in which differences can be observed between the phenotypes of a homozygous dominant organism and a heterozygous organism for certain characteristics. For instance, in the case of flower color, if two copies of the dominant allele $P$ result in an amount of pigment production that vastly exceeds the pigment production that is possible with a single copy, then it could be possible for the heterozygotes to produce a slighter purple color, like this: </p>
+
+<p><center><img src="/img/2023-07-15-Fig4.png" alt="Fig 4" /></center></p>
+
+<p>If it were this way, then we'd be able to easily distinguish between all possible genotypes just by observing the phenotype, since each phenotype would correspond to a unique genotype. Because of this, the topology for this locus would be the <em>discrete topology</em> on three points:</p>
+
+<p><center><img src="/img/2023-07-15-Fig5.png" alt="Fig 5" /></center></p>
+
+<p>In this case incomplete dominance would trivialize the problem, but there are more complex cases in which it gives rise to interesting behavior. For instance, there's a gene that controls coat color in rabbits with four distinct alleles denoted $C,c^\mathtt{ch}, c^\mathtt{h}, c$ that have the following behavior:</p>
+
+<ul>
+<li>$C$ produces an enzyme that fabricates pigment normally, which gives rise to dark fur all over the rabbit's body.</li>
+<li>$c^\mathtt{ch}$ produces a less effective enzyme that fabricates pigment in smaller quantities, giving rise to gray hair (unless there's also another enzyme producing pigment in greater quantities).</li>
+<li>$c^\mathtt{h}$ produces an enzyme that is very sensitive to temperature, and breaks down completely at high temperatures. Thus, it only produces pigment at the rabbit's extremities (paws and ears), where it produces pigment in normal quantities.</li>
+<li>$c$ produces an enzyme that doesn't work at all.</li>
+</ul>
+
+<p>Notice that in the presence of the allele $C$, we wouldn't be able to directly deduce the presence of any other allele, since black pigment would appear in large quantities all over the rabbit. For this reason, $C$ is said to be <em>completely dominant</em> to the other two alleles. On the other hand, $c^\mathtt{ch}$ is <em>partially dominant</em> to $c^\mathtt{h}$, since the heterozygous genotype with these two alleles allows for a mixture of the two characteristics to be observed: dark hair in the extremities, and gray hair over the rest of the body. I've had some difficulty finding good sources on the internet that describe the dominance relations between the alleles of this gene without any ambiguity, but from here onward I'll assume that they give rise to the following $5$ phenotypes, which is what I've understood from my reading:</p>
+
+<p><center><img src="/img/2023-07-15-Fig6.png" alt="Fig 6" /></center></p>
+
+<p>If this is accurate, then the following is the topology that would be used to describe what can be deduced with certainty about a bunny's genotype:</p>
+
+<p><center><img src="/img/2023-07-15-Fig7.png" alt="Fig 7" /></center></p>
+
+<p>Can you see why? For each open set in this diagram and each of their respective elements, can you describe an observation that would confirm that an organism's genotype belongs to that open set?</p>
+
+<h4>Epistasis <a id="toc-section-4" class="toc-section"></a></h4>
+
+<p>We could also consider multiple characteristics of an organism at the same time, encoded by different genes. For instance, if a gene with the alleles $A,a$ controls a person's hair color and a gene with the alleles $B,b$ controls their eye color, since we already know the topologies on the respective sets ${AA, Aa, aa}$ and ${BB,Bb,bb}$ that would arise by considering these characteristics separately, we can obtain a topology on the set <script type="math/tex; mode=display">\begin{Bmatrix} AABB & AaBB & aaBB \\ AABb & AaBb & aaBb \\ AAbb & Aabb & aabb
+\end{Bmatrix}</script> that describes the simultaneous consideration of the two characteristics at once, by taking the <em>product topology</em> on this set. In this case, the topology is given by:</p>
+
+<p><center><img src="/img/2023-07-15-Fig8.png" alt="Fig 8" /></center></p>
+
+<p>The term <strong>epistasis</strong> refers to an interaction between genes in which the genotype with respect to one gene influences the expression of the phenotype coded by the other gene, in contrast to the previous example in which the characteristics are independent. For instance, suppose this time that one gene with alleles $A,a$ controls hair color while another gene with alleles $B,b$ controls whether or not a person is bald (supposing that baldness is dominant). In this case, the second characteristic can <em>mask</em> the phenotype with respect to the first characteristic - if a person is bald, itdoesn't matter what color their hair would be if they had hair, because this can't be observed. In this case, the mapping from genotype to phenotype would be as follows:</p>
+
+<p><center><img src="/img/2023-07-15-Fig9.png" alt="Fig 9" /></center></p>
+
+<p>In a finite topology like the ones we've been investigating, we can consider the <strong>basic open set</strong> $B_g$ about each point $g$, that is, the smallest open set containing that point, or the intersection of all open sets containing it. For a genotype $g$, the basic open set $B_g$ represents the most specific level of knowledgee that it's possible to possess about an organism of that genotype. It's a good puzzle trying to determine what exactly are the open sets in the topology corresponding to this combination of characteristics. I found the following topology:</p>
+
+<p><center><img src="/img/2023-07-15-Fig10.png" alt="Fig 10" /></center></p>
+
+<p>The most interesting case to consider was $aaBB$, that is, the genotype with the largest basic open set, or the genotype of a person about whom the least can be deduced. We can describe the $9$ basic open sets $B_g$ of this topology in terms of the observations about a person with genotype $g$ that allow us to conclude that person's genotype belongs to $B_g$:</p>
+
+<ol>
+<li>$B_\mathtt{aabb}$ includes people with brown hair.</li>
+<li>$B_\mathtt{AAbb}$ includes people with blond hair.</li>
+<li>$B_\mathtt{Aabb}$ includes people with blond hair who are capable of having brown-haired kids when reproducing with brown-haired people.</li>
+<li>$B_\mathtt{aaBb}$ includes bald people who can have brown-haired kids when reproducing with a brown-haired person.</li>
+<li>$B_\mathtt{AABb}$ includes bald people who can have blond-haired children when reproducing with a brown-haired person.</li>
+<li>$B_\mathtt{AaBb}$ includes bald people who can have both brown-haired and blond-haired kids when reproducing with brown-haired people.</li>
+<li>$B_\mathtt{AABB} = B_\mathtt{AaBB}$ includes bald people who can have children belonging to $B_\mathtt{AaBb}$.</li>
+<li>$B_\mathtt{aaBB}$ includes all bald people. That is, $aaBB$ cannot be distinguished from any other genotype of a bald person (even though they can sometimes be distinguished from each other).</li>
+</ol>
+
+<p>To address a possible confusion: it might seem that the set ${aaBB, aaBb, AaBB, AaBb}$ should also be open, since these are the only genotypes that can cross with $AAbb$ to have a child with one of the genotypes in $B_\mathtt{aaBb} = {aaBb, AaBb}$, and since this is another open set we would be able to verify when its child has one of these genotypes. But this is not a possible experiment, becuase to be sure of the result, we would have to be sure that we crossed the individual with a person of genotype $AAbb$. But this genotype can't be verified! We wouldn't be able to verify that the person with whom they are reproducing has genotype $AAbb$, but rather just that they belong to $B_\mathtt{AAbb} = {AAbb, Aabb}$, and if we cross any bald person with someone having a genotype of either $AAbb$ or $Aabb$, the result could be a child of $B_\mathtt{aaBb}$. It's because of this that $B_\mathtt{aaBB}$ is distinct from ${aaBB, aaBb, AaBB, AaBb}$, and instead equals the set of all genotypes giving rise to baldness.</p>
+
+<h4>Exercises <a id="toc-section-5" class="toc-section"></a></h4>
+
+<p>Here are some more cases to consider. They're purely theoretical and I have no idea whether they have any basis in real genetics.</p>
+
+<ol>
+<li>Imagine that there are three alleles $A_0,A_1,A_2$ for a gene that encode three distinct phenotypes and are such that $A_0$ is totally dominant over $A_1$, $A_1$ is totally dominant over $A_2$ and $A_2$ is totally dominant over $A_0$. Can you draw the topology on the $6$ possible genotypes that describes what can be deduced about the genotype of an organism? </li>
+<li>Consider the case of the flowers that we described at the beginning of the post, but this time suppose that there's a disease (that spreads randomly, and isn't necessarily heritable) that causes a plant to have blue flowers regardless of its genotype. Each plant can have any of the three genotypes $PP,Pp, pp$ but can also either have the disease or not have the disease, so that there are $6$ possible states and only three possible colors. Find the corresponding topology. What if the disease gives rise to purple flowers? Or white flowers?</li>
+<li>Consider once more the example with genes controlling hair color and baldness. What would the topology be if baldness were recessive instead of dominant?</li>
+</ol>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

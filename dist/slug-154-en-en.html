@@ -1,0 +1,174 @@
+<html>
+<head>
+    <title>Population Puzzles and Mendelian Inheritance</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h3>Population puzzles and Mendelian Genetics</h3>
+
+<p>Although this is a math post, it doesn’t get into anything beyond high-school-level math. I noticed in my biology class that Mendelian Genetics, although it is a simplification of a much more complex gene inheritance mechanism in humans and other organisms, gives rise to a lot of fun math puzzles (which, in my opinion, are quite aesthetically pleasing). These problems often involve simple ratios and probability laws, which aren’t very advanced concepts, but can still be confusing and difficult to conceptualize. If the puzzles that I lay out in this post are too easy to solve with pencil and paper, try doing them in your head.</p>
+
+<h4>Warm-up ratio puzzles <a id="toc-section-1" class="toc-section"></a></h4>
+
+<p>Before getting into the genetics, here are a few warm-up questions just involving ratios and proportionality in a population of animals:</p>
+
+<blockquote>
+<p>Suppose all birds in a forest are either red or blue.<br />
+<strong>1.</strong> If there are twice as many red birds as blue birds, what fraction of the birds are blue?<br />
+<strong>2.</strong> If half of the blue birds die, <em>then</em> what fraction of the birds are blue?<br />
+<strong>3.</strong> Suppose that all birds have either long or short beaks. If $1/6$ of red birds have long beaks and $1/3$ of blue birds have long beaks, what fraction of all birds have long beaks?<br />
+<strong>4.</strong> Suppose all birds have either long or short tails. If $1/2$ of all birds have long tails and twice as many red birds as blue birds have long tails, what fraction of red birds have long tails?</p>
+</blockquote>
+
+<p><em>Solution to Puzzle 1:</em> Suppose there are $x$ blue birds. Then there are $2x$ red birds and the total number of birds is $x+2x=3x$. Thus, the fraction of blue birds is $x/3x=1/3$.</p>
+
+<p><em>Solution to Puzzle 2:</em> Now there are only $x/2$ blue birds, but there are still $2x$ red birds. The total number of birds is equal to $x/2+2x=5x/2$ and the fraction of blue birds is $(x/2)/(5x/2)=1/5$.</p>
+
+<p><em>Solution to Puzzle 3:</em> Since $1/6$ of the $2x$ red birds have long beaks, the number of red birds with long beaks equals $x/3$. Since $1/3$ of the $x/2$ blue birds have long beaks, the number of blue birds with long beaks equals $x/6$. The total number of long-beaked birds is $x/3+x/6=x/2$ and the fraction of long-beaked birds is $(x/2)/(5x/2)=1/5$.</p>
+
+<p><em>Solution to Puzzle 4:</em> Among the long-tailed birds, twice as many are red as are blue, so $3/3$ of the long-tailed birds are red. Since $1/2$ of all birds are long-tailed, exactly $(1/2)(2/3)=1/3$ of all birds are red long-tailed birds. Finally, since $4/5$ of all birds are red, $(1/3)/(4/5)=5/12$ of red birds have long tails.</p>
+
+<h4>Mendelian genetics <a id="toc-section-2" class="toc-section"></a></h4>
+
+<p>Okay, those were pretty simple. Now let’s get into some genetics before doing any more puzzles. Feel free to skip this section if you already understand basic Mendelian inheritance.</p>
+
+<p><strong>Gregor Mendel</strong> was a monk who discovered some important laws of genetics by experimenting with pea plants in the garden of his monestary (he’s pretty famous, so most readers will have at least heard of him already). One of the traits of pea plants that he experimented with was flower color: pea plant flowers could be either purple or white. In his most famous experiment, he bred true-breeding purple-flowered peas with true-breeding white-flowered peas. To be clear, organisms that are <strong>true-breeding</strong> with respect to a certain trait if they always pass that trait to their offspring after mating with each other.</p>
+
+<p><center><img src="/img/2020-03-07-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>When he crossed true-breeding purple-flowered peas with true-breeding white-flowered peas, all of the children were purple. However, when he allowed the purple-flowered peas in this generation to reproduce with each other, the child population contained about $3/4$ purple-flowered plants and $1/4$ white-flowered plants! Somehow, the “whiteness” gene had disappeared for a generation and then reemerged in the following generation. </p>
+
+<p>Mendel came up with a model to explain this phenomenon. He proposed that each pea plant contains two “heritable factors” (which we now call <strong>alleles</strong>) and a child receives only one of these from each of its parents. When considering flower color, the two alleles are $P$, corresponding to purple flowers, and $p$, corresponding to white flowers. Thus, each pea plant has a <strong>genotype</strong> of $PP$, $Pp$, or $pp$. However, the $P$ allele is <strong>dominant</strong>, meaning that a pea plant is purple if it has at least one $P$ allele, and can only be white if it has no $P$ alleles and two $p$ alleles (equivalently, we say that $p$ is the <strong>recessive</strong> allele). Thus, the <strong>phenotype</strong> of a pea plant, or the actual physical characteristics it displays, are determined by the presence or absence of the dominant allele. Plants with the $PP$ or $Pp$ genotype have purple flowers, and plants with the $pp$ genotype have white flowers.</p>
+
+<p>How does this explain what Mendel observed? Well, the true-breeding purple-flowered peas would have had $PP$ and the true-breeding white-flowered peas would have had $pp$, so their children must have all had $Pp$. What happened when these $Pp$ peas bred amongst themselves? Have a look at the <strong>Punnett Square</strong> below to see what happens when two $Pp$ pea plants breed with each other:</p>
+
+<p><center><img src="/img/2020-03-07-Fig2.png" alt="Fig 2" /></center></p>
+
+<p>We can see that $1/4$ of the children will have $PP$, $1/2$ will have $Pp$ (or $pP$, which is the same thing), and $1/4$ will have $pp$. All of the flowers with $PP$ or $Pp$ will be purple, which is $3/4=75\%$ of them, just as Mendel’s experiment showed! Even better, Mendel repeated the experiment with lots of other different characters of pea plants:</p>
+
+<ul>
+<li>seed color (yellow or green)</li>
+<li>seed shape (smooth or wrinkled)</li>
+<li>pod color (yellow or green)</li>
+<li>pod shape (full or constricted)</li>
+<li>stem size (normal or dwarf)</li>
+<li>flower position (axial or terminal)</li>
+</ul>
+
+<p>He observed the same results for each of these characters, supporting his hypothesis. </p>
+
+<p>Before moving on, a few definitions and a bit of notation: an organism with two identical alleles (e.g. $PP$ or $pp$) is called a <strong>homozygote</strong> and an organism with two different alleles is a <strong>heterozygote</strong>. Typically, when using letters to represent alleles, the dominant allele is written using a capital letter and the recessive allele is represented by a lowercase letter.</p>
+
+<p>Stated formally, here are the assumptions of Mendel’s model:</p>
+
+<ol>
+<li>All characters are discrete binary. That is, each trait is one of exactly two possibilities (yellow/green, smooth/wrinkled, normal/dwarf, etc).</li>
+<li>A child inherits one allele from each of its parents.</li>
+<li>One allele is dominant, and any organism possessing the dominant allele displays the corresponding phenotype (i.e. has the physical traits caused by that allele).</li>
+<li>A child inherits a random allele from each parent. That is, if a child has a homozygotic parent (with $Pp$), it inherits $P$ from that parent with $50\%$ probability and $p$ with $50\%$ probability.</li>
+<li>Different traits are “independently assorted” or “unlinked.” For example, the color of a pea’s flowers and the shape of its seeds have no bearing on each other whatsoever.</li>
+</ol>
+
+<p>Although these assumptions certainly aren’t true in general across the plant and animal kingdoms (in biology, there seem to be exceptions to every rule), they do hold in many cases. Some examples of dominant traits in humans include attached earlobes, freckles, and the ability to roll one’s tongue, and some recessive traits include left-handedness.</p>
+
+<p>Before moving on to some more puzzles, let me warn you of a few common misunderstandings. If you and your mate are both heterozygous ($Rr$) for the right-handedness gene and you have four children, this doesn’t mean that it’s certain that one of them will be left-handed and the other three will be right-handed. This is the <em>most probable</em> outcome, but it’s not guaranteed, because we’re dealing with probability and each birth is an independent event. Also, don’t confuse <em>dominance</em> of an allele with <em>prevalence</em>. Six-fingeredness, for example, is a dominant trait, but certainly not very common.</p>
+
+<h4>Pea plant puzzles <a id="toc-section-3" class="toc-section"></a></h4>
+
+<p>Now, here are some puzzles using Mendel’s pea plants:</p>
+
+<blockquote>
+<ol>
+<li>You have a purple-flowered pea plant, but you don’t know whether it is homozygous ($PP$) or heterozygous ($Pp$). When you allow it to reproduce with a white-flowered pea, about half of the offspring are purple. Which is it, $PP$ or $Pp$?</li>
+<li>Suppose a homozygous purple-flowered pea plant mates with a heterozygous purple-flowered pea plant. If two of their children are randomly selected to mate with each other, what is the probability that one of the offspring has white flowers?</li>
+<li>Say you have a population of all homozygous pea plants of which $10\%$ have white flowers. You allow all of these plants to mate with each other indiscriminately. Approximately what percentage of their offspring will be heterozygous ($Pp$)?</li>
+<li>Suppose you have a bunch of purple-flowered pea plants, some homozygous and some heterozygous. When you allow them to reproduce with white-flowered peas, $10\%$ of the children have white flowers. What percentage of your original group of purple-flowered peas was homozygous?</li>
+<li>Again, suppose you have a bunch of purple-flowered pea plants and do not know how many are homozygous/heterozygous. This time, you allow them to all mate with each other indiscriminately, resulting in a child population with about $91\%$ purple-flowered plants. What percentage of the plants in the original population were heterozygous (Pp)?</li>
+<li>Consider a mixed population containing both purple-flowered and white-flowered pea plants, with about $60\%$ purple-flowered. After the plants in this population mate indiscriminately with each other, the child population has about $51\%$ purple-flowered peas. What proportion of the initial population was homozygous dominant (PP)?</li>
+<li>Within a population of purple- and white-flowered pea plants, plants breed indiscriminately amongst themselves. In the child population, $64\%$ are homozygous dominant (PP). What proportion of the plants in the child population have white flowers?</li>
+</ol>
+</blockquote>
+
+<p><em>Solution to Puzzle 1:</em> If a homozygous dominant (purple) plant breeded with a homozygous recessive (white) plant, all of the offspring would have purple flowers, since they would all inherit at least one dominant $P$ allele from the purple parent. Since some of the offspring are white, we can rule out this possibility, so the parent must be heterozygous $Pp$.</p>
+
+<p><em>Solution to Puzzle 2:</em> Since one of the parents is homozygous dominant, all of the children will be purple. However, the other parent is heterozygous, about half of the children will have $PP$ and the other half $Pp$. In order for two of these plants to produce a white-flowered child, both of them must be $Pp$, and the probability of two $Pp$ plants being selected is $(1/2)(1/2)=1/4$. Further, for a child to have white flowers, it must receive $p$ from both parents, which also occurs with probability $(1/2)(1/2)=1/4$. Thus, the overall probability of a white-flowered “grandchild” being produced is $(1/4)(1/4)=1/16$.</p>
+
+<p><em>Solution to Puzzle 3:</em> Since all possible parents are homozygous, $PP\times pp$ is the only way to obtain a heterozygous child. For each child, the probability that one parent is $PP$ and the other is $pp$ is equal to $(0.9)(0.1)+(0.1)(0.9)=0.18$. Thus, about $18\%$ of the child population will be heterozygous.</p>
+
+<p><em>Solution to Puzzle 4:</em> Suppose $x$ is the proportion of your purple-flowered pea population that is heterozygous. $PP\times pp$ can only result in purple-flowered children, and $Pp\times pp$ results in about half purple-flowered and half white-flowered children. Thus, $x/2$ should be the proportion of the children with white flowers. Therefore $x/2=0.1$ and $x=0.2$, so the proportion of homozygous peas in your initial population equal $1-x=0.8$, or $80\%$.</p>
+
+<p><em>Solution to Puzzle 5:</em> Let $x$ be the proportion of the initial population that is heterozygous. Since all plants in this population are purple, the only way to obtain white-flowered children is $Pp\times Pp$, The probability that both of a child’s parents have $Pp$ equals $x^2$, and the probability that it inherits $p$ from both of them is $1/4$, so a child has white flowers with probability $x^2/4$. Thus, the proportion of purple-flowered children should be about $1-x^2/4 = 0.91$, and by solving this we see that $x=0.6$, so about $60\%$ of the original population were heterozygous.</p>
+
+<p><em>Solution to Puzzle 6:</em> This is where it gets a bit trickier. Let $x$ be the proportion of the initial population that was heterozygous dominant ($Pp$), so that the answer to the puzzle is $1-x$. Let’s calculate the probability that a child produced by this population has white flowers, in terms of $x$. There are three ways for this to happen:</p>
+
+<ul>
+<li>$pp\times pp$ always results in white-flowered offspring, and the probability of having two $pp$ parents is $(1-0.6)(1-0.6)=(0.4)(0.4)=0.16$.</li>
+<li>$Pp\times pp$ results in white-flowered offspring with probability $1/2$, and the probability of having one $Pp$ parent and one $pp$ parent is $(2)(x)(1-0.6)=0.8x$, so the overall probability of this case is $(1/2)(0.8x)=0.4x$.</li>
+<li>$Pp\times Pp$ results in white-flowered offspring with probability $1/4$, and the probability of having two $Pp$ parents is $x^2$, so the overall probability of this case is $x^2/4=0.25x^2$.</li>
+</ul>
+
+<p>Adding up the probabilities from each of these cases gives us the probability that a child has white flowers, which we know from the problem is equal to $1-0.51=0.49$. Therefore, we have
+<script type="math/tex; mode=display">0.16+0.4x+0.25x^2=0.49</script>
+Solving this equation yields $x=0.6$, so $1-x=0.4$ and $40%$ of the original population were heterozygous.</p>
+
+<p><em>Solution to Puzzle 7:</em> This puzzle is especially tricky, and the algebra can get very messy if one tries to solve it using a system of equations. There is, however, a very nice and simple way to do it. Rather than considering proportions of homozygous and heterozygous pea plants in the initial population, let $x$ be the proportion of all <em>alleles</em> in the initial population that are dominant $P$. Since all parents are chosen with equal probability and each of a child’s alleles is chosen with equal probability from each parent’s pair of alleles, we have that a child’s alleles are chosen uniformly and at random <em>from all alleles</em> in the parent population. Thus, $x^2$ is the probability of a child being homozygous dominant, so we know that $x^2=0.64$ and $x=0.8$. This means $20\%$ of alleles in the parent population are $p$, and the probability of a child receiving $pp$ is equal to $(0.2)(0.2)=0.04$, so about $4\%$ of children should have white flowers.</p>
+
+<p>What is it that makes puzzle 7 so tricky? It seems at first glance like there isn’t enough information to solve the problem. Indeed, in some arbitrary population of pea plants, given only that the proportion of homozygous dominant plants equals $64\%$, there <em>isn’t</em> enough information to determine the proportion of white-flowered plants. We could certainly have a population consisting only of homozygous dominant and homozygous recessive, or only of homozygous dominant and heterozygous. So why was this problem solvable?</p>
+
+<p>There is one extra piece of information given in the problem, but it’s hidden: the fact that the population was produced by indiscriminant interbreeding of a parent population. This throws in an element of randomness that (ironically) allows us to predict more about the child population. If we know that the population we’re dealing with was produce in this way, it’s virtually impossible to have, say, a population of only $PP$ and $pp$ plants, because the probability of this happening would be tiny.</p>
+
+<p>Let’s generalize the result of puzzle 7. Suppose we have a population of pea plants (or, more generally, organisms) with respective proportions $x_{PP},x_{Pp}$, and $x_{pp}$ of homozygous dominant, heterozygous, and homozygous recessive individuals. For one, we know that
+<script type="math/tex; mode=display">x_{PP}+x_{Pp}+x_{pp}=1</script>
+simply because every individual in the population falls into one of these three categories. However, we know more than that. Using the same approach as we did in the solution to puzzle 7, suppose that $y$ is the proportion of dominant $P$ alleles in the parent population. Then we have that
+<script type="math/tex; mode=display">x_{PP}=y^2</script>
+<script type="math/tex; mode=display">x_{Pp}=2y(1-y)</script>
+<script type="math/tex; mode=display">x_{pp}=(1-y)^2</script>
+which determines some implicit relations between $x_{PP},x_{Pp},$ and $x_{pp}$. For example, we have
+<script type="math/tex; mode=display">\sqrt{x_{PP}}+\sqrt{x_{pp}}=1</script>
+<script type="math/tex; mode=display">x_{Pp}=2\sqrt{x_{PP}\cdot x_{pp}}</script>
+These equations are essentially a restatement of the <a href="https://en.wikipedia.org/wiki/Hardy–Weinberg_principle">Hardy-Weinberg Equations</a>.</p>
+
+<h4>Two open-ended questions <a id="toc-section-4" class="toc-section"></a></h4>
+
+<p>I’ll close this blog post with two more open-ended question (whose answers I will <em>not</em> provide):</p>
+
+<blockquote>
+<p><strong>1.</strong> Consider a population of organisms in which a certain recessive trait causes a disease that inevitably leads to death (before the afflicted individual has offspring of its own). What happens to the proportion of organisms with the disease as many generations go by?<br />
+<strong>2.</strong> What would happen if only heterozygous individuals got the disease (so that individuals with $PP$ and $pp$ remained unafflicted)?  </p>
+</blockquote>
+
+<p>Keep in mind that everything in this post has assumed Mendel's simplified postulation of genetic inheritance. In reality, things are often much more complicated (remember how I said there are exceptions to everything in biology?) - for instance, <a href="https://en.wikipedia.org/wiki/ABO_blood_group_system#Genetics">blood type inheritance</a> involves <strong>codominant</strong> alleles, and <a href="https://www.raising-rabbits.com/rabbit-coat-color-genetics.html">rabbit fur color inheritance</a> involves a whole hierarchy of different alleles.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

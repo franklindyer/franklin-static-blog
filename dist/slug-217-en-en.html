@@ -1,0 +1,170 @@
+<html>
+<head>
+    <title>RPi headless setup and remote connection</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>RPi headless setup and remote connection</h2>
+
+<p>As with so many of my blog posts, this post is written more or less for my former self. The first time I tried setting up a Raspberry Pi, I didn't have any external monitor to connect to the Pi, and I was frustrated to find that many of the online tutorials for setting up your RPi presuppose this. Through more targeted googling and trial and error I was able to get a remote shell on my RPi without any external monitor or keyboard. </p>
+
+<p>This post is basically a write-up of my personal notes on how to accomplish this, with some additional tips explaining how you can connect to your RPi from outside of your private home network. If I go a few months without touching my RPi and then end up having to set it up again, I'll probably refer back to this post myself!</p>
+
+<p>Here's exactly what you need to follow this tutorial:</p>
+
+<ul>
+<li>A Raspberry Pi</li>
+<li>A micro-SD card (usually comes with the RPi)</li>
+<li>A personal computer</li>
+<li>An appropriate adapter to connect the micro-SD card to your PC</li>
+<li>A home network that your PC is connected to</li>
+<li>OpenSSH (or an SSH client of your choice) installed on your PC</li>
+<li>An ethernet cable (unless your home network is wireless)</li>
+</ul>
+
+<h3>Initial setup <a id="toc-section-1" class="toc-section"></a></h3>
+
+<p>First, you should download the <a href="https://www.raspberrypi.com/software/">Raspberry Pi Imager</a> from the Raspberry Pi website. You'll use this to load an operating system onto the micro-SD card. Consult the specs of your RPi to determine its model, and whether it is 64-bit or 32-bit. My RPi was <a href="https://www.amazon.com/gp/product/B0897XZDF2/ref=ppx_yo_dt_b_search_asin_title?ie=UTF8&amp;psc=1">purchased from here</a>, so it's a Raspberry Pi 4 with 64-bit architecture. Connect the micro-SD card to your PC and open up the Raspberry Pi Imager. Then select the correct model and the appropriate version of Raspbian (the dedicated Linux distribution for RPis) for your architecture, select the micro-SD card as your storage, and proceed to the next step.</p>
+
+<p><center>
+<img src="/img/2024-03-26-Fig1.png" alt="Fig 1" />
+</center></p>
+
+<p>You may be prompted to apply "OS customisation settings". If so, you should select "edit settings". In this menu, you can set a username and password for an account on the RPi. If your home network is wireless, you should enter the SSID and password for your home WiFi, so that the RPi can connect automatically to WiFi when it starts up. You can also set a hostname. Even if you don't change the hostname, you should copy it down somewhere, because it will be useful for connecting to the RPi momentarily. Here's what my settings look like:</p>
+
+<p><center>
+<img src="/img/2024-03-26-Fig2.png" alt="Fig 2" />
+</center></p>
+
+<p>Under the "services" heading, you should also ensure that "enable SSH" is turned on. SSH is the application that we'll use to get a command shell on the RPi without physically connecting a keyboard and monitor to it. For now, it's okay to use the password authentication option. But more on this in a second.</p>
+
+<p>Then, you can go ahead and flash the OS onto the micro-SD card. This could take a few minutes. When that's finished, remove the micro-SD card, insert it into the RPi and power it on. If your home network is wired, plug one end of an ethernet cable into your RPi and the other end into your home router. It may take a couple of minutes to start up for the first time and connect to the network.</p>
+
+<p>Now, try running <code>ping pi.local</code> from a terminal on your PC. If you get a response, that's great! Then you should (hopefully) be able to get shell access to the RPi by running <code>ssh galois@pi.local</code> (replacing <code>galois</code> with your chosen username).</p>
+
+<h3>If the RPi isn't accessible <a id="toc-section-2" class="toc-section"></a></h3>
+
+<p>If your RPi responded to a <code>ping</code>, but you weren't able to connect to it via <code>ssh</code>, the tips in this section aren't applicable to you. But if it didn't even respond to a <code>ping</code>, keep reading.</p>
+
+<p>If your RPi doesn't respond to a <code>ping pi.local</code> from your PC, a number of things may be wrong. Here are some possibilities (but I'm sure there are others).</p>
+
+<ul>
+<li>your RPi is not connected to the network</li>
+<li>your PC is connected to a different network than the RPi</li>
+<li>the hostname you typed in is wrong</li>
+<li>your PC can't associate the name <code>pi.local</code> with your RPi</li>
+</ul>
+
+<p>Let's start with the easiest one. Make sure that the hostname you jotted down from the OS configuration screen is the same one you're trying to <code>ping</code>.</p>
+
+<p>Then make sure that the network your PC is connected to is the same as the network that your RPi is connected to. If the network is wired, they should be connected to the same router via two separate ethernet cables. If it's wireless, then the name (SSID) of the WiFi network that your PC is connected to should be the same as the name of the wireless network that you entered on the OS customization screen. If the <code>ping</code> still doesn't work, then continue.</p>
+
+<p>In the past, I've had trouble getting my RPi to connect to my WiFi just by filling out the settings on the "OS customization" menu. However, the tip mentioned in <a href="https://www.tomshardware.com/reviews/raspberry-pi-headless-setup-how-to,6028.html">this tutorial</a> has worked for me, despite the fact that it's <a href="https://www.raspberrypi.com/documentation/computers/configuration.html#connect-to-a-wireless-network">no longer officially supported</a> since the Bookworm version of Debian - so you might also try it out for yourself, if your network is wireless. Create a text file called <code>wpa_supplicant.conf</code>, entering the SSID and password for your own home network:</p>
+
+<div class="code"><pre><code>
+country=US
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+
+network={
+scan_ssid=1
+ssid="YOUR-HOME-SSID-HERE"
+psk="YOUR-WIFI-PASSWORD-HERE"
+}
+</code></pre></div>
+
+<p>Open the micro-SD card up on your PC again, and place a copy of this text file into the card's boot folder. Then insert it back into the RPi, power it on, and wait a few minutes before trying again.</p>
+
+<p>If all of this still doesn't work, it's possible that your RPi was actually connecting to the network all along, but your PC was unable to resolve the hostname <code>pi.local</code>. Hostnames ending in <code>.local</code> are propagated using a protocol called <a href="https://en.wikipedia.org/wiki/Multicast_DNS">Multicast DNS (mDNS)</a>. If there's a problem with mDNS on your PC, it may not be able to associate the name <code>pi.local</code> with the IP address of your RPi. </p>
+
+<p>However, you don't <em>need</em> the hostname to connect to your RPi, and you may be able to figure out its IP address by other means. If you can access an admin portal for your router, you may be able to see a list of connected hosts there, and identify one of them as your RPi. If not, you may still be able to ascertain the RPi's IP address through a bit of detective work. You can run the command <code>arp -a</code> on your PC to view a list of the IP (and MAC) addresses of devices on the same subnet. Power down your RPi and run <code>arp -a</code> on your PC, copying down the IP addresses that appear in the output. Then turn your RPi back on, wait a couple of minutes, and run <code>arp -a</code> again. If any <em>new</em> IP address is present the second time, it's possible that it belongs to your RPi!</p>
+
+<h3>SSH troubleshooting and hardening <a id="toc-section-3" class="toc-section"></a></h3>
+
+<p>If you're having trouble connecting to your RPi over SSH, first make sure that you can <code>ping</code> it, as described above. If you cannot <code>ping</code> your RPi, then there <em>is no network connectivity</em> between your RPi and your PC, and no amount of SSH troubleshooting will save you. But if the <code>ping</code> step succeeds and the SSH connection fails, </p>
+
+<p>If you're unable to login over SSH, make sure that you have the correct password, and that you enabled password authentication during the OS customization step. If this still doesn't work, there is <a href="https://www.raspberrypi.com/documentation/computers/remote-access.html#enable-the-ssh-server">another hack</a> for enabling SSH by placing a text file in the boot folder of the SD card, similar to the <code>wpa_supplicant</code> trick in the previous section. For this trick, you just need to create an empty text file called <code>ssh</code> in the boot folder. This has worked for me in the past, when the RPi Imager OS customization step seemingly failed.</p>
+
+<p>If you're able to connect to your RPi, that's awesome! But you might still want to make sure it's secure, and using password authentication for SSH is not the most secure option. If someone malicious ever gets onto your home network, or if you ever open up your RPi to the whole internet (as described in the next section), then it might be vulnerable to a brute force attack, in which an attacker repeatedly tries guessing your username and password. Public key authentication much more secure.</p>
+
+<p>First of all, you will need a public-private key pair on your PC. OpenSSH stores them in a hidden directory called <code>.ssh</code> in your home directory. If you already have a key pair for your PC, you can skip this part. Otherwise, you can use OpenSSH to generate a public-private key pair for your user by running <code>ssh-keygen</code>. Your public key should be in a file called <code>id_rsa.pub</code> or similar, and your private key should be in a file with the same name but lacking the <code>.pub</code> extension, e.g. <code>id_rsa</code>. The private key is meant to be private - do not copy it anywhere! </p>
+
+<p>Now connect to your user on the RPi using SSH (with password authentication, for now). Run <code>ssh-keygen</code> as your user. This will generate a public-private key pair for the user on the RPi. Run <code>nano ~/.ssh/authorized_keys</code> to create and open the <code>authorized_keys</code> file in your new user's SSH directory, and then <em>paste your PC's public key</em> into this file and save it. This will allow your PC to connect to the RPi as this user. The RPi will identify your PC by its public key, but the private key is how your PC will "prove" to the RPi that it is the legitimate owner of that public key. (Read more about how this works <a href="https://en.wikipedia.org/wiki/Public-key_cryptography">here</a>!)</p>
+
+<p>Now run <code>sudo nano /etc/ssh/sshd_config</code> to make edits to the RPi's SSH configutation. This is where we'll turn off password authentication entirely, and require that the more secure alternative of public key authentication is used. I suggest making sure the following settings are present in your <code>/etc/ssh/sshd_config</code> configuration file:</p>
+
+<div class="code"><pre><code>
+PermitRootLogin no
+PubkeyAuthentication yes
+PasswordAuthentication no
+</code></pre></div>
+
+<h3>SSH remote forwarding <a id="toc-section-4" class="toc-section"></a></h3>
+
+<p>In the past, I've sometimes wanted to access my RPi from outside of my home network. You might want to do this if you've started a little coding project on your RPi that isn't available anywhere else, or if you want to check on some other resource that's only available from your home network, but you're out of the house at school, at work or at a coffee shop (as I often am). Naturally, you won't be able to SSH into <code>pi.local</code> anymore, because this hostname only exists on your private network. You won't be able to connect directly to the RPi by its IP address either, because <a href="https://en.wikipedia.org/wiki/Private_network">private IP addresses</a> are not globally unique.</p>
+
+<p>If you're in this situation, a few options are available to you. One option is <a href="https://en.wikipedia.org/wiki/Port_forwarding">port forwarding</a> together with <a href="https://en.wikipedia.org/wiki/Dynamic_DNS">dynamic DNS</a>, but this is only viable if your home router has a public IP address, and if you actually have administrator privileges on your home router. Some internet service providers (ISPs) will give their customers a home router that don't have a public IP address accessible from the internet, or that can't be configured to set up port forwarding because customers aren't given admin privileges. Another possible avenue is to investigate software-defined networking tools like <a href="https://en.wikipedia.org/wiki/ZeroTier">ZeroTier</a>.</p>
+
+<p>But in this section I'll describe another neat solution that has worked well for me before: SSH remote forwarding. In remote forwarding, a resource on a private network that is <em>not exposed to the internet</em> (in this case, the RPi) keeps a persistent connection with a remote server that <em>is exposed to the internet</em>. Then, when the remote server receives an SSH connection request to a certain port (say, from me, sitting in a coffee shop), it forwards this request to the private resource over the preexisting connection. You could picture it like this:</p>
+
+<p><center>
+<img src="/img/2024-03-26-Fig3.png" alt="Fig 3" />
+</center></p>
+
+<p>To implement this, you need a <em>server with a public IP address</em> that you can also access through SSH. I've had a good experience renting servers through <a href="https://www.digitalocean.com">DigitalOcean</a>, or you can rent one through AWS.</p>
+
+<p>When you have this, make sure SSH is installed on your public server, and make sure that a public-private keypair has been generated for your user on that server. Because we'll need the RPi to initiate an SSH connection to the remote server, we will need to add the public key for <code>galois</code> to the <code>~/.ssh/authorized_keys</code> file for the new user on the remote server.</p>
+
+<p>Next, you should install <code>autossh</code> on your RPi by running <code>sudo apt-get install autossh</code>. This is a tool that restarts SSH connections when they crash, which is essential when you want to have a long-lived connection like the kind that is necessary for remote port forwarding.</p>
+
+<p>Let's say your user on the remote server is called <code>chevalier</code>, and the IP address of your remote server is <code>W.X.Y.Z</code>. From the Raspberry Pi, while logged in as the <code>galois</code> user, run the command <code>autossh -R 2201:localhost:22 chevalier@W.X.Y.Z</code>. This will initiate the SSH remote port forward, with SSH requests directed at port <code>2201</code> of the remote server being forwarded to the RPi. Now, anywhere that your PC is connected to the internet, you should be able to run <code>ssh -p 2201 galois@W.X.Y.Z</code> and connect to <code>galois</code> on your Raspberry Pi!</p>
+
+<p>If this isn't working, you might want to check that port 2201 (or whatever port you chose) isn't being blocked by the firewall on your remote server, and that the configuration <code>AllowTcpForwarding yes</code> is set in the SSH config of the remote server. And if you're not sure how to make sure the <code>autossh</code> connection keeps running even after you log off of the RPi, check out the tools <a href="https://www.gnu.org/software/screen/">GNU screen</a> and <a href="https://github.com/tmux/tmux/wiki">tmux</a>. They allow you to start up a shell and disconnect from it in such a way that any processes continue running and you can reconnect to the shell at a later time.</p>
+
+<p>To sum up, I usually follow these steps from beginning to end to set up my remote port forward:</p>
+
+<ul>
+<li>set up my RPi with user <code>galois</code> and ensure <code>autossh</code> and <code>screen</code> are installed</li>
+<li>acquire a remote server with public IP <code>W.X.Y.Z</code> and user <code>chevalier</code></li>
+<li>ensure <code>AllowTCPForwarding</code> is enabled and port 2201 is unblocked on <code>W.X.Y.Z</code></li>
+<li>generate SSH keys for <code>galois</code> (locally) and <code>chevalier</code> (remotely) if they don't already exist</li>
+<li>copy <code>galois</code>' public key into <code>chevalier</code>'s <code>authorized_keys</code> file</li>
+<li>as <code>galois</code>, run <code>screen</code> to open a new screen</li>
+<li>again as <code>galois</code>, run the command <code>autossh -R 2201:localhost:22 chevalier@W.X.Y.Z</code></li>
+<li>again as <code>galois</code>, press <code>Ctrl-A Ctrl-D</code> to disconnect from the screen and leave <code>autossh</code> running</li>
+<li>log out of <code>galois</code></li>
+</ul>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

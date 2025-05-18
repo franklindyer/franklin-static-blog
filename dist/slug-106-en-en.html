@@ -1,0 +1,87 @@
+<html>
+<head>
+    <title>Tilted Parabola</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Tilted Parabola</h2>
+
+<p><em>2016 Dec 7</em></p>
+
+<blockquote>
+<p>Find the equation of the graph of a parabola that is neither vertical or horizontal.</p>
+</blockquote>
+
+<p>It is commonly known that a parabola is the locus of all points equidistant from a point, called the <em>focus</em>, and a line, called the <em>directrix</em>. The quadratic function represents a parabola with a horizontal directrix, and the square root function can represent half of a parabola with a vertical directrix. Given a horizontal or vertical directrix, it is easy to write the equation of the parabola, since the distance of a point on the parabola from the focus can be found by the distance formula and the distance of a point on the parabola from a horizontal or vertical line can be found by the absolute value of the difference between the abscissa or ordinate of the point on the parabola and the y- or x-value of the horizontal or vertical line. However, now that we have a formula for the distance between a point and <em>any</em> line with defined nonzero slope, we can create a parabola that is tilted at an angle. The way to do this would be to choose a directrix line $y=mx+b$ and a focus $(x_0, y_0)$, and the equation of the parabola would be</p>
+
+<p>
+<script type="math/tex; mode=display">\sqrt{(x-x_0)^2+(y-y_0)^2}=\frac{\mid y-mx-b\mid}{\sqrt{m^{2}+1}}</script>
+</p>
+
+<p>Let's try an example: the parabola with focus $(1,1)$ and directrix $y=-x$. First we must set up our equation:</p>
+
+<p>
+<script type="math/tex; mode=display">\sqrt{(x-1)^2+(y-1)^2}=\frac{\mid y+x-0\mid}{\sqrt{(-1)^{2}+1}}</script>
+<script type="math/tex; mode=display">\sqrt{(x-1)^2+(y-1)^2}=\frac{\mid y+x\mid}{\sqrt{2}}</script>
+</p>
+
+<p>And now we must simplify. To begin, we square both sides.</p>
+
+<p>
+<script type="math/tex; mode=display">(x-1)^2+(y-1)^2=\frac{(y+x)^2}{2}</script>
+</p>
+
+<p>Then we expand the binomials.</p>
+
+<p>
+<script type="math/tex; mode=display">x^2-2x+1+y^2-2y+1=\frac{1}{2}y^2+\frac{1}{2}x^2+xy</script>
+<script type="math/tex; mode=display">\frac{1}{2}y^2-2y-xy+\frac{1}{2}x^2-2x+2=0</script>
+<script type="math/tex; mode=display">(\frac{1}{2})y^2+(-2-x)y+(\frac{1}{2}x^2-2x+2)=0</script>
+</p>
+
+<p>Now that we have this in $ax^2+bx+c$ form as a quadratic of y, we can solve it for y in terms of x using the quadratic formula.</p>
+
+<p>
+<script type="math/tex; mode=display">y=2+x\pm \sqrt{(2+x)^2-2(\frac{1}{2}x^2-2x+2)}</script>
+<script type="math/tex; mode=display">y=2+x\pm \sqrt{x^2+4x+4-x^2+4x-4}</script>
+<script type="math/tex; mode=display">y=2+x\pm \sqrt{8x}</script>
+<script type="math/tex; mode=display">y=2+x\pm 2\sqrt{2x}</script>
+</p>
+
+<p>In this case, $y$ is not a function of $x$ because of the plus-or-minus, but the parabola can be represented as the two functions $2+x+2\sqrt{2x}$ and $2+x-2\sqrt{2x}$ together. Here is a graph of the parabola, along with its focus and directrix:</p>
+
+<p><center><img src="/img/2016-12-7-Fig1.png" alt="Fig 1" /></center></p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

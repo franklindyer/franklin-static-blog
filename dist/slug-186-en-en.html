@@ -1,0 +1,170 @@
+<html>
+<head>
+    <title>Analysis of growth orders, continued</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h3>Analysis of growth orders of sequences, continued</h3>
+
+<p>This post is a continuation of <a href="/post/185">my previous post</a>, in which we constructed equivalence classes of sequences of real numbers in order to formalize the notion of a "growth order". We also defined a couple of simple operations on these growth orders, giving them an algebraic structure (to be precise, the structure of a <strong>semiring without zero</strong>). This allowed us to derive some non-obvious asymptotic formulae involving sums of iterated logarithms. </p>
+
+<p>In this post, we continue to explore the partial summation operation introduced in the previous post, as well as introducing a new <em>convolution</em> operation that interacts nicely with partial summation. At the end, we briefly explore the unary operations on growth orders as a semigroup, and pose some unanswered questions about its structure. As a teaser, here are a couple of asymptotic formulae that will result from our explorations in this post:</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{k=n}^{2n} \frac{1}{\sqrt{k \log k}} = \Theta\Big(\sqrt{\frac{n}{\log n}}\Big)</script>
+</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{k=1}^{n-1} \log(k)\log(n-k) = \Theta(n\log^2 n)</script>
+</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{k=2}^n \frac{e^{\sqrt{\log k}}}{k\sqrt[4]{\log k}} = \Theta(\sqrt[4]{\log n}\cdot e^{\sqrt{\log n}})</script>
+</p>
+
+<p>But first, before deriving these, a few formalities: we must place some extra restrictions upon the sequences and growth orders in question, in order to ensure certain "nice behavior" that will allow us to obtain these identities.</p>
+
+<h4>A regularity condition</h4>
+
+<p>We assume that, for all sequences in the coming sections, the following "regularity condition" holds: for all $k\in\mathbb N$, there exist constants $M_1$ and $M_2$ such that <script type="math/tex; mode=display">C_1 a_m < a_n < C_2 a_m</script> for all $n\leq m\leq kn$. Intuitively, this condition says that taking linear-like subsequences of $(a_n)$ (i.e. subsequences whose indices are $\mathcal{O}(n)$) does not change its growth order. For instance, if $a_n=n^2$ and $(m_n)$ is an $\mathcal{O}(n)$ sequence of strictly increasing indices, then the sequence $a_{m_n}=m_n^2$ has the same growth order, meaning that $(n^2)$ satisfies this condition. Let's say that sequences with this property exhibit <strong>moderate growth</strong>. (I'm sure this term has been defined elsewhere to mean something else, but it won't hurt for us to use it just for the purposes of this post.)</p>
+
+<p>This condition is meant to, among other things, rule out sequences that grow or decay exponentially, and restrict our considerations to sequences whose growth/decay is "similar to power functions", since sequences that behave exponentially often don't "play nice" with respect to their asymptotic behavior. It's not too difficult to prove the following facts:</p>
+
+<ul>
+<li>If $\alpha$ exhibits moderate growth and $[\alpha]=[\beta]$, then $\beta$ exhibits moderate growth. (This means it also makes sense to talk about whether a <em>growth order</em>, or equivalence class of sequences, grows moderately.)  </li>
+<li>If $\alpha$ and $\beta$ exhibit moderate growth, then so does $\alpha+\beta$.  </li>
+<li>If $\alpha$ and $\beta$ exhibit moderate growth, then so does $\alpha\cdot\beta$.  </li>
+<li>If $\alpha$ exhibits moderate growth, then so does $[\alpha]^{-1}$.  </li>
+<li>If $\alpha$ exhibits moderate growth, then so does $\Sigma\alpha$.  </li>
+</ul>
+
+<p>These facts should reassure us that we have come up with a good condition for "niceness" of growth orders, in the sense that if we start with a bunch of "nice" growth orders and generate new ones by iteratively taking sums, products, inverses, and partial sums, we will not inadvertently produce any "bad" sequences. In other words, the class of moderate growth orders is <em>closed</em> under all of the operations that we'd like to play with.</p>
+
+<p>However, <em>beware</em>! This condition does not encompass all sequences whose growth is bounded between power functions. Consider, for instance, the sequence $a_n$ defined by letting $a_{2n-1}=n$ for odd terms and $a_{2n}=n^2$ for even terms. The subsequence $(a_{2n})$ is <em>not</em> of the same growth order as the original sequence - that is, there do not exist any constants $C_1,C_2$ such that <script type="math/tex; mode=display">C_1 a_n \leq a_{2n}=n^2 \leq C_2 a_n</script> In general, if $\alpha,\gamma$ are two sequences of moderate growth and $\alpha&lt;\beta&lt;\gamma$, it does <em>not</em> necessarily follow that $\beta$ exhibits moderate growth.</p>
+
+<p>This regularity condition is handy in that most of the sub-exponential sequences that we usually deal with satisfy this definition, and it is powerful because it allows us to evaluate some sums immediately. For example, consider, for a general monotone sequence $\alpha=(a_n)$ of moderate growth, the sum <script type="math/tex; mode=display">\sum_{k=n}^{2n} a_k</script> You should recognize this from the first formula listed at the beginning of the post. Because $\alpha$ is monotone, this sum can be immediately bounded between $(n+1)a_n$ and $(n+1)a_{2n}$, and the regularity condition immediately ensures that these have the same growth order $\Theta(na_n)$. Hence, for all such sequences $\alpha$, we have that <script type="math/tex; mode=display">\sum_{k=n}^{2n} a_k = \Theta(na_n)</script> which immediately implies the first formula: <script type="math/tex; mode=display">\sum_{k=n}^{2n} \frac{1}{\sqrt{k \log k}} = \Theta\Big(\sqrt{\frac{n}{\log n}}\Big)</script>
+</p>
+
+<h4>More on the sum ratio</h4>
+
+<p>In <a href="/post/185">the previous post</a> we observed that when attempting to determine the growth order of $\Sigma\alpha$ for a given sequence $\alpha$, it is often advantageous to consider the quantity <script type="math/tex; mode=display">\frac{\Sigma[\alpha]}{[\alpha]}</script> because this is a <em>monotone decreasing</em> function of $[\alpha]$ and often assumes the same value for an interval of many growth orders, allowing us to deduce new growth orders by a "squeezing" argument. For instance, knowing that <script type="math/tex; mode=display">\frac{\Sigma[\alpha]}{[\alpha]}=[n\log n]</script> for both of the growth orders $[\alpha] = [1/n]$ and $[\alpha]=[\log n/n]$ allows us to deduce the growth order of any sequence of intermediate growth, such as sequences with $[\alpha]=[\log\log\log n/n]$.</p>
+
+<p>If we imagine a bunch of sequences arranged linearly in order of increasing growth order (assuming they are all comparable to each other), then we might imagine the function $[\alpha]\to \Sigma[\alpha]/[\alpha]$ as dividing this line into several different regimes or subintervals over which the quantity $\Sigma[\alpha]/[\alpha]$ is constant. Now I'd like to more closely examine <em>what exactly</em> these regimes are. For instance, we already know that this ratio equals $[n\log n]$ for all sequences $\alpha$ with a growth order of $\log^p n /n$, for any $p\in\mathbb R$ - this much can be deduced using integral approximations - but are these the <em>only</em> growth orders for which $\Sigma[\alpha]/[\alpha]=[n\log n]$? Or are there some that grow faster than all $\log^p n /n$ for $p\in\mathbb{R}$, or perhaps some that grow slower than all of these?</p>
+
+<p>First, let's change our perspective a bit by considering the quantity $[\alpha]/\Sigma[\alpha]$ instead of $\Sigma[\alpha]/[\alpha]$ for a while. This is a <em>monotone increasing</em> function of $[\alpha]$, and it is somewhat reminiscent of the <em>logarithmic derivative</em> from calculus: <script type="math/tex; mode=display">\frac{d}{dx}\log f(x) = \frac{f'(x)}{f(x)}</script> This fact from calculus allows us to deduce the value of the integral <script type="math/tex; mode=display">\int \frac{f'(x)}{f(x)}dx = \log f(x) + C</script> This is, of course, purely intuitive, and not a proof, but it might lead us to conjecture an analogous formula for our growth orders: <script type="math/tex; mode=display">\Sigma\Big(\frac{[\alpha]}{\Sigma[\alpha]}\Big) = \log \Sigma[\alpha]</script> Note that we have not defined exactly what we man by $\log[\beta]$ yet, since $\log$ is a defined function on positive real numbers, not on equivalence classes of sequences. But I'll wave my hand over this and leave it as an exercise to define $\log[\beta]$ for growth orders $[\beta] &gt; [1]$, so as not to interrupt the current train of thought.</p>
+
+<p>Let's prove this formula now. Suppose that $\Sigma[\alpha] &gt; 1$, and let $\alpha = (a_n)$. Then we have that <script type="math/tex; mode=display">\log\bigg(\sum_{k=1}^{n+1}a_k\bigg)-\log\bigg(\sum_{k=1}^{n}a_k\bigg) = \log\bigg(1+\frac{a_{n+1}}{\sum_{k=1}^n a_k}\bigg)</script> Now we make an appeal to the regularity condition from earlier. It is an easy exercise to show that, for such sequences, the ratio <script type="math/tex; mode=display">\frac{a_{n+1}}{\sum_{k=1}^n a_k}</script> tends to zero. It is also well known that $\log(1+x)\sim x$ as $x\to 0$. This means that the above difference of logarithms satisfies <script type="math/tex; mode=display">\log\bigg(\sum_{k=1}^{n+1}a_k\bigg)-\log\bigg(\sum_{k=1}^{n}a_k\bigg) = (1+o(1))\cdot\frac{a_{n+1}}{\sum_{k=1}^n a_k}</script> By taking partial sums of both sides, we have that <script type="math/tex; mode=display">\log\bigg(\sum_{k=1}^N a_k\bigg) = (1+o(1))\cdot \sum_{n=1}^N \frac{a_{n}}{\sum_{k=1}^n a_k}</script> and consequently <script type="math/tex; mode=display">\log [\alpha] = \Sigma\Big(\frac{[\alpha]}{\Sigma [\alpha]}\Big)</script> which is the formula we wanted to prove!</p>
+
+<p>Having derived this formula, we are now prepared to characterize the "regimes" of values of $[\alpha]/\Sigma[\alpha]$ that we were originally curious about. Suppose that, for two growth orders $[\alpha],[\beta]$, we know that <script type="math/tex; mode=display">\frac{[\alpha]}{\Sigma[\alpha]}=\frac{[\beta]}{\Sigma[\beta]}</script> Then, taking partial sums of both sides, we have <script type="math/tex; mode=display">\log\Sigma[\alpha]=\log\Sigma[\beta]</script> Now, returning to the definition of equality of these equivalence classes, we have that there exist positive constants $p,q$ such that <script type="math/tex; mode=display">p\cdot \log\Sigma[\beta] < \log\Sigma[\alpha] < q\cdot\log\Sigma[\beta]</script> and therefore <script type="math/tex; mode=display">(\Sigma[\beta])^p < \Sigma[\alpha] < (\Sigma[\beta])^q</script> So we have that $[\alpha]$ and $[\beta]$ have the same sum ratio <em>only if</em> their partial sum sequences are bounded by powers of each other. We may apply this fact to our earlier example, deducing that $\Sigma[\alpha]/[\alpha]=[n\log n]$ <em>only if</em> the growth order of $\Sigma\alpha$ is "trapped" between $[\log^p n]$ and $[\log^q n]$ for some $p,q\in\mathbb R^+$. </p>
+
+<p>What about the converse? If $(\Sigma\beta)^p &lt; \Sigma\alpha &lt; (\Sigma\beta)^q$, does it necessarily follow that $[\alpha]/\Sigma[\alpha]=[\beta]/\Sigma[\beta]$? Actually, this is <em>false</em>, and a counterexample can be constructed easily: consider $[\alpha]=[n]$, and $\beta=(b_n)$ defined by $b_{2n}=n$ for even terms and $b_{2n-1}=1$ for odd terms. Both $\Sigma[\alpha]$ and $\Sigma[\beta]$ are equal to $[n^2]$, but $[\alpha]/\Sigma[\alpha]\ne[\beta]/\Sigma[\beta]$ - in fact, these two sequences are <em>incomparable</em>. However, it <em>can</em> be proven that if $(\Sigma\beta)^p &lt; \Sigma\alpha &lt; (\Sigma\beta)^q$ <em>and</em> the ratios $[\alpha]/\Sigma[\alpha]$ and $[\beta]/\Sigma[\beta]$ are <em>assumed to be comparable</em>, then they <em>must be equal</em>. This is another exercise.</p>
+
+<h4>Prescribing the sum ratio</h4>
+
+<p>The extension of the logarithm function to growth orders (with super-constant growth) is useful for something else as well. We have seen how it allows us to deduce which sequences have the same growth order of their sum ratio $[\alpha]/\Sigma[\alpha]$. Now we will see how it sometimes allows us to <em>prescribe</em> a growth order for the sum ratio: that is, given a sequence $\beta$, the logarithm gives rise to a useful technique for finding sequences $[\alpha]$ such that <script type="math/tex; mode=display">\frac{[\alpha]}{\Sigma[\alpha]}=[\beta]</script> For if this inequality holds, we may take partial sums of both sides to obtain the equality <script type="math/tex; mode=display">\log\Sigma[\alpha]=\Sigma[\beta]</script> which suggests that we might want to try a sequence satisfying <script type="math/tex; mode=display">\Sigma\alpha = e^{k\Sigma\beta}</script> where exponentiation here is defined elementwise on sequences. (Note that exponentiation <em>cannot</em> be defined on equivalence classes of sequences, because equality of the growth orders of two sequences does not ensure equality of the growth orders of their corresponding exponentials).</p>
+
+<p>As a simple example, suppose we wanted to find a sequence $\alpha$ with <script type="math/tex; mode=display">\frac{[\alpha]}{\Sigma[\alpha]} = \frac{1}{n\sqrt{\log n}}</script> Using monotonicity properties, we would immediately be able to say that, if such a sequence existed, it would necessarily be dominated by $n^p$ for all $p&gt;1$, and would necessarily dominate all growth orders $\log^p n/n$ for $p\in\mathbb R$. By the above line of reasoning, we might want to try finding a sequence $\alpha$ satisfying <script type="math/tex; mode=display">\Sigma[\alpha] = [e^{\sqrt{\log n}}]</script> Using the integral approximation technique from calculus again, it is straightforward to show that the sequence $\alpha=(a_n)$ given by <script type="math/tex; mode=display">a_n = \frac{e^{\sqrt{\log n}}}{n\sqrt{\log(n+1)}}</script> will do the trick. This line of reasoning, along with the "power-trapping" argument from the previous section, allows us to deduce the second formula from the beginning of the post:</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{k=2}^n \frac{e^{\sqrt{\log k}}}{k\sqrt[4]{\log k}} = \Theta(\sqrt[4]{\log n}\cdot e^{\sqrt{\log n}})</script>
+</p>
+
+<h4>The convolution operation</h4>
+
+<p>Now I'd like to define a new operation on growth orders of sums: convolution. The convolution of two sequences of real numbers $\alpha=(a_n),\beta=(b_n)$, denoted $\alpha\ast\beta = (c_n)$, is usually defined as</p>
+
+<p>
+<script type="math/tex; mode=display">c_n = \sum_{k=1}^{n} a_k b_{n-k+1}</script>
+</p>
+
+<p>As we've done before, we will define a similar operation $[\alpha]\ast[\beta]$ on the growth orders of sequences by defining $[\alpha]\ast[\beta]=[\alpha\ast\beta]$. Once more, we must check that this operation is well-defined on equivalence classes of sequences by verifying that $[\alpha_1\ast\beta_1]=[\alpha_2\ast\beta_2]$ for any sequences $\alpha_1,\alpha_2,\beta_1,\beta_2$ with $[\alpha_1]=[\alpha_2]$ and $[\beta_1]=[\beta_2]$.</p>
+
+<p>This proof is straightforward. Suppose that, by our previous definition, the sequences $\alpha_1/\alpha_2$, $\alpha_2/\alpha_1$, $\beta_1/\beta_2$, and $\beta_2/\beta_1$ are bounded above by $M_1,M_2,M_3,M_4\in\mathbb R^+$ respectively. Then, using the fact that <script type="math/tex; mode=display">\frac{x_1+x_2+...+x_n}{y_1+y_2+...+y_n}\leq \frac{1}{n}\bigg(\frac{x_1}{y_1}+\frac{x_2}{y_2}+...+\frac{x_n}{y_n}\bigg)</script> for positive real numbers $x_1,...,x_n$ and $y_1,...,y_n$, we have that</p>
+
+<p>
+<script type="math/tex; mode=display">\frac{\alpha_1\ast\beta_1}{\alpha_2\ast\beta_2} \leq \frac{1}{n}\cdot M_1 M_3 n = M_1 M_3</script>
+</p>
+
+<p>and</p>
+
+<p>
+<script type="math/tex; mode=display">\frac{\alpha_2\ast\beta_2}{\alpha_1\ast\beta_1} \leq \frac{1}{n}\cdot M_2 M_4 n = M_2 M_4</script>
+</p>
+
+<p>meaning that $[\alpha_1]=[\alpha_2]$ and $[\beta_1]=[\beta_2]$ together imply that $[\alpha_1\ast\beta_1]=[\alpha_2\ast\beta_2]$, exactly as we wanted. It can also be shown that $\ast$ preserves the regularity condition that we discussed at the beginning of the post.</p>
+
+<p>Now that we know this operation is well-defined on growth orders, we can study its properties. The regularity condition that we assumed at the beginning of the post allows us to deduce a useful relationship between $\ast$ and $\Sigma$. For sequences $\alpha=(a_n)$ and $\beta=(b_n)$, we have that</p>
+
+<p>
+<script type="math/tex; mode=display">\bigg(\sum_{k=1}^n a_k\bigg)\bigg(\sum_{k=1}^n b_k\bigg)=\sum_{j=1}^n \sum_{k=1}^n a_j b_k</script>
+</p>
+
+<p>By reindexing this sum and omitting terms or adding new terms, we can obtain the following upper and lower bounds:</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{j=2}^{n+1}\sum_{k=1}^{j-1} a_k b_{j-k}\leq \bigg(\sum_{k=1}^n a_k\bigg)\bigg(\sum_{k=1}^n b_k\bigg)\leq \sum_{j=2}^{2n} \sum_{k=1}^{j-1} a_k b_{j-k}</script>
+</p>
+
+<p>Now, if $\alpha\ast\beta=\gamma=(c_n)$, this is equivalent to</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{j=2}^{n+1}c_{j-1}\leq \bigg(\sum_{k=1}^n a_k\bigg)\bigg(\sum_{k=1}^n b_k\bigg)\leq \sum_{j=2}^{2n} c_{j-1}</script>
+</p>
+
+<p>By the regularity condition, these upper and lower bounds have the same growth order. Hence, by a squeezing argument, the product of sums in the middle has the same growth order as both of them, meaning that $(\Sigma[\alpha])(\Sigma[\beta])=\Sigma[\gamma]$. Thus, we have proven the following relationship between $\ast$ and $\Sigma$:</p>
+
+<p>
+<script type="math/tex; mode=display">(\Sigma [\alpha])(\Sigma [\beta]) = \Sigma ([\alpha]\ast[\beta])</script>
+</p>
+
+<p>In other words, the operation $\Sigma$ converts convolution into products!</p>
+
+<p>We can deduce another interesting relationship as well. Letting $\alpha=(a_n)$ and $\beta=(b_n)$ again, consider the quantity <script type="math/tex; mode=display">\bigg(\sum_{k=1}^{n+1} a_k\bigg)\bigg(\sum_{k=1}^{n+1} b_k\bigg) - \bigg(\sum_{k=1}^n a_k\bigg)\bigg(\sum_{k=1}^n b_k\bigg)</script> By algebraic manipulation, this can be simplified to <script type="math/tex; mode=display">a_{n+1}b_{n+1} + a_n\sum_{k=1}^n b_k + b_n\sum_{k=1}^n a_k</script> The growth order of this is equal to $[\alpha][\beta]+[\alpha]\Sigma[\beta]+[\beta]\Sigma[\alpha]$, or, since $[\alpha][\beta]$ is necessarily less than both of the other terms, just $[\alpha]\Sigma[\beta]+[\beta]\Sigma[\alpha]$. If we take partial sums of the above expression, we find that it is a telescoping sum which sums to the product $\Sigma\alpha\cdot\Sigma\beta$, yielding the following identity of growth orders: <script type="math/tex; mode=display">\Sigma([\alpha]\Sigma[\beta]+[\beta]\Sigma[\alpha])=(\Sigma[\alpha])(\Sigma[\beta])</script> Doesn't this look familiar to the identity that we just derived involving convolution? <script type="math/tex; mode=display">\Sigma ([\alpha]\ast[\beta])=(\Sigma [\alpha])(\Sigma [\beta])</script> Together, these equalities tell us that <script type="math/tex; mode=display">\Sigma ([\alpha]\ast[\beta])=\Sigma([\alpha]\Sigma[\beta]+[\beta]\Sigma[\alpha])</script> which implies that <script type="math/tex; mode=display">[\alpha]\ast[\beta]=[\alpha]\Sigma[\beta]+[\beta]\Sigma[\alpha]</script>
+<em>under the assumption</em> that both sides are at least <em>comparable</em> to each other. (For if one were strictly faster-growing than the other, their partial sums could not have the same growth order.) A special case of this formula for $\alpha=\beta$ is <script type="math/tex; mode=display">[\alpha]\ast[\alpha]=[\alpha]\Sigma[\alpha]</script> which yields the second formula from the beginning of the post.</p>
+
+<h4>Sequence transformations as a semigroup</h4>
+
+<p>There's one more thing that I'd like to comment on before ending this post. It might seem slightly unnatural or like "overkill" to introduce the logarithmic growth order using the logarithm function that we know so much about from calculus and analysis. After all, the two main definitions of the logarithm involve machinery that is foreign to all of the sequence manipulations that we've been doing here: defining $\log x = \int_1^x \tfrac{dt}{t}$ defines a continuous function, which feels out-of-place in our study of discrete sequences, and defining the logarithm as the inverse of the exponential function feels inappropriate because we've specifically been trying to avoid exponential functions. </p>
+
+<p>There is, however, a very naturally-occurring way of defining <em>logarithmic growth</em> using only the operations we've defined so far. Even if we forgot about the binary operations of products and convolution, restricting ourselves to the partial sum operation $\Sigma$ and the inverse operation $(\cdot)^{-1}$, and assuming nothing more than the constant growth order $[1]$, we could equivalently define logarithmic growth by setting <script type="math/tex; mode=display">[\log n]=\Sigma(\Sigma [1])^{-1}</script> Because $\Sigma[1]=[n]$, and $[n]^{-1}=[1/n]$, and $\Sigma[1/n]=[\log n]$. If we rewrote the "reciprocal operation" $(\cdot)^{-1}$ using prefix notation similar to $\Sigma$, for instance letting $\mathrm{R}[\alpha]$ denote $[\alpha]^{-1}$, then the above equation would become <script type="math/tex; mode=display">[\log n]=\Sigma\mathrm{R}\Sigma [1]</script>
+</p>
+
+<p>At this point, a natural question to ask would be: <em>what other growth orders</em> can we derive just by iteratively applying the operations $\Sigma$ and $\mathrm{R}$ to the constant growth order $[1]$? Clearly we can get the growth order of any integer power by iteratively applying $\Sigma$: <script type="math/tex; mode=display">\Sigma^m [1]=[n^m]</script> and with a little more effort, we can construct more complicated growth orders involving nested logarithms, such as <script type="math/tex; mode=display">(\Sigma\mathrm{R}\Sigma)^2[1]=[\log\log n]</script> and <script type="math/tex; mode=display">(\Sigma\mathrm{R}\Sigma)^2\mathrm{R}(\Sigma\mathrm{R}\Sigma)^2[1]=[\log\log\log n]</script> As an exercise: can you come up with a similar formula for $[\log\log\log\log n]$? How about for an arbitrary number of iterated logarithms? Can you come up with a general description of <em>all possible</em> growth orders that can be constructed in this way?</p>
+
+<p>There are other puzzling questions that we can ask ourselves about the growth-order-transformations obtained by stringing together copies of $\Sigma$ and $\mathrm{R}$. For instance, given a general transformation $\Phi$, when does there exist a growth order $[\alpha]$ such that $\Phi[\alpha]=[\alpha]$? For instance, can you find a growth order satisfying $\Sigma\mathrm{R}\Sigma[\alpha]=[\alpha]$, or a "fixed point" of the transformation $\Phi = \Sigma\mathrm{R}\Sigma$?</p>
+
+<p>It turns out that the operations $\Sigma$ and $\mathrm{R}$ generate a <strong>semigroup</strong>, or an algebraic object with an associative operation (in this case, composition). A <strong>free semigroup</strong> generated by $\Sigma$ and $\mathrm{R}$ would simply consist of strings of these characters which can be composed via concatenation. However, the semigroup generated by the actions of $\Sigma$ and $\mathrm{R}$ on moderately-growing sequences is <em>not</em> a free semigroup, because some strings of $\Sigma$ and $\mathrm{R}$ denote the same action. For instance, $\Sigma\mathrm{R}\mathrm{R}$ and $\Sigma$ are the same, because $\mathrm{R}\mathrm{R}$ simply takes the reciprocal of a sequence twice, returning it to the original sequence and leaving it unaffected. However, one might ask: are there any <em>other</em> nontrivial equalities between compositions of $\Sigma$ and $\mathrm{R}$? Or is the action of this semigroup on the set of moderately-growing sequences simply equal to the free semigroup on ${\Sigma,\mathrm{R}}$ with the stipulation that $\mathrm{R}^2=I$ is the identity? In other words, does this semigroup have the presentation <script type="math/tex; mode=display">\langle\Sigma,\mathrm{R}~|~\mathrm{R}^2=I\rangle</script> or is it more complex than this? I hope to eventually come up with answers to these questions.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

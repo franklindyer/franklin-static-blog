@@ -1,0 +1,204 @@
+<html>
+<head>
+    <title>Evitar evaluaciones sin fin en Scheme</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h3>Evitar evaluaciones sin fin en Scheme</h3>
+
+<p>(Psst! Don't want to read this in Spanish? <a href="https://franklin.dyer.me/post/196">Here's a translation.</a>)</p>
+
+<p>En el lenguaje Scheme hay una particularidad muy interesante de ciertas estructuras de control. Cuando realizamos una llamada a función como <code>(f x y)</code> (en este caso una función con dos argumentos) se evalúa ambos argumentos <code>x</code> y <code>y</code> primero para entonces pasarlos a la función <code>f</code>. Podemos demostrar este fenómeno sintetizando argumentos que producen efectos secundarios una vez que son evaluados:</p>
+
+<div class="code"><code><pre>
+> (define x '(begin (display "evaluating x\n") 34))
+> (define y '(begin (display "evaluating y\n") 35))
+> (define (f a b) (+ a b))
+> (eval x)
+evaluating x
+34
+> (eval y)
+evaluating y
+35
+> (f (eval x) (eval y))
+evaluating x
+evaluating y
+69
+</pre></code></div>
+
+<p>Pero algunas estructuras de control que parecen funciones realmente no lo son por no tramitar sus argumentos así. Por ejemplo fíjate qué pasa cuando realizamos operaciones booleanas con la construcción <code>and</code>:</p>
+
+<div class="code"><code><pre>
+> (define x '(begin (display "evaluating x\n") #t))
+> (define y '(begin (display "evaluating y\n") #f))
+> (and (eval x) (eval y))
+evaluating x
+evaluating y
+#f
+> (and (eval y) (eval x))
+evaluating y
+#f
+</pre></code></div>
+
+<p>En concreto una invocación a <code>and</code> se va evaluando los argumentos uno tras otro hasta encontrar uno falso y devolver <code>#f</code> si lo encuentra o <code>#t</code> si no lo encuentra. Pues una vez que   encuentra un argumento con el valor <code>#f</code> realmente no hay necesidad de evaluar el resto de los argumentos porque una vez que aparece un valor falso ya está determinado el resultado de la operación booleana. La construcción <code>or</code> emplea un truco semejante: una vez que encuentra el valor <code>#t</code> en sus argumentos entonces devuelve <code>#t</code> sin evaluar el resto.</p>
+
+<p>Pues no suele influir esta peculiaridad mucho en el rendimiento de nuestros programas pero sí puede importar mucho en el caso de que una de las expresiones que se pasa como argumento produce error o entra en un bucle infinito de tal manera que no devuelve un valor válido. No nos cuesta mucho encontrar ejemplos de expresiones cuya evaluación nunca termina. Por ejemplo, si definimos <code>(define btm '(eval btm)</code> y entonces ejecutamos <code>(eval btm)</code> ya entramos en un bucle sin fin. Si intentamos pasar esta expresión chunga como argumento a una función nunca se acabará la ejecución aún si el resultado realmente no depende del valor del argumento. Por ejemplo la función <code>(lambda x 0)</code> en principio debe devolver <code>0</code> siempre pero cuando intentamos realizar la llamada <code>((lambda x 0) (eval btm))</code> nunca devuelve ningún valor por intentar evaluar <code>btm</code>. Por otro lado:</p>
+
+<div class="code"><code><pre>
+> (and #f (eval btm))
+#f
+</pre></code></div>
+
+<p>pues debido a su tratamiento especial de argumentos <code>and</code> nunca intenta evaluar <code>btm</code> por eso logra devolver un valor. Por otro lado, la llamada <code>(and (eval btm) #f)</code> nunca termina porque intenta evaluar el primer argumento antes del segundo y la llamada <code>(and #t (eval btm))</code> nunca termina porque el resultado de la expresión depende del valor del segundo argumento.</p>
+
+<p>Pero diría que son muy distintos las evaluaciones <code>(and (eval btm) #f)</code> y <code>(and #t (eval btm))</code>. En el segundo caso realmente no tendría sentido asignarle un valor porque podría resultar o cierto o falso dependiendo del valor de <code>(eval btm)</code> y como éste no produce ningún valor booleano no hay manera de elegir un valor de esta expresión que no sea arbitraria. Por otro lado la intuición nos dice que la expresión <code>(and (eval btm) #f)</code> "debe" evaluar a falso, pues aunque el primer argumento no devuelve ningún booleano, si lo devolviera entonces la expresión resultaría falso en cualquier caso. De hecho podemos definir una versión propia de <code>and</code> que evalúa el segundo argumento antes del primero:</p>
+
+<div class="code"><code><pre>
+(define-syntax and2
+        (syntax-rules ()
+                ((and2 x y)
+                 (let ((tmp y))
+                      (if tmp x #f)))))
+</pre></code></div>
+
+<p>Con esta construcción nos va <code>(and2 (eval btm) #f)</code> pero <code>‌(and2 #f (eval btm))</code> no va - entonces tiene la misma debilidad <code>and2</code> que <code>and</code> pero al revés. ¿Cómo podríamos escribir una estructura de control que evalúa las expresiones booleanas en todos casos que el resultado sea determinado por los argumentos que devuelven un valor?</p>
+
+<p>Voy a intentar describir más precisamente qué quiero decir aquí. Suponemos que hay una función (no de Scheme sino una función matemática que queremos implementar en Scheme) con varios argumentos: <script type="math/tex; mode=display">f:A_1\times \cdots \times A_n \to B</script> Para representar la posibilidad de pasar argumentos no bien definidos podemos ampliar el dominio de la función así: <script type="math/tex; mode=display">\tilde f:(A_1\sqcup \{\bot\})\times\cdots\times (A_n\sqcup \{\bot\})\to (B\sqcup\{\bot\})</script> o sea que añadimos a cada componente del dominio y al rango un "valor" adicional $\bot$ que representa algo que no se puede evaluar o que no tiene valor definido. (Juro que yo no soy él que inventó esta <a href="https://en.wikipedia.org/wiki/Bottom_type">notación rara</a>.) Vamos a definir un orden parcial en el dominio de la función ampliada $\tilde f$ de la manera siguiente: diremos que una tupla $t=(a_1,\cdots,a_n)$ es "menor" que la tupla $t'=(a_1',\cdots,a_n')$ o sea $t\leq t'$ si y sólo si $t$ "podría ser igual a $t'$" si algunos de sus elementos no definidos (iguales a $\bot$) fueran definidos. Dicho más rigurosamente diremos que $t\leq t'$ si $a_i\ne a_i'$ sólo cuando $a_i = \bot$. Por ejemplo decimos que $(1,\bot,3)\leq (1,2,3)$. Intuitivamente si nos ponemos a evaluar los argumentos de una función y en algún instante resulta que el primer argumento se ha evaluado a $1$ y el tercer argumento a $3$ pero el segundo argumento sigue evaluándose, <em>todavía es posible</em> que  salga un $2$ y que la sucesión de argumentos resulte $(1,2,3)$ al final. Por otro lado $(1,\bot,3)\nleq (1,2,4)$ pues como el tercer argumento se ha evaluado a $3$ ya no es posible que sea un $4$. En Scheme en concreto tendríamos el orden parcial siguiente para un par de argumentos booleanos:</p>
+
+<p><center><img src="/img/2022-11-30-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>en la cual figura $\bot$ representa el "valor" de una expresión como <code>(eval btm)</code>.</p>
+
+<p>Exigimos algunas propiedades de esta función $\tilde f$ para que quepa con nuestra intuición de la computación que representa. Lo primero es que mientras mejor definida sea la entrada a la función, mejor definido será la salida. Si $t'$ es una "evaluación posible" de $t$ o sea si $t\leq t'$, entonces $\tilde f(t')$ debe de ser una evaluación posible de $\tilde f(t)$ o sea $\tilde f(t)\leq \tilde f(t')$. Entonces exigimos la propiedad de <em>monotonicidad</em>: <script type="math/tex; mode=display">t\leq t' ~ \implies ~ \tilde f(t)\leq \tilde f(t')</script> En particular si los argumentos $t$ bastan para determinar el valor de $\tilde f(t)$ y si $t'$ es "aún más específico" que $t$ entonces $\tilde f(t')$ tendrá que tener el mismo valor. Además si queremos considerar $\tilde f$ como una implementación de $f$ debe tener los mismos valores que $f$ en el subconjunto $A_1\times\cdots\times A_n$ de su dominio o sea cuando todos sus argumentos son bien definidos. Con el dibujo anterior del orden parcial en pares de booleanos en Scheme podemos visualizar el suborden de argumentos en el cual la implementación de <code>and</code> está definido y el suborden en el cual la operación lógica <em>podría</em> ser definida:</p>
+
+<p><center><img src="/img/2022-11-30-Fig2.png" alt="Fig 2" /></center></p>
+
+<p>La mejor implementación de $f$ respeto a su robustez frente a argumentos mal formados sería una que le asigna un valor bien definido a cada conjunto de argumentos cuyos valores bien definidos determinan únicamente. Es decir, una implementación óptima de la conjunción lógica en Scheme devolvería un valor para cada par de argumentos dentro de la región verde. Puedes formular esta propiedad matemáticamente?</p>
+
+<p>Pues basta ya con la formalización matemática. Tal vez la trato con más detalle en una entrada a continuación pero si te interesa leer más acera de la formalización de computaciones parciales debes leer sobre <a href="https://en.wikipedia.org/wiki/Domain_theory">la teoría de dominios</a>. Es un tema del cual quiero aprender más yo mismo.</p>
+
+<p>De todos modos mi intento de implementar la operación de conjunción lógica de manera más robusta a las computaciones que no terminan involucra las <em>hebras</em>. Si evaluamos los argumentos uno tras otro entonces siempre quedará un caso en el cual espera el resultado de una computación que nunca termina mientras que el otro argumento determina completamente el resultado. Por otro lado si nos vamos evaluando los dos argumentos simultáneamente o sea evaluando cada uno poco a poco entonces podemos terminar la computación tan pronto como la llegada de un valor que determina el valor de la operación. Aquí está mi código:</p>
+
+<div class="code"><code><pre>
+(define-syntax andp 
+        (syntax-rules ()
+                ((andp x y)
+                 (let* ((ch (make-channel))
+                        (th1 (thread (lambda () (channel-put ch x)))) 
+                        (th2 (thread (lambda () (channel-put ch y)))))
+                       (and (channel-get ch) (channel-get ch)))))) 
+</pre></code></div>
+
+<p>Lo que cumple esta función es que crea un canal y entonces crean dos hebras <code>th1</code> y <code>th2</code> que comunican con el proceso padre a través del canal. Según la documentación de Racket acerca del <a href="https://docs.racket-lang.org/reference/channel.html">paralelismo</a> la llamada <code>channel-get</code> se bloquea hasta que un emisor envía un valor por el canal proporcionado y entonces devuelve éste. Así que al usar <code>(and (channel-get ch) (channel-get ch))</code> cogemos como el primer argumento a <code>and</code> el valor de <em>la computación que devuelve un resultado primero</em>. Si este valor es falso entonces devuelve <code>and</code> el valor <code>#f</code> sin esperar otro valor con la segunda llamada a <code>channel-get</code>. Si probamos el funcionamiento de nuestra implementación <code>andp</code> observamos los resultados siguientes:</p>
+
+<div class="code"><code><pre>
+> (andp #f (eval btm))
+#f
+> (andp (eval btm) #f)
+#f
+</pre></code></div>
+
+<p>Pues no sé si sería factible usar esta operación en la práctica. La creación de hebras debe generar muchos gastos así que creo que un programa que usa la implementación paralela para cada conjunción lógica sería muy ineficiente. Sin embargo podrían surgir casos en los cuales vale la pena, en concreto en computaciones en las cuales es probable que una parte tarde mucho más que otra en evaluarse.</p>
+
+<p>También podemos considerar el manejo de expresiones sin evaluación por funciones más compleja que las operaciones booleanas. Por ejemplo considera la estructura de control <code>if</code> que también tiene un flujo de control especial en Scheme. Durante la evaluación de la expresión <code>(if t x y)</code> se evalúa <code>t</code> primero y si resulta cierto entonces devuelve el valor de <code>x</code> y si resulta falso devuelve el valor de <code>y</code> de manera que sólo computa el valor o de <code>x</code> o de <code>y</code>. Por ejemplo las computaciones <code>(if #t 23 (eval btm))</code> y <code>(if #f (eval btm) 23)</code> sí devuelven un valor (ambos evalúan a <code>23</code>). Si el primer argumento <code>t</code> no se puede evaluar entonces ni se evalúa <code>(if t x y)</code> pero fíjate que hay casos en los cuales el resultado no depende del valor de <code>t</code>. Por ejemplo en la expresión <code>(if (eval btm) 23 23)</code> realmente no hay necesidad de evaluar <code>(eval btm)</code> porque ya sea el valor del primer argumento <code>#t</code> o <code>#f</code> el resultado final será <code>23</code>. Para implementar la estructura if-else con mejor manejo de este caso especial también podemos utilizar las hebras:</p>
+
+<div class="code"><code><pre>
+(define-syntax ifp 
+        (syntax-rules ()
+                ((ifp test x y)
+                 (let* ((ch (make-channel))
+                         (th1 (thread (lambda () (if (eqv? x y) (channel-put ch x) 0))))
+                         (th2 (thread (lambda () (if test x y)))))
+                       (channel-get ch))))) 
+</pre></code></div>
+
+<p>Con esta implementación conseguimos los resultados siguientes:</p>
+
+<div class="code"><code><pre>
+> (ifp #t 23 (eval btm))
+23
+> (ifp #f (eval btm) 23)
+23
+> (ifp (eval btm) 23 23)
+23
+</pre></code></div>
+
+<p>mientras que evaluaciones como <code>(if (eval btm) 23 24)</code> y <code>(if #t (eval btm) 23)</code> todavía serán sin fin, pues sus resultados dependerían de la computación infinita de <code>(eval btm)</code>.</p>
+
+<p>Echamos un vistazo brevemente a un ejemplo más complejo que trata de la implementación de una función que compara dos listas y decide si son iguales o no. Aquí están dos implementaciones no paralelas:</p>
+
+<div class="code"><code><pre>
+(define (comp-list-1 l1 l2)
+        (cond ((empty? l1) (empty? l2))
+              ((empty? l2) #f) 
+              (else (and (eqv? (eval (car l1)) (eval (car l2))) 
+                         (comp-list-1 (cdr l1) (cdr l2))))))
+
+(define (comp-list-2 l1 l2)
+        (cond ((empty? l1) (empty? l2))
+              ((empty? l2) #f) 
+              (else (and (comp-list-2 (cdr l1) (cdr l2)) 
+                         (eqv? (eval (car l1)) (eval (car l2)))))))
+</pre></code></div>
+
+<p>Para los argumentos que se portan bien estas dos implementaciones proporcionarán los mismos resultados pero son muy distinto en cuanto a su tratamiento de listas que contienen entradas que no se puede evaluar. Por ejemplo como <code>comp-list-1</code> compara las dos listas de principio hacia el final es capaz de distinguir entre las dos listas <code>'(1 (eval btm))</code> y <code>'(2 3)</code> porque detecta la diferencia entre <code>1</code> y <code>2</code>. No es capaz de distinguir entre <code>'(1 (eval btm) 3)</code> y <code>'(1 2 4)</code> porque se topa con una entrada sin evaluación antes de encontrar las entradas <code>3</code> y <code>4</code> que le permitirían distinguir entre las dos listas. El asunto es al revés para <code>comp-list-2</code>. De hecho podemos clasificar explícitamente los pares de listas entre las cuales son capaces de distinguir las dos implementaciones. En concreto <code>(comp-list-1 l1 l2)</code> devuelve un resultado si:</p>
+
+<ol>
+<li>Ni <code>l1</code> ni <code>l2</code> tiene elementos sin evaluación</li>
+<li>Las listas <code>l1</code> y <code>l2</code> son distintos y la primera entrada en la cual no son iguales tiene evaluación en ambas listas</li>
+<li>Una lista es más corta que la otra y todos los elementos de ésta tienen evaluación</li>
+</ol>
+
+<p>Por otro lado <code>(comp-list-2 l1 l2)</code> devuelve un resultado si:</p>
+
+<ol>
+<li>Ni <code>l1</code> ni <code>l2</code> tiene elementos sin evaluación</li>
+<li>Una lista es más corta que la otra</li>
+<li>Las listas <code>l1</code> y <code>l2</code> son distintas y la última entrada en la cual no son iguales tiene evaluación en ambas listas</li>
+</ol>
+
+<p>Una particularidad interesante es que <code>comp-list-2</code> detecta desigualdad entre dos listas con largos distintos sin intentar evaluar ni un elemento. Pero además de <code>comp-list-1</code> y <code>comp-list-2</code> podemos diseñar una implementación paralela (y poco eficiente) que aprovecha de nuestra construcción anterior <code>andp</code>:</p>
+
+<div class="code"><code><pre>
+(define (comp-list-p l1 l2)
+        (if (empty? l1)
+            (empty? l2)
+            (andp (eqv? (eval (car l1)) (eval (car l2)))
+                  (comp-list-p (cdr l1) (cdr l2))))) 
+</pre></code></div>
+
+<p>Con esta implementación las condiciones de terminación son mucho más flojas. En concreto sólo es necesario que las dos listas tienen largos distintos o que tienen dos entradas correspondientes desiguales <em>en cualquiera posición</em> con evaluación. Esta implementación es capaz de distinguir tanto entre <code>'(1 (eval btm))</code> y <code>'(2 3)</code>  como entre <code>'(1 (eval btm) 3)</code> y <code>'(1 2 4)</code>. Además puede distinguir entre las listas <code>'((eval btm) 34 (eval btm))</code> y <code>'((eval btm) 35 (eval btm))</code> entre las cuales ni <code>comp-list-1</code> ni <code>comp-list-2</code> es capaz de distinguir.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

@@ -1,0 +1,32 @@
+{
+    "entries": [
+        {
+            "title": "Variación acotada y el operador de traslado",
+            "slug": "bounded-variation-translate-operator",
+            "date": "2025-05-20",
+            "lang": "es",
+            "file": "2025-05-20.md"
+        },
+        {
+            "title": "Ideal scaling of spaced repetition",
+            "slug": "scaling-spaced-repetition",
+            "date": "2025-02-20",
+            "lang": "en",
+            "file": "2025-02-20.md" 
+        },
+        {
+            "title": "Some collected cool stats about the Wiener process",
+            "slug": "wiener-process-trivia",
+            "date": "2024-12-30",
+            "lang": "en",
+            "file": "2024-12-30.md"
+        },
+        {
+            "title": "A character's journey from finger to glyph",
+            "slug": "character-input-processing",
+            "date": "2024-11-30",
+            "lang": "en",
+            "file": "2024-11-30.md"
+        }
+    ]
+}

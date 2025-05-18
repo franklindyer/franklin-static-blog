@@ -1,0 +1,94 @@
+<html>
+<head>
+    <title>Prädiktoren und Newcombs Paradoxon</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Prädiktoren und Newcombs Paradoxon</h2>
+
+<p>Can't read German? <a href="https://franklin.dyer.me/post/152">Here</a> is an English translation of this post.</p>
+
+<p>Dieser Blogeintrag handelt über einen Begriff der Philosophie der Zeit und der Vorbestimmung, nämlich die Möglichkeit eines Apparats, der die Zukunft unfehlbar voraussagen könnte. Neulich hat mein Philosophieklub dieses Thema kurz behandelt während einer Diskussion über die Willensfreiheit. Auch hat einer meiner Lieblingsautoren, Ted Chiang, eine bewusstseinverändernde Kurzgeschichte geschrieben (die “What’s Expected” heißt), die die Möglichkeit eines “Prädiktors” gebraucht, um die Philosophie und die Psychologie der Willensfreiheit zu erforschen.</p>
+
+<h4>Newcombs Problem <a id="toc-section-1" class="toc-section"></a></h4>
+
+<p>Lass uns zuerst ein Gedankenexperiment bedenken, das “Newcombs Problem” heißt. Stellen Sie mal vor, daß Sie nehmen an einem Spiel (ähnlich zu “Let’s Make a Deal!”) teil, in dem zwei Kisten vor Ihnen liegen und jede fasst einen gewissen Geldbetrag. Kiste A ist durchsichtig und man kann $\$10$ drinsehen. Kiste B ist doch undurchsichtig, aber Sie wissen, daß der Aufseher des Spieles entweder $\$100$ oder $\$0$ anfänglich dringestellt hat. Sie müssen entscheiden, ob sie nur Kiste B oder die beide Kisten bekommen wollen (anders gesagt, ob sie “gierig” sein wollen oder nicht). Es gibt nur noch eine Bedingung des Spieles: der Aufseher kann in die Zukunft sehen und die Geldmenge, die er in Kiste B steckt, kommt auf seine Voraussetzung Ihrer Entscheidung an. Wenn er voraussagte, daß Sie “gierig” entschieden (und die beide Kisten nähmen), dann würde er in Kiste B kein Geld stecken, sonst würde er sie mit $\$100$ auffüllen. Wie soll man wählen, um maximal zu profitieren? Denken Sie einen Moment nach, dann prüfen Sie die folgende zwei Argumente, die zu verschiedenen Ergebnissen kommen:</p>
+
+<p><strong>Argument B:</strong> Wenn Sie nur Kiste B auswählen, dann bekommen Sie $\$100$, sonst bekommen Sie nur $\$10$, weil der Aufseher Ihre “Gierigkeit” vorhersehen haben würde. Deshalb nehmen Sie nur Kiste B.</p>
+
+<p><strong>Argument AB:</strong> Sagen wir mal, daß Kiste B fasst $\$X$. Wenn Sie Kiste B auswählen, dann bekommen Sie $\$X$, doch wenn Sie die beide nehmen, dann bekommen Sie $\$X+\$10$. Offensichtlich ist die zweite Entscheidung günstiger (eigentlich genau $\$10$ günstiger).</p>
+
+<p>Die beide Argumenten scheinen gültig, obwohl sie im Widerspruch zueinander stehen. Welche ist richtig?</p>
+
+<p>In der Wirklichkeit kommt es darauf an, welche Voraussetzungen  man vermutet. Lass uns die Annahmen dieser zwei Argumente syllogistisch erläutern. Argument B behauptet:</p>
+
+<ul>
+<li>Der Aufseher kann fehlerfrei in die Zukunft sehen.</li>
+<li>Infolgedessen werden Sie $\$100$ bekommen wenn sie Kiste B wählen und $\$10$ wenn sie die beide nehmen.</li>
+<li>Deshalb sollen sie nur Kiste B nehmen.</li>
+</ul>
+
+<p>Und Argument AB sagt:</p>
+
+<ul>
+<li>Der Aufseher hat schon eine bestimmte Geldmenge in Kiste B gesteckt, die nicht ändern kann.</li>
+<li>Sowieso werden Sie den Inhalt der Kiste B bekommen, also müssen Sie nur entscheiden, ob Sie $\$10$ darüberhinaus wollen.</li>
+<li>Wenn Sie den Gewinn optimisieren wollen, sollen Sie freies Geld nicht verzichten, deshalb nehmen Sie die beide Kisten.</li>
+</ul>
+
+<p>Lass uns jetzt die Annahmen dieser Argumente nebeneinandersetzen:</p>
+
+<ul>
+<li><strong>Argument B</strong> nimmt an, daß „der Aufseher kann fehlerfrei in die Zukunft sehen.“</li>
+<li><strong>Argument AB</strong> nimmt an, daß „der Aufseher hat schon eine bestimmte Geldmenge in Kiste B gesteckt, die nicht ändern kann.“</li>
+</ul>
+
+<p>Weil die Ergebnisse von Argument B und Argument AB nicht vereinbar sind, können die beide Annahmen auch nicht wahr sein. Deshalb kommen wir zum überraschenden Entschluss, daß das Existenz eines fehlerfreien Prädiktores nach sich zieht, daß <em>der Inhalt der Kiste B nicht bestimmt sein kann</em> und bis Ihre Entscheidung unbestimmt bleibt. Dieser wird problematisch wenn wir das Gedankenexperiment ein bisschen ändern: was wäre passieren, wenn Kiste B <em>durchsichtig</em> wäre? Wenn wir in der Willensfreiheit glauben, offensichtlich könnten wir nicht in den fehlerfreien Prädiktoren - wenn man die Prognose des Prädiktors schon vorher weiß, kann man sie einfach trotzen.</p>
+
+<h4>Ein Problem mit den Prädiktoren <a id="toc-section-2" class="toc-section"></a></h4>
+
+<p>Dieses Problem kommt aber nicht auf der Willensfreiheit an. Newcombs Paradoxon verschleiert ein größeres Problem mit den Prädiktoren. Stellen Sie vor, daß wir einen elektronischen Prädiktor-Apparat haben, daß nimmt als Eingabe einen Impuls und schickt das gleiche Impuls eine Sekunde früher zurück. Lass uns diesen Apparat in einen Schaltkreis so stecken:</p>
+
+<p><center><img src="/img/2020-02-07-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>wo C steht für einen Computer. Dann programmieren wir den Computer mit dieser Anleitung:</p>
+
+<blockquote>
+<p>Wenn ein Impuls ankommt, mach nichts für eine Sekunde, sonst wenn nichts für einige Minuten angekommen ist, send einen Impuls aus.</p>
+</blockquote>
+
+<p>In dieser Situation könnte ein Prädiktor nie klappen. Wann es einen Impuls voraussagt, wird das Computer stumm, und sonst schickt das Computer einen Impuls, den es nicht vorausgesagt hat. Man könnte postulieren, daß das Computer in diesem Fall irgendwie kaputtgehen würde, doch das scheint wie einen schlechten Vorwand weil es keinen Grund fürs Kaputtgehen geben würde. Deshalb folgern wir, daß den Begriff eines “fehlerfreien Prädiktors” unlösbar problematisch ist unabhängig von der Willensfreiheit und dem Determinismus. Gibt’s Hoffnung einer Lösung dieses Problemes oder sind die Prädiktoren völlig unmöglich?</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

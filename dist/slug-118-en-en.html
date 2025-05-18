@@ -1,0 +1,115 @@
+<html>
+<head>
+    <title>Snell's Law and Quickest Paths</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Snell’s Law and Quickest Paths</h2>
+
+<p>In this post, I will describe and prove a concept from physics/optics known as Snell’s Law. Then, just for fun, I will apply it to an interesting “quickest path” problems from pure mathematics that will probably never occur in any physical scenario.</p>
+
+<p>In physics, <strong>Fermat’s Principle</strong> is the assumption that when light travels from one point in space to another, it always takes the quickest path. In some scenarios, the quickest path between two points is the straight line connecting them, but this is not always the case. The maximum velocity at which light can travel varies based on the <strong>medium</strong> through which it travels, whether it be air, water, glass, or empty space. When a ray of light has to transfer from one medium to another to travel between two points, it turns out that the fastest path it often <em>not</em> a straight line. This is partially because a straight line path may cause the ray spend “too long” in a medium that slows down its velocity, whereas it could have gone faster by transferring first to a medium in which it can travel more quickly. Consider this simplified example:</p>
+
+<p><center><img src="/img/2019-07-25-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>Clearly, even though the red path is the path of shortest <em>length</em>, following the green path would be quicker. This is because the time spent in medium $2$ will be negligible compared to that spent in medium $1$ because of the much higher velocity in medium $2$, meaning that it would be quicker to <em>get out</em> of medium $1$ as quickly as possible, and then head towards point $B$. That’s not to say that the green path is <em>optimal</em> - that was just a conceptual thought experiment. Now let’s use math to calculate the <em>actual</em> optimal paths.</p>
+
+<p>Consider an arbitrary scenario in which the two media correspond to velocities $v_1$ and $v_2$ and the start and end points of the path are respective distances $d_1$ and $d_2$ from the interface between the media, with a vertical distance $h$ between them. Further, we may assume that <em>within</em> each medium, the shortest path is a straight line, so the optimal path consists of two line segments. In the image below, I have characterized these line segments by the respective angles $\theta_1$ and $\theta_2$ that they make with the normal line:</p>
+
+<p><center><img src="/img/2019-07-25-Fig2.png" alt="Fig 2" /></center></p>
+
+<p>We may easily calculate with a bit of trig that the vertical distances travelled in each medium are $d_1 \tan(\theta_1)$ and $d_2\tan(\theta_2)$ respectively, and the total distances travelled in each medium are $d_1\sec(\theta_1)$ and $d_2\sec(\theta_2)$ respectively. Thus, since the total vertical distance travelled is $h$ and we wish to minimize the total time spent, we can reduce the problem to the following: we need to minimize the quantity
+<script type="math/tex; mode=display">d_1 v_1^{-1}\sec(\theta_1)+d_2 v_2^{-1}\sec(\theta_2)</script>
+subject to the constraints
+<script type="math/tex; mode=display">d_1\tan(\theta_1)+d_2\tan(\theta_2)=h</script>
+and $\theta_1,\theta_2\in (0,\pi/2)$.</p>
+
+<p>Because of the constraints, we have that $\theta_2$ is actually a function of $\theta_1$ (and vice versa). This means that we may differentiate the first expression with respect to $\theta_1$ and equate it to zero (in order to calculate the optimal $\theta_1$ and $\theta_2$ values), yielding the following:
+<script type="math/tex; mode=display">d_1 v_1^{-1}\sec(\theta_1)\tan(\theta_1)+d_2 v_2^{-1}\sec(\theta_2)\tan(\theta_2)\cdot \frac{d\theta_2}{d\theta_1}=0</script>
+which is equivalent to
+<script type="math/tex; mode=display">\frac{d_1\sec(\theta_1)\tan(\theta_1)}{d_2\sec(\theta_2)\tan(\theta_2)}=-\frac{v_1}{v_2}\frac{d\theta_2}{d\theta_1}</script>
+Now, if we differentiate the equation representing the first constraint with respect to $\theta_1$ as well, and perform a few algebraic manipulations, we obtain the following equation:
+<script type="math/tex; mode=display">\frac{d\theta_2}{d\theta_1}=-\frac{d_1\sec^2(\theta_1)}{d_2\sec^2(\theta_2)}</script>
+Combining this with the above equation yields the following:
+<script type="math/tex; mode=display">\frac{d_1\sec(\theta_1)\tan(\theta_1)}{d_2\sec(\theta_2)\tan(\theta_2)}=\frac{v_1 d_1\sec^2(\theta_1)}{v_2 d_1\sec^2(\theta_2)}</script>
+or
+<script type="math/tex; mode=display">\frac{\sin(\theta_1)}{\sin(\theta_2)}=\frac{v_1}{v_2}</script>
+This simple, pleasing result is known as <strong>Snell’s Law</strong>, and determines the quickest path between two points in different media with a linear interface between them.</p>
+
+<p>Now let’s use Snell’s Law to tackle a different and much more interesting problem. Suppose you are in a vehicle represented by a point on the two-dimensional Cartesian coordinate plane. You wish to travel from some point $A$ to another point $B$ as quickly as possible, and the maximum instantaneous velocity of your vehicle at any time is also equal to its y-coordinate. How can you find the optimal path?</p>
+
+<p>At first, this seems like a completely different problem, since there is no discrete differentiation between media in which the particle has different velocities. Rather, there is a <em>continuum</em> of velocities at which the particle may travel. Once again, before actually tackling the problem, let’s do a little thought experiment to assure ourselves that the quickest path will not be a straight line. Suppose, for example, that points $A$ and $B$ are at the same y-coordinate, but are very far away:</p>
+
+<p><center><img src="/img/2019-07-25-Fig3.png" alt="Fig 3" /></center></p>
+
+<p>Then the green path marked above might easily be faster than the red one, because although it goes “out of the way” by unnecessarily moving upwards, it saves some time since the longer stretch of the path takes less time, being at a higher altitude and thus being traversed at a greater speed.</p>
+
+<p>Now I will explain an actual numerical solution. If you want to try the problem, do so now, before reading on.</p>
+
+<p>To simplify things, let’s suppose that point $A$ is the point $(0, h_0)$ and point $B$ is the point $(x_1,h_1)$. Even though there are no discrete medium-changes in this problem, we can still use Snell’s Law to help us - just think of each line $y=a$ as an <em>infinitesimally thin</em> medium. If the trajectory of our vehicle follows the quickest path, then we know by Snell’s Law that the angle $\theta$ that our trajectory makes with the vertical satisfies the following equation:
+<script type="math/tex; mode=display">\frac{\sin(\theta)}{v}=\frac{\sin(\theta_0)}{v_0}</script>
+where $\theta_0$ and $v_0$ are the initial angle and initial velocity. We can simplify this by saying that
+<script type="math/tex; mode=display">\sin(\theta)=kv</script>
+where $k$ is some constant. Let’s draw another picture:</p>
+
+<p><center><img src="/img/2019-07-25-Fig4.png" alt="Fig 4" /></center></p>
+
+<p>If we represent the optimal path as the curve of a function $y=f(x)$, then we can see that at any value of $x$, the angle $\theta$ satisfies
+<script type="math/tex; mode=display">\sin(\theta)=kv=kf(x)=ky</script>
+Notice now that $\sin(\theta)$ is actually determined by the slope of the curve. The slope of a line with angle $\theta$ from the vertical is equal to $\cot(\theta)$, meaning that the slope of the curve $y=f(x)$ at a particular x-value is equal to $\cot(\theta)$, or $y’=\cot(\theta)$. Since 
+<script type="math/tex; mode=display">\cot^2(\theta)=\csc^2(\theta)-1</script>
+we may combine this with the above equation for $\sin(\theta)$, telling us that
+<script type="math/tex; mode=display">\cot^2(\theta)=y’^2=\frac{1}{k^2 y^2}-1</script>
+This is a pretty gross differential equation to solve, so I’ll omit the algebra and leave that up to any reader who is sufficiently interested to crunch the numbers. Solving the differential equation and using the initial values $y(0)=h_0$ and $y(x_1)=h_1$ to solve for the constant $k$ and the constant $C$ that appeared as a result of solving the differential equation results in the following solution:</p>
+
+<p>
+<script type="math/tex; mode=display">\bigg(x-\frac{h_1^2-h_0^2+x_1^2}{2x_1}\bigg)^2+y^2=\frac{(h_1^2-h_0^2+x_1^2)^2}{4x_1^2}+h_0^2</script>
+</p>
+
+<p>Miraculously, this is the equation of a <em>circle</em>! So it turns out that the solution to our difficult and complicated problem is to simply travel along the <em>circle</em> passing through points $A$ and $B$ whose center lies on the x-axis, according to Snell’s Law. In fact, we can also calculate the amount of time the journey will take by calculating the integral</p>
+
+<p>
+<script type="math/tex; mode=display">\int_0^{x_1} \sqrt{1+f’(x)^2}\frac{dx}{f(x)}</script>
+</p>
+
+<p>Solving this integral also requires a lot of messy algebra, but an exact answer can be found for its value as well:</p>
+
+<p>
+<script type="math/tex; mode=display">\log\bigg(\frac{2h_0h_1}{h_1^2+h_0^2+x_1^2-\sqrt{(h_1^2-h_0^2+x_1^2)^2+4x_1^2h_0^2}}\bigg)</script>
+</p>
+
+<p>And that concludes this brief blog post.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

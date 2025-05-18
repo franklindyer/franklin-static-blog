@@ -1,0 +1,1 @@
+$$\int_0^1 \cos(x-\sqrt{1-x^2}\big)dx$$

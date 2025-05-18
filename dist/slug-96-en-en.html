@@ -1,0 +1,132 @@
+<html>
+<head>
+    <title>Iterated Polynomials</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Iterated Polynomials</h2>
+
+<p><em>2017 April 9</em></p>
+
+<blockquote>
+<p>Find the formula for the <em>n</em>th iterate of the function $f(x)=2x^2-1$ for $|x| \le 1$.
+Find the formula for the <em>n</em>th iterate of a quadratic with a fixed point at its minimum.</p>
+</blockquote>
+
+<p>It seems that some polynomial functions, such as $f(x)=x^2+1$, simply can't have an iteration formula in the closed form. However, some do because they can be put in the form $f(x)=(g\circ h\circ g^{-1})(x)$. For example, any polynomial function of the form
+<script type="math/tex; mode=display">f(x)=\frac{1}{c}(cx+d)^p-\frac{d}{c}</script>
+</p>
+
+<p>can be iterated, because it takes the aforementioned form with
+<script type="math/tex; mode=display">g(x)=\frac{1}{c}x-\frac{d}{c}</script>
+<script type="math/tex; mode=display">h(x)=x^p</script>
+</p>
+
+<p>meaning that
+<script type="math/tex; mode=display">f^n(x)=(g\circ h^n\circ g^{-1})(x)</script>
+<script type="math/tex; mode=display">f^n(x)=\frac{1}{c}(cx+d)^{p^n}-\frac{d}{c}</script>
+</p>
+
+<p>Let's apply this to quadratics. This formula tells us that any quadratic with its vertex on the line $y=x$ can be iterated by this formula, because a quadratic with its vertex on $y=x$ takes the form
+<script type="math/tex; mode=display">f(x)=a(x-h)^2+h</script>
+</p>
+
+<p>or
+<script type="math/tex; mode=display">f(x)=\frac{1}{a}(ax-ah)^2+h</script>
+</p>
+
+<p>Which we can see takes the form $f(x)=(g\circ h\circ g^{-1})(x)$ where $g(x)=\frac{1}{a}x+h$ and $h(x)=x^2$, so
+<script type="math/tex; mode=display">f^n(x)=\frac{1}{a}(ax-ah)^{2^n}+h</script>
+</p>
+
+<p>That's about it for polynomials, aside from a few quadratics that can be iterated somewhat using trigonometric functions. For example, the quadratic
+<script type="math/tex; mode=display">f(x)=2x^2-1</script>
+</p>
+
+<p>can be split up into
+<script type="math/tex; mode=display">f(x)=x^2-(\sqrt{1-x^2})^2</script>
+<script type="math/tex; mode=display">f(x)=\cos^2(\cos^{-1}x)-\sin^2(\cos^{-1}x)</script>
+<script type="math/tex; mode=display">f(x)=\cos(2\cos^{-1}x)</script>
+</p>
+
+<p>which, once again, takes our special form and can be iterated as
+<script type="math/tex; mode=display">f^n(x)=\cos(2^n\cos^{-1}x)</script>
+</p>
+
+<p>However, quadratics iterated this way can only be iterated to a certain extent because of the limited domain of the inverse trigonometric functions. Let's try an example anyways. What about $f^{10}(0.5)$? Using our formula, this will be
+<script type="math/tex; mode=display">f^{10}(x)=\cos(2^10\cos^{-1}0.5)</script>
+<script type="math/tex; mode=display">f^{10}(x)\approx \cos(1072.330)</script>
+<script type="math/tex; mode=display">f^{10}(x)=-0.5</script>
+</p>
+
+<p>Well, that was a bad example to try, because $f(0.5)=f(-0.5)=-0.5$, so we could have found that without our formula. How about $f^{10}(0.1)$?</p>
+
+<p>
+<script type="math/tex; mode=display">f^{10}(0.1)=\cos(2^10\cos^{-1}0.1)</script>
+<script type="math/tex; mode=display">f^{10}(x)\approx \cos(1505.923)</script>
+<script type="math/tex; mode=display">f^{10}(x)=-0.452</script>
+</p>
+
+<p>I think I'm noticing a pattern here. When I iterate a quadratic whose vertex is on $y=x$, the graphs of the iterates exhibit predictable behavior. Here are the graphs of $y=\frac{1}{2}(x-2)^2+2$ and its first few iterates:</p>
+
+<p><center><img src="/img/2017-4-9-Fig1.png" alt="Fig 1" /></center>
+<center><img src="/img/2017-4-9-Fig2.png" alt="Fig 2" /></center>
+<center><img src="/img/2017-4-9-Fig3.png" alt="Fig 3" /></center>
+<center><img src="/img/2017-4-9-Fig4.png" alt="Fig 4" /></center></p>
+
+<p>They all seem to predictably flatten out at the bottom and then become steeper more and more quickly. Now here's the function $f(x)=2x^2-1$ and its first couple iterates:</p>
+
+<p><center><img src="/img/2017-4-9-Fig5.png" alt="Fig 5" /></center>
+<center><img src="/img/2017-4-9-Fig6.png" alt="Fig 6" /></center>
+<center><img src="/img/2017-4-9-Fig7.png" alt="Fig 7" /></center>
+<center><img src="/img/2017-4-9-Fig8.png" alt="Fig 8" /></center></p>
+
+<p>These display neat sinusoidal behavior and then head straight up. In fact, the crests of each of the waves are at a height of $1$, and the points $(1,1)$ and $(-1,1)$ lie on the curve directly before and after it begins to grow out of control, which is perhaps the reason why we cannot iterate it outside of that interval. Now observe these pictures of a quadratic of neither form:</p>
+
+<p><center><img src="/img/2017-4-9-Fig9.png" alt="Fig 9" /></center>
+<center><img src="/img/2017-4-9-Fig10.png" alt="Fig 10" /></center>
+<center><img src="/img/2017-4-9-Fig11.png" alt="Fig 11" /></center>
+<center><img src="/img/2017-4-9-Fig12.png" alt="Fig 12" /></center></p>
+
+<p>This quadratic's iterates display erratic behavior that grows insanely large before coming down again. Here's one more interesting case - a parabola tangent to the line $y=x$:</p>
+
+<p><center><img src="/img/2017-4-9-Fig13.png" alt="Fig 13" /></center>
+<center><img src="/img/2017-4-9-Fig14.png" alt="Fig 14" /></center>
+<center><img src="/img/2017-4-9-Fig15.png" alt="Fig 15" /></center>
+<center><img src="/img/2017-4-9-Fig16.png" alt="Fig 16" /></center></p>
+
+<p>Perhaps there is some formula for quadratics of that form, since they seem to behave predictably... but that's for another post.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

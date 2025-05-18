@@ -1,0 +1,154 @@
+<html>
+<head>
+    <title>Telescoping Sums</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Telescoping Sums</h2>
+
+<p><em>2017 June 9</em></p>
+
+<blockquote>
+<p>Find the values of each of the following infinite sums:
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{1}{x(x+1)}</script>
+<script type="math/tex; mode=display">\sum_{x=2}^\infty \frac{1}{x^2-1}</script>
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{1}{x(x+1)(x+2)}</script>
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{x}{2^x}</script>
+</p>
+</blockquote>
+
+<p>Okay, let's start with the first problem:
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{1}{x(x+1)}</script>
+This is a simple telescoping sum problem. Note that
+<script type="math/tex; mode=display">\frac{1}{x(x+1)}=\frac{1}{x}-\frac{1}{x+1}</script>
+So, when expanded, the infinite sum looks like
+<script type="math/tex; mode=display">\frac{1}{1}-\frac{1}{2}+\frac{1}{2}-\frac{1}{3}+\frac{1}{3}-...</script>
+Look! Each term other than the very first one forms a zero pair with some other term. They all cancel out, and we are left with
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{1}{x(x+1)}=1</script>
+as our answer. But wait a minute... couldn't we do an infinite sum like
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{1}{x(x+2)}</script>
+the same way? Since
+<script type="math/tex; mode=display">\frac{1}{x(x+2)}=\frac{1}{2}\bigg(\frac{1}{x}-\frac{1}{x+2}\bigg)</script>
+then the entire sum is
+<script type="math/tex; mode=display">\frac{1}{2}\bigg(\frac{1}{1}-\frac{1}{3}+\frac{1}{2}-\frac{1}{4}+\frac{1}{3}-\frac{1}{5}+...\bigg)</script>
+Now the only terms that don't get cancelled are $1$ and $\frac{1}{2}$, so the sum is
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{1}{x(x+2)}=\frac{1}{2}\bigg(1+\frac{1}{2}\bigg)=\frac{3}{4}</script>
+In fact, we can generalize this method of solving sums of this sort. If we have a sum of the form
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{1}{x(x+k)}</script>
+We can use partial fractions to set
+<script type="math/tex; mode=display">\frac{1}{x(x+k)}=\frac{1}{k}\bigg(\frac{1}{x}-\frac{1}{x+k}\bigg)</script>
+And so, by expanding, we can see that the sum becomes
+<script type="math/tex; mode=display">\frac{1}{k}\bigg(1-\frac{1}{k+1}+\frac{1}{2}-\frac{1}{k+2}+...+\frac{1}{k}+\frac{1}{2k}+\frac{1}{k+1}+\frac{1}{2k+1}+...\bigg)</script>
+Which can be rearranged to form
+<script type="math/tex; mode=display">\frac{1}{k}\bigg(1+\frac{1}{2}+\frac{1}{3}+...+\frac{1}{k}+\frac{1}{k+1}-\frac{1}{k+1}+\frac{1}{k+2}-\frac{1}{k+2}+...\bigg)</script>
+All of the terms cancel except for those from $1$ to $k$, so we get
+<script type="math/tex; mode=display">\frac{1}{k}\bigg(1+\frac{1}{2}+\frac{1}{3}+...+\frac{1}{k}\bigg)</script>
+and we have the formula
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{1}{x(x+k)}=\frac{1}{k}\sum_{x=1}^k \frac{1}{x}</script>
+or
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{1}{x(x+k)}=\frac{1}{k}H_k</script>
+where $H_n$ denotes the <em>nth</em> harmonic number.
+Okay! Onto the next sum:
+<script type="math/tex; mode=display">\sum_{x=2}^\infty \frac{1}{x^2-1}</script>
+We can split up the fraction into
+<script type="math/tex; mode=display">\frac{1}{(x+1)(x-1)}</script>
+<script type="math/tex; mode=display">\frac{1}{2}\bigg(\frac{1}{x-1}-\frac{1}{x+1}\bigg)</script>
+And so, when we expand the sum, we get
+<script type="math/tex; mode=display">\frac{1}{2}\bigg(1-\frac{1}{3}+\frac{1}{2}-\frac{1}{4}+\frac{1}{3}-\frac{1}{5}+...\bigg)</script>
+<script type="math/tex; mode=display">\frac{1}{2}\bigg(1+\frac{1}{2}+\frac{1}{3}-\frac{1}{3}+\frac{1}{4}-\frac{1}{4}+...\bigg)</script>
+<script type="math/tex; mode=display">\frac{1}{2}\bigg(1+\frac{1}{2}\bigg)</script>
+<script type="math/tex; mode=display">\frac{3}{4}</script>
+and so we have our answer:
+<script type="math/tex; mode=display">\sum_{x=2}^\infty \frac{1}{x^2-1}=\frac{3}{4}</script>
+</p>
+
+<p>Are you noticing a pattern in these summation problems?</p>
+
+<p>Suppose we have any summation in the form
+<script type="math/tex; mode=display">\sum_{x=1}^\infty f(x)-f(x+k)</script>
+or
+<script type="math/tex; mode=display">\lim_{n\to \infty}\sum_{x=1}^n f(x)-f(x+k)</script>
+we can start by finding a formula for
+<script type="math/tex; mode=display">\sum_{x=1}^n f(x)-f(x+k)</script>
+which can be found by expanding the sum and telescoping it:
+<script type="math/tex; mode=display">f(1)-f(k+1)+f(2)-f(k+2)+...+f(n)-f(k+n)</script>
+If we assume that $n \gt k$, then we have
+<script type="math/tex; mode=display">f(1)-f(k+1)+f(2)-f(k+2)+...+f(k)-f(2k)+f(k+1)-f(2k+1)+...+f(n)-f(k+n)</script>
+Which collapses to
+<script type="math/tex; mode=display">f(1)+f(2)+...+f(k)-f(n+1)-f(n+2)-...-f(n+k)</script>
+and this is equal to
+<script type="math/tex; mode=display">\sum_{x=1}^k f(x)-\sum_{x=n+1}^{n+k} f(x)</script>
+And our original infinite sum is
+<script type="math/tex; mode=display">\lim_{n\to \infty}\Bigg(\sum_{x=1}^k f(x)-\sum_{x=n+1}^{n+k} f(x)\Bigg)</script>
+If $\lim_{x\to\infty}f(x)$ exists, then we can say that this is equal to
+<script type="math/tex; mode=display">\sum_{x=1}^k f(x)-\lim_{x\to\infty}kf(x)</script>
+This is the formula for a telescoping sum:
+<script type="math/tex; mode=display">\sum_{x=1}^\infty f(x)-f(x+k)=\sum_{x=1}^k f(x)-\lim_{x\to\infty}kf(x)</script>
+Given that $k$ is a natural number.</p>
+
+<p>Moving on to the next problem:
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{1}{x(x+1)(x+2)}</script>
+Using partial fractions, we can split up the fraction to get
+<script type="math/tex; mode=display">\frac{1}{x(x+1)(x+2)}=\frac{1}{2}\frac{1}{x}-\frac{1}{x+1}+\frac{1}{2}\frac{1}{x+2}</script>
+<script type="math/tex; mode=display">\frac{1}{x(x+1)(x+2)}=\frac{1}{2}\bigg(\frac{1}{x}-\frac{1}{x+1}\bigg)-\frac{1}{2}\bigg(\frac{1}{x+1}-\frac{1}{x+2}\bigg)</script>
+and so our sum is equal to
+<script type="math/tex; mode=display">\frac{1}{2}\sum_{x=1}^\infty \bigg(\frac{1}{x}-\frac{1}{x+1}\bigg)-\frac{1}{2}\sum_{x=1}^\infty \bigg(\frac{1}{x+1}-\frac{1}{x+2}\bigg)</script>
+<script type="math/tex; mode=display">\frac{1}{2}\bigg(1-\frac{1}{2}\bigg)</script>
+<script type="math/tex; mode=display">\frac{1}{4}</script>
+And so the answer to this problem is
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{1}{x(x+1)(x+2)}=\frac{1}{4}</script>
+</p>
+
+<p>Next up is a different type of sum:
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{x}{2^x}</script>
+Yay! Something that can't be done using partial fractions! This one telescopes in a different way. Look what happens if we multiply and divide the sum by $\frac{1}{2}$:
+<script type="math/tex; mode=display">\frac{\frac{1}{2}}{\frac{1}{2}}\sum_{x=1}^\infty \frac{x}{2^x}</script>
+<script type="math/tex; mode=display">\frac{(1-\frac{1}{2})}{\frac{1}{2}}\sum_{x=1}^\infty \frac{x}{2^x}</script>
+<script type="math/tex; mode=display">\frac{1}{\frac{1}{2}}\sum_{x=1}^\infty (1-\frac{1}{2})\frac{x}{2^x}</script>
+<script type="math/tex; mode=display">2\sum_{x=1}^\infty \bigg(\frac{x}{2^x}-\frac{x}{2^{x+1}}\bigg)</script>
+Now look what happens when we write this out:
+<script type="math/tex; mode=display">2\bigg(\frac{1}{2}-\frac{1}{4}+\frac{2}{4}-\frac{2}{8}+\frac{3}{8}-\frac{3}{16}+...\bigg)</script>
+<script type="math/tex; mode=display">2\bigg(\frac{1}{2}+\frac{-1+2}{4}+\frac{-2+3}{8}+...\bigg)</script>
+<script type="math/tex; mode=display">2\bigg(\frac{1}{2}+\frac{1}{4}+\frac{1}{8}+...\bigg)</script>
+Now we have a geometric series inside of the parentheses. That geometric series can be easily calculated to converge to $1$ using the formula, and we have
+<script type="math/tex; mode=display">2(1)</script>
+<script type="math/tex; mode=display">2</script>
+and so
+<script type="math/tex; mode=display">\sum_{x=1}^\infty \frac{x}{2^x}=2</script>
+</p>
+
+<p>Great. All of these sums were telescoping sums, but in a future post I hope to tackle a few infinite sums that cannot be solved in this way.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

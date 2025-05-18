@@ -1,0 +1,280 @@
+<html>
+<head>
+    <title>Who visits this blog, anyways?</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h3>Who visits this blog, anyway?</h3>
+
+<p>Sometimes I wonder if anyone <em>actually</em> looks at any of the stuff that I post on this blog. It doesn’t make much of a difference - blogging for its own sake is personally beneficial and fun enough to continue doing it whether anyone reads me or not - but I can’t help being curious. So, in this post, I’ll dig into my blog’s visitor logs (stored in an SQL database) and analyze the traffic that has reached my website so far.</p>
+
+<p>I only started logging around early July of this year (2020), so  keep in mind that my logs only go back that far.</p>
+
+<h4>Bot traffic <a id="toc-section-1" class="toc-section"></a></h4>
+
+<p>First of all, a huge portion of the web traffic to my blog comes from bots with names like <code>DotBot</code>, <code>Googlebot</code>, <code>DuckDuckGo-Favicons-Bot</code>, and <code>PetalBot</code>. Some of the requests, despite not being explicitly labelled as from bots, don’t seem like they came from humans, or at least not from humans who are actually interested in my website. Like this one:</p>
+
+<p><code>GET /boaform/admin/formLogin?username=admin&amp;psd=admin</code></p>
+
+<p>This appears to be an attempt to log in to my website... but my blog doesn’t support user logins at all. Someone probably wrote a script to send this request like grapeshot to many different sites across the internet, hoping to exploit some common vulnerability that appears on many websites’ login forms. Weird.</p>
+
+<p>There’s a script on my server that dumps requests like this into an SQL table, identifying the IP address, the date and time of the request, and the raw text of the request. This information is stored in columns labelled <code>ip</code>, <code>timestamp</code>, and <code>request</code>. My script also makes a guess as to whether the request came from a bot, storing this information is a column called <code>isbot</code>. My “bot detection strategy” isn’t very sophisticated - it basically consists of checking whether the request contains the substring <code>“bot”</code>, so it probably <em>underestimates</em> the number of bots visiting my site (since there are surely plenty of bots that don’t announce themselves as bots).</p>
+
+<p>We can estimate the proportion of requests to my blog that come from bots using the following SQLite query:</p>
+
+<p><code>SELECT AVG(isbot) FROM visitors;</code></p>
+
+<p>and the result:</p>
+
+<p><code>0.636117523011598</code></p>
+
+<p>Again, this is probably an <em>underestimate</em> - so <em>at least</em> $63\%$ of the visits to my blog are perpetrated by bots.</p>
+
+<p>Now we know how much traffic comes from bots, but what if we want to know how many different bots have visited this site? We can estimate this by counting the number of distinct IP addresses of bot visitors (which may not be entirely accurate, because two or more bots may be coming from the same IP address, but it’ll do). This can be accomplished using the query</p>
+
+<p><code>SELECT COUNT(DISTINCT ip) FROM visitors WHERE isbot=1;</code></p>
+
+<p>which returns</p>
+
+<p><code>2337</code></p>
+
+<p>Compare that to the number of non-bot visitors, which we can find using the query</p>
+
+<p><code>SELECT COUNT(DISTINCT ip) FROM visitors WHERE isbot=0;</code></p>
+
+<p>to be approximately</p>
+
+<p><code>1912</code></p>
+
+<p>Yikes! I guess I’m much more popular with bots than I am with humans. </p>
+
+<p>Let’s see what kind of bot traffic my blog has gotten over the course of the past week. The following query returns the date, the number of bot requests, and the number of distinct bot IP addresses for each of the past seven days:</p>
+
+<p><code>SELECT date(timestamp), COUNT(*), COUNT(DISTINCT ip) FROM visitors WHERE isbot=1 GROUP BY date(timestamp) ORDER BY date(timestamp) DESC LIMIT 7;</code></p>
+
+<p>And the result:</p>
+
+<p><code><pre>
+2020-10-07|52|27
+2020-10-06|280|80
+2020-10-05|246|77
+2020-10-04|249|62
+2020-10-03|482|67
+2020-10-02|258|72
+2020-10-01|176|67
+</pre></code></p>
+
+<p>Why is today’s bot traffic (first row) so much lower than all of the previous days? Probably because today is still “in progress”, and the rest of the traffic that will come in over the course of the day has yet to be logged.</p>
+
+<h4>Human traffic <a id="toc-section-2" class="toc-section"></a></h4>
+
+<p>Now let’s see who is <em>really</em> visiting my website. Of course, I can’t find out <em>exactly who</em> visits my websites - the most I can see in my logs is their IP addresses (as well as some device/browser information). And, for the sake of privacy, I won’t even show my visitors’ IP addresses here, although I will divulge some information about where in the world (literally) they come from.</p>
+
+<p>We’ve already seen that the number of distinct non-bot IP addresses is <code>1912</code>, slightly less than the number of distinct bot IPs. Now let’s take a closer look at these visitors. The following query  yields a list of the top 15 IP addresses of non-bot visitors to my blog, sorted by the number of requests each has made:</p>
+
+<p><code>SELECT ip, COUNT(*) FROM visitors WHERE isbot=0 GROUP BY ip ORDER BY COUNT(*) DESC LIMIT 15;</code></p>
+
+<p>and here’s the result, with the IP addresses blocked out. However, I <em>have</em> looked up each of these top IP addresses using an online <a href="https://www.iplocation.net">IP geolocation tool</a> and listed their geographic locations to the right:</p>
+
+<p><code><pre>
+XXX.XX.XX.XX|1638  (Johnson City, TN)
+XX.XXX.XXX.XXX|568  (Chicago, IL)
+XX.XXX.XXX.XX|471  (Albuquerque, NM)
+XX.XX.XXX.XXX|319  (Albuquerque, NM)
+XX.XXX.XXX.XX|283  (Albuquerque, NM)
+XX.XXX.XXX.XX|226  (Albuquerque, NM)
+XX.X.XX.XXX|207  (Albuquerque, NM)
+XX.XX.XXX.XXX|156  (Johnson City, TN)
+XXX.XX.XX.XX|142  (Bronx, NY)
+XX.XXX.XXX.XX|138  (Albuquerque, NM)
+XX.XX.XX.XXX|135  (Scranton, PA)
+XX.XXX.XXX.XXX|135  (Naperville, IL)
+XX.XXX.XXX.XXX|127  (Paris, France)
+</pre></code></p>
+
+<p>The first of these is probably <em>me</em>, since I used to live in Johnson City and had to visit my own website often in order to test new features and check to make sure my posts were displaying properly. One of the Albuquerque IPs is probably <em>also</em> me, since I’ve moved to ABQ to attend the University of New Mexico. (So it appears that I’m my own number one biggest fan, as well as my number five or six biggest fan.) The rest of the Albuquerque addresses are probably other people affiliated with my university, but as for some of these other places, I have absolutely no idea. I don’t know anybody in Scranton, Naperville, the Bronx, or Paris... but I guess they know me.</p>
+
+<p>There is, of course, the possibility that some of these people are using VPNs, causing the IP registered to be different from their actual IP address and preventing me from knowing where they’re actually located. It’s a lot cooler to think that someone in Paris is looking at my blog, though, so I’ll stick with that thought.</p>
+
+<p>Suppose I want to know not only who has made the most requests to my blog, but who has visited it most often. The following query gives another list of IP addresses, this time sorted by the number of distinct days on which each IP address has made a request to my website:</p>
+
+<p><code>SELECT ip, COUNT(DISTINCT date(timestamp)) FROM visitors WHERE isbot=0 GROUP BY ip ORDER BY COUNT(DISTINCT date(timestamp)) DESC LIMIT 15;</code></p>
+
+<p>yielding the following result (again with geographical locations on the right):</p>
+
+<p><code><pre>
+XXX.XXX.XXX.XX|95  (Tokyo, Japan)
+XX.XX.XX.XX|55  (Bucharest, Romania)
+XX.XXX.XXX.XXX|49  (Chicago, IL)
+XX.XX.XX.XXX|41  (Scranton, PA)
+XXX.XX.XX.XX|39  (Johnson City, TN)
+XXX.XX.XXX.XXX|36  (Los Angeles, CA)
+XX.XXX.XXX.XX|35  (Ithaca, NY)
+XXX.XX.XXX.XX|31  (Los Angeles, CA)
+XXX.XX.XXX.XXX|31  (Los Angeles, CA)
+XXX.XXX.XX.XXX|29  (Amsterdam, Netherlands)
+XXX.XXX.XX.XXX|29  (Amsterdam, Netherlands)
+XXX.XXX.XX.XXX|28  (Amsterdam, Netherlands)
+XX.XXX.XXX.XXX|21  (Paris, France)
+</pre></code></p>
+
+<p>To be honest, this was a big shock to me, and I’d be very surprised if many of these weren’t being passed through VPNs. Another possibility is that some of these requests are actually from bots, but my (super sophisticated) bot filter failed to recognize them as bots. </p>
+
+<p>Although I can’t determine whether any of these requests have come through a VPN, I can get a better idea of whether or not they’re bots by looking at the actual requests they’ve made. To get an idea of what a typical bot request looks like, let’s use the following query (the IP address <code>XX.XX.XX.XXX</code> in the query below is one of the addresses that my filter has labelled as a bot):</p>
+
+<p><code>SELECT request FROM visitors WHERE ip="XXX.XX.XXX.XX" ORDER BY date(timestamp) DESC LIMIT 10;</code></p>
+
+<p><code><pre>
+/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1
+/vendor/phpunit/phpunit/src/Util/PHP/eval-stdin.php HTTP/1.1
+/api/jsonws/invoke HTTP/1.1
+/solr/admin/info/system?wt=json HTTP/1.1
+/?XDEBUG_SESSION_START=phpstorm HTTP/1.1
+/?a=fetch&amp;content=<php>die(@md5(HelloThinkCMF))</php> HTTP/1.1
+/index.php?s=/Index/\x5Cthink\x5Capp/invokefunction&amp;function=call_user_func_array&amp;vars[0]=md5&amp;vars[1][]=HelloThinkPHP HTTP/1.1
+/api/jsonws/invoke HTTP/1.1
+/solr/admin/info/system?wt=json HTTP/1.1
+/?XDEBUG_SESSION_START=phpstorm HTTP/1.1 
+</pre></code></p>
+
+<p>None of these routes actually exist on my blog, so it’s pretty obvious that this is a bot that is groping around blindly, probably looking for a security vulnerability. Here’s another example from a different bot:</p>
+
+<p><code><pre>
+/ HTTP/1.1
+/favicon.ico HTTP/1.1
+/favicon.ico HTTP/1.1
+/ HTTP/1.1
+/favicon.ico HTTP/1.1
+/favicon.ico HTTP/1.1
+/ HTTP/1.1
+/favicon.ico HTTP/1.1
+/favicon.ico HTTP/1.1
+/ HTTP/1.1
+</pre></code></p>
+
+<p>Lots of repeated visits to my homepage - also probably not something a human would do. Now let’s look at the most frequent requests made by our friend (supposedly) in Tokyo, using a similar query:</p>
+
+<p><code><pre>
+/htmlpage/brainfuck.html HTTP/1.1
+/htmlpage/brainfuck.html HTTP/1.1
+/htmlpage/brainfuck.html HTTP/1.1
+/htmlpage/brainfuck.html HTTP/1.1
+/htmlpage/brainfuck.html HTTP/1.1
+/htmlpage/brainfuck.html HTTP/1.1
+/htmlpage/brainfuck.html HTTP/1.1
+/htmlpage/brainfuck.html HTTP/1.1
+/htmlpage/brainfuck.html HTTP/1.1
+/htmlpage/brainfuck.html HTTP/1.1
+</pre></code></p>
+
+<p>These requests go to my <a href="https://franklin.dyer.me/file/brainfuck.html">Brainfuck interpreter</a>, now located at a different link (I promise I’m not gratuitously dropping f-bombs, the programming language is actually called Brainfuck). Given that this page is an interpreter where you can write Brainfuck code and watch it run using a visual representation, it’s pretty believable that a real person would be using it frequently, perhaps to work on a coding puzzle or project written in Brainfuck.</p>
+
+<p>Now let’s try our friend from Romania:</p>
+
+<p><code><pre>
+/ HTTP/1.1
+/ HTTP/1.1
+/ HTTP/1.1
+/ HTTP/1.1
+/ HTTP/1.1
+/ HTTP/1.1
+/ HTTP/1.1
+/ HTTP/1.1
+/ HTTP/1.1
+/ HTTP/1.1
+</pre></code></p>
+
+<p>Hmmm, this visitor is just requesting my homepage over and over again. Maybe someone <em>really</em> likes to look at my homepage, but has no desire to click any of the links on it? No, I don’t buy it - this is probably a bot incorrectly classified as a regular visitor.</p>
+
+<h4>Popular pages <a id="toc-section-3" class="toc-section"></a></h4>
+
+<p>To wrap up this post, let’s find out which pages on my blog are the most popular. We can use the following query to find out which resources on my website have been requested most frequently by non-bots:</p>
+
+<p><code>SELECT COUNT(*), request FROM visitors WHERE isbot=0 GROUP BY request ORDER BY COUNT(*) DESC LIMIT 10;</code></p>
+
+<p>which yields</p>
+
+<p><code><pre>
+3250|/ HTTP/1.1
+1611|/favicon.ico HTTP/1.1
+457|/htmlpage/brainfuck.html HTTP/1.1
+388|/js/post_script.js HTTP/1.1
+126|/posts HTTP/1.1
+93|/htmlpage/mathsnack.html HTTP/1.1
+91|/post/106 HTTP/1.1
+80|/img/2016-12-7-Fig1.png HTTP/1.1
+66|/post/169 HTTP/1.1
+64|/post/164 HTTP/1.1
+</pre></code></p>
+
+<p>As we might expect, the most requested resource is my homepage, followed by the favicon for my website and my Brainfuck compiler. (Don’t ask about <code>mathsnack.html</code>... that was a failed experiment which no longer exists.) Then there’s my old <a href="https://franklin.dyer.me/post/106">tilted parabola post</a> from almost four years ago, as well as the <a href="/img/2016-12-7-Fig1.png">image that goes along with it</a>... I’m not sure why this one has been requested so often, considering how, in my opinion, it’s one of my least interesting posts. Perhaps because it’s one of my oldest. </p>
+
+<p>If we want to ignore resources like images and static html pages and focus instead on actual blog posts, we can use the following modified query, which restricts requests to those containing the substring <code>/post/</code>:</p>
+
+<p><code>SELECT COUNT(*), request FROM visitors WHERE isbot=0 AND request LIKE "%/post/%" GROUP BY request ORDER BY COUNT(*) DESC LIMIT 10;</code></p>
+
+<p>which gives us the list</p>
+
+<p><code><pre>
+91|/post/106 HTTP/1.1
+66|/post/169 HTTP/1.1
+64|/post/164 HTTP/1.1
+54|/post/146 HTTP/1.1
+39|/post/158 HTTP/1.1
+31|/post/167 HTTP/1.1
+30|/post/159 HTTP/1.1
+30|/post/162 HTTP/1.1
+25|/post/163 HTTP/1.1
+22|/post/114 HTTP/1.1
+</pre></code></p>
+
+<p>Respectively, these are the following posts:</p>
+
+<ul>
+<li><a href="https://franklin.dyer.me/post/106">Tilted Parabola</a>  </li>
+<li><a href="https://franklin.dyer.me/post/169">Iterative Generative Art with Pycairo</a>  </li>
+<li><a href="https://franklin.dyer.me/post/164">Alternate Day-Night and Seasonal Cycles</a>  </li>
+<li><a href="https://franklin.dyer.me/post/146">Ambiguity in Language</a>  </li>
+<li><a href="https://franklin.dyer.me/post/158">Environmental Crossfitness in Genetic Algorithms</a>  </li>
+<li><a href="https://franklin.dyer.me/post/167">Aristotle’s Hylomorphism</a>  </li>
+<li><a href="https://franklin.dyer.me/post/159">Packet-Fragmentation Optimization Problems</a>  </li>
+<li><a href="https://franklin.dyer.me/post/162">Spiele zur Subjektiven Untersuchung des Gehirns</a>  </li>
+<li><a href="https://franklin.dyer.me/post/163">Bookworm Adventures</a>  </li>
+<li><a href="https://franklin.dyer.me/post/114">El Cuarteto de Nos</a>  </li>
+</ul>
+
+<p>Anyways, that concludes this post. Maybe in a couple months or a year or so, once I have more visitor data, I can do something a little bit more mathy with my visitor logs and write a post about it.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

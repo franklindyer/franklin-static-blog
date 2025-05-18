@@ -1,0 +1,268 @@
+<html>
+<head>
+    <title>The Gamma and Lambert-W Functions</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>The Gamma and Lambert-W Functions</h2>
+
+<p><em>2017 June 21</em></p>
+
+<blockquote>
+<p>Find the values of the following integrals, where $W(x)$ denotes the inverse function of $y=xe^x$ from $0$ to $\infty$:
+<script type="math/tex; mode=display">\int_0^1 W(x)dx</script>
+<script type="math/tex; mode=display">\int_0^{e} W(x)^2dx</script>
+<script type="math/tex; mode=display">\int_0^\infty W(e^{-x})dx</script>
+<script type="math/tex; mode=display">\int_0^\infty \frac{W(x)}{x\sqrt{x}}dx</script>
+<script type="math/tex; mode=display">\int_0^\infty W\bigg(\frac{1}{x^2}\bigg)dx</script>
+</p>
+</blockquote>
+
+<p>I will be devoting this post to two very interesting and related functions: the Gamma Function $\Gamma(z)$ and the Lambert-W Function $W(z)$. </p>
+
+<p>I will start off with the basics of the Lambert-W function. This function is taken to be the inverse function of $y=xe^x$. Here are two graphs, one of $y=xe^x$ (in red), and one of the Lambert-W function (in blue).</p>
+
+<p><center><img src="/img/2017-6-19-Fig1.png" alt="Fig 1" /></center>
+<center><img src="/img/2017-6-19-Fig2.png" alt="Fig 2" /></center></p>
+
+<p>As you can see, $y=xe^x$ is not injective and should not have an inverse, but because only a small branch of it is non-injective, it can be useful to treat is as if it had an inverse anyways. This is what the Lambert-W function is for. That function cannot be inverted anyways using elementary functions, so the Lambert-W function is what we treat as its inverse. However, since it is not actually injective, the Lambert-W function has two branches: the lower branch $W_{-1}$ and the upper branch $W_0$. The point at which the function changes between these two branches is at the point corresponding to the minimum of $y=xe^x$, the point $(-\frac{1}{e},-1)$ on the Lambert-W function. Because it is defined as the inverse of $y=xe^x$, it has the properties
+<script type="math/tex; mode=display">W(xe^x)=x</script>
+<script type="math/tex; mode=display">W(x)e^{W(x)}=x</script>
+</p>
+
+<p>The value $W(1)$, or the unique solution to the equation
+<script type="math/tex; mode=display">xe^x=1</script>
+is called the <em>omega constant</em> $\Omega$ and is about $0.5671$. We will be using it in some of our later integral problems.</p>
+
+<p>This function can be used to "solve" many new types of equations. For example, consider the equation
+<script type="math/tex; mode=display">e^x=3x</script>
+This equation can be solved using the Lambert-W function in the following way:
+<script type="math/tex; mode=display">e^x=3x</script>
+<script type="math/tex; mode=display">1=3xe^{-x}</script>
+<script type="math/tex; mode=display">-\frac{1}{3}=-xe^{-x}</script>
+<script type="math/tex; mode=display">W\bigg(-\frac{1}{3}\bigg)=W(-xe^{-x})</script>
+<script type="math/tex; mode=display">W\bigg(-\frac{1}{3}\bigg)=-x</script>
+<script type="math/tex; mode=display">x=-W\bigg(-\frac{1}{3}\bigg)</script>
+There are two possible values satisfying this, since both branches of the Lambert-W function exist at $x=-\frac{1}{3}$.</p>
+
+<p>Here's another example:
+<script type="math/tex; mode=display">6\cdot 2^{2x}=x</script>
+This can be solved in the following way:
+<script type="math/tex; mode=display">6\cdot 2^{2x}=x</script>
+<script type="math/tex; mode=display">6\cdot e^{\ln(2^{2x})}=x</script>
+<script type="math/tex; mode=display">6\cdot e^{2x\ln(2)}=x</script>
+<script type="math/tex; mode=display">6=e^{-2x\ln(2)}x</script>
+<script type="math/tex; mode=display">-12\ln(2)=-2x\ln(2)e^{-2x\ln(2)}</script>
+<script type="math/tex; mode=display">W(-12\ln(2))=W(-2x\ln(2)e^{-2x\ln(2)})</script>
+<script type="math/tex; mode=display">W(-12\ln(2))=-2x\ln(2)</script>
+<script type="math/tex; mode=display">x=-\frac{W(-12\ln(2))}{2\ln(2)}</script>
+</p>
+
+<p>The derivative of the Lambert-W function is given by
+<script type="math/tex; mode=display">W'(x)=\frac{1}{x}\frac{W(x)}{W(x)+1}</script>
+I will not go into the details of the derivation of this formula, because it can be attained easily using the formula for the derivative of the inverse of a function, in this case the function $f(x)=xe^x$. Furthermore, its antiderivative is
+<script type="math/tex; mode=display">\int W(x) dx=\frac{x(W(x)^2-W(x)+1)}{W(x)}+C</script>
+which can also be obtained with the use of a formula.</p>
+
+<p>We will now derive two identities of the Lambert-W function that we will now prove that may become helpful later. The first is the sum identity
+<script type="math/tex; mode=display">W(a)+W(b)=W\bigg(\frac{ab}{W(a)}+\frac{ab}{W(b)}\bigg)</script>
+and the second is the product identity
+<script type="math/tex; mode=display">aW(b)=W\bigg(\frac{ab^a}{W(b)^{a-1}}\bigg)</script>
+Here is the derivation of the first identity:
+<script type="math/tex; mode=display">W(a)+W(b)</script>
+<script type="math/tex; mode=display">=W\bigg((W(a)+W(b))e^{W(a)+W(b)}\bigg)</script>
+<script type="math/tex; mode=display">=W\bigg(W(a)e^{W(a)}e^{W(b)}+W(b)e^{W(b)}e^{W(a)}\bigg)</script>
+<script type="math/tex; mode=display">=W\bigg(ae^{W(b)}+be^{W(a)}\bigg)</script>
+<script type="math/tex; mode=display">=W\bigg(\frac{ab}{W(b)}+\frac{ab}{W(a)}\bigg)</script>
+<script type="math/tex; mode=display">=W\bigg(\frac{ab}{W(a)}+\frac{ab}{W(b)}\bigg)</script>
+And here is the derivation of the second:
+<script type="math/tex; mode=display">aW(b)</script>
+<script type="math/tex; mode=display">=W\bigg(aW(b)e^{aW(b)}\bigg)</script>
+<script type="math/tex; mode=display">=W\bigg(a\cdot W(b)e^{W(b)}\cdot e^{(a-1)W(b)}\bigg)</script>
+<script type="math/tex; mode=display">=W\bigg(abe^{(a-1)W(b)}\bigg)</script>
+<script type="math/tex; mode=display">=W\bigg(ab\big(e^{W(b)}\big)^{a-1}\bigg)</script>
+<script type="math/tex; mode=display">=W\bigg(ab\bigg(\frac{b}{W(b)}\bigg)^{a-1}\bigg)</script>
+<script type="math/tex; mode=display">=W\bigg(\frac{ab^a}{W(b)^{a-1}}\bigg)</script>
+</p>
+
+<p>Before we move into the "good stuff", it would be best to introduce the Gamma Function, as it can save a lot of time when evaluating some of the integrals that we will later evaluate.</p>
+
+<p>Basically, the Gamma Function is an extension of the factorial function to non-natural numbers. It has the property
+<script type="math/tex; mode=display">\Gamma(n)=(n-1)!, \forall n\in\mathbb N</script>
+So it is essentially the factorial function, translated one unit. It is defined as
+<script type="math/tex; mode=display">\Gamma(z)=\int_0^\infty x^{z-1}e^{-x}dx</script>
+Its relation to the factorial function can be proven using induction. First we must show that $\Gamma(1)=1$:
+<script type="math/tex; mode=display">\Gamma(1)=\int_0^\infty x^{1-1}e^{-x}dx</script>
+<script type="math/tex; mode=display">\Gamma(1)=\int_0^\infty e^{-x}dx</script>
+<script type="math/tex; mode=display">\Gamma(1)=1</script>
+</p>
+
+<p>Wonderful. Now we must begin the inductive part of the proof.
+<script type="math/tex; mode=display">\Gamma(z)=\int_0^\infty x^{z-1}e^{-x}dx</script>
+If we use integration by parts, we can observe that
+<script type="math/tex; mode=display">\int x^{z-1}e^{-x}dx=-x^{z-1}e^{-x}+(z-1)\int x^{z-2}e^{-x}dx</script>
+Which means that
+<script type="math/tex; mode=display">\Gamma(z)=(z-1)\int_0^\infty x^{z-2}e^{-x}dx</script>
+<script type="math/tex; mode=display">\Gamma(z)=(z-1)\Gamma(z-1)</script>
+Which completes our inductive proof.</p>
+
+<p>One thing that is helpful when working with the Gamma Function is knowledge of the Gaussian Integral; that is, the integral
+<script type="math/tex; mode=display">\int_{-\infty}^\infty e^{-x^2}dx=\sqrt{\pi}</script>
+This integral comes up often when evaluating particular values of the Gamma Function. For example, look what happens when we try to evaluate $\Gamma\bigg(\frac{1}{2}\bigg)$:
+<script type="math/tex; mode=display">\Gamma\bigg(\frac{1}{2}\bigg)=\int_0^\infty x^{-\frac{1}{2}}e^{-x}dx</script>
+If we make the substitution $x \to y^2$, this integral turns into
+<script type="math/tex; mode=display">\Gamma\bigg(\frac{1}{2}\bigg)=\int_0^\infty 2y(y^2)^{-\frac{1}{2}}e^{-y^2}dx</script>
+<script type="math/tex; mode=display">\Gamma\bigg(\frac{1}{2}\bigg)=2\int_0^\infty e^{-y^2}dx</script>
+<script type="math/tex; mode=display">\Gamma\bigg(\frac{1}{2}\bigg)=\int_{-\infty}^\infty e^{-y^2}dx</script>
+Which is just the same as the Gaussian Integral, and so
+<script type="math/tex; mode=display">\Gamma\bigg(\frac{1}{2}\bigg)=\sqrt{\pi}</script>
+</p>
+
+<p>I'll spare you the derivations of the first couple values of this type of the Gamma Function, as they each involve a lot of integration by parts and are very repetitive. Here they are:
+<script type="math/tex; mode=display">\Gamma\bigg(\frac{1}{2}\bigg)=\sqrt{\pi}</script>
+<script type="math/tex; mode=display">\Gamma\bigg(\frac{3}{2}\bigg)=\frac{1}{2}\sqrt{\pi}</script>
+<script type="math/tex; mode=display">\Gamma\bigg(\frac{5}{2}\bigg)=\frac{3}{4}\sqrt{\pi}</script>
+<script type="math/tex; mode=display">\Gamma\bigg(\frac{7}{2}\bigg)=\frac{15}{8}\sqrt{\pi}</script>
+</p>
+
+<p>Are you noticing a pattern?
+<script type="math/tex; mode=display">\Gamma\bigg(\frac{1}{2}\bigg)=\frac{1}{2^0}\sqrt{\pi}</script>
+<script type="math/tex; mode=display">\Gamma\bigg(\frac{3}{2}\bigg)=\frac{1}{2^1}\sqrt{\pi}</script>
+<script type="math/tex; mode=display">\Gamma\bigg(\frac{5}{2}\bigg)=\frac{1\cdot3}{2^2}\sqrt{\pi}</script>
+<script type="math/tex; mode=display">\Gamma\bigg(\frac{7}{2}\bigg)=\frac{1\cdot3\cdot5}{2^3}\sqrt{\pi}</script>
+</p>
+
+<p>Do you see it? This can lead us to conjecture that
+<script type="math/tex; mode=display">\Gamma\bigg(\frac{2n+1}{2}\bigg)=\frac{(2n-1)!!}{2^n}, \forall n \in \mathbb N</script>
+</p>
+
+<p>This can be proven easily using induction. This proof is also inductive and also uses integration by parts. The first step is recalling that $\Gamma(\frac{1}{2})$ is equal to $\sqrt{\pi}$. Then we can begin our inductive step. By definition,
+<script type="math/tex; mode=display">\Gamma\bigg(\frac{2n+1}{2}\bigg)=\int_0^\infty x^{\frac{2n-1}{2}}e^{-x}dx</script>
+And if we use integration by parts, we notice that
+<script type="math/tex; mode=display">\int x^{\frac{2n-1}{2}}e^{-x}dx=-x^{\frac{2n-1}{2}}e^{-x} + \frac{2n-1}{2}\int x^{\frac{2n-3}{2}}e^{-x}dx</script>
+Meaning that
+<script type="math/tex; mode=display">\Gamma\bigg(\frac{2n+1}{2}\bigg)=\frac{2n-1}{2}\int_0^\infty x^{\frac{2n-3}{2}}e^{-x}dx</script>
+<script type="math/tex; mode=display">\Gamma\bigg(\frac{2n+1}{2}\bigg)=\frac{2n-1}{2}\Gamma\bigg(\frac{2n-1}{2}\bigg)</script>
+Which completes the induction step of our proof.</p>
+
+<p>It can be proven similarly that
+<script type="math/tex; mode=display">\Gamma\bigg(\frac{kn+1}{k}\bigg)=\frac{(kn-k+1)!_k}{k^n}, \forall n,k \in \mathbb N</script>
+where $!_k$ represents the <em>kth</em> factorial (that is, $!_2$ is $!!$, $!_3$ is $!!!$, and so on). This fact will be useful to us later on.</p>
+
+<p>One final notable formula regarding the Gamma Function is its reflection formula, derived by Euler:
+<script type="math/tex; mode=display">\Gamma(z)\Gamma(1-z)=\frac{\pi}{\sin \pi z}</script>
+</p>
+
+<p>However, we will not use it much, and so we will not derive it here. Perhaps in a later post that is focused solely on the Gamma Function.</p>
+
+<p>Before we start the integrals, let me remind you of the definite integral property
+<script type="math/tex; mode=display">\int_a^b f(x)dx=\int_{g^{-1}(a)}^{g^{-1}(b)} g'(x)(f \circ g)(x) dx</script>
+Because we will be using it a lot in the upcoming problems.</p>
+
+<p>First off, we will tackle the least intimidating of the integrals:
+<script type="math/tex; mode=display">\int_0^1 W(x)dx</script>
+It seems impossible at first to integrate over a function that cannot even be expressed using other elementary functions. However, we can use the trick that I just mentioned, along with the fact that $W(x)$ is defined as the inverse of $xe^x$. Let's use the trick with $g(x)=xe^x$. Then we get
+<script type="math/tex; mode=display">\int_{W(0)}^{W(1)} W(xe^x)\cdot\frac{d}{dx}(xe^x)dx</script>
+$W(0)$ is $0$ and $W(1)$ is the omega constant, so we can now simplify the integral and the rest of the bounds:
+<script type="math/tex; mode=display">\int_{0}^{\Omega} x(xe^x+e^x)dx</script>
+<script type="math/tex; mode=display">\int_{0}^{\Omega} x^2e^xdx+\int_0^{\Omega} xe^xdx</script>
+Using integration by parts, we can reduce this to
+<script type="math/tex; mode=display">\Omega^2 e^{\Omega}-2\int_{0}^{\Omega} xe^xdx+\int_0^{\Omega} xe^xdx</script>
+<script type="math/tex; mode=display">\Omega^2 e^{\Omega}-\int_0^{\Omega} xe^xdx</script>
+<script type="math/tex; mode=display">\Omega^2 e^{\Omega}-(\Omega e^\Omega-e^\Omega+e^0)</script>
+<script type="math/tex; mode=display">\Omega^2 e^{\Omega}-\Omega e^\Omega+e^\Omega-e^0</script>
+Remember, since $\Omega=W(1)$, we can simplify $\Omega e^\Omega$ to $1$:
+<script type="math/tex; mode=display">\Omega-1+e^\Omega-1</script>
+<script type="math/tex; mode=display">\Omega+e^\Omega-2</script>
+Furthermore, since $\Omega e^\Omega=1$, then $e^\Omega=\frac{1}{\Omega}$, so our simplified answer is
+<script type="math/tex; mode=display">\Omega+\frac{1}{\Omega}-2</script>
+and so
+<script type="math/tex; mode=display">\int_0^1 W(x)dx=\Omega+\frac{1}{\Omega}-2</script>
+</p>
+
+<p>On to the next one:
+<script type="math/tex; mode=display">\int_0^{e} W(x)^2dx</script>
+Let us again use our "trick" with $g(x)=xe^x$:
+<script type="math/tex; mode=display">\int_0^{1} x^2(xe^x+e^x)dx</script>
+<script type="math/tex; mode=display">\int_0^{1} x^3e^xdx+\int_0^1 xe^xdx</script>
+Now the integral can be solved readily by using integration by parts over and over again. I'll spare you the details:
+<script type="math/tex; mode=display">\int_0^{e} W(x)^2dx=4-e</script>
+</p>
+
+<p>Now for the integral
+<script type="math/tex; mode=display">\int_0^\infty W(e^{-x})dx</script>
+This time we can use $g(x)=-\ln(xe^x)=-\ln(x)-x$ to get the much easier integral
+<script type="math/tex; mode=display">\int_{\Omega}^0 x\cdot -(\frac{1}{x}+1)dx</script>
+<script type="math/tex; mode=display">\int_{0}^\Omega (x+1)dx</script>
+<script type="math/tex; mode=display">\frac{\Omega^2}{2}+\Omega</script>
+and so
+<script type="math/tex; mode=display">\int_0^\infty W(e^{-x})dx=\frac{\Omega^2}{2}+\Omega</script>
+</p>
+
+<p>Next up is
+<script type="math/tex; mode=display">\int_0^\infty \frac{W(x)}{x\sqrt{x}}dx</script>
+Let us once again use $g(x)=xe^x$ to get
+<script type="math/tex; mode=display">\int_0^\infty \frac{x(xe^x+e^x)}{xe^x\sqrt{xe^x}}dx</script>
+<script type="math/tex; mode=display">\int_0^\infty \frac{xe^x(x+1)}{xe^x\sqrt{xe^x}}dx</script>
+<script type="math/tex; mode=display">\int_0^\infty \frac{x+1}{\sqrt{xe^x}}dx</script>
+<script type="math/tex; mode=display">\int_0^\infty (x+1)(x^{-\frac{1}{2}}e^{-\frac{1}{2}x})dx</script>
+<script type="math/tex; mode=display">\int_0^\infty x^{\frac{1}{2}}e^{-\frac{1}{2}x}dx+\int_0^\infty x^{-\frac{1}{2}}e^{-\frac{1}{2}x}dx</script>
+Now we can recognize the relevance of the gamma function. If we use $g(x)=2x$ then we get
+<script type="math/tex; mode=display">2\sqrt{2}\int_0^\infty x^{\frac{1}{2}}e^{-x}dx+\sqrt{2}\int_0^\infty x^{-\frac{1}{2}}e^{-\frac{1}{2}x}dx</script>
+<script type="math/tex; mode=display">2\sqrt{2}\Gamma\bigg(\frac{3}{2}\bigg)+\sqrt{2}\Gamma\bigg(\frac{1}{2}\bigg)</script>
+and, since we have already obtained these values for the Gamma Function, we have
+<script type="math/tex; mode=display">2\sqrt{2}\frac{\sqrt{\pi}}{2}+\sqrt{2}\sqrt{\pi}</script>
+<script type="math/tex; mode=display">2\sqrt{2\pi}</script>
+and so
+<script type="math/tex; mode=display">\int_0^\infty \frac{W(x)}{x\sqrt{x}}dx=2\sqrt{2\pi}</script>
+</p>
+
+<p>Now for the final integral:
+<script type="math/tex; mode=display">\int_0^\infty W\bigg(\frac{1}{x^2}\bigg)dx</script>
+First we will use $g(x)=\sqrt{\frac{1}{x}e^{-x}}$, which gives us
+<script type="math/tex; mode=display">\frac{1}{2}\int_0^\infty x\cdot\bigg(x^{-\frac{1}{2}}e^{-\frac{1}{2}x}+x^{-\frac{3}{2}}e^{-\frac{1}{2}x}\bigg)dx</script>
+<script type="math/tex; mode=display">\frac{1}{2}\int_0^\infty x^{\frac{1}{2}}e^{-\frac{1}{2}x}dx+\frac{1}{2}\int_0^\infty x^{-\frac{1}{2}}e^{-\frac{1}{2}x}dx</script>
+Now let us use $g(x)=2x$:
+<script type="math/tex; mode=display">\frac{1}{2}2\sqrt{2}\int_0^\infty x^{\frac{1}{2}}e^{-x}dx+\frac{1}{2}\sqrt{2}\int_0^\infty x^{-\frac{1}{2}}e^{-x}dx</script>
+<script type="math/tex; mode=display">\sqrt{2}\Gamma\bigg(\frac{3}{2}\bigg)+\frac{1}{\sqrt{2}}\Gamma\bigg(\frac{1}{2}\bigg)</script>
+<script type="math/tex; mode=display">\sqrt{2}\frac{\sqrt{\pi}}{2}+\frac{1}{\sqrt{2}}\sqrt{\pi}</script>
+<script type="math/tex; mode=display">\sqrt{2\pi}</script>
+and so
+<script type="math/tex; mode=display">\int_0^\infty W\bigg(\frac{1}{x^2}\bigg)dx=\sqrt{2\pi}</script>
+</p>
+
+<p>And that concludes this blog post!</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

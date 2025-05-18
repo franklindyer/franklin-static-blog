@@ -1,0 +1,129 @@
+<html>
+<head>
+    <title>Ideal scaling of spaced repetition</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Ideal scaling of spaced repetition</h2>
+
+<p>I'm a huge fan of <a href="/link/1">spaced repetition</a> for language learning. This method helped me retain vocabulary at a surprising rate while first learning German, and lately I've been trying to use it to learn Russian as well. Пока мне очень нравится... русский язык — интересный и красивый. Может быть, я когда-нибудь напишу сочинение об интересных вещах в грамматике русского языка.</p>
+
+<p>If you're unfamiliar, here's a rundown on how spaced repetition works:</p>
+
+<ul>
+<li>You have a deck of flashcards, each of which has a prompt and one or more correct answers</li>
+<li>At any given time, each card is either "due" or "not due"</li>
+<li>When a card is first introduced, it is not due, and becomes due in $\Delta$ hours, where $\Delta$ is a parameter (in my Russian deck, $\Delta = 8\text{ hr}$)</li>
+<li>When you answer a card correctly, the amount of time before it next becomes due is multiplied by a fixed parameter $\varphi_+ &gt; 1$ (in my Russian deck, $\varphi_+ = 1.2$)</li>
+<li>When you answer a card incorrectly, the amount of time before it next becomes due is multiplied by a fixed parameter $\varphi_- &lt; 1$ (in my Russian deck, $\varphi_+ = 0.5$)</li>
+</ul>
+
+<p>Due cards "pile up" while you're away, and you generally sit down once or twice a day, or maybe once every couple days, to clear them all out. The flashcards that you know well will have their interval repeatedly inflated by a factor $\varphi_+ &gt; 1$, so that you encounter it less and less frequently, making more room for cards that more urgently need your attention. Meanwhile, as you miss a card multiple, its interval decays by $\varphi_- &lt; 1$ each time, increasing the frequency with which you are asked to review it.</p>
+
+<p>Studying flashcards with SR is part of my daily routine, and it can be an overwhelming habit to keep up at times, especially when a bunch of cards become due all at once and need to be cleaned out. I find myself tweaking how often I add new cards, and how many I add in each batch, to avoid giving myself an avalanche of new cards.</p>
+
+<p>This got me thinking about how the workload of an SR flashcard deck scales over time. This post outlines some heuristic calculations meant to shed light on how the workload of an SR deck scales under ideal circumstances.</p>
+
+<hr>
+
+<p>Let's consider the workload of maintaining a spaced repetition deck under the best possible circumstances: the user answers each card the moment it becomes due, and always gets it correct. While this is (sadly) not at all how things go in my SR deck, it should give a reasonable "best-case" analysis of how quickly cards pile up. Aside from that, my own flashcards go through a preliminary studying phase before entering the SR loop, so that I already know them somewhat well before they ever become due. For this reason, I'm usually able to answer $80-90\%$ of my due cards correctly, and this "ideal behavior" assumption may not be as preposterous as it sounds.</p>
+
+<p>From here onward, I'll denote $\varphi_+$, the "correct factor", by $\varphi$, since $\varphi_-$ doesn't affect anything when the user never gets any cards wrong.</p>
+
+<p>Under the above conditions, the sequence of intervals between successive due times of each card will be $\Delta, \Delta\varphi, \Delta\varphi^2,$ and so on. Hence, the time between each card's zeroth appearance and its nth appearance is given by <script type="math/tex; mode=display">\Delta + \Delta\varphi + \cdots + \Delta\varphi^n = \Delta\frac{\varphi^{n+1}-1}{\varphi - 1}</script> Note that while a card's interval grows exponentially with respect to the <em>number of appearances</em> of a card, it does not grow exponentially with respect to <em>time</em>. The formula above can be used to calculate how many times a card will have become due by time $t$: <script type="math/tex; mode=display">n = \bigg\lfloor \frac{1}{\log\varphi}\cdot\log\bigg(1 + \frac{\varphi - 1}{\Delta}\cdot t\bigg)\bigg\rfloor</script>
+</p>
+
+<p>The above, as a function of $t$, directly measures how much work an ideal user must do to maintain that individual card on its own (by tallying how many times they must answer it as time progresses). The fact that this is a step function makes it a little inconvenient to work with. So instead, I'll work with a function $\ell(t)$, which I'll call the <em>load function</em>, that more smoothly measures "the rate at which a flashcard adds work for the user" in a deck. It is defined to be zero when $t &lt; 0$ (a card produces no work before it is added to the deck) and defined as follows for $t\geq 0$:</p>
+
+<p>
+<script type="math/tex; mode=display">\ell(t) := \frac{1}{\log\varphi}\cdot\frac{1}{t+\frac{\Delta}{\varphi - 1}}</script>
+</p>
+
+<p>This function is meant as a way of "smoothing out" the discrete arrival times of flashcards, and thereby also smoothing out the cumulative function tracking the number of times a card has been studied over time. It has the property that the integral <script type="math/tex; mode=display">\int_a^b \ell(\tau) ~ d\tau</script> is <em>approximately</em> the number of times that the card is studied between $a$ and $b$ time units after its introduction to the deck, where this approximation has error $\leq 1$ at any given time. In particular, look how closely it matches our formula for the number of times $n$ that the card becomes due before time $t$: <script type="math/tex; mode=display">\int_0^t \ell(\tau) ~ d\tau = \frac{1}{\log\varphi}\cdot\log\bigg(1 + \frac{\varphi - 1}{\Delta}\cdot t\bigg)</script>
+</p>
+
+<p>If $\mathcal D$ represents a deck consisting of many cards $c\in\mathcal D$ with respective starting times $t_c$, then we have that the function <script type="math/tex; mode=display">\Lambda(t) := \sum_{c\in\mathcal D} \ell(t - t_c)</script> performs a similar role for the deck as a whole, tracking the rate at which the deck "accumulates work to be done". That is, the integral <script type="math/tex; mode=display">\int_a^b \Lambda(\tau) ~ d\tau</script> approximates the total number of cards studied between time $a$ and time $b$, with error at most $|\mathcal D|$. (If $[a,b]$ is a small interval, this error is quite significant, so this only makes sense as an actual approximation for the number of cards studied when the interval is long.) We can think of this "cumulative load function" $\Lambda(t)$ as a metric for how "busy" the deck is at any given time, in terms of how quickly new cards are arriving on average. Just as $\ell(t)$ smooths out the discrete arrival of a single card into a differentiable power curve, we can think of $\Lambda(t)$ as smoothing out the arrivals of due cards in an entire deck into a (mostly) differentiable "flow of cards".</p>
+
+<p>Notice what happens to the load when a number of cards have already been added to a deck and no more are added. The load $\Lambda(t)$ will clearly decay at time progresses, since it is a sum of decreasing functions in $t$. Furthermore, these individual load functions are each $\Theta(t^{-1})$, so we can say that $\Lambda(t) = \Theta(t^{-1})$ as well, provided that no new cards are added.</p>
+
+<p>Now let's consider what happens when a perfect user adds cards to a deck in batches of $K$ cards at a regular tempo, with a delay of $T$ between card batches. This mimics my own usage of spaced repetition at times, when I have a semi-regular regimen of adding new cards to my deck. It might also give a good representation of deck usage by someone who is studying vocabulary for a language class, where they receive approximately the same amount of new vocabulary each day or week according to a certain curriculum.</p>
+
+<p>Under these conditions, we have <script type="math/tex; mode=display">\Lambda(t) = \sum_{n=0}^{\lfloor t ~/ ~T\rfloor} K\ell(t-nT) = \frac{K}{\log\varphi}\sum_{n=0}^{\lfloor t ~/ ~T\rfloor} \frac{1}{(t-nT) + \frac{\Delta}{\varphi - 1}}</script> This is nearly a <a href="/link/2">harmonic sum</a>, and reversing the sum's indices makes it clear how $\Lambda$ behaves asymptotically as $t\to\infty$: <script type="math/tex; mode=display">\Lambda(t) = \frac{K}{\log\varphi}\sum_{n=0}^{\lfloor t ~/ ~T\rfloor} \frac{1}{Tn + T\{t/T\} + \frac{\Delta}{\varphi - 1}} = \frac{K\log (t)}{T\log(\varphi)} + \mathcal O(1)</script>
+</p>
+
+<p>In other words, if you continue adding flashcards to your deck at a regular pace, your workload over time will grow logarithmically.</p>
+
+<p>What if we don't want the flashcard load to grow unboundedly over time? I, for one, am often hesitant to add new cards to my deck when I start waking up in the morning to find 150-200+ due cards in my deck. As a result, I've noticed that in the long term, the frequency with which I add new cards actually decreases as I try to keep the load beneath a reasonable bound.</p>
+
+<p>This suggests the theoretical question: to keep the card load bounded, at what rate must the influx of new cards decrease asymptotically?</p>
+
+<p>Let's suppose that cards are introduced in batches of $K$, and that batch number $n$ is introduced at time $t= A(n) = n\alpha(n)$, where $\alpha(n)$ is some monotone increasing function that controls the growing interval between batches. The constant case of $\alpha(n) = T$ reflects the situation we've already considered, in which cards are introduced periodically with a delay of $T$ units of time. Anything greater than constant growth of $\alpha$ indicates longer and longer waits between batches.</p>
+
+<p>The load $\Lambda$ has local peaks at the times when new cards are introduced, so bounding $\Lambda$ by an upper bound of $B&lt; 0$ is equivalent to bounding its values at the times $t = A(n)$ for $n\in \mathbb N$. Thus, we need to figure out what growth rates of $\alpha$ will keep the following sum bounded: </p>
+
+<p>
+<script type="math/tex; mode=display">\Lambda(A(N)) = \sum_{n=0}^{N} K\ell\big(A(N)-A(n)\big) = \frac{K}{\log\varphi}\sum_{n=0}^{N} \frac{1}{A(N)-A(n) + \frac{\Delta}{\varphi - 1}}</script>
+</p>
+
+<p>We can derive a decent upper bound for $\Lambda(A(N))$ by splitting the sum into two pieces: </p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{n=0}^{N/2}\frac{1}{A(N)-A(n) + \frac{\Delta}{\varphi - 1}} + \sum_{n=N/2+1}^{N}\frac{1}{A(N)-A(n) + \frac{\Delta}{\varphi - 1}}</script>
+</p>
+
+<p>For the former sum, we have</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{n=0}^{N/2} \frac{1}{A(N)-A(n) + \frac{\Delta}{\varphi - 1}} \leq \sum_{n=0}^{N/2} \frac{1}{A(N/2) + \frac{\Delta}{\varphi - 1}} \leq \frac{1}{\alpha(N/2)}</script>
+</p>
+
+<p>And for the latter sum:</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{n=N/2+1}^{N} \frac{1}{A(N)-A(n) + \frac{\Delta}{\varphi - 1}} \leq \sum_{n=0}^{N/2} \frac{1}{n\alpha(N/2) + \frac{\Delta}{\varphi - 1}} \leq \frac{\varphi-1}{\Delta} + \frac{\log(N) + 1}{\alpha(N/2)}</script>
+</p>
+
+<p>Hence, we have the following upper bound on the peak load:</p>
+
+<p>
+<script type="math/tex; mode=display">\Lambda(A(N)) \leq \frac{K}{\log\varphi}\bigg(\frac{\varphi-1}{\Delta} + \frac{\log(N) + 2}{\alpha(N/2)}\bigg)</script>
+</p>
+
+<p>Thus, if $\alpha(n) = \Omega(\log n)$, the load is bounded above by a constant, making it $\mathcal O(1)$. Furthermore, when $\alpha(n)$ <em>does</em> exhibit  logarithmic growth $\Theta(\log n)$, this bound shows that the load can be tempered by varying the hidden constant to make this upper bound grow or shrink.</p>
+
+<p>The take-away? That if you want your workload in an SR deck to remain bounded over time, you may need to wait longer and longer intervals between new additions to your deck, with these intervals growing logarithmically. (Luckily, logarithmic growth is very slow.) More concretely, if you want your work load to eventually plateau at a steady rate of at most $\approx B$ due cards per hour, then these intervals may need to grow at a rate of approximately <script type="math/tex; mode=display">\alpha(N) \sim \frac{1}{\frac{B\log\varphi}{K} - \frac{\varphi - 1}{\Delta}}\cdot \log(N) ~ \text{hrs}</script>
+</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

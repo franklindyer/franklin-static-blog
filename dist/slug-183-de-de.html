@@ -1,0 +1,256 @@
+<html>
+<head>
+    <title>Schauergeschichten der Analyse</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Schauergeschichten der Analyse</h2>
+
+<p>Fröhliches Halloween-Wochenende! Ich muss zugeben, daß alles Gruseliges und Gotisches mich immer interessiert hat und daß ich ziemlich viel krankhafte Neugier besitze. Diese Neigung beschränkt sich nicht nur auf die Horrorfilmen und die Gruselgeschichten sondern gilt sie auch für meine Interesse an der Mathematik. Während der frühesten höheren Mathematikkursen der Sekundarschule und der Universität lernt man viele schöne Theoreme und Methoden, die auf der Voraussetzung "hinreichend gut benommene" Funktionen beruhen. Aber jetzt, wo ich Lehrassistent für einen Rechenverfahrenskurs bin, und zwei Kursen über Real- und Fourieranalyse mache, habe ich verschiedene mathematischen Funktionen begegnet, die ausgesprochen <em>schlecht</em> benommen  und sogar abscheulich sind. In diesem Blogeintrag werde ich einige "Ungeheuer" der mathematischen Analyse darstellen, die unseren üblichen numerische Methoden durcheinanderbringen und vor den alle angewandte Mathematiker sich fürchten... und in manchen Fällen, wie man sich vor ihr schützen kann.</p>
+
+<p>Notiz: weil es so viele Beispiele gibt, die ich abbilden wollte, und weil ich so beschäftigt auch mit den Hausaufgaben bin, habe ich mir nicht die Mühe gegeben, Erklärungen für jeden aufzuschreiben. Die Meisten laße ich als Übungen oder Denkanregungen.</p>
+
+<h3>Das Newtonverfahren <a id="toc-section-1" class="toc-section"></a></h3>
+
+<p>Das Newtonverfahren ist ein Algorithmus zur Approximation der Lösung nicht linearen Gleichungen, im Besonderen im Form von</p>
+
+<p>
+<script type="math/tex; mode=display">f(x)=0</script>
+</p>
+
+<p>wo $f:\mathbb R \to\mathbb R$ "hinreichend gut benommen" ist. Zum Beispiel, wenn $f(x)=x^2-2$, bietet das Newtonverfahren eine Approximation von $\sqrt{2}$. Der Algorithmus läuft folgenderweise: wir definieren eine Folge von Approximationen $x_0,x_1,x_2...$ vermittels der Rekursionsgleichung</p>
+
+<p>
+<script type="math/tex; mode=display">x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)}</script>
+</p>
+
+<p>wo $x_0$ eine Schätzung ist, die "hinreichend nah" zur wirklichen Wurzel steht. Graphisch interpretiert ist $x_{n+1}$ die Wurzel der Gerade, die $f(x)$ am besten in der Nähe von $x_n$ approximiert, also der Berührungslinie.</p>
+
+<p>Für die meisten "angenehme" Funktionen hat das Newtonverfahren quadratischer Konvergenzordnung, wie zum Beispiel $f(x) = x^2-2$. In diesem Fall ist die Rekursionsgleichung</p>
+
+<p>
+<script type="math/tex; mode=display">x_{n+1} = x_n - \frac{x_n^2-2}{2x} = \frac{x_n + \frac{2}{x_n}}{2}</script>
+</p>
+
+<p>Mit der Schätzung $x_0 = 1$ läuft die Folge so:</p>
+
+<p>
+<script type="math/tex; mode=display">\begin{array}{c|c|c}
+\text{Estimate} & \text{Value} & \text{Error} \\
+0 & 1 & 4.14 \cdot 10^{-1} \\
+1 & 1.5 & 8.57 \cdot 10^{-2} \\
+2 & 1.416666... & 2.45 \cdot 10^{-3} \\
+3 & 1.414215... & 2.12 \cdot 10^{-6} \\
+4 & 1.414214... & 1.59 \cdot 10^{-12} \\
+\end{array}</script>
+</p>
+
+<p>Ausgezeichnet! Der Stellenzahl von Genauigkeit ist mit jeder Wiederholung verdoppelt. Betracht mal jetzt die Funktion $f(x) = (x^2-2)^2$, die die gleiche Wurzel $x=\sqrt{2}$ besitzt. Von dieser haben wir die Rekursionsgleichung</p>
+
+<p>
+<script type="math/tex; mode=display">x_{n+1} = x_n - \frac{(x_n^2-2)^2}{4x_n(x_n^2-2)} = \frac{3x_n+\frac{2}{x_n}}{4}</script>
+</p>
+
+<p>die die folgende Folge hervorbringt:</p>
+
+<p>
+<script type="math/tex; mode=display">\begin{array}{c|c|c}
+\text{Estimate} & \text{Value} & \text{Error} \\
+0 & 1 & 4.14 \cdot 10^{-1} \\
+1 & 1.25 & 1.64 \cdot 10^{-1} \\
+2 & 1.3375 & 7.67 \cdot 10^{-2} \\
+3 & 1.376957... & 3.72 \cdot 10^{-2} \\
+4 & 1.395837... & 1.83 \cdot 10^{-2} \\
+5 & 1.405085... & 9.12 \cdot 10^{-3} \\
+\end{array}</script>
+</p>
+
+<p>In diesem Fall die Genauigkeit steigt nur linear. Auch für die Funktionen $f(x) = (x^2-2)^m$ wo $m\in \mathbb N\backslash {1}$. Im Allgemeinen funktioniert das Newtonverfahren nicht richtig wann $f$ eine mehrfache Nullstelle hat. Die Genauigkeit kann auch sehr langsamer als linear steigen - z.B. für die Funktion $f(x)=e^{-1/x^2}$, die die Wurzel $x=0$ hat, nimmt der Schätzfehler sehr langsam ab:</p>
+
+<p><center><img src="/img/2021-10-31-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>Es gibt auch Funktionen, für die die Nähe von $x_0$ zur wahrhaften Nullstelle gar keine Konvergenz garantiert. Schau mal dieses Monster an:</p>
+
+<p>
+<script type="math/tex; mode=display">f(x) = e^{-1/x^2}(2 + \cos (1/x))</script>
+</p>
+
+<p>Die hat unendlich viel Extrema in der Nähe von der Nullstelle $x=0$, in der Nähe von denen die Berührungslinie von $f$ fast flach ist. Solange $x_0$ ausreichend nah zu einem Extremwert steht, kann der Schätzfehler von $x_1$ größer als die von $x_0$ sein. Zu allem Übel gibt es auch $x_0$ in jeder Umgebung der Wurzel, für den das Newtonverfahren eine periodische Folge $x_0, x_1, x_0, x_1, ...$ hervorbringt! (Kannst du diese Tatsache analytisch beweisen?)</p>
+
+<p>Tatsächlich ist jeder der obenen Gegenbeispiele ziemlich "gut benommen" - jedes ist sogar $C^\infty$! Also, was genau erfordert das Newtonverfahren von einer Funktion? Der wirkliche Theorem lautet folgendermaßen:</p>
+
+<blockquote>
+<p>Wenn $f:\mathbb R \to \mathbb R$ stetig differenzierbar in einer Umgebung von der Nullstelle $x=\alpha$, $f'(\alpha)\ne 0$ und $f''(\alpha)$ existiert, dann konvergiert das Newtonverfahren quadratisch.</p>
+</blockquote>
+
+<h3>Die Polynominterpolation <a id="toc-section-2" class="toc-section"></a></h3>
+
+<p>Zu jeder Menge von $n$ Punkte ${(x_j,y_j)}$ entspricht ein einziges Polynom $P$ $n-1$ -ten Grades, das sie interpoliert, damit $P(x_j) = y_j$ für alle $j=1,2,...,n$, solange alle $x_j$ verschieden sind. Deshalb wenn $f:\mathbb [a,b]\to\mathbb R$ irgendeine Funktion ist, können wir immer ein Polynom $P:[a,b]\to\mathbb R$ $n-1$ -ten Grades auch finden, das an $n$ vorgeschriebenen Punkte $x_1,...,x_n$ gleichwertig wie $f$ sind, sodaß $P(x_j) = f(x_j)$. Unter bestimmten Bedingungen wird $P$ auch nah (doch nicht gleich) zu $f$ sonst überall in $[a,b]$ kommen... aber nicht immer.</p>
+
+<p>Zum Beispiel, im Interval $[-1,1]$, die Funktion $f(x)=e^x$ läßt sich sehr gut von Polynomen interpolieren: mit nur $n=6$ Punkten sinkt der Maximalfehler der Interpolante niedriger als $10^{-5}$ und mit $n=9$ Punkten niedriger als $10^{-8}$. Unten siehst du den Graph des Fehlerwerts $|e^x - P_n(x)|$ im Interval $[-1,1]$ für $n=3,6,9,12$:</p>
+
+<p><center><img src="/img/2021-10-31-Fig2.png" alt="Fig 2" /></center></p>
+
+<p>und hier findest du einen Graph des Maximalfehlers für jeder $n$:</p>
+
+<p><center><img src="/img/2021-10-31-Fig3.png" alt="Fig 3" /></center></p>
+
+<p>Schön! Aber für andere Funktionen funktioniert diese Methode der Polynominterpolation nicht so gut. Zum Beispiel die Funktion</p>
+
+<p>
+<script type="math/tex; mode=display">f(x)=\frac{1}{x^2+1}</script>
+</p>
+
+<p>laßt den folgenden Maximalfehlergraph entstehen:</p>
+
+<p><center><img src="/img/2021-10-31-Fig4.png" alt="Fig 4" /></center></p>
+
+<p>Es sieht so aus, als ob diese Polynomen auch konvergieren, nur aber ein bisschen langsamer. Betracht mal jetzt die Funktion</p>
+
+<p>
+<script type="math/tex; mode=display">f(x)=\frac{1}{25x^2+1}</script>
+</p>
+
+<p>die dem folgenden Fehlergraph entspricht:</p>
+
+<p><center><img src="/img/2021-10-31-Fig5.png" alt="Fig 5" /></center></p>
+
+<p>Was ist hier passiert? Obwohl diese Funktion ziemlich "gut benommen" ist - also, kontinuierlich und stetig unendlich oft differenzierbar - konvergieren seine Interpolante gar nicht und sowohl schlechter werden als $n$ steigt. Hier findest du ein Graph mit der Funktion $f$ und ihrer Interpolante mit $n=12$:</p>
+
+<p><center><img src="/img/2021-10-31-Fig6.png" alt="Fig 6" /></center></p>
+
+<p>Aus irgendeinem Grund schwankelt die Interpolante unbeherrschbar in der Nähe von den Intervallgrenzen. Diese Besonderheit heißt <a href="https://en.wikipedia.org/wiki/Runge's_phenomenon">Runges Phänomen</a>. Was ist hier los? Warum überhaupt gibt diese bestimmte Funktion sich nicht zum Polynominterpolation her?</p>
+
+<p>Vermittels des Satzes von Rolle kann man beweisen, daß wenn $f$ glatt ist, ist der Fehler der Polynominterpolante mit $n+1$ Punkten $x_0&lt;...&lt;x_n$ gleich</p>
+
+<p>
+<script type="math/tex; mode=display">|f(x)-P_{n}(x)| = \Bigg|\frac{f^{(n+1)}(\xi)}{(n+1)!}\prod_{j=0}^n (x-x_j) \Bigg|</script>
+</p>
+
+<p>wo $\xi$ ein bestimmten Zahl im Intervall $[x_0,x_n]$ ist, solange $x\in [x_0,x_n]$ auch. Wenn $x_0=-1$ und $x_n=1$ und die gleichmäßig verteilt in $[x_0,x_n]$ sind, daraus folgt, daß</p>
+
+<p>
+<script type="math/tex; mode=display">x_j = -1 + \frac{2j}{n}</script>
+</p>
+
+<p>und damit kann man auch beweisen, daß</p>
+
+<p>
+<script type="math/tex; mode=display">\Bigg|\prod_{j=0}^n (x-x_j) \Bigg|\leq \frac{n!}{4}\Big(\frac{2}{n}\Big)^{n+1}</script>
+</p>
+
+<p>und deshalb</p>
+
+<p>
+<script type="math/tex; mode=display">|f(x)-P_{n}(x)| \le \Big(\frac{2}{n}\Big)^{n+1} \frac{|f^{(n+1)}(\xi)|}{n+1}</script>
+</p>
+
+<p>Infolgedessen konvergieren die Interpolanten $P_n$ solange $|f(x)-P_{n}(x)|\to 0$ als $n\to\infty$ für jeder $x\in [x_0,x_n]$, derentwegen würde die Bedingung ausreichen, daß</p>
+
+<p>
+<script type="math/tex; mode=display">\lim_{n\to\infty}\Big(\frac{2}{n}\Big)^{n+1} \frac{|f^{(n+1)}(\xi)|}{n+1} = 0</script>
+</p>
+
+<p>also, daß $|f^{(n+1)}(\xi)|$ nicht "superschnell" steigt als $n\to\infty$. Mit der Funktion $f(x)=e^x$ ist diese Bedingung ideal, weil in diesem Fall $f^{(n+1)}(x)=e^x$ auch und deshalb</p>
+
+<p>
+<script type="math/tex; mode=display">e^{-1} \le f^{(n+1)}(\xi)\le e</script>
+</p>
+
+<p>für alle $\xi\in [-1,1]$. Für $f(x) = \frac{1}{1+25x^2}$ steigen $f^{(n+1)}(\xi)$ viel schneller: im Besonderen</p>
+
+<p>
+<script type="math/tex; mode=display">|f^{(2n)}(0)| = 5^{2n}(2n)!</script>
+</p>
+
+<p>und derentwegen</p>
+
+<p>
+<script type="math/tex; mode=display">\lim_{n\to\infty}\Big(\frac{2}{2n}\Big)^{2n+1} \frac{5^{2n}(2n)!}{2n+1} = \infty</script>
+</p>
+
+<p>...also, unsere Bedingung wird gar nicht erfüllt. Wir beschließen, daß die Glätte der Funktion $f$ keine Konvergenz der Polynominterpolanten garantiert, weil auch wenn die Ableitungen $f^{(n+1)}$ existieren überall, können die Interpolanten "unkontrollierbar schwankeln" wenn $f^{(n+1)}$ "zu groß" sind.</p>
+
+<h3>Die Fourierreihe <a id="toc-section-3" class="toc-section"></a></h3>
+
+<p>Die Fourierreihe einer periodischen Funktion $f:\mathbb R\to\mathbb R$ ist die reihe</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{n\in\mathbb Z} \hat{f}(n) e^{inx}</script>
+</p>
+
+<p>wo die Fourier-Koeffizienten $\hat{f}(n)$ sind</p>
+
+<p>
+<script type="math/tex; mode=display">\hat{f}(n) = \frac{1}{2\pi} \int_0^{2\pi} f(x)e^{-inx}dx</script>
+</p>
+
+<p>Der grundlegenden Theorem der Fourieranalyse behauptet daß solange $f$ eine "angemessene" periodische Funktion ist, konvergiert seine Fourierreihe gegen sich selbst:</p>
+
+<p>
+<script type="math/tex; mode=display">f(x) = \sum_{n\in\mathbb Z} \hat{f}(n) e^{inx}</script>
+</p>
+
+<p>Laut der Professorin meines Fourieranalysenkurses war die Hauptfrage der Fourieranalyze lange Zeit "was genau heißt <em>angemessen</em>?" Also, welche Beschränkungen wirklich garantieren, daß die Fourierreihe einer Funktion konvergiert? Eine glaubhafte Vermutung: vielleicht kann es sein, daß die Kontinuität punktweise Konvergenz der Fourierreihe garantiert. Erstaunlicherweise aber gar nicht. Tatsächlich habe ich eine solche Grässlichkeit als Abschlussproject für den Kurs erdacht - wenn dieses Thema dich interessiert, <a href="https://franklin.dyer.me/file/fourier-final-project.pdf">hier findest du einen Entwurf meines Projects</a>.</p>
+
+<p>Trotz der Tragik dieser kontraintuitiven Ergebnis gelang es mir zu beweisen, daß alle kontinuierliche Funktionen außer die "schlechteste" konvergente Fourierreihen haben. Nämlich klappt es für all Lipschitz-Funktionen und Hölder-kontinuierliche Funktionen, also, alle Funktionen die nicht "steiler" als eine Potenzfunktion sind. Außerdem klappt es für alle lokalmonoton Funktionen. Deshalb muß jeder Gegenbeispiel "sehr steil" und "grenzenlos wackelnd" in der Nähe von einem Punkt sein.</p>
+
+<p>Wir haben auch das folgende Resultat in meinem Fourieranalysenkurs bewiesen:</p>
+
+<blockquote>
+<p>Solange $f:\mathbb R\to\mathbb R$ $2\pi$ -periodisch und stetig differenzierbar ist, konvergiert seine Fourierreihe überall.</p>
+</blockquote>
+
+<p>Dieses ist aber ein schwächeres Resultat, als das was ich in meinem Projekt demostriere, weil alle differenzierbare Funktionen local Hölder-kontinuierlich sind, aber das Gegenteil ist nicht wahr. Man kann auch beweisen, daß obwohl die Kontinuität kein Konvergenz der Fouriersummen $S_n f$ garantiert, zieht sie etwas schwächer aber trotzdem interessant nach sich:</p>
+
+<blockquote>
+<p>Solange $f:\mathbb R\to\mathbb R$ $2\pi$ -periodisch und kontinuierlich ist, konvergieren die <em>Durchschnitte</em> ihrer Fouriersummen: <script type="math/tex; mode=display">\lim_{n\to\infty} \frac{S_0 f(x) + ... + S_n f(x)}{n+1} = f(x)</script>
+</p>
+</blockquote>
+
+<h3>Ausgang <a id="toc-section-4" class="toc-section"></a></h3>
+
+<p>Wir haben hier demonstriert, daß obwohl eine Funktion anscheinend "gut benommen" auf den ersten Blich aussieht, sei es kontinuierlich, differenzierbar, oder glatt, kann es andere Eigenschaften besessen, die die übliche numerische Methoden versauen, z.B.:</p>
+
+<ul>
+<li>mehrfache Nullstellen</li>
+<li>unendliche Schwankungen in der Nähe eines Punktes</li>
+<li>schnell steigende Ableitungen</li>
+<li>extrem Steilheit</li>
+</ul>
+
+<p>Lass dir das eine Lehre sein... wenn du eine numerische Technik auf einer Funktion das nächste Mal anzuwenden versuchst, Vorsicht! Es kann sein, daß deine Funktion eine von diesen verkleideten Ungeheueren ist... (zwar ist es aber ziemlich unwahrscheinlich.)</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

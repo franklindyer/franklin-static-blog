@@ -1,0 +1,325 @@
+<html>
+<head>
+    <title>Monodromy in graphs and spaces</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <script type="text/javascript" src="/js/jsxgraphcore.js"></script>
+
+<p><link rel="stylesheet" href="/css/jsxgraph.css"></p>
+
+<script type="text/javascript" src="/js/fraction.min.js"></script>
+
+<script type="text/javascript" src="/js/complex.min.js"></script>
+
+<script type="text/javascript" src="/js/quaternion.min.js"></script>
+
+<script type="text/javascript" src="/js/polynomial.min.js"></script>
+
+<script type="text/javascript" src="/js/poly-root-toy.js"></script>
+
+<h2>Monodromy in graphs and spaces</h2>
+
+<h3>Crate permutations in Sokoban <a id="toc-section-1" class="toc-section"></a></h3>
+
+<p>My <a href="/post/231">most recent obsession project</a> has given me cause to think about Sokoban puzzles again, which are an old favorite of mine. I've also had <a href="/post/217">group theory</a> <a href="/post/229">on the mind</a> <a href="/post/230">recently</a>, and having both of these topics rattling around in my brain at once gave rise to another interesting (if incredibly esoteric) idea. What if we could define a group action corresponding to a Sokoban level that describes the ways in which the level's crates can be permuted?</p>
+
+<p>Here's what I came up with. Consider a Sokoban level in which each of the $n$ crates is already on top of a target, and the player is in some specific position $(x,y)$ on the grid. Let the crates be labelled $1,2,\cdots,n$. We can say that a specific permutation $\sigma\in S_n$ is <em>realizable</em> in this Sokoban arrangement if there is a valid sequence of moves by the player that permutes the crates as described by $\sigma$ (so that they all end end up on targets again, but with different crates on different targets) and the player ends up back at $(x,y)$.</p>
+
+<p>I claim that the collection of all realizable configurations for a given Sokoban arrangement forms a <em>group</em>, in particular a subgroup of $S_n$, which describes how the crates can be "shuffled". To prove this, we need to argue that (1) the composition of any two realizable permutations is also realizable, and (2) the inverse of any realizable permutation is realizable.</p>
+
+<p>To see why (1) is true, suppose that $\sigma$ and $\tau$ are two realizable permutations such that are realized by the respective sequences of moves $\mu_1,\cdots,\mu_i$ and $\nu_1,\cdots,\nu_j$, where each $\mu$ and $\nu$ corresponds to one of the four possible player movements "up, down, left, right". Since the sequence $\mu_1,\cdots,\mu_i$ brings the player back to the position $(x,y)$ by definition, executing the sequence of moves $\mu_1,\cdots,\mu_i$ <em>followed by</em> the sequence of moves $\nu_1,\cdots,\nu_j$ will also bring the player back to the position $(x,y)$, and will have the effect of applying the permutation $\sigma$ <em>followed by</em> the permutation $\tau$ to the level's crates, effectively applying the permutation $\tau\sigma$. This means that $\tau\sigma$ is also realizable. (Note that the condition of the player returning to their starting position is essential for composability, because executing the same sequence of moves from a different starting position might have a different outcome.)</p>
+
+<p>To see why (2) is true, suppose $\sigma$ is a realizable permutation. It belongs to $S_n$, where $n\in\mathbb N$ is the finite number of crates in the level. Because $S_n$ is finite, $\sigma$ must have finite order. If its order is $k\in\mathbb N$, so that $\sigma^k = e$, the identity permutation, then we have that $\sigma\cdot \sigma^{k-1} = \sigma^{k-1}\cdot \sigma = e$, meaning that $\sigma^{k-1}$ is the inverse of $\sigma$ (and is also realizable by (1)). That is, to invert a given permutation of the crates realized by a certain sequence of moves, you just have to repeat that same sequence of moves "enough times".</p>
+
+<p>Let's look at a couple of examples. (I'm using the <a href="https://www.puzzlescript.net">Puzzlescript</a> replica of Sokoban to make these examples, as well as <a href="https://www.puzzlescript.net/Documentation/gifs.html">generate the GIFs</a>.) First, consider this arrangement involving $3$ crates:</p>
+
+<p><center><img src="/img/2024-08-30-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>The following sequence of moves swaps the two crates on the left, so we can say that it corresponds to the permutation $\sigma = (12)$:</p>
+
+<p><center><img src="/img/2024-08-30-Fig2.gif" alt="Fig 2" /></center></p>
+
+<p>And this sequence of moves swaps the two crates on the right, so we can say that it corresponds to the permutation $\sigma = (23)$:</p>
+
+<p><center><img src="/img/2024-08-30-Fig3.gif" alt="Fig 3" /></center></p>
+
+<p>These two transpositions together generate the entire symmetric group $S_3$, that is, all possible permutations of three crates. Thus, we can say that the group of realizable permutations for this arrangement is $S_3$.</p>
+
+<p>Here's another arrangement to consider:</p>
+
+<p><center><img src="/img/2024-08-30-Fig4.png" alt="Fig 4" /></center></p>
+
+<p>I designed this arrangement specifically to have the permutation group $C_3$, the group of cyclic permutations on $3$ elements. If you play around with this level, you should be able to convince yourself that the shape of the level allows you to cyclically permute the crates, like this:</p>
+
+<p><center><img src="/img/2024-08-30-Fig5.gif" alt="Fig 5" /></center></p>
+
+<p>but does not allow you to transpose any two crates without moving the third crate. I think this kind of level design can be generalized to manifest arbitrary cyclic groups $C_n$ as groups of realizable permutations of Sokoban arrangements. For instance, here's an arrangement for $C_4$:</p>
+
+<p><center><img src="/img/2024-08-30-Fig6.png" alt="Fig 6" /></center></p>
+
+<p>I'm also pretty sure - but not completely convinced - that the group action associated with the following arrangement is the transitive action of $A_4$ on the four crates:</p>
+
+<p><center><img src="/img/2024-08-30-Fig7.png" alt="Fig 7" /></center></p>
+
+<p>I'd like to see some other interesting transitive group actions realized as groups of permutations on Sokoban crates. I've been trying to come up with an arrangement whose associated group action is the transitive action of the Klein four-group $V$ on 4 elements, but no luck so far.</p>
+
+<p>(Psst! If you manage to come up with any Sokoban arrangements with other interesting associated group actions, I'll gladly add them to this blog post, along with an attribution.)</p>
+
+<h3>Monodromy with graphs as state-spaces <a id="toc-section-2" class="toc-section"></a></h3>
+
+<p>A natural question at this point is whether this construction can be generalized from Sokoban to other puzzle games. One way of describing puzzle games like Sokoban that is pretty agnostic to the type of puzzle and easily generalizable is with a <em>state graph</em>. This is a directed graph $G$ in which each vertex represents a particular state of the game, and each directed edge represents a valid "move" from one state to the next. These state graphs can be enormous, but here's what just a little piece of the state graph of a Sokoban puzzle might look like:</p>
+
+<p><center><img src="/img/2024-08-30-Fig8.png" alt="Fig 8" /></center></p>
+
+<p>Any playable sequence of moves in the game will correspond to a <em>path</em> in the state graph of the game. If a sequence of moves brings the game back to the same state that it started in, it corresponds to a <em>loop</em> or a <em>cycle</em> in the graph. It turns out that the collection of loops in a graph that start and end at the same point can be endowed with a group structure that is directly analogous to the <a href="https://en.wikipedia.org/wiki/Fundamental_group#Graphs">fundamental group</a> from topology. Perhaps this is related to the group structure we discovered for Sokoban arrangements?</p>
+
+<p>You might have noticed that there is some ambiguity in how we've described the "state graph" for a Sokoban puzzle. We have not specified whether the crates are "distinguishable" or "indistinguishable" in the state graph. If the player carries out a sequence of moves that swaps two of the boxes and then returns to the starting position, have they looped back to their starting node in the state graph, or have they travelled to a different node? For instance, is this sequence of moves a loop...</p>
+
+<p><center><img src="/img/2024-08-30-Fig9.png" alt="Fig 9" /></center></p>
+
+<p>...or is it a path that does not wrap around?</p>
+
+<p><center><img src="/img/2024-08-30-Fig10.png" alt="Fig 10" /></center></p>
+
+<p>Depending on whether or not we discriminate between the crates, our state graph can be one of two different graphs. The state graph $G$ that we get by treating the crates as indistinguishable (in which the above sequence of moves is a loop) has only one-sixth as many nodes as the state graph $H$ that we get by treating the crates as unique (in which the above sequence of moves is not a loop). As a matter of fact, we can define a surjective function between these graphs $f:H\to G$ that "forgets" the identities of each crate, so that each node of $G$ is the image of exactly $6$ different nodes of $H$, and these preimages are the $6$ different labellings of the $3$ crates. More generally, if $G$ is the state graph of a Sokoban puzzle with $n$ <em>unlabeled</em> crates and $H$ is the state graph of a Sokoban puzzle with $n$ <em>labeled</em> crates, then the "forgetful" mapping $f:H\to G$ covers each node of $G$ with $n!$ preimages.</p>
+
+<p>This "label-forgetting" function $f$ has the handy property of being a <a href="https://en.wikipedia.org/wiki/Covering_graph">graph covering</a>. (You should click on that link, the Wikipedia page on covering graphs is fantastic.) Graph coverings have some very interesting properties. One interesting property is the <strong>path lifting property</strong>: for any path $p$ in $G = (V,E)$ starting at the node $v_0 = V$, and for any given preimage $\tilde{v_0}$ of $v$ under the covering $f$, there exists a  unique preimage $\tilde{p}$ of the path $p$ which starts at the node $\tilde{v_0}$. In the context of state graphs of Sokoban puzzles, this roughly says that if we know the way that the crates are initially labelled, and we know the sequence of moves that is executed on the unlabelled crates, then we can also deduce the labelling of the crates after all of the moves are executed.</p>
+
+<p>This has a very interesting implication: a graph covering $f:G\to H$ gives rise to a group homomorphism $\tilde{f}:\pi(H)\to\pi(G)$ between the fundamental groups of the two graphs. This works because each loop in $H$ is projected down onto a loop in $G$ by the covering $f$. However, not every loop in $G$ lifts to a loop in $H$, meaning that $\tilde{f}$ may not be (and often isn't) a surjection.</p>
+
+<p>Here comes the punch line: the crate permutation group that we described earlier is precisely the quotient group $\pi(G)/\text{im}(\tilde{f})$. (Can you convince yourself that $\text{im}(\tilde{f})\trianglelefteq \pi(G)$?) Intuitively, a quotient group is a construction whereby we take an existing group and insist that a certain subgroup is actually trivial - so, by quotienting $\pi(G)$ by $\text{im}(\tilde{f})$, we are essentially taking the group of loops in the state graph of a Sokoban level (which is always a free group, hence infinite) and insisting that the paths that don't swap any of the crates are trivial. This causes the infinite fundamental group $\pi(G)$ to "collapse" into a group that only accounts for how the crates are be acted upon.</p>
+
+<p>Given a graph covering $f:H\to G$, we will call the group produced by the above construction the <strong>monodromy group</strong> of that graph covering. To be honest, I don't have a source to cite for this definition, but it seems like a natural piece of terminology to use given the way that fundamental groups are defined for both topological spaces to graphs, and the way that the monodromy group is defined for topological spaces (a bit more on this in the next section).</p>
+
+<p>The nice thing about this definition is that is generalizes the group construction from specifically Sokoban to many different puzzles. For example, it can be applied to the famous <a href="https://en.wikipedia.org/wiki/15_puzzle">15 puzzle</a>, where the graph $H$ consists of $16!$ vertices (in two connected components) and the graph $G$ is the space of states that the puzzles can occupy <em>ignoring</em> how the tiles are labelled:</p>
+
+<p><center><img src="/img/2024-08-30-Fig11.png" alt="Fig 11" /></center></p>
+
+<p>The graph $H$ that covers this is unimaginably huge. For the smaller $2\times 3$ variation of this puzzle, I can at least begin to draw a small piece of the covering graph (which has $2$ components and $720$ nodes in all):</p>
+
+<p><center><img src="/img/2024-08-30-Fig12.png" alt="Fig 12" /></center></p>
+
+<p>There's a lot more to say about covering graphs, but I'll leave it there for now, in favor of talking just a little about what monodromy means in topological spaces. Not that topological spaces give any particular insights into Sokoban - I just think the connection between the two is neat! If you want to think more about graph monodromy, I challenge you to try coming up with graph coverings that have specific prescribed monodromy groups, as we started doing with the Sokoban groups. (The problem is a lot easier for arbitrary graphs, and the notion of the <a href="https://en.wikipedia.org/wiki/Cayley_graph">Cayley Graph</a> of a group is very helpful.)</p>
+
+<h3>Monodromy with complex covering spaces <a id="toc-section-3" class="toc-section"></a></h3>
+
+<p>The "real" definition of a <strong>monodromy group</strong> comes from topology, and the study of <a href="https://en.wikipedia.org/wiki/Covering_space">covering spaces</a> of topological spaces. I won't get into the weeds with rigorous definitions and theorems, but intuitively speaking a covering of topological spaces is a way of "folding" a topological space upon itself continuously to "lay down flat" on top of another topological space. This could happen in a trivial way, like if several copies of a topological space $X$ were stacked on top of each other like pancakes. Here's an example where $X=\mathbb S^1$ is the circle:</p>
+
+<p><center><img src="/img/2024-08-30-Fig13.png" alt="Fig 13" /></center></p>
+
+<p>This is a "triple-covering" because exactly three points in the domain space map onto every single point in the codomain space. But here's a different triple covering of the circle:</p>
+
+<p><center><img src="/img/2024-08-30-Fig14.png" alt="Fig 14" /></center></p>
+
+<p>This is actually a covering of $\mathbb S^1$ by $\mathbb S^1$ <em>itself</em> - the circle can triple-cover itself. Pardon the bad drawing... if you prefer to think of this covering in symbolic terms, the covering map sends each point $(\cos\vartheta,\sin\vartheta)$ in the domain to the point $(\cos 3\vartheta, \sin 3\vartheta)$ in the codomain. My point is that the more interesting topological coverings are the ones that less like stacked pancakes and more like a single connected space that is "twisted" upon itself.</p>
+
+<p>Topological coverings $f:Y\to X$ have a <strong>path lifting</strong> property just like the one that I mentioned earlier about graphs: given any path $\gamma$ in the codomain space $X$ starting at $x\in X$, and any base point $y\in Y$ in the domain space that is a preimage of $x$, there is a unique path $\tilde{\gamma}$ in $Y$ that starts at $y$ and maps down onto $\gamma$. Here's what this looks like for a particular base point and path in the trivial "pancake" triple-covering of the circle:</p>
+
+<p><center><img src="/img/2024-08-30-Fig15.png" alt="Fig 15" /></center></p>
+
+<p>and here's what it looks like in the "twisted" triple-covering of the circle:</p>
+
+<p><center><img src="/img/2024-08-30-Fig16.png" alt="Fig 16" /></center></p>
+
+<p>Something cool is <em>fundamentally different</em> about the twisted covering. In the pancake covering, if the path $\gamma$ in the codomain happens to be a loop, then it will always lift to a loop in the domain:</p>
+
+<p><center><img src="/img/2024-08-30-Fig17.png" alt="Fig 17" /></center></p>
+
+<p>But if $\gamma$ is a loop in the twisted covering, it <em>might not</em> lift to a loop. For instance, a single loop around the circle in the twisted covering lifts to a path that takes $y\in X$ to a <em>different</em> preimage $y'$ of $x$:</p>
+
+<p><center><img src="/img/2024-08-30-Fig18.png" alt="Fig 18" /></center></p>
+
+<p>And guess what? If we had used that preimage $y'$ as our basepoint, the corresponding lift of $\gamma$ would terminate at yet <em>another</em> preimage of $x$:</p>
+
+<p><center><img src="/img/2024-08-30-Fig19.png" alt="Fig 19" /></center></p>
+
+<p>The set of all preimages of $x$ under some covering is sometimes called the <strong>fiber</strong> of $x$. The general takeaway from this is as follows: <em>a loop in the codomain of a topological covering induces a permutation on the fiber of its basepoint</em>. In particular, if $f:Y\to X$ is the covering and $x\in X$ is some base point for a loop $\gamma$ in $X$, the permutation $\sigma:f^{-1}(x)\to f^{-1}(x)$ sends each point $y\in f^{-1}(x)$ to the <em>endpoint</em> of the unique lift $\tilde{\gamma}$ of $\gamma$ with $y$ as its <em>starting point</em>. These permutations together comprise a group action on the fiber $f^{-1}(x)$, which is how we define the <strong>monodromy group</strong> of a topological covering.</p>
+
+<p><center><img src="/img/2024-08-30-Fig20.png" alt="Fig 20" /></center></p>
+
+<p>Anyhow, I don't expect to do the idea justice with my pictures, and anything much more complicated than a twisted covering of $\mathbb S^1$ is pretty near impossible to draw. </p>
+
+<p>So instead I've given several <em>explicit</em> examples  of topological coverings below, along with some cute little graph widgets (Javascript code stolen from <a href="https://duetosymmetry.com/tool/polynomial-roots-toy/">this page</a>) allowing you to play with monodromy and see exactly how specific loops in the complex plane permute the preimages of a point under different rational function coverings $f(z)$. Rational functions on $\mathbb C$ (or rather, the <a href="https://en.wikipedia.org/wiki/Riemann_sphere">Riemann Sphere</a>) are fantastic ways of constructing interesting covering spaces, since the <a href="https://en.wikipedia.org/wiki/Fundamental_theorem_of_algebra">Fundamental Theorem of Algebra</a> gives nice guarantees about how big the fiber of each point under a rational function $f(z)$ will be, <em>except</em> at finitely many critical points (which can just be "cut out" of the domain and codomain spaces to obtain a perfect triple-, quadruple- or whatever-covering). Have fun!</p>
+
+<p>For clarity, in each example below, there are two graphs. The graph on the left is the codomain space, and the point labelled $f(z)$ is draggable. The point labelled $c$ is also draggable, and if you click on it and hold down, $f(z)$ will follow a circular path around it - this is just for convenience, so that you don't have to drag $f(z)$ around a circular path or worry about moving it smoothly by hand if you want to see what happen when $f(z)$ makes a circular loop. The graph on the right shows <em>all (three or four) of the preimages</em> of the point $f(z)$ on the left.</p>
+
+<hr>
+
+<p>The polynomial <script type="math/tex; mode=display">f(z) = z^3</script> has monodromy group isomorphic to $C_3$, the cyclic group with three elements. It defines a triple covering <script type="math/tex; mode=display">\tilde{\mathbb C}\backslash \{0,\infty\}\to \tilde{\mathbb C}\backslash \{0,\infty\} </script> with a single small rotation around the origin corresponding to a cyclic permutation of the roots. We can deduce the monodromy group from the fact that the monodromy group must be generated by the permutation resulting from a loop about $w=0$, and the only transitive action on $3$ points with a single generator is the $C_3$ action. (The only groups with a single generator are the cyclic groups.)</p>
+
+<p>Try dragging $f(z)$ in a small circle around the origin, and watch what happens to the preimages $z_0,z_1,z_2$. You should see that they are cyclically permuted!</p>
+
+<p><center></p>
+
+<div id="coeffbox1" class="jxgbox mybox graphbox" style="">
+</div>
+
+<div id="rootbox1" class="jxgbox mybox graphbox" style="">
+</div>
+
+<p></center></p>
+
+<script type="text/javascript">
+  var controller = new PolyRootController(
+    "rootbox1",
+    "coeffbox1",
+    Polynomial({'3': Complex(1,0)}),
+    Polynomial({'0': Complex(1,0)}));
+</script>
+
+<hr>
+
+<p>The polynomial <script type="math/tex; mode=display">f(z) = z^3 - 3z</script> has monodromy group isomorphic to $S_3$, the symmetric group with three elements. It defines a triple covering <script type="math/tex; mode=display">\tilde{\mathbb C}\backslash \{\pm 1,\pm 2,\infty\}\to \tilde{\mathbb C}\backslash \{\pm 2,\infty\} </script> Its monodromy group must be generated by two permutations, induced by letting $f(z)$ follow a small loop encircling the respective points $w=\pm 2$. Because $z^3-3z-2$ and $z^3-3z+2$ have roots of order two, we can deduce that each of these permutation is a simple transposition. This rules out the monodromy group $C_3$, which contains no simple transpositions, allowing us to deduce the correct monodromy group of $S_3$.</p>
+
+<p>Try dragging $f(z)$ in a small circle centered around $w=+2$. Then try dragging it in a small circle centered around $w=-2$. What happens?</p>
+
+<p><center></p>
+
+<div id="coeffbox2" class="jxgbox mybox graphbox" style="">
+</div>
+
+<div id="rootbox2" class="jxgbox mybox graphbox" style="">
+</div>
+
+<p></center></p>
+
+<script type="text/javascript">
+  var controller = new PolyRootController(
+    "rootbox2",
+    "coeffbox2",
+    Polynomial({'3': Complex(1,0), '1': Complex(-3,0)}),
+    Polynomial({'0': Complex(1,0)}));
+</script>
+
+<hr>
+
+<p>The polynomial <script type="math/tex; mode=display">f(z) = z^4</script> has monodromy group isomorphic to $C_4$, the cyclic group with four elements. It defines a quadruple covering <script type="math/tex; mode=display">\tilde{\mathbb C}\backslash \{0,\infty\}\to \tilde{\mathbb C}\backslash \{0,\infty\} </script> and we can use the same reasoning as in the example $f(z)=z^3$ to deduce that its monodromy group is cyclic, as it must have a single generator (corresponding to $f(z)$ looping once about $w=0$).</p>
+
+<p>Try dragging $f(z)$ in a circle around the origin for this example.</p>
+
+<p><center></p>
+
+<div id="coeffbox3" class="jxgbox mybox graphbox" style="">
+</div>
+
+<div id="rootbox3" class="jxgbox mybox graphbox" style="">
+</div>
+
+<p></center></p>
+
+<script type="text/javascript">
+  var controller = new PolyRootController(
+    "rootbox3",
+    "coeffbox3",
+    Polynomial({'4': Complex(1,0)}),
+    Polynomial({'0': Complex(1,0)}));
+</script>
+
+<hr>
+
+<p>The rational function <script type="math/tex; mode=display">f(z) = \frac{(z^2-1)^2}{z^2}</script> has monodromy group isomorphic to $V$, the Klein four-group. It defines a quadruple covering <script type="math/tex; mode=display">\tilde{\mathbb C}\backslash \{0,\infty,\pm 1, \pm i\}\to \tilde{\mathbb C}\backslash \{0,-4,\infty\}</script> We can deduce this monodromy group by considering the factorizations of $f(z)$ and $f(z)+4$. They tell us that when $f(z)\approx 0$, the preimage $z$ can be one of $4$ points, two of which are close to $+1$ and two of which are close to $-1$, meaning that letting $f(z)$ make a small loop around $w=0$ transposes each of these pairs of roots. Similarly, when $f(z)\approx -4$, the preimage $z$ can be one of $4$ points, two of which are close to $+i$ and two of which are close to $-i$. This means that the monodromy group of $f$ is generated by two permutations, each of which has the cycle type of $(12)(34)$ - and the only permutation group acting transitively on four elements with generators of this shape is $V$.</p>
+
+<p>TLDR: try dragging $f(z)$ in a small circle about $w=0$, and then try dragging $f(z)$ in a small circle about $w=-4$. You should see that in the former case, two pairs of the preimages are swapped, and in the latter case, two <em>different</em> pairings of preimages are swapped.</p>
+
+<p><center></p>
+
+<div id="coeffbox4" class="jxgbox mybox graphbox" style="">
+</div>
+
+<div id="rootbox4" class="jxgbox mybox graphbox" style="">
+</div>
+
+<p></center></p>
+
+<script type="text/javascript">
+  var controller = new PolyRootController(
+    "rootbox4",
+    "coeffbox4",
+    Polynomial({'4': Complex(1,0), '2': Complex(-2,0), '0': Complex(1,0)}),
+    Polynomial({'2': Complex(1,0)}));
+</script>
+
+<hr>
+
+<p>The rational function <script type="math/tex; mode=display">f(z) = \frac{z^4}{2z^2 - 1}</script> has monodromy group isomorphic to $D_4$, the dihedral group with $8$ elements. It defines a quadruple covering <script type="math/tex; mode=display">\tilde{\mathbb C}\backslash \{0,\pm 1,\infty\}\to \tilde{\mathbb C}\backslash \{0,1,\infty\}</script> Since $f(z) = \mathcal O(z^4)$ for $z\approx 0$ we can say that letting $f(z)$ follow a small loop about $w=0$ induces a 4-cycle on the preimage points. And since $f(z) = 1 +\mathcal O((z-1)^2)$ for $z\approx 1$ and $f(z) = 1 + \mathcal O((z+1)^2)$ for $z\approx -1$, we have that letting $f(z)$ follow a small loop about $w=1$ induces a permutation on the preimages consisting of a pair of transpositions. The only transitive group action on 4 points with generators of these cycle types is $D_4$.</p>
+
+<p>Try dragging $f(z)$ in a small circle about $w=0$, then try dragging it in a small circle about $w=1$. Finally, drag it in a <em>large</em> circle around the origin, so that the circle encompasses both $w=0$ and $w=1$. What kind of action do you notice on the roots?</p>
+
+<p><center></p>
+
+<div id="coeffbox5" class="jxgbox mybox graphbox" style="">
+</div>
+
+<div id="rootbox5" class="jxgbox mybox graphbox" style="">
+</div>
+
+<p></center></p>
+
+<script type="text/javascript">
+  var controller = new PolyRootController(
+    "rootbox5",
+    "coeffbox5",
+    Polynomial({'4': Complex(1,0)}),
+    Polynomial({'0': Complex(-1,0), '2': Complex(2,0)}));
+</script>
+
+<hr>
+
+<p>The rational function <script type="math/tex; mode=display">f(z) = \frac{z^3 (z+3)}{z^3+2z+1}</script> has monodromy group isomorphic to $A_4$, the alternating group of permutations on $4$ elements. It defines a quadruple covering <script type="math/tex; mode=display">\tilde{\mathbb C}\backslash \{0,\pm 1,-3,\infty\}\to \tilde{\mathbb C}\backslash \{0,1,\infty\}</script> Since $f(z)=\mathcal O(z^3)$ for $z\approx 0$, we can say that a small loop about the origin induces a 3-cycle on the preimage points. Similarly, since $f(z) = 1+\mathcal O((z+1)^3)$ for $z\approx -1$, we can also say that a small loop about $w=1$ induces a 3-cycle on the preimage points, meaning that the monodromy group action is generated by two 3-cycles, and is hence isomorphic to $A_4$.</p>
+
+<p>Try dragging $f(z)$ in a small circle about $w=0$, then try dragging it in a small circle about $w=1$. What do you notice? Does this remind you at all of my Sokoban puzzle for $A_4$?</p>
+
+<p><center></p>
+
+<div id="coeffbox6" class="jxgbox mybox graphbox" style="">
+</div>
+
+<div id="rootbox6" class="jxgbox mybox graphbox" style="">
+</div>
+
+<p></center></p>
+
+<script type="text/javascript">
+  var controller = new PolyRootController(
+    "rootbox6",
+    "coeffbox6",
+    Polynomial({'4': Complex(1,0), '3': Complex(3,0)}),
+    Polynomial({'0': Complex(1,0), '1': Complex(2,0), '3': Complex(1,0)}));
+</script>
+
+<hr>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

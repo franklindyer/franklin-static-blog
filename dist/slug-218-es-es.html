@@ -1,0 +1,128 @@
+<html>
+<head>
+    <title>Una vista áerea Albuquerque en QGIS</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Una vista áerea de Albuquerque en QGIS</h2>
+
+<p>Como niño jugaba a veces en el Wii de mis abuelos cuando me quedé en su casa. Había un juego llamado <em>Wii Sports Resort</em> que tiene lugar en un centro turístico en una isla en el que tu avatar puede participar en varias diversiones deportivas como la lucha con espadas, el frisbi, el ciclismo, el wakeboarding y demás. </p>
+
+<p><center><img src="/img/2024-04-30-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>Por alguna razón, un juego de estos solía gustarme mucho mejor que los demás: la <em>vista áerea</em>, en la que se conduce el personaje sobre toda la isla en un avioncito. No era el volar que me ha encantado tanto como el descubrimiento de varios puntos de interés esparcidos por la isla que se realiza pasando justo por encima de cada ubicación. Después de visitar el "i point" asociado a cada punto de interés, aparecería en una lista de todas las ubicaciones descubiertas en el menú al final de la "vista áerea", tal y como se ve en esta captura del fan wiki:</p>
+
+<p><center><img src="/img/2024-04-30-Fig2.png" alt="Fig 2" /></center></p>
+
+<p>Hace falta un poco de acrobacia áerea para acceder a algunos de estos sitios clandestinos, por el cual hecho era aún más tentador la posibilidad de completar mi colección encontrando los pocos escondites que hasta entonces me habían escapado. A nivel psicológico no entiendo bien por qué este juego me ha captado tanto - pero recuerdo haber fantaseado con experimentar una "vista áerea" de Chattanooga, la ciudad en la que vivía mi familia en ese entonces, y con colectar "i points" de ubicaciones notables por la ciudad como el Walnut Street Bridge y el Tennessee Aquarium. </p>
+
+<p>Hace varios años que no pensaba en ese juego, pero recientemente descubrí algo que parece estimular las mismas partes de mi cerebro. Buscando empleo tecnológico local me topé con un puesto que pide experiencia con los GIS, el cual acrónimo no conocía. Después de googlearlo aprendí que GIS significa <strong>sistema de información geográfica</strong> (en inglés: geographic information system) y que se usan estos sistemas para consultar y manipular datos espaciales que pueden involucrar tanto elementos naturales como elementos artificiales o administrativos. </p>
+
+<p>Por supuesto, me pregunté si acaso podría encontrar conjuntos de datos abiertos sobre Albuquerque (donde vivo actualmente) y me asombró la <a href="https://www.cabq.gov/gis/geographic-information-systems-data">gran cantidad de datos</a> que publica la Ciudad de Albuquerque. Además, aprendí que en muchos casos se puede consultar datos de GIS usando el lenguaje de consulta SQL que se suele usar para bases de datos. Claro, no pude sino descargar varios conjuntos de datos para ver qué información estrafalaria podría extraer. Lo que queda de esta entrada consta de algunas consultas tontas que he realizado en los datos de GIS de Albuquerque. Te animo a buscar datos de GIS que corresponden a tu propia ciudad (probablemente existen!) y probar algunas consultas por tu propio cuenta. Yo he elegido <a href="https://www.qgis.org/en/site/index.html">QGIS</a> para mis pruebas como es gratis y código abierto.</p>
+
+<p>Antes de empezar, hago un breve comentario técnico. Todavía estoy aprendiendo de los GIS por primera vez, pero aquí está alguna jerga según entiendo yo:</p>
+
+<ul>
+<li>Un <strong>conjunto de datos vectorial</strong> consta de puntos con atributos asociados</li>
+<li>Una <strong>capa</strong> es un conjunto de datos espaciales que son temáticamente relacionados</li>
+<li>Un <strong>elemento</strong> es un dato del conjunto de datos vectorial, que puede ser o un punto o una curva o un polígono</li>
+<li>Una capa suele tener una <strong>tabla de atributos</strong> que almacena datos y metadatos sobre cada elemento</li>
+</ul>
+
+<p>Se puede user conjuntos de datos vectoriales para representar elementos discretos como empresas o puntos de interés (puntos), calles o ríos (curvas) o parques públicos o cuerpos de agua (polígonos). Se suele contrastar los datos vectoriales con datos ráster, que se usan para representar datos continuos que asignan a cada punto en un espacio un valor numérico, como altura o temperatura.  Al parecer hay varios distintos formatos que sirven para almacenar datos vectoriales. Estos incluyen <a href="https://en.wikipedia.org/wiki/Shapefile">shapefiles</a>, <a href="https://en.wikipedia.org/wiki/GeoJSON">GeoJSON</a> y <a href="https://en.wikipedia.org/wiki/Geography_Markup_Language">GML</a>.</p>
+
+<p>Uno de los conjuntos de datos sobre Albuquerque que más me ha interesado es el que describe "uso de tierra". Me demoré en tocar este conjunto porque no sabía el significado de este título, pues suena un poco aburrido. Pero en este conjunto se encuentra información sobre todos los establecimientos en Albuquerque que son organizados con mucha especificidad en distintos <a href="https://coagisweb.cabq.gov/datadownload/ABQlanduse.pdf">"códigos de uso de tierra"</a>. Empezamos eligiendo algunos distintos tipos de empresas y viendo todas las ubicaciones correspondientes en el alrededor de UNM. </p>
+
+<p>En primer lugar, aquí está UNM:</p>
+
+<p><center><img src="/img/2024-04-30-Fig3.png" alt="Fig 3" /></center></p>
+
+<p>Haciendo clic derecho en la capa <code>landuse</code> y eligiendo <code>Open Attribute Table</code> se puede visualizar el conjunto de datos entero y a partir de esta table se puede averiguar que la columna <code>OldLandU_1</code> debe ser la que contiene los códigos de uso de tierra que queremos investigar. Entonces navegando a <code> Edit &gt; Select &gt; Select Features by Expression</code> podemos abrir un menú que nos permite seleccionar elementos con un predicado de SQL. </p>
+
+<p>Echando un vistazo a la lista de códigos de uso de tierra que adjunté arriba, se ve que hay dos códigos que corresponden a restaurante de comida rápida (que se distinguen entre sí por la presencia o ausencia de un drive-thru). Entonces, podemos ingresar el siguiente predicado para destacar los establecimientos de comida rápida:</p>
+
+<div class="code">
+OldLandU_1 LIKE '%FAST FOOD%'
+</div>
+
+<p>También he agregado etiquetas a todos los elementos seleccionados que muestras los primeros dígitos de sus <code>GlobalID</code> respectivos para poder referirme a ellos más fácilmente. Aquí están los resultados a lo largo de Central, en el alrededor de UNM:</p>
+
+<p><center><img src="/img/2024-04-30-Fig4.png" alt="Fig 4" /></center></p>
+
+<p>Como estudiante de la uni, <em>por supuesto</em> puedo identificar varios de los restaurantes de comida rápida cercanos a UNM de memoria. Por ejemplo el edificio <code>CF5</code> es un Wendy's y el <code>145</code> es un Taco Bell. A propósito, es un desafío divertido intentar recordar cada edificio sabiendo sólo su ubicación y su código de uso de tierra - creo que <code>B27</code> es un McDonald's y <code>280</code> es una pizzería, pero podría haberlos confundido. Se me resulta bastante gracioso el hecho de que el Freddy's en Central no está clasificado como <code>FAST FOOD</code> ni tampoco <code>RESTAURANT</code> sino un <code>EATING AND DRINKING ESTAB</code>:</p>
+
+<p><center><img src="/img/2024-04-30-Fig5.png" alt="Fig 5" /></center></p>
+
+<p>Viviendo en Albuquerque como estudiante de UNM, empecé a notar a partir de la <a href="https://www.rld.nm.gov/cannabis/cannabis-in-new-mexico/">legalización de marijuana</a> en Nuevo México que los dispensarios de marijuana han empezado a brotar por todas partes. Apenas creo que hay bastante demanda para que todos sobrevivan! Pues por supuesto quería intentar encontrar datos de GIS que incluyen las ubicaciones de los dispensarios por todo Albuquerque. Esta búsqueda desembocó en la <a href="https://www.arcgis.com/apps/dashboards/4be0b05fa6444888b7174e0d92c9747b">Mapa de Aprobación de Locales Minoristas de Cannabis</a>, la cual muestra todas las ubicaciones de dispensarios propuestos por todo Albuquerque además de su estado con respecto a la aprobación. Resultó una <em>gran molestia</em> averiguar cómo descargar los datos crudos, pero finalmente lo logré con la ayuda de <a href="https://jonathanchang.org/blog/downloading-esri-online-shapefiles/">esta entrada de blog</a> (muchas gracias a Jonathan Chang!). Pues aquí están todos los dispensarios propuestos en el alrededor de campus con las ubicaciones aceptadas en verde y las rechazadas en rojo:</p>
+
+<p><center><img src="/img/2024-04-30-Fig6.png" alt="Fig 6" /></center></p>
+
+<p>Ahora nos ponemos a intentar algo un poco más complejo con estos datos que involucra <em>varias</em> capas a la vez. La Ciudad de Albuquerque ha publicado algunas <a href="https://www.cabq.gov/city-of-albuquerque-cannabis-equity-workspace/city-of-albuquerque-cannabis-information-1">reglas</a> acerca de las locales minoristas de cannabis, y entre ellas:</p>
+
+<ul>
+<li>un local minorista de cannabis no puede ubicarse a una distancia de menor que 300 pies de una escuela</li>
+<li>un local minorista de cannabis no puede ubicarse menor que 600 pies de otro local minorista de cannabis</li>
+<li>un establecimiento que está licensiado como "microempresa" es una excepción a esta regla</li>
+<li>un establecimiento que ha aquirido un "conditional use approval" es otra excepción</li>
+</ul>
+
+<p>Con algunas herramientas que proporciona QGIS debemos poder averiguar si existen dispensarios que no cumplan con estas reglas. En concreto, la herramienta búfer, que se encuentra en <code>Vector &gt; Geoprocessing Tools &gt; Buffer</code>, nos permite crear una nueva capa cuyos elementos son <em>círculos de un cierto radio</em> centrados en cada dispensario. Así se ven estos círculos, pintados como burbujitos verdes:</p>
+
+<p><center><img src="/img/2024-04-30-Fig7.png" alt="Fig 7" /></center></p>
+
+<p>Entonces podemos desplegar la operación <em>combinación espacial</em> entre la capas, que se comporta de manera parecida a la operación <code>JOIN</code> en SQL salvo que puede tomar en cuenta información espacial también. <a href="https://gis.stackexchange.com/questions/217444/understanding-join-attributes-by-location-in-qgis">Esta entrada de StackExchange</a> contiene algunos diagramas muy bonitas en la respuesta más gustada que explican cómo funciona este tipo de operación. Además de la capa de dispensarios he descargado una capa del sitio web de CABQ que consta de puntos que marcan las ubicaciones de escuelas en Albuquerque. Si juntamos la capa de búfer de dispensarios con ls capa de escuelas usando el predicado de <em>intersección</em>, el resultado debe ser una capa que indica todas las escuelas que se encuentren dentro de una bola de radio 300 pies centrado en algún dispensario.</p>
+
+<p>Realizando esto por mi cuenta sólo encontré un único resultado: el <code>Releaf Cannabis CO</code> que se encuentra en <code>1606 Central Ave SE</code> y una escuela particular llamado <code>Tierra Adentro</code> que se encuentra enfrente. Pero hice una búsqueda y descubrí en el <a href="https://www.tierraadentronm.org">sitio web de Tierra Adentro</a> que actualmente se ubican en <code>1781 Bellamah Ave NW</code>, sitio que queda a una distancia de algunas millas. El campo <code>LASTUPDATE</code> para esta escuela contiene el valor <code>11/9/16</code> en el conjunto de datos que descargué, así que deduzco que la escuela debe haberse reubicado desde entonces.</p>
+
+<p><center><img src="/img/2024-04-30-Fig8.png" alt="Fig 8" /></center></p>
+
+<p>Para encontrar pares de dispensarios con una distancia de menor que 600 pies <em>entre sí</em>, sólo hace falta calcular si algunas de esta bolas de radio 300 pies se cortan entre sí - pues si una bola de radio 300ft centrado en un punto corta la pola de radio 300ft centrado en otro, entonces los dos puntos tienen una distancia menor que 600ft entre ellos. Como tal debemos llevar a cabo una combinaci´øn espacial de la capa de búferes de dispensarios <em>consigo mismo</em> y entonces limpiar el resultando quitando pares duplicados ("<code>x</code> se encuentra a menor que 600ft de <code>y</code> y <code>y</code> se encuentra a menor que 600ft de <code>x</code>") y entradas degenerados que juntan un dispensario consigo mismo ("<code>x</code> se encuentra a menor de 600ft de <code>x</code>"). Cada dispensario con búfer posee un identificador único en la columna <code>objectid</code> y cada par de dispensarios con búfer que aparece en la nueva capa contiene el identificador de cada uno en las columnas <code>objectid</code> y <code>objectid_2</code>. Hay un truco que se puede usar para eliminar las entradas duplicadas y degeneradas: realizar un <code>Filter</code> con el predicado <code>objectid &lt; objectid_2</code>. (Puedes averiguar por qué funciona esto?)</p>
+
+<p>Yo encontré 47 pares (no duplicados) de dispensarios con una distancia menor que 600 pies entre sí. Al parecer, los dispensarios con licensia de microempresa tienen la subcadena <code>MICB</code> o bien <code>micb</code> en su campo <code>state_cannabis_licence_number</code>, así que podemos quitar estas excepciones con el predicado siguiente:</p>
+
+<div class="code">
+NOT (
+    LOWER(state_cannabis_licence_number) LIKE '%micb%'
+    OR LOWER(state_cannabis_licence_number_2) LIKE '%micb%'
+)
+</div>
+
+<p>Encontré 14 resultados después de ejecutar este filtro. Inspeccionándolos uno por uno encontré que algunos claramente son errores (e.g. <code>Leaf &amp; Flower LLC</code> y <code>Leaf &amp; Flower LLC Producer</code> tienene entradas distintas pero probablemente se refieren a la misma empresa, y <code>Urban Wellness</code> tiene dos entradas correspondientes con identificadores distintos). Sin embargo, algunos parecen ser contraejemplos verdaderos, como este par aquí: Se supone que una empresa de estas dos disponga de un "conditional use approval".</p>
+
+<p><center><img src="/img/2024-04-30-Fig9.png" alt="Fig 9" /></center></p>
+
+<p>Pues basta ya con el análisis, pero me he divertido mucho jugueteando con estos conjuntos de datos en QGIS. Esta diversión ha estimulado varias partes de mi cerebro, entre ellas mi interés en las bases de datos, mi razonamiento geométrico y topológico, y estos restos de materia gris que en el pasado me hicieron entusiasmarme tanto al descubrir huevos de Pascua desde encima en la vista áerea de <em>Wii Sports</em>. Ahora que lo pienso, no creo que hubieran tantos dispensarios de cannabis en la isla de Wuhu...</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

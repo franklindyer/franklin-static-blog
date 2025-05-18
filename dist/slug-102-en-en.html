@@ -1,0 +1,78 @@
+<html>
+<head>
+    <title>Triangle Median Problem</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Triangle Median Problem</h2>
+
+<p><em>2017 Feb 10</em></p>
+
+<blockquote>
+<p>Suppose you have a triangle with side lengths $a_0$, $b_0$, and $c_0$. Call this triangle "triangle $0$". Construct its medians, and use those as the sides of a second triangle, "triangle $1$", with side lengths $a_1$, $b_1$, and $c_1$, so that the median to the side of length $a_0$ has length $a_1$, the median to the side with length $b_0$ has length $b_1$, and the median to the side with length $c_0$ has length $c_1$. Repeat this process to get "triangle $2$" with side lengths $a_2$, $b_2$, and $c_2$, and so on. Find $a_{1000}$, $b_{1000}$, and $c_{1000}$ in terms of $a_0$, $b_0$, and $c_0$, given that, by C.P. Lawes' median length formula,<br />
+<script type="math/tex; mode=display">a_{n+1}=\frac{1}{2}\sqrt{2({b_n}^2+{c_n}^2)-{a_n}^2}</script>
+<script type="math/tex; mode=display">b_{n+1}=\frac{1}{2}\sqrt{2({a_n}^2+{c_n}^2)-{b_n}^2}</script>
+<script type="math/tex; mode=display">c_{n+1}=\frac{1}{2}\sqrt{2({a_n}^2+{b_n}^2)-{c_n}^2}</script>
+</p>
+</blockquote>
+
+<p>This is obviously an iterated function problem. Our best bet is to try and iterate out the second iterate and see if anything significant happens. However, this problem isn't as simple as just iterated functions, because it uses three sequences, each term of each one reliant on each other's previous term. If we start with
+<script type="math/tex; mode=display">a_{2}=\frac{1}{2}\sqrt{2({b_2}^2+{c_2}^2)-{a_2}^2}</script>
+and then plug in values for $a_{2}$, $b_{2}$, and $c_{2}$, we get
+<script type="math/tex; mode=display">a_{2}=\frac{1}{2}\sqrt{2(\frac{1}{2}({a_0}^2+{c_0}^2)-\frac{1}{4}{b_0}^2+\frac{1}{2}({a_0}^2+{b_0}^2)-\frac{1}{4}{c_0}^2)-\frac{1}{2}({b_0}^2+{c_0}^2)+\frac{1}{4}{a_0}^2}</script>
+<script type="math/tex; mode=display">a_{2}=\frac{1}{2}\sqrt{{a_0}^2+{a_0}^2+\frac{1}{4}{a_0}^2+{b_0}^2-\frac{1}{2}{b_0}^2-\frac{1}{2}{b_0}^2+{c_0}^2-\frac{1}{2}{c_0}^2-\frac{1}{2}{c_0}^2}</script>
+<script type="math/tex; mode=display">a_{2}=\frac{1}{2}\sqrt{\frac{9}{4}{a_0}^2}</script>
+<script type="math/tex; mode=display">a_{2}=\frac{3}{4}a_0</script>
+</p>
+
+<p>This is remarkable in that it means that the median length of every other triangle is unaffected by the lengths of any medians in the second triangle before it other than the median corresponding to itself. Now not only do we know that
+<script type="math/tex; mode=display">a_{2}=\frac{3}{4}a_0</script>
+but also that
+<script type="math/tex; mode=display">a_{n}=\frac{3}{4}a_{n-2}</script>
+or
+<script type="math/tex; mode=display">a_{n}=f(a_{n-2})</script>
+where
+<script type="math/tex; mode=display">f(x)=\frac{3}{4}x</script>
+In order to get to $a_{1000}$, we need only apply this function $500$ times, or to find
+<script type="math/tex; mode=display">f^{500}(a_0)</script>
+Which is, by one of our iterated function formulas (see entry 2017-1-12),
+<script type="math/tex; mode=display">(\frac{3}{4})^{500}a_0</script>
+Without loss of generality, this applies to $b_n$ and $c_n$ as well, so the answer to the problem is
+<script type="math/tex; mode=display">a_{1000}=(\frac{3}{4})^{500}a_0</script>
+<script type="math/tex; mode=display">b_{1000}=(\frac{3}{4})^{500}b_0</script>
+<script type="math/tex; mode=display">c_{1000}=(\frac{3}{4})^{500}c_0</script>
+</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

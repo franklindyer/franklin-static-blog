@@ -1,0 +1,280 @@
+<html>
+<head>
+    <title>Pascal's Triangle</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Pascal's Triangle</h2>
+
+<p><em>2017 May 6</em></p>
+
+<p>Whew! I need a break from iterated functions.</p>
+
+<blockquote>
+<p>Prove that the sum of the entries of the <em>n</em>th row of Pascal's Triangle is $2^n$.
+Prove that the alternating sum of the entries of the <em>n</em>th row of Pascal's Triangle is $0$.
+Find a formula for <script type="math/tex; mode=display">\sum_{n_{k-1}=1}^{n_k} \sum_{n_{k-2}=1}^{n_{k-1}} ... \sum_{n_0=1}^{n_1} 1</script>
+</p>
+</blockquote>
+
+<p>The mathematical phenomenon known as "Pascal's Triangle" recently caught my eye. Pascal's Triangle is a triangular arrangement of numbers stretching on to infinity with each row of numbers containing one number more than the previous row. Furthermore, each number is the sum of the two numbers above it, with the topmost number a one. Here are the first $7$ rows of pascal's triangle:</p>
+
+<p><center><img src="/img/2017-5-6-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>This mathematical entity has some interesting properties. For example, if we denote the combinations formula for "n choose r" by
+<script type="math/tex; mode=display">_nC_r=\frac{n!}{r!(n-r)!}</script>
+</p>
+
+<p>and we call the topmost row of Pascal's triangle row <em>0</em> and the first entry in each row the <em>0</em>th entry in that row, then the <em>r</em>th item in the <em>n</em>th row is given by $_nC_r$. This can be proven easily, because since each entry in the triangle is the sum of the entries above it, and since $_0C_0$ is trivially $1$, also the topmost entry of the pyramid, we need only prove that this summing property holds for $_nC_r$, or that
+<script type="math/tex; mode=display">_nC_r=_{n-1}C_{r-1}+_{n-1}C_r</script>
+</p>
+
+<p>Here is a quick algebraic proof of that identity. We start with the expression
+<script type="math/tex; mode=display">_{n-1}C_{r-1}+_{n-1}C_r</script>
+and expand it out using our formula:
+<script type="math/tex; mode=display">\frac{(n-1)!}{(r-1)!(n-r)!}+\frac{(n-1)!}{r!(n-r-1)!}</script>
+<script type="math/tex; mode=display">\frac{(n-1)!r}{r!(n-r)!}+\frac{(n-1)!(n-r)}{r!(n-r)!}</script>
+<script type="math/tex; mode=display">\frac{(n-1)!r+(n-1)!(n-r)}{r!(n-r)!}</script>
+<script type="math/tex; mode=display">\frac{(n-1)!(r+n-r)}{r!(n-r)!}</script>
+<script type="math/tex; mode=display">\frac{(n-1)!n}{r!(n-r)!}</script>
+<script type="math/tex; mode=display">\frac{n!)}{r!(n-r)!}</script>
+</p>
+
+<p>We can now see that this is clearly equal to $_nC_r$. This can be useful in proving some conjectures about patterns found in Pascal's triangle. For example, observe what happens when one alternates addition and subtraction for each entry in some row (other than the <em>0</em>th row):
+<script type="math/tex; mode=display">1-1=0</script>
+<script type="math/tex; mode=display">1-2+1=0</script>
+<script type="math/tex; mode=display">1-3+3-1=0</script>
+<script type="math/tex; mode=display">1-4+6-4+1=0</script>
+</p>
+
+<p>We can obviously conjecture that this will always be $0$, but how can we prove it? Well, we can do so using what we now know about the connection between Pascal's Triangle and the combinations formula. Such an alternation of addition and subtraction will take the form
+<script type="math/tex; mode=display">_nC_0-_nC_1+_nC_2-...+_nC_{n-1}(-1)^{n-1}+_nC_n(-1)^n</script>
+</p>
+
+<p>Using our identity $<em>nC_r=</em>{n-1}C_{r-1}+_{n-1}C_r$, we can expand this out to get
+<script type="math/tex; mode=display">_nC_0-(_{n-1}C_1+_{n-1}C_0)+(_{n-1}C_2+_{n-1}C_1)-...+(_{n-1}C_{n-1}+_{n-1}C_{n-2})(-1)^{n-1}+_nC_n(-1)^n</script>
+</p>
+
+<p>and we can rearrange this to get
+<script type="math/tex; mode=display">_nC_0-_{n-1}C_0+_{n-1}C_1-_{n-1}C_1+_{n-1}C_2-_{n-1}C_2+...+_{n-1}C_{n-2}-_{n-1}C_{n-2}+_{n-1}C_{n-1}(-1)^{n-1}+_nC_n(-1)^n</script>
+</p>
+
+<p>This is, of course, a telescoping sum, and we are left only with
+<script type="math/tex; mode=display">_nC_0-_{n-1}C_0+_{n-1}C_{n-1}(-1)^{n-1}+_nC_n(-1)^n</script>
+</p>
+
+<p>Of cource, any $_kC_k$ or $_kC_0$ is equal to $1$, so we now have
+<script type="math/tex; mode=display">1-1+(-1)^{n-1}+(-1)^n</script>
+<script type="math/tex; mode=display">(-1)^{n-1}+(-1)^n</script>
+</p>
+
+<p>Those two terms will be of opposite signs, and we get $0$ as a final result, proving our conjecture.</p>
+
+<p>Now notice what happens when you sum the entries of each row:
+<script type="math/tex; mode=display"> 1+1=2 </script>
+<script type="math/tex; mode=display">1+2+1=4</script>
+<script type="math/tex; mode=display">1+3+3+1=8</script>
+<script type="math/tex; mode=display">1+4+6+4+1=16</script>
+</p>
+
+<p>We can make yet another conjecture: that the sum of the entries of the <em>n</em>th row is equal to $2^n$. We can prove this using a similar technique, but first we must modify our identity a little bit. Right now we know that
+<script type="math/tex; mode=display">_nC_r=_{n-1}C_{r-1}+_{n-1}C_r</script>
+</p>
+
+<p>and so
+<script type="math/tex; mode=display">_{n+1}C_r=_nC_{r-1}+_nC_r</script>
+</p>
+
+<p>Simply by subtracting, we get that
+<script type="math/tex; mode=display">_nC_r=_{n+1}C_r-_nC_{r-1}</script>
+</p>
+
+<p>This identity will prove useful in this proof. Let us denote the sum of the entries of the <em>n</em>th row by $S(n)$. Then
+<script type="math/tex; mode=display">S(n)=_nC_0+_nC_1+...+_nC_n</script>
+</p>
+
+<p>By substitution from our identitu, we get
+<script type="math/tex; mode=display">S(n)=(_{n+1}C_0-0)+(_{n+1}C_1-_nC_0)+...+(_{n+1}C_n-_nC_{n-1})</script>
+</p>
+
+<p>We can rearrange this to get
+<script type="math/tex; mode=display">S(n)=(_{n+1}C_0+_{n+1}C_1+...+_{n+1}C_n)-(_nC_0+_nC_1+...+_nC_{n-1})</script>
+or
+<script type="math/tex; mode=display">S(n)=(_{n+1}C_0+_{n+1}C_1+...+_{n+1}C_n+_{n+1}C_{n+1}-1)-(_nC_0+_nC_1+...+_nC_{n-1}+_nC_n-1)</script>
+</p>
+
+<p>This is where the trick comes in. Notice that the sum 
+<script type="math/tex; mode=display">_nC_0+_nC_1+...+_nC_{n-1}+_nC_n</script>
+</p>
+
+<p>Is the same as $S(n)$, and the sum
+<script type="math/tex; mode=display">_{n+1}C_0+_{n+1}C_1+...+_{n+1}C_n+_{n+1}C_{n+1}</script>
+</p>
+
+<p>Is the same as $S(n+1)$, so we have now that
+<script type="math/tex; mode=display">S(n)=(S(n+1)-1)-(S(n)-1)</script>
+</p>
+
+<p>and this crunches down to
+<script type="math/tex; mode=display">S(n)=S(n+1)-S(n)</script>
+<script type="math/tex; mode=display">S(n+1)=2S(n)</script>
+</p>
+
+<p>Great! Now we've defined the sum in terms of itself recursively, and since $S(0)=1$, we can say that $S(n)=2^n$, since the sum of each row is twice the sum of the previous row.</p>
+
+<p>Alright, there's one more interesting problem to do, and it doesn't at first seem like it will have anything to do with the combinations operator. <a href="https://math.stackexchange.com/questions/2262873/condensing-a-sum-into-simpler-notation/2262888#2262888">The problem</a> comes from @Ryan on Math StackExchange. The problem is to find a general formula for the iterated summation
+<script type="math/tex; mode=display">Z^k(n_k)=\sum_{n_{k-1}=1}^{n_k} \sum_{n_{k-2}=1}^{n_{k-1}} ... \sum_{n_0=1}^{n_1} 1</script>
+</p>
+
+<p>For this problem, it isn't hard to make a conjecture. Here are the first couple iterates:
+<script type="math/tex; mode=display">Z^0(n_0)=1</script>
+<script type="math/tex; mode=display">Z^1(n_1)=n</script>
+<script type="math/tex; mode=display">Z^2(n_2)=\frac{n_2(n_2+1)}{2}</script>
+<script type="math/tex; mode=display">Z^3(n_3)=\frac{n_3(n_3+1)(n_3+2)}{6}</script>
+<script type="math/tex; mode=display">Z^4(n_4)=\frac{n_4(n_4+1)(n_4+2)(n_4+3)}{24}</script>
+</p>
+
+<p>It is easy to see just by observing the pattern that
+<script type="math/tex; mode=display">Z^k(n_k)=\frac{1}{k!}\prod_{i=0}^{k-1} (n_k+i)</script>
+</p>
+
+<p>Here is the proof that I posted on Math Stackexchange:</p>
+
+<p>I have already shown that the conjecture holds for the first two, so that part is out of the way. Our conjecture is that</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{n_{k-1}=1}^{n_k} \sum_{n_{k-2}=1}^{n_{k-1}} ... \sum_{n_0=1}^{n_1} 1=\frac{1}{k!}\prod_{i=0}^{k-1} (n_k+i)</script>
+</p>
+
+<p>Assume that this statement is true for some $n_k$. Then we must prove that its truth for some $n_k$ implies its truth for $n_{k+1}$, or that if the above is true, then</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{n_k=1}^{n_{k+1}} \sum_{n_{k-1}=1}^{n_k} ... \sum_{n_0=1}^{n_1} 1=\frac{1}{(k+1)!}\prod_{i=0}^{k} (n_{k+1}+i)</script>
+</p>
+
+<p>Must also be true. This may at first seem like a scary problem to attack until we remember that we assumed that</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{n_{k-1}=1}^{n_k} \sum_{n_{k-2}=1}^{n_{k-1}} ... \sum_{n_0=1}^{n_1} 1=\frac{1}{k!}\prod_{i=0}^{k-1} (n_k+i)</script>
+</p>
+
+<p>was true, allowing us to substitute and instead have the task of proving</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{n_k=1}^{n_{k+1}} \frac{1}{k!}\prod_{i=0}^{k-1} (n_k+i)=\frac{1}{(k+1)!}\prod_{i=0}^{k} (n_{k+1}+i)</script>
+</p>
+
+<p>Which is less intimidating. First one must notice that the quantity</p>
+
+<p>
+<script type="math/tex; mode=display">\prod_{i=0}^{k-1} (n_k+i)</script>
+</p>
+
+<p>is equal to</p>
+
+<p>
+<script type="math/tex; mode=display">\frac{(n_k+k-1)!}{(n_k-1)!}</script>
+</p>
+
+<p>and we can substitute this into our equation to get</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{n_k=1}^{n_{k+1}} \frac{1}{k!}\frac{(n_k+k-1)!}{(n_k-1)!}=\frac{1}{(k+1)!}\frac{(n_{k+1}+k)!}{(n_{k+1}-1)!}</script>
+</p>
+
+<p>We can now notice that </p>
+
+<p>
+<script type="math/tex; mode=display">\frac{1}{k!}\frac{(n_k+k-1)!}{(n_k-1)!}</script>
+</p>
+
+<p>is the same as</p>
+
+<p>
+<script type="math/tex; mode=display">_{n_k+k-1}C_{n_k-1}</script>
+</p>
+
+<p>and so now we have</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{n_k=1}^{n_{k+1}} {_{n_k+k-1}C_{n_k-1}}=\frac{1}{(k+1)!}\frac{(n_{k+1}+k)!}{(n_{k+1}-1)!}</script>
+</p>
+
+<p>Now we can attack the sum</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{n_k=1}^{n_{k+1}} {_{n_k+k-1}C_{n_k-1}}</script>
+</p>
+
+<p>Which expands out to form</p>
+
+<p>
+<script type="math/tex; mode=display">_kC_0+_{k+1}C_1+_{k+2}C_2+...+_{n_{k+1}+k-1}C_{n_{k+1}-1}</script>
+</p>
+
+<p>Now we can use the identity of the combinations formula</p>
+
+<p>
+<script type="math/tex; mode=display">_nC_r=_{n+1}C_r-_nC_{r-1}</script>
+</p>
+
+<p>to expand out our infinite sum:</p>
+
+<p>
+<script type="math/tex; mode=display">_kC_0+(_{k+2}C_1-_{k+1}C_0)+(_{k+3}C_2-_{k+2}C_3)+...+(_{n_{k+1}+k}C_{n_{k+1}-1}-_{n_{k+1}+k-1}C_{n_{k+1}-2})</script>
+</p>
+
+<p>We can see now that this is a telescoping sum that condenses down to</p>
+
+<p>
+<script type="math/tex; mode=display">_kC_0-_{k+1}C_0+_{n_{k+1}+k}C_{n_{k+1}-1}</script>
+<script type="math/tex; mode=display">=1-1+_{n_{k+1}+k}C_{n_{k+1}-1}</script>
+<script type="math/tex; mode=display">=_{n_{k+1}+k}C_{n_{k+1}-1}</script>
+</p>
+
+<p>When we substitute this into our equation, we get this:</p>
+
+<p>
+<script type="math/tex; mode=display">_{n_{k+1}+k}C_{n_{k+1}-1}=\frac{1}{(k+1)!}\frac{(n_{k+1}+k)!}{(n_{k+1}-1)!}</script>
+<script type="math/tex; mode=display">\frac{(n_{k+1}+k)!}{(k+1)!(n_{k+1}-1)!}=\frac{(n_{k+1}+k)!}{(k+1)!(n_{k+1}-1)!}</script>
+</p>
+
+<p>Which is a truth statement. This proves that if our statement is true for some $k$, then is must be true for $k+1$, and since it is true for $k=1$, it is true for all natural numbers $k$. QED.</p>
+
+<p>That was sure a pain to type up.</p>
+
+<p>Anyways, the combination formula's interesting identity seems useful in turning normally difficult summations into telescoping sums.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

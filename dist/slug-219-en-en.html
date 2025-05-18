@@ -1,0 +1,474 @@
+<html>
+<head>
+    <title>Simple dependency injection using monads</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Simple dependency injection using monads</h2>
+
+<p>I've been mulling over the idea of this blog post for a long time, probably since I wrote <a href="https://franklin.dyer.me/post/197">this older post</a> describing a couple examples of monads. Monads are infamously tricky to grok, which is why I've been looking for examples to help myself understand the commonest Haskell monads that are as simple as possible, yet at the same time well-motivated (no <code>Foo Bar Baz</code> or any of that gibberish).</p>
+
+<p>This post consists of a family of examples illustrating how monads allow us to easily implement <a href="https://en.wikipedia.org/wiki/Dependency_injection"><strong>dependency injection</strong></a> in Haskell, which is a design pattern whereby an abstractly-written function receives its dependencies "from outside", making it very easy to drastically change the function's behavior by manipulating the dependencies that it is given.</p>
+
+<p>As a warning - this post isn't very beginner-friendly, and it's not an introduction to monads. The intended audience is someone (like me) who has been toying with monads for a little while but is struggling to get a "big picture" understanding of how they are powerful. If you have not programmed in Haskell and worked with monads before, you will probably have a hard time following what comes below, but I encourage you to <a href="https://gist.github.com/franklindyer/11863d8e192388848e73fa659f38a9bb">download the code</a> and load it into a REPL to tinker with regardless of your skill level.  </p>
+
+<p>The function into which we'll be "injecting dependencies" is a very simple one - we will just be writing an implementation for the following mathematical function: <script type="math/tex; mode=display">f(x) = \frac{1}{\sqrt{x}} + \frac{1}{\sqrt{1-x}}</script> As a disclaimer, when I said that I wanted an example to "motivate" monads, that was coming from the mouth (fingers?) of someone who feels more comfortable in pure mathematics than software engineering, so not everyone will find this example as compelling as me. The above function is somewhat arbitrary, but I picked it specifically because it involves a couple of different mathematical operations that can be problematic, such as division and taking a square root. In a moment we'll see how various different monads can be used to define more robust versions of this function <em>without rewriting any of its definition</em>.</p>
+
+<p>A naive implementation of this function in Haskell looks like this:</p>
+
+<div class="code"><pre><code>
+fNaive :: Float -> Float
+fNaive x = 1 / (sqrt x) + 1 / (sqrt (1 - x))
+</code></pre></div>
+
+<p>Below is a more general definition of <code>f</code> that returns not a <code>Float</code>, but a <code>t Float</code>, where <code>t</code> is an <em>arbitrary monad</em>. This version of the function is defined using do-notation, so that it works for arbitrary monads, but its exact functionality depends on the particular monad being used. In the examples below, we'll see how we can "inject" new functionality into this function <em>without touching its definition at all</em>, simply by changing the monad that it uses.</p>
+
+<p>The function <code>f</code> will be what is known as a <strong>kliesli morphism</strong> with respect to whatever monad <code>t</code> we use in each case. To build up this function monadically, we need kliesli versions of each of the floating point operations that are used to define <code>f</code>, namely addition, reciprocals, and square roots. So we start be defining an interface for monads supporting each of these operations <em>as kliesli morphisms</em>, and then proceed to write our more modular definition of the function <code>f</code>:</p>
+
+<div class="code"><pre><code>
+class Monad t => MonadicFloatOps t where
+    madd :: Float -> Float -> t Float
+    madd = (return .) . (+)
+    msqrt :: Float -> t Float
+    mrecip :: Float -> t Float
+
+f :: MonadicFloatOps t => Float -> t Float
+f x = do
+    x1 <- msqrt x
+    x2 <- (madd 1 (-x)) >>= msqrt
+    y1 <- mrecip x1
+    y2 <- mrecip x2
+    madd y1 y2
+</code></pre></div>
+
+<p>These are the definitions that we'll use in what follows.</p>
+
+<h3>The Identity monad <a id="toc-section-1" class="toc-section"></a></h3>
+
+<p>The identity monad effectively does not change the structure of a type at all, meaning that values of <code>Identity Float</code> are precisely in correspondence with values of <code>Float</code>. So if we let <code>t = Identity</code> in our definition for <code>f</code>, we will have something that is funcionally equivalent to <code>fNaive</code>, except that its type signature is <code>Float -&gt; Identity Float</code> instead of <code>Float -&gt; Float</code>. Its outputs are not <em>exactly</em> <code>Float</code> values, but you can think of them as "wrapped floats".</p>
+
+<p>We can redefine <code>fNaive</code> using <code>f</code> with a minimal amount of extra work: we just need to let Haskell know how our three floating-point operations are defined as kliesli morphisms returning <code>Identity Float</code> values rather than <code>Float</code> values. That is, we need to instance <code>Identity</code> into <code>MonadicFloatOps</code>. This can be done easily as follows:</p>
+
+<div class="code"><pre><code>
+instance MonadicFloatOps Identity where
+    madd = (return .) . (+)
+    msqrt = return . sqrt
+    mrecip = return . (1/)
+</code></pre></div>
+
+<p>Then we can redefine <code>fNaive</code> without making any changes to <code>f</code>, just by telling Haskell that it's a special case of <code>f</code> where <code>t</code> is the <code>Identity</code> functor:</p>
+
+<div class="code"><pre><code>
+fNaive = f :: Float -> Identity Float
+</code></pre></div>
+
+<p>And here are some sample outputs, run in GHCI:</p>
+
+<div class="code"><pre><code>
+ghci> fNaive 0.3
+Identity 3.0209703
+ghci> fNaive 0.5
+Identity 2.828427
+ghci> fNaive 0
+Identity Infinity
+ghci> fNaive 2
+Identity NaN
+</code></pre></div>
+
+<h3>The Maybe monad <a id="toc-section-2" class="toc-section"></a></h3>
+
+<p>We've just seen how this function can return <code>Infinity</code> or <code>NaN</code> in some cases. These outputs can occur when one of the two reciprocals involved in calculating <code>f</code> results in a division by zero, or when one of the square roots is a complex square root. If we wanted to safely and conservatively handle these undefined cases without relying on the dubious conventions of <code>Infinity</code> and <code>NaN</code> established by the IEEE, we could make use of the <code>Maybe</code> monad. This monad is perfect for expressing the results of computations that may fail.</p>
+
+<p>The <code>Maybe</code> functor already has a built-in <code>Monad</code> instance, so we just need to instance it into <code>MonadicFloatOps</code> by defining "safe" versions of our three floating-point operations. We can accomplish this as follows:</p>
+
+<div class="code"><pre><code>
+instance MonadicFloatOps Maybe where
+    madd = (return .) . (+)
+    msqrt x
+        | x >= 0 = Just (sqrt x)
+        | otherwise = Nothing
+    mrecip x
+        | x == 0 = Nothing
+        | otherwise = Just (1 / x)
+</code></pre></div>
+
+<p>Note that for the <code>madd</code> addition operation, our definition is the same as before, because <code>madd</code> cannot fail on its own. That is, the sum of two <code>Maybe Float</code> values shouldn't be <code>Nothing</code> unless one of the two arguments is <code>Nothing</code>. For <code>msqrt</code> and <code>mrecip</code>, we need to do a little more work: in the former case, we need to check that the argument is nonnegative, and in the latter case we just need to check that the argument is nonzero.</p>
+
+<p>Again, we can define a <code>Maybe Float</code> variant of the function <code>f</code> just by indicating to Haskell that we want to use <code>t = Maybe</code> as our monad:</p>
+
+<div class="code"><pre><code>
+fMaybe = f :: Float -> Maybe Float
+</code></pre></div>
+
+<p>And here are the same test cases:</p>
+
+<div class="code"><pre><code>
+ghci> fMaybe 0.3
+Just 3.0209703
+ghci> fMaybe 0.5
+Just 2.828427
+ghci> fMaybe 0
+Nothing
+ghci> fMaybe 2
+Nothing
+</code></pre></div>
+
+<h3>The Either monads <a id="toc-section-2" class="toc-section"></a></h3>
+
+<p>Next suppose that we still want to write a safe version of <code>f</code>, but that this time we want to be a bit more descriptive about <em>what exactly went wrong</em> when the function returns nothing. As we've commented already, there are two potential problems: complex square roots, and division by zero. But when <code>fMaybe</code> returns <code>Nothing</code>, it provides no information about which of these two things happened.</p>
+
+<p>So let's define a custom data type that expresses these two possible types of error:</p>
+
+<div class="code"><pre><code>
+data MyFloatError = ImaginarySqrtError | ZeroDivisionError deriving (Eq, Show)
+</code></pre></div>
+
+<p>The return value of our newest variant of <code>f</code> will return <em>either</em> one of these two errors <em>or</em> an actual floating-point number. Enter the <code>Either</code> monad. Or, to be more precise, the <code>Either</code> <em>monads</em> - for any type <code>a</code>, there is a monad corresponding to the functor <code>Either a b</code>. In our case, we will be using <code>Either MyFloatError</code> as our monad <code>t</code>. Before we do so, we need to instance the functor <code>Either MyFloatError</code> into our interface <code>MonadicFloatOps</code>:</p>
+
+<div class="code"><pre><code>
+instance MonadicFloatOps (Either MyFloatError) where
+    madd = (return .) . (+)
+    msqrt x
+        | x >= 0 = Right (sqrt x)
+        | otherwise = Left ImaginarySqrtError
+    mrecip x
+        | x == 0 = Left ZeroDivisionError
+        | otherwise = Right (1 / x)
+</code></pre></div>
+
+<p>Again, <code>madd</code> is trivial to implement, since addition cannot fail on its own. But this time, <code>msqrt</code> returns an <code>ImaginarySqrtError</code> when it fails, whereas <code>mrecip</code> returns an <code>ZeroDivisionError</code> when it fails. This way, when <code>f</code> fails, we avoid erasing the information about <em>how</em> it failed.</p>
+
+<p>As before, we can define <code>fEither</code>, our newest variant of <code>f</code>, like this:</p>
+
+<div class="code"><pre><code>
+fEither = f :: Float -> Either MyFloatError Float
+</code></pre></div>
+
+<p>and here are some test values:</p>
+
+<div class="code"><pre><code>
+ghci> fEither 0.3
+Right 3.0209703
+ghci> fEither 0.5
+Right 2.828427
+ghci> fEither 0
+Left ZeroDivisionError
+ghci> fEither 2
+Left ImaginarySqrtError
+</code></pre></div>
+
+<h3>The List monad <a id="toc-section-3" class="toc-section"></a></h3>
+
+<p>We've already seen how the square-root is an operation that can fail, but it is also sometimes described mathematically as a <em>multivalued function</em>, or a function that can return multiple possible values. This is because every positive real number has <em>two different square roots</em>, in particular a positive square root and a negative square root. Often we only want the positive square root of a number, but occasionally we are interested in both cases. </p>
+
+<p>By making use of the list monad <code>[]</code>, we can express the fact that a mathematical calculation has multiple different possible results depending on which branches are used for each multivalued expression involved. Our newest variant of the function <code>f</code> will therefore have the type signature <code>Float -&gt; [Float]</code>, and its output will list all of the possible values of this expression: <script type="math/tex; mode=display">\pm\frac{1}{\sqrt{x}} \pm \frac{1}{\sqrt{1-x}}</script> depending on which signs are chosen for each term, for a maximum of $4$ different possible values. As before, we just need to instance the list monad into <code>MonadicFloatOps</code>, since its monad instance is built-in. Here are the definitions of the three operations:</p>
+
+<div class="code"><pre><code>
+instance MonadicFloatOps [] where
+    madd = (return .) . (+)
+    msqrt x
+        | x > 0 = [sqrt x, -sqrt x]
+        | x == 0 = [0]
+        | otherwise = []
+    mrecip x
+        | x == 0 = []
+        | otherwise = [1 / x]
+</code></pre></div>
+
+<p>Again, nothing special happens for the <code>madd</code> operation. The <code>mrecip</code> implementation is also pretty plain, but notice that we return an empty list <code>[]</code> when dividing by zero, so that we are still expressing the case in which <code>f</code> fails, as we did with the <code>Maybe</code> monad, except that the "failure" result is an empty list rather than <code>Nothing</code>. For <code>msqrt</code>, there can be zero, one or two distinct results, since there are no square roots of a negative number, there is one square root of zero, and there are two square roots of any positive number.</p>
+
+<p>Here's the definition of <code>fList</code>:</p>
+
+<div class="code"><pre><code>
+fList = f :: Float -> [Float]
+</code></pre></div>
+
+<p>And here are our test outputs:</p>
+
+<div class="code"><pre><code>
+ghci> fList 0.3
+[3.0209703,0.6305132,-0.6305132,-3.0209703]
+ghci> fList 0.5
+[2.828427,0.0,0.0,-2.828427]
+ghci> fList 0
+[]
+ghci> fList 2
+[]
+</code></pre></div>
+
+<p>One peculiarity of our implementation is the duplicate value <code>0.0</code> that can be seen in the result of <code>fList 0.5</code>. Can you see why this happens?</p>
+
+<h3>The Reader monads <a id="toc-section-4" class="toc-section"></a></h3>
+
+<p>We've just discussed how the square-root function is sometimes viewed as a multi-valued function. If, instead of expressing all possible values of the function <code>f</code>, we only want to express one or the other depending on a choice of whether to use positive or negative square roots, we can make use of the <code>Reader</code> monad. This monad allows us to express values that depend on some shared environment, in a <em>read-only</em> capacity. This monad is often used in software as a way of making many environment variables available to a function without stacking up a bunch of input arguments.</p>
+
+<p>In a more complicated piece of software, we might use the monad <code>Reader env</code> to pass around environment variables, where <code>env</code> is some user-defined data type, usually a record type with a field corresponding to each environment variable. But for this simple contrived example our environment only consists of a single bit of information, namely the answer to the question "do we want to use positive square roots, or negative square roots?" So we will use the <code>Reader Bool</code> monad.</p>
+
+<div class="code"><pre><code>
+instance MonadicFloatOps (Reader Bool) where
+    madd = (return .) . (+)
+    msqrt x = do
+        pos <- ask
+        let sx = sqrt x
+        return $ if pos then sx else -sx
+    mrecip x = return (1 / x)
+</code></pre></div>
+
+<p>The implementations of <code>madd</code> and <code>mrecip</code> are straightforward. Notice that unlike in the previous examples, we are not implementing any protections on the unsafe square-root and reciprocal operations. The only nontrivial bit of this instance is where we query the shared environment in the <code>msqrt</code> implementation and return either <code>sqrt x</code> or <code>-sqrt x</code> depending on the configuration variable.</p>
+
+<p>Now we can define <code>fReader</code> like this:</p>
+
+<div class="code"><pre><code>
+fReader = f :: Float -> Reader Bool Float
+</code></pre></div>
+
+<p>Here are some sample outputs. Keep in mind that when <code>x</code> is a <code>Float</code>, the expression <code>fReader x</code> evaluates not to a floating point number but to a <code>Reader Bool Float</code> object, which cannot be evaluated to a <code>Float</code> until is receives an environment of type <code>Bool</code>. The function <code>runReader</code> is used to give it this argument.</p>
+
+<div class="code"><pre><code>
+ghci> runReader (fReader 0.3) True
+3.0209703
+ghci> runReader (fReader 0.3) False
+-3.0209703
+ghci> runReader (fReader 0.5) True
+2.828427
+ghci> runReader (fReader 0.5) False
+-2.828427
+ghci> runReader (fReader 0) True
+Infinity
+ghci> runReader (fReader 2) True
+NaN
+</code></pre></div>
+
+<h3>The IO monad <a id="toc-section-5" class="toc-section"></a></h3>
+
+<p>Now let's do something quite different. Suppose that, instead of being more interested in the <em>safety</em> of our function <code>f</code>, we are interested in its <em>speed</em>. To that end, suppose that we've written an optimized implementation of some mathematical function in another language like C, and would like to hook it up with our Haskell function to improve its performance. Or this could merely be for the sake of convenience, for instance if we already have an implementation of some mathematical function written in C and don't want to implement it all over again in Haskell, but we need it as a subcalculation for one of our Haskell functions. </p>
+
+<p>In this case, I'll show how we can use an external implementation of the square-root function. To do this, we will need to let <code>t = IO</code>, since running an external executable file will require our Haskell program to carry out some I/O. Here's some C code that reads a floating-point number from its first argument and writes the approximate square root of this number to <code>stdout</code> using an iterative method:</p>
+
+<div class="code"><pre><code>
+#import &lt;stdio.h&gt;
+
+double iterative_sqrt(double x, double est, double tol) {
+    double est_prev = 0;
+    double delta = est;
+    while (delta > tol || delta < -tol) {
+        est_prev = est;
+        est = (est + x/est)/2;
+        delta = est - est_prev;
+    }
+    return est;
+}
+
+int main(int argc, char** argv) {
+    float x = 0;
+    sscanf(argv[1], "%f", &x);
+    printf("%.15f\n\n", iterative_sqrt(x, 1.0, 1e-15));
+}
+</code></pre></div>
+
+<p>I make no claims that this is any faster than Haskell's built-in square-root function, and in fact it probably isn't. But this is only for illustrative purposes anyways, and it is no stretch of the imagination to think that for certain applications one might want to use an optimized C subroutine for some obscure mathematical calculation that is used in a Haskell function.</p>
+
+<p>I've compiled this C code to an executable file <code>sqrt.o</code>. Here's how we can instance <code>IO</code> into <code>MonadicFloatOps</code> in such a way that <code>msqrt</code> delegates square-root calculations to this external executable:</p>
+
+<div class="code"><pre><code>
+instance MonadicFloatOps IO where
+    madd = (return .) . (+)
+    msqrt x = do
+        (_, Just hout, _, ph) 
+            <- createProcess (proc "./sqrt.o" [show x]) { std_out = CreatePipe }
+        sqrtString <- hGetLine hout
+        return (read sqrtString)
+    mrecip x = return (1 / x)
+</code></pre></div>
+
+<p>From here, the definition of our new variant of <code>f</code> is easy:</p>
+
+<div class="code"><pre><code>
+fIO = f :: Float -> IO Float
+</code></pre></div>
+
+<p>and here are some test outputs:</p>
+
+<div class="code"><pre><code>
+ghci> fIO 0.3
+3.0209703
+ghci> fIO 0.5
+2.828427
+ghci> fIO 0
+1.0e15
+ghci> fIO 2
+*** Exception: Prelude.read: no parse
+</code></pre></div>
+
+<p>Note that in this version we made no attempts to ensure the safety of <code>f</code>, so that in the cases where <code>f</code> is not defined, the output values of <code>fIO</code> can be messy.</p>
+
+<h3>The Writer monads <a id="toc-section-6" class="toc-section"></a></h3>
+
+<p>Another interesting piece of functionality that we might want to inject into <code>f</code> is <em>operation counting</em>. We might want to do this if we were carrying out a theoretical analysis of some computational algorithm and wanted to keep track of how many floating-point operations a certain subroutine carried out for each test case. This seems a little silly for the function <code>f</code>, because we can count these operations easily just by looking at <code>f</code>. But this could become very useful if <code>f</code> were a more complex function, especially one defined recursively, or if <code>f</code> were being called multiple times as part of some other function.</p>
+
+<p>We can accomplish this using the <code>Writer</code> family of monad.s Like the <code>Reader</code> monad, it is also used to represent computations with a shared environment, but it can be contrasted with <code>Reader</code> in that the <code>Writer</code> monads provide a <em>write-only</em> environment. That means that the environment cannot affect the computation but it "accumulates" information drawn from the computation as it runs. This is ideal for operation counting, because the running operation count should be continually updated but should not affect the result of the function evaluation. Another practical use-case of the <code>Writer</code> monad might be to implement logging of some sort, say, appending a message to some log string each time a certain kind of function is called.</p>
+
+<p>We will be using the <code>Writer Int</code> monad to implement operation counting for <code>f</code>, since our running operation count will have a type of <code>Int</code>. Unlike in previous examples, we cannot immediately instance <code>Writer Int</code> into <code>MonadicFloatOps</code> because it is not automatically an instance of <code>Monad</code> - in order to use the built-in monad instance for <code>Writer a</code>, the type <code>a</code> must be instanced into <code>Monoid</code>. This is because the writer needs to be told "how to accumulate" values of type <code>a</code>. In our case, simple addition will do. If we were implementing something like logging, our monoid operation might be string concatenation.</p>
+
+<p>Here's our monoid instance for <code>Int</code>:</p>
+
+<div class="code"><pre><code>
+instance Semigroup Int where
+    (<>) = (+)
+
+instance Monoid Int where
+    mempty = 0
+</code></pre></div>
+
+<p>and here is our instance of <code>Writer Int</code> into <code>MonadicFloatOps</code>:</p>
+
+<div class="code"><pre><code>
+instance MonadicFloatOps (Writer Int) where
+    madd x y = tell 1 >> return (x + y)
+    msqrt x = tell 1 >> return (sqrt x)
+    mrecip x = tell 1 >> return (1 / x)
+</code></pre></div>
+
+<p>Finally, here are our test cases. Again, the unsafe examples fail with the default behavior for <code>Float</code> because we haven't checked for any of the unsafe inputs to <code>msqrt</code> or <code>mrecip</code>. The variant <code>fWriter</code> can be written with nothing more than a type hint:</p>
+
+<div class="code"><pre><code>
+fWriter = f :: Float -> Writer Int Float
+</code></pre></div>
+
+<p>and here are our test cases:</p>
+
+<div class="code"><pre><code>
+ghci> runWriter (fWriter 0.3)
+(3.0209703,6)
+ghci> runWriter (fWriter 0.5)
+(2.828427,6)
+ghci> runWriter (fWriter 0)
+(Infinity,6)
+ghci> runWriter (fWriter 2)
+(NaN,6)
+</code></pre></div>
+
+<p>Of course, the operation counts are all equal to <code>6</code>, because the function <code>f</code> is evaluated the same way for each of these calls. I think that the <em>real</em> power of this monad is better illustrated in a use-case where the function <code>f</code> is used as a subroutine to some <em>other</em> function. For instance, suppose that we want to approximate the following definite integral of $f$ using left Riemann sums: <script type="math/tex; mode=display">\int_a^b f(x) ~ dx</script> We can use our <code>MonadicFloatOps</code> instance for <code>Writer Int</code> to <em>seamlessly</em> integrate an operation count into our Riemann sum routine. Here's a quick implementation of left Riemann sums approximating this integral, where <code>a,b</code> are the endpoints of the interval and <code>n</code> is the number of rectangles:</p>
+
+<div class="code"><pre><code>
+analyzeRiemannSum :: MonadicFloatOps m => Float -> Float -> Int -> m Float
+analyzeRiemannSum a b n = do
+    let nf = fromIntegral n
+    let step = (b - a)/nf
+    let xs = [a + k*step | k <- [0..nf-1] ]
+    ys <- sequence $ map f xs
+    foldM madd 0 (map (step *) ys)
+</code></pre></div>
+
+<p>Yes, okay, admittedly I cheated because I'm not counting the floating point multiplications using <code>(*)</code> towards the operation count. If we wanted to include these in the operation count, we would just need to add a function called <code>mmultiply</code> to our <code>MonadicFloatOps</code> interface. But I won't do that here.</p>
+
+<p>Anyhow, here are some test cases with $[a,b] = [0.1,0.9]$:</p>
+
+<div class="code"><pre><code>
+ghci> runWriter (analyzeRiemannSum 0.1 0.9 20)
+(2.5338423,140)
+ghci> runWriter (analyzeRiemannSum 0.1 0.9 100)
+(2.529984,700)
+</code></pre></div>
+
+<p>Note that our <code>analyzeRiemannSum</code> function isn't specific to the <code>Writer Int</code> monad, but rather works for any <code>MonadicFloatOps</code> instance. More on this in just a second.</p>
+
+<h3>The State monads <a id="toc-section-7" class="toc-section"></a></h3>
+
+<p>For one final example, I'll show how a <code>State</code> monad can be used to implement not only operation counting for the function <code>f</code>, but also <a href="https://en.wikipedia.org/wiki/Memoization">memoization</a> for some operations involved in its calculation, in particular the square-root operation. It's a little silly to use memoization here, since we aren't doing particularly expensive computations. But this is all for illustrative purposes anyways.</p>
+
+<p>The <code>State</code> monads are ideal here because different parts of the computation must interact with a shared state, but neither a <code>Reader</code> nor a <code>Writer</code> is sufficient. Computations must have the ability to <em>read from</em> the shared state in order to find pre-computed values in a memo and avoid re-computing them. They also need the ability to <em>write to</em> the shared state in order to add new values to the memo that haven't been computed before. Since we need both reading and writing capabilities in this use-case, a <code>State</code> monad is needed here.</p>
+
+<p>Here's a custom data type that we can use to hold both a memo of square-root values and an operation count:</p>
+
+<div class="code"><pre><code>
+data FloatOpsMemo = FloatOpsMemo {
+    numOps :: Int,
+    sqrtMemo :: [(Float, Float)]
+} deriving (Eq, Show)
+</code></pre></div>
+
+<p>And here's an implementation of <code>MonadicFloatOps</code> for the state monad <code>State FloatOpsMemo</code>:</p>
+
+<div class="code"><pre><code>
+instance MonadicFloatOps (State FloatOpsMemo) where
+    madd x y = modify (\s -> s { numOps = 1 + numOps s }) >> return (x + y)
+    msqrt x = do
+        memo <- fmap sqrtMemo get
+        let lookupRes = lookup x memo
+        case lookupRes of
+            Nothing ->
+                modify (\s -> s { numOps = 1 + numOps s, sqrtMemo = (x,sqx):(sqrtMemo s) })
+                >> return sqx
+                where sqx = sqrt x
+            (Just sqx) -> return sqx
+    mrecip x = modify (\s -> s { numOps = 1 + numOps s }) >> return (1 / x)
+</code></pre></div>
+
+<p>Admittedly there is a bit more boilerplate involved in incrementing the operation counts for <code>madd</code> and <code>mrecip</code> because we need to unpack the operation count component of our <code>FloatOpsMemo</code> state. The memo implementation for <code>msqrt</code>, which checks whether a square-root value is present in the memo before proceeding to calculate it, is also a bit verbose, but in a larger program the memo functionality would probably be abstracted out into a helper functino written elsewhere, rather than implemented by hand. Note that we are only incrementing the operation count for <code>msqrt</code> when the memo lookup <em>misses</em>. </p>
+
+<p>The definition of <code>fMemo</code>, the memoized version of <code>f</code>, is:</p>
+
+<div class="code"><pre><code>
+fMemo = f :: Float -> State FloatOpsMemo Float
+</code></pre></div>
+
+<p>And here are the test cases:</p>
+
+<div class="code"><pre><code>
+ghci> runState (fMemo 0.3) (FloatOpsMemo { numOps = 0, sqrtMemo = [] })
+(3.0209703,FloatOpsMemo {numOps = 6, sqrtMemo = [(0.7,0.83666),(0.3,0.5477226)]})
+ghci> runState (fMemo 0.5) (FloatOpsMemo { numOps = 0, sqrtMemo = [] })
+(2.828427,FloatOpsMemo {numOps = 5, sqrtMemo = [(0.5,0.70710677)]})
+ghci> runState (fMemo 0) (FloatOpsMemo { numOps = 0, sqrtMemo = [] })
+(Infinity,FloatOpsMemo {numOps = 6, sqrtMemo = [(1.0,1.0),(0.0,0.0)]})
+ghci> runState (fMemo 2) (FloatOpsMemo { numOps = 0, sqrtMemo = [] })
+(NaN,FloatOpsMemo {numOps = 6, sqrtMemo = [(-1.0,NaN),(2.0,1.4142135)]})
+</code></pre></div>
+
+<p>An interesting consequence of this implementation is that the final state of each run tells us <em>exactly</em> which square-roots have been calculated over its course. Another interesting thing to note that differs from our experience with the <code>Writer</code> operation counter is that <code>numOps</code> is only <code>5</code> for the case of <code>fMemo 0.5</code>. Can you see why this is?</p>
+
+<p>Remember our <code>analyzeRiemannSum</code> function, and how it was defined for <em>any</em> <code>MonadicFloatOps</code> instance? Well guess what - we can use it for <code>State FloatOpsMemo</code> too. This will compute left Riemann sums for <code>f</code> memoizing <em>all square roots</em> over the course of the entire calculation. Here are two examples:</p>
+
+<div class="code"><pre><code>
+ghci> runState (analyzeRiemannSum 0.1 0.9 20) (FloatOpsMemo { numOps = 0, sqrtMemo = [] })
+(2.5338423,FloatOpsMemo {numOps = 131, sqrtMemo = [(0.13999999,0.3741657),...]})
+ghci> runState (analyzeRiemannSum 0.1 0.9 100) (FloatOpsMemo { numOps = 0, sqrtMemo = [] })
+(2.529984,FloatOpsMemo {numOps = 674, sqrtMemo = [(0.10800004,0.3286336),...]})
+</code></pre></div>
+
+<p>There are a lot of values in these memos, so I've truncated them. But notice how the operation counts are a bit lower for these runs. This is because of the memoization we've implemented for <code>msqrt</code>. Not that I'm claiming this leads to any real performance gains in <em>this</em> case - but one can see how it would be handy to be able to incorporate memoization this seamlessly into a computational problem that could benefit from it a lot more.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

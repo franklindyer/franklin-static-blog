@@ -1,0 +1,74 @@
+<html>
+<head>
+    <title>Distance from a Point to a Line</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Distance from a Point to a Line</h2>
+
+<p><em>2016 Dec 1</em></p>
+
+<blockquote>
+<p>Derive a formula for the distance from a point to a line in the cartesian coordinate plane.</p>
+</blockquote>
+
+<p>The distance from any point to a line is defined as the shortest distance between that point and any point on the line. The line segment connecting a point to its closest point on a line is always perpendicular to the line. Let the line be the line $y=mx+b$ with angle of elevation with the x-axis $\theta$ and the point be the point $A(x_0,y_0)$. Let $\overline{AB}$ be the perpendicular line segment from $A$ to $y=mx+b$, so that the distance $d$ is equal to the length of $\overline{AB}$. Let us also drop a vertical line segment $\overline{AC}$ from $A$ to $C$, the point on $y=mx+b$ directly above or below it. Finally, construct a line parallel to the x-axis through the point $C$. Now we have something that looks like this:</p>
+
+<p><center><img src="/img/2016-12-1-Fig1.png" alt="Fig 1" /></center></p>
+
+<p>Now we can see that we have constructed a right triangle. Note that the angle that $y=mx+b$ makes with the horizontal line through $C$ is also $\theta$, since the horizontal line through $C$ is parallel to the x-axis and the line $y-mx+b$ acts as a transversal. Then, since $\overline{AC}$ is perpendicular to the horizontal line through $C$, $\angle{ACB}=90^{\circ}-\theta$. Since $\theta=tan^{-1}(m)$, </p>
+
+<p>
+<script type="math/tex; mode=display">\angle{ACB}=90^{\circ}-tan^{-1}(m)=tan^{-1}(\frac{1}{m})</script>
+</p>
+
+<p>Also, since the ordinate of $A$ is $y_0$ and the ordinate of $C$ is $mx_0+b$,</p>
+
+<p>
+<script type="math/tex; mode=display">\overline{AC}=\mid y_0-mx_0-b\mid</script>
+</p>
+
+<p>This is all we need to calculate $d$ using right triangle trigonometry:</p>
+
+<p>
+<script type="math/tex; mode=display">sin(\angle{ACB})=\frac{d}{\mid y_0-mx_0-b\mid}</script>
+<script type="math/tex; mode=display">sin(tan^{-1}(\frac{1}{m}))=\frac{d}{\mid y_0-mx_0-b\mid}</script>
+<script type="math/tex; mode=display">\frac{1}{\sqrt{m^2+1}}=\frac{d}{\mid y_0-mx_0-b\mid}</script>
+<script type="math/tex; mode=display">d=\frac{\mid y_0-mx_0-b\mid}{\sqrt{m^{2}+1}}</script>
+</p>
+
+<p>Which gives us the distance between the point and the line.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

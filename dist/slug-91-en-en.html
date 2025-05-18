@@ -1,0 +1,139 @@
+<html>
+<head>
+    <title>Digit Sums</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Digit Sums</h2>
+
+<p><em>2017 May 13</em></p>
+
+<blockquote>
+<p>Find a formula for the sum of an integer's digits in base $k$.
+Prove that if a number is divisible by $3$, then the sum of its digits is as well. </p>
+</blockquote>
+
+<p>The topic of functions not defined algebraically never disappoint when it comes to mathematical recreation. I recently decided to define the function $\sigma_k(x)$ as the function whose output is the sum of the digits of $x$ represented in base $k$ (where $k \ge 1$). Of course, both $x$ and $k$ should be integers in order for this function to be defined. Some examples are
+<script type="math/tex; mode=display">\sigma_10(1023)=6</script>
+<script type="math/tex; mode=display">\sigma_2(64)=1</script>
+<script type="math/tex; mode=display">\sigma_7(646)=10</script>
+</p>
+
+<p>First of all, let me establish that the representation of $x$ in base $k$ (denoted $x_k$) can be expressed as
+<script type="math/tex; mode=display">c_0k^0+c_1k^1+...+c_{\eta-1}k^{\eta-1}</script>
+where $\eta$ is the number of digits in the $x_k$, and each $c_i \le k-1$. Then we can express $\sigma_k(x)$ as
+<script type="math/tex; mode=display">\sigma_k(x)=c_0+c_1+...+c_{\eta-1}</script>
+First, let us try to express the relationship between $\sigma_k(x)$ and $\sigma_k(x+1)$, as this relationship is often meaningful when dealing with unknown functions. First of all, if $c_0 \lt k-1$, then $(x+1)<em>k$ is
+<script type="math/tex; mode=display">(c_0+1)k^0+c_1k^1+...+c_{\eta-1}k^{\eta-1}</script>
+and $\sigma_k(x+1)$ is
+<script type="math/tex; mode=display">\sigma_k(x+1)=c_0+1+c_1+...+c_{\eta-1}</script>
+<script type="math/tex; mode=display">\sigma_k(x+1)=\sigma_k(x)+1</script>
+However, this is only when $c_0 \lt k-1$. It gets messier when $c_0 = k-1$. When that is so, then we can't represent $x$ as
+<script type="math/tex; mode=display">(c_0+1)k^0+c_1k^1+...+c_{\eta-1}k^{\eta-1}</script>
+Because then the first coefficient would be $k$. This isn't as bad as it looks; it basically just boils down to carrying, since $k*k^0=k^1$. If $c_1 \lt k-1$, then $(x+1)_k$ is
+<script type="math/tex; mode=display">(c_1+1)k^1+c_2k^2+...+c_{\eta-1}k^{\eta-1}</script>
+If not, then we carry again, and if $c_2 \lt k-1$, then it is
+<script type="math/tex; mode=display">(c_2+1)k^2+c_3k^3+...+c_{\eta-1}k^{\eta-1}</script>
+And so on. So let $t$ be the smallest number for which $c_t \lt k-1$. Then $(x+1)k$ is
+<script type="math/tex; mode=display">(c_t+1)k^t+c_{t+1}k^{t+1}+...+c_{\eta-1}k^{\eta-1}</script>
+and so
+<script type="math/tex; mode=display">\sigma_k(x+1)=c_t+1+c_{t+1}+...+c_{\eta-1}</script>
+<script type="math/tex; mode=display">\sigma_k(x+1)=\sigma_k(x)-(c_0+...+c_{t-1})+1</script>
+and since each of $c_0+...+c</em>{t-1}$ was equal to $k-1$, we can substitute to get
+<script type="math/tex; mode=display">\sigma_k(x+1)=\sigma_k(x)-t(k-1)+1</script>
+The largest loss that can occur is when all $c_i$ from $i=0$ to $\eta-1$ are equal to $k-1$. In this case, 
+<script type="math/tex; mode=display">\sigma_k(x+1)=\sigma_k(x)-\eta(k-1)+1</script>
+Now it would be useful for us to find a formula for $\eta$ in terms of $x$. I'm going to get a little bit sidetracked now to do that.</p>
+
+<p>Notice that the smallest number with $\eta$ digits in base $k$ is $k^{\eta-1}$ and the largest is $k^\eta-1$. Any number with $\eta$ digits will be between these two numbers. Any positive integer $x$ can be represented as $k^{\log_k(x)}$, so if $x$ has $\eta$ digits, then 
+<script type="math/tex; mode=display">\eta-1 \le \log_k(x) \lt \eta</script>
+and
+<script type="math/tex; mode=display">\eta \le \log_k(x)+1 \lt \eta+1</script>
+Now we see that if we let $\eta=\lfloor \log_k(x) \rfloor +1$, then this will be fulfilled, and $\eta$ will always be an integer, which works for our purposes. Thus we will define  the digit function $\eta_k(x)$ as
+<script type="math/tex; mode=display">\eta_k(x)=\lfloor \log_k(x) \rfloor +1</script>
+Great! Now, when we substitute this into our formula for the largest loss of $\sigma_k$, we get
+<script type="math/tex; mode=display">\sigma_k(x+1)=\sigma_k(x)-(\lfloor \log_k(x) \rfloor+1)(k-1)+1</script>
+<script type="math/tex; mode=display">\sigma_k(x+1)=\sigma_k(x)-\lfloor \log_k(x) \rfloor(k-1)+k</script>
+</p>
+
+<p>Now we can finally set up an inequality bounding $\sigma_k(x+1)$ in terms of $\sigma_k(x)$. The greatest value that can result from increasing $x$ by $1$ is $\sigma_k(x)+1$ and the smallest is $\sigma_k(x)-\lfloor \log_k(x) \rfloor(k-1)+k$, so
+<script type="math/tex; mode=display">\sigma_k(x)-\lfloor \log_k(x) \rfloor(k-1)+k \le \sigma_k(x+1) \le \sigma_k(x)+1</script>
+And we have thus bounded the change in $\sigma_k(x+1)$ when $x$ increases by $1$.</p>
+
+<p>But we can do better than that! Let's find an exact formula for $\sigma_k(x)$. If we're going to find the formula for the sum of the digits of $x$, we should probably first find the formula for the <em>d</em>th digit in base $k$. Before doing this, though, I should first establish something about arithmetic in base $k$.</p>
+
+<p>In base $10$, the base which we know and love, when we multiply a number by $10$, each digit "shifts" up one place value, and when we divide, it shifts back. This is no coincidence. In fact, if we write any number in base $k$ and multiply or divide by $k$, this same shift occurs. Now suppose we want to obtain the <em>d</em>th digit of a number. Can we not simply shift it "down" $d$ place values, remove the integer part of the number that we then have, shift it back so that our digit is then in the ones place, and then lop of the fractional part of the number? This process can be put into symbolic language with the expression
+<script type="math/tex; mode=display">\lfloor k\{\frac{x}{k^d}\} \rfloor</script>
+</p>
+
+<p>Where ${}$ denotes the "sawtooth" function that gives the fractional part of a number (it is defined as ${a}=a-\lfloor a \rfloor$). Since this gives us the <em>d</em>th digit, then the sum of all of the digits is
+<script type="math/tex; mode=display">\sigma_k(x)=\sum_{d=0}^{\lfloor \log_k(x) \rfloor +1} \lfloor k\{\frac{x}{k^d}\} \rfloor</script>
+which is equivalent to
+<script type="math/tex; mode=display">\sigma_k(x)=\sum_{d=0}^{\lfloor \log_k(x) \rfloor +1} \frac{1}{k^{d-1}}(x\mod k^d-x\mod k^{d-1})</script>
+</p>
+
+<p>The second can sometimes be easier to evaluate by hand using modular arithmetic, especially when very large numbers are involved.</p>
+
+<p>This formula isn't really ever going to be useful, but the concept of this "digit sum" function can be very useful in proofs because it provides a method of symbolically representing something that would normally have to be described verbally. To demonstrate this, I'm going to use it to prove the well known "digit sum" test for divisibility by $3$.</p>
+
+<p>Since the statement
+<script type="math/tex; mode=display">3|\sigma_{10}(3x)</script>
+is true for $x=1$, and its truth for $x$ implies its truth for $x+1$, it is true for all positive integral $x$. Its truth for $x=1$ is easy to verify, so I shall jump right into proving that its truth for $x$ implies its truth for $x+1$. Let $y=3x$, so that we need to verify instead that its truth for $y$ implies its truth for $y+3$. Recall that $y$ can be represented in base $k$ by
+<script type="math/tex; mode=display">y=c_0k^0+c_1k^1+...+c_{\eta-1}k^{\eta-1}</script>
+</p>
+
+<p>There are four cases in which I must verify this truth: when $c_0 \lt 7$, and when $c_0 \ge 7$. In the first case, no carrying is required, but in the second, I will have to carry.</p>
+
+<p>Case 1: When $c_0 \lt 7$, then $y+3$ can be represented as
+<script type="math/tex; mode=display">y+3=(c_0+3)10^0+c_110^1+...+c_{\eta-1}10^{\eta-1}</script>
+Meaning that
+<script type="math/tex; mode=display">\sigma_{10}(y+3)=c_0+...+c_{\eta-1}+3</script>
+<script type="math/tex; mode=display">\sigma_{10}(y+3)=\sigma_10(y)+3</script>
+Which, of course, maintains divisibility by $3$.</p>
+
+<p>Case 2: When $c_0 \ge 7$, I have to carry when adding $3$. No longer can I represent $y+3$ with
+<script type="math/tex; mode=display">y+3=(c_0+3)10^0+c_110^1+...+c_{\eta-1}10^{\eta-1}</script>
+because then the first digit of $y+3$ would be greater than $9$. Instead, using carrying, the first digit of $y+3$ should be $c_0-7$, and we carry a $1$ to the next digit. But now we are faced with a new problem - what if the next digit is a $9$? Then we will have to change it to $0$ and carry again. But then what if the <em>next</em> digit is a $9$? This could go on any number of times, but we can solve this by letting $t$ be the smallest integer for which $c_t \ne 9$. Then $y+3$ is
+<script type="math/tex; mode=display">y+3=(c_0-7)10^0+(c_t+1)10^t+...+c_{\eta-1}10^{\eta-1}</script>
+and
+<script type="math/tex; mode=display">\sigma_{10}(y+3)=c_0-7+c_t+1+...+c_{\eta-1}</script>
+<script type="math/tex; mode=display">\sigma_{10}(y+3)=\sigma(y)-(c_1+...+c_{t-1})-7+1</script>
+<script type="math/tex; mode=display">\sigma_{10}(y+3)=\sigma(y)-(c_1+...+c_{t-1})-6</script>
+And since each of $c_1+...+c_{t-1}$ is equal to $9$, we can substitute to get
+<script type="math/tex; mode=display">\sigma_{10}(y+3)=\sigma(y)-9(t-1)-6</script>
+<script type="math/tex; mode=display">\sigma_{10}(y+3)=\sigma(y)-3(3(t-1)+2)</script>
+Which also preserves divisibility by $3$. We have just proven that divisibility rule, and our function notation for the digit sum made it much easier.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>
