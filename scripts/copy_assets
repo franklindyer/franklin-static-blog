@@ -11,6 +11,7 @@ cp ./content/img/*.png ./dist/img/
 cp ./content/img/*.jpg ./dist/img/
 cp ./content/img/*.jpeg ./dist/img/
 cp ./content/img/*.gif ./dist/img/
+cp ./content/img/*.svg ./dist/img/
 
 cp ./content/css/*.css ./dist/css/
 

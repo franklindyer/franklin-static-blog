@@ -26,7 +26,7 @@ def generate_post(entry):
     html_content = MD_PROC.convert(md_content)
     html_content = markdown2.markdown(html_content)
     html_tpl = JENV.get_template("entry.tpl")
-    html_page = html_tpl.render(title=entry["title"], content=html_content)
+    html_page = html_tpl.render(title=entry["title"], content=html_content, conf=INDEX["config"])
 
     new_fname = make_post_filename(entry) 
     f = open(f"./dist/{new_fname}.html", 'w')
@@ -39,7 +39,7 @@ def generate_all_posts():
 
 def generate_homepage():
     html_tpl = JENV.get_template("home.tpl")
-    html_page = html_tpl.render(entries=INDEX["entries"][:5])
+    html_page = html_tpl.render(entries=INDEX["entries"][:5], conf=INDEX["config"])
 
     f = open(f"./dist/index.html", 'w')
     f.write(html_page)
@@ -47,7 +47,7 @@ def generate_homepage():
 
 def generate_post_list():
     html_tpl = JENV.get_template("all.tpl")
-    html_page = html_tpl.render(entries=INDEX["entries"])
+    html_page = html_tpl.render(entries=INDEX["entries"], conf=INDEX["config"])
 
     f = open(f"./dist/all.html", 'w')
     f.write(html_page)

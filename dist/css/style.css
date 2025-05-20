@@ -25,8 +25,8 @@ img {
 }
 
 .thumbnail {
-    height: 50px;
-    width: 50px;
+    height: 40px;
+    width: 40px;
     float: left;
     margin: 5px;
 }
@@ -35,9 +35,9 @@ img {
     overflow: auto;
     font-family: Sans Serif;
     background: #dddddd;
-    border-radius: 3px;
-    drop-shadow: 2px 2px solid black;
-    margin: 5px;
+    border-radius: 4px;
+    box-shadow: 4px 4px gray; 
+    margin: 8px;
     padding: 3px;
 }
 
@@ -45,6 +45,12 @@ img {
     position: relative;
     margin: 6px;
     padding-top: 10px;
+}
+
+img.lang-icon {
+    display: inline-block;
+    float: right;
+    padding: 4px;
 }
 
 .flags-span {

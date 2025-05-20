@@ -1,4 +1,13 @@
 {
+    "config": {
+        "langcolors": {
+            "en": "#dddddd",
+            "es": "#ffddcc",
+            "de": "#eeeebb",
+            "ar": "#ffcccc"
+        }
+    },
+
     "entries": [
         {
             "title": "Variación acotada y el operador de traslado",
