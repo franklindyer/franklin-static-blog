@@ -1,3 +1,5 @@
+<p>You can find my <a href="/pages/franklin_cv.html">CV here</a>.</p>
+
 <details>
     <summary>About me in English</summary>
 
