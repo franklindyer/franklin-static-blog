@@ -1,0 +1,22 @@
+{
+    "config": {
+    },
+
+    "notes": [
+        {
+            "title": "List of simple but counterintuitive math things",
+            "slug": "counterintuitive-math",
+            "file": "counterintuitive-math.md"
+        },
+        {
+            "title": "Pi and the AGM: Exercises 1.1",
+            "slug": "pi-agm-exercises-1-1",
+            "file": "pi-agm-exercises-1-1.md"
+        },
+        {
+            "title": "Pi and the AGM: Exercises 1.2",
+            "slug": "pi-agm-exercises-1-2",
+            "file": "pi-agm-exercises-1-2.md"
+        }
+    ]
+}

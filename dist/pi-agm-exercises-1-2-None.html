@@ -1,0 +1,64 @@
+<html>
+<head>
+    <title>Pi and the AGM: Exercises 1.2</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Pi and the AGM: Exercises 1.2</h2>
+
+<hr>
+
+<p><strong>Exercise 1.</strong></p>
+
+<p><strong>Proof of (1.2.5).</strong> The given functional equation yields the following power series equation: <script type="math/tex; mode=display">\sum_{k=0}^\infty d_{\lfloor k/2\rfloor}x^k = \sum_{k=0}^\infty d_k \bigg(\frac{4x}{(1+x)^2}\bigg)^k</script> We may expand $4x/(1+x)^2$ in each term of the RHS and apply the following power series formula: <script type="math/tex; mode=display">\frac{1}{(1-y)^m} = \sum_{k=0}^\infty \binom{m+k}{k} y^k</script> and reorder the summation to obtain the following formula: <script type="math/tex; mode=display">\sum_{k=0}^\infty d_{\lfloor k/2\rfloor}x^k = \sum_{n=0}^\infty x^n \sum_{k=0}^n d_k 4^{k} \binom{n+k}{n-k}(-1)^{n-k}</script> which yields the following recurrence, by equating coefficients: <script type="math/tex; mode=display">d_{\lfloor n/2\rfloor} = \sum_{k=0}^n d_k 4^{k} \binom{n+k}{n-k}(-1)^{n-k}</script> This can be used to solve for $d_n$ in terms of previous terms of $(d_n)$. But there's no way in hell I'm going to slog through solving this recurrence explicitly - not when the proof of the desired equality given by (1.2.10) is just as valid. Good on Gauss though, I guess.</p>
+
+<p><strong>Proof of (1.2.7).</strong> Recall the following Maclaurin expansion: <script type="math/tex; mode=display">\frac{1}{\sqrt{1-x}} = \sum_{n=0}^\infty \binom{2n}{n}\frac{x^n}{4^n}</script> which yields the following series for the integrand: <script type="math/tex; mode=display">\frac{1}{\sqrt{1-x^2\sin^2\vartheta}} = \sum_{n=0}^\infty \binom{2n}{n}\frac{x^{2n}}{4^n}\cdot \sin^{2n}\vartheta</script> Thus, exchanging sum and integral, we get the following: <script type="math/tex; mode=display">K(x) = \sum_{n=0}^\infty \binom{2n}{n}\frac{x^{2n}}{4^n}\cdot \int_0^{\pi/2}\sin^{2n}(x) ~ dx</script> Note that regardless of the value of $x\in [-1,1]$, the integrand of the integral in each term of the sum is strictly positive everywhere on the interval of integration. This fact allows us to justify the exchange of summation and integral without any problems. Finally, the integral in term $n$ can be integrated as follows, either using integration by parts to establish a recurrence, or by using the Beta function: <script type="math/tex; mode=display">\int_{0}^{\pi/2}\sin^{2n}(x) ~ dx = \frac{\pi}{2^{2n+1}}\binom{2n}{n}</script> Hence: <script type="math/tex; mode=display">K(x) = \frac{\pi}{2}\sum_{n=0}^\infty \binom{2n}{n}^2\frac{x^{2n}}{4^{2n}}</script> which is equivalent to the desired expansion.</p>
+
+<p><strong>Proof of (1.2.10).</strong> Let's perform the suggested substitution $u= \tfrac{1}{2}(t-ab/t)$ in the integral. Note that as $t$ ranges over $\mathbb R$, $u$ ranges over $\mathbb R$ twice, so for this integral, we have <script type="math/tex; mode=display">\int_\mathbb R f(u(t)) dt = 2\int_\mathbb R f(u) du</script> Now let's work on rearranging the integrand. Note that with this substitution, we have that <script type="math/tex; mode=display">du = \frac{1}{2}\Big(1 + \frac{ab}{t^2}\Big)dt</script> and hence <script type="math/tex; mode=display">\begin{align*}\tfrac{\pi}{2}T(a,b) &= \int_\mathbb R \frac{dt}{\sqrt{(a^2+t^2)(b^2+t^2)}} \\ &= \int_\mathbb R \frac{1}{\sqrt{t^2 + (a^2 + b^2) + \frac{a^2 b^2}{t^2}}}\frac{dt}{t} \\ &= \int_\mathbb R \frac{1}{\sqrt{t^2 + (a^2 + b^2) + \frac{a^2 b^2}{t^2}}} \cdot \frac{2}{t + \frac{ab}{t}} \cdot\frac{du}{dt} dt \\ &= \int_\mathbb R \frac{1}{\sqrt{t^2 + (a^2 + b^2) + \frac{a^2 b^2}{t^2}}} \cdot \frac{2}{\sqrt{t^2 + 2ab + \frac{a^2b^2}{t^2}}} \cdot\frac{du}{dt} dt \\ &= \int_\mathbb R \frac{2}{\sqrt{(4u^2 + (a+b)^2)(4u^2 + 4ab)}}\cdot \frac{du}{dt} dt \\ &= \frac{1}{2}\int_\mathbb R \frac{1}{\sqrt{(u^2 + (\tfrac{a+b}{2})^2)(u^2 + (\sqrt{ab})^2)}}\cdot \frac{du}{dt} dt \\ &= \int_\mathbb R \frac{du}{\sqrt{(u^2 + (\tfrac{a+b}{2})^2)(u^2 + (\sqrt{ab})^2)}} \\ &= \tfrac{\pi}{2}T\big(\tfrac{a+b}{2}, \sqrt{ab}\big)\end{align*}</script> which establishes the desired equality.</p>
+
+<hr>
+
+<p><strong>Exercise 2.</strong> Deriving the differential equation for $f(x) = M(1-x,1+x)^{-1}$ is straightforward given the formula for the coefficients $(d_n)$ established in the first exercise: <script type="math/tex; mode=display">d_n = \binom{2n-1}{n}^2 \frac{1}{4^{2n-1}}</script> Note that this implies the following recurrence: <script type="math/tex; mode=display">(2n+2)^2 d_{n+1} = (2n+1)^2 d_n</script> If we let $\mathcal D$ be the derivative operator and $X$ denote the operator consisting of multiplication by $x$, then note that $(X\mathcal D)^2$ transforms the coefficients in the series for $f$ into the LHS of the above, and $X^2 (DX)^2$ transforms them into the RHS, that is:</p>
+
+<p>
+<script type="math/tex; mode=display">\begin{align*}(X\mathcal D)^2f(x) &= \sum_{n=0}^\infty (2n+2)^2 x^{2n+2}d_{n+1} \\ X^2 (DX)^2f(x) &= \sum_{n=0}^\infty (2n+1)^2 x^{2n+2}d_n\end{align*}</script>
+</p>
+
+<p>if we take the convention that $d_0 = 1$. This implies that the following operator annihilates $f$: <script type="math/tex; mode=display">X^2 (DX)^2 - (X\mathcal D)^2 = (X^4 - X^2)\mathcal D^2 + (3X^3-X)\mathcal D + X^2</script> Which implies the differential equation we were seeking: <script type="math/tex; mode=display">(x^3 -x) f'' + (3x^2-1)f + xf = 0</script>
+</p>
+
+<p>It remains to be proven that the same differential equation applies to $M(1,x)^{-1}$. We know from (1.2.6) that <script type="math/tex; mode=display">\frac{1}{M(1,x)} = \frac{1}{M(1+\sqrt{1-x^2}, 1-\sqrt{1-x^2})}</script> hence, if we can show that $f(\sqrt{1-x^2})$ is also a solution to the above differential equation when $f$ is, we will be done. Let's start by expressing the derivatives of $f(x) = g(\sqrt{1-x^2})$ in terms of the derivatives of $g$. We have: <script type="math/tex; mode=display">\begin{align*}f(x) &= g(\sqrt{1-x^2}) \\ f'(x) &= -\frac{x}{\sqrt{1-x^2}}\cdot g'(\sqrt{1-x^2}) \\ f''(x) &= \frac{1}{(1-x^2)^{3/2}}\cdot g'(\sqrt{1-x^2}) + \frac{x^2}{1-x^2}\cdot g''(\sqrt{1-x^2})\end{align*}</script> If we substitute these expressions for $f'',f',f$ in the differential equation for $f$, we get the following: <script type="math/tex; mode=display">-x^3 g''(\sqrt{1-x^2}) + \frac{2x-3x^2}{\sqrt{1-x^2}}g'(\sqrt{1-x^2}) + xg(\sqrt{1-x^2}) = 0</script> Substituting $x$ for $\sqrt{1-x^2}$ yields: <script type="math/tex; mode=display">-(1-x^2)^{3/2}g''(x) + \frac{(3x^2-1)\sqrt{1-x^2}}{x}g'(x) + \sqrt{1-x^2}g(x) = 0</script> and finally, multiplying this by $x/\sqrt{1-x^2}$ yields the desired differential equation: <script type="math/tex; mode=display">(x^3 - x)g'' + (3x^2 - 1)g' + xg = 0</script> establishing that $M(1,x)^{-1}$ is another solution to the same differential equation as $M(1-x,1+x)^{-1}$.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>
