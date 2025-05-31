@@ -7,6 +7,7 @@ import markdown2
 JLOAD = jinja2.FileSystemLoader(searchpath="./content/tpl/")
 JENV = jinja2.Environment(loader=JLOAD)
 INDEX = json.loads(open("./content/entries.json").read())
+NOTES = json.loads(open("./content/notes.json").read())
 MD_EXT = ['mdx_math', 'markdown.extensions.tables', 'md_in_html']
 MD_PROC = markdown.Markdown(extensions=MD_EXT)
 
@@ -18,7 +19,7 @@ for i in range(len(INDEX['entries'])):
         INDEX['entries'][i]["thumbnail"] = thumb_name
 
 def make_post_filename(entry):
-    return f"{entry['slug']}-{entry['lang']}"
+    return f"{entry['slug']}-{entry.get('lang')}"
 
 def generate_post(entry):
     fname = entry['file']
@@ -34,7 +35,7 @@ def generate_post(entry):
     f.close()
 
 def generate_all_posts():
-    for e in INDEX["entries"]:
+    for e in INDEX["entries"] + NOTES["notes"]:
         generate_post(e) 
 
 def generate_homepage():
@@ -50,6 +51,13 @@ def generate_post_list():
     html_page = html_tpl.render(entries=INDEX["entries"], conf=INDEX["config"])
 
     f = open(f"./dist/all.html", 'w')
+    f.write(html_page)
+    f.close()
+
+    notes_tpl = JENV.get_template("notes.tpl")
+    html_page = notes_tpl.render(entries=NOTES["notes"], conf=NOTES["config"])
+
+    f = open(f"./dist/notes.html", 'w')
     f.write(html_page)
     f.close()
 

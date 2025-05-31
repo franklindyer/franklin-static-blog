@@ -1,0 +1,78 @@
+<html>
+<head>
+    <title>List of simple but counterintuitive math things</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Simple but counterintuitive math</h2>
+
+<hr>
+
+<p><strong>The Basel Problem.</strong> Why is the following equation true: <script type="math/tex; mode=display">\sum_{n=1}^\infty \frac{1}{n^2} = \frac{\pi^2}{6}</script> I know how to prove this using Fourier Series, but the proof doesn't "preserve intuition" very well.</p>
+
+<hr>
+
+<p><strong>Selmer's cubic curve.</strong> Selmer has proved that the following cubic has a solution modulo $m$ for every positive integer $m$, but does <em>not</em> have any integer solutions: <script type="math/tex; mode=display">3x^3 + 4y^3 + 5z^3 = 0</script> That makes this a counterexample to a property satisfied by homogenous conics, stating that they have a solution in integers if and only if they have a solution modulo each positive integer $m$. Is there a quick or intuitive way to understand why this fails for this cubic?</p>
+
+<hr>
+
+<p><strong>The quantum CHSH game.</strong> This is a very simple cooperative game for two players, Alice and Bob, who are allowed to discuss strategy before playing the game separately from each other. The game has a moderator named Charlie, and the game proceeds as follows:</p>
+
+<ol>
+<li>Charlie chooses $x,y\in {0,1}$ uniformly and at random.</li>
+<li>Charlie sends $x$ to Alice and $y$ to Bob.</li>
+<li>Alice must choose a bit $a$, and Bob must choose a bit $b$.</li>
+<li>Alice and Bob win the game iff $a + b\bmod 2 = x\land y$.</li>
+</ol>
+
+<p>Classically, it is easy to prove that the optimal strategy allows them to win $75\%$ of the time. But when <em>quantum</em> strategies are permitted, so that Alice and Bob may share an entangled quantum state, the following winning probability is realizable, and furthermore optimal: <script type="math/tex; mode=display">\cos^2\tfrac{\pi}{8} \approx 0.85</script> This is unintuitive to me in two ways: firstly, that such a strategy is possible in the first place; and secondly, that it cannot be improved on by adding "more entanglement" somehow. I've proven both of these things algebraically, but they still elude my intuition (as many quantum-related things do).</p>
+
+<hr>
+
+<p><strong>Exotic S5-shaped subgroups of S6</strong>. There are 6 conjugate subgroups of $S_6$ that are isomorphic to $S_5$, <em>and</em> that act transitively upon a 6-element set as subgroups of the permutation group representation of $S_6$. (That is, they are not the trivially embedded copies of $S_5$ that simply fix one of the 6 elements.) Is there an intuitive - perhaps geometric or algebraic - way of understanding these subgroups?</p>
+
+<hr>
+
+<p><strong>Magma theories over finite sets.</strong> Terence Tao's "Equational Theories" formalization project holds many gems of counterintuitive mathematics, but one of the things that intrigues me most is the idea that some equational laws, called <em>Austin laws</em>, admit only <em>infinite</em> (or trivial) models. Examples include:</p>
+
+<p>
+<script type="math/tex; mode=display">\begin{align*}x &= y\circ (y\circ (y\circ (x\circ (z\circ y)))) \\ x &= (y\circ ((z\circ x) \circ w))\circ (x\circ w) \\ x &= (((y\circ y)\circ y)\circ x)\circ ((y\circ y)\circ z)\end{align*}</script>
+</p>
+
+<p>It is also interesting how some pairs of magma laws have an entailment relationship for finite magmas, but not for infinite magmas. I find both things very counterintuitive but haven't had the time to explore the topic enough for them to become more clear to me.</p>
+
+<hr>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>
