@@ -10,6 +10,13 @@
 
     "entries": [
         {
+            "title": "Eine Technik zur Vereinfachung von aus Rekursionsgleichungen entstandenen Wachstumsklassen",
+            "slug": "moderate-recurrence-trick",
+            "date": "2025-06-01",
+            "lang": "de",
+            "file": "2025-06-01-de.md"
+        },
+        {
             "title": "Variación acotada y el operador de traslado",
             "slug": "slug-231-es",
             "date": "2025-05-20",
