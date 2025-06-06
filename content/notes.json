@@ -9,6 +9,11 @@
             "file": "counterintuitive-math.md"
         },
         {
+            "title": "Упражнения для сестры, часть 1",
+            "slug": "sister-problem-set-1",
+            "file": "sister-problem-set-1.md"
+        },
+        {
             "title": "Pi and the AGM: Exercises 1.1",
             "slug": "pi-agm-exercises-1-1",
             "file": "pi-agm-exercises-1-1.md"
