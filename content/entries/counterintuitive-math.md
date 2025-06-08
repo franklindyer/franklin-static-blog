@@ -32,3 +32,9 @@ $$\begin{align*}x &= y\circ (y\circ (y\circ (x\circ (z\circ y)))) \\ x &= (y\cir
 It is also interesting how some pairs of magma laws have an entailment relationship for finite magmas, but not for infinite magmas. I find both things very counterintuitive but haven't had the time to explore the topic enough for them to become more clear to me.
 
 <hr>
+
+**Equational proofs can be ridiculously hard.** There are many interesting problems that take the following form: given that some equations hold true in a ring/magma/monoid/group/field, show that some other equation holds true in general, or that some other equation has a solution. One of the most appealing kinds of proofs for these problems is that consisting of *direct algebraic manipulation*. For example, a favorite problem is to prove that $$X = 1 + X^2 ~ \implies ~ X = X^7$$ in, for instance $\mathbb C$. One proof is to show that $X$ is a cube root of unity, from which the result is straightforward. But there is a more interesting and more generalizable proof that does not even rely on the field properties of $\mathbb C$, and in fact applies in more general settings (one consequence, for example, is that a tree-like topological space satisfying $T\simeq \mathbf{1} + T^2$ also satisfies $T \simeq T^7$).
+
+But sometimes, direct algebraic proofs are shockingly *way more complicated* than constructive ones. For example, Jacobson's Theorem states that rings $R$ for which $x^n = x$ for all $x\in R$ for some $n\in\mathbb N$ are commutative. Direct algebraic evidence for this claim for a particular value of $n$ can be provided by expressing the commutator $xy-yx$ in the following form: $$xy-yx = \sum g_i\cdot (f_i^n - f_i)\cdot h_i$$ for some $f_i,g_i,h_i\in \mathbb Z[x,y]$. But finding these representations is difficult and they can be ridiculously complicated for even very small values of $n$. See [this paper](https://arxiv.org/pdf/2310.05301) for details.
+
+<hr>
