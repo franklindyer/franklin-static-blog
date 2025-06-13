@@ -1,0 +1,101 @@
+<html>
+<head>
+    <title>Elliptic functions and their friends</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Elliptic integrals and their friends</h2>
+
+<p>The theory of elliptic functions is rich with unbelievable algebraic identities and relationships. To make sense of this field, you have to keep a myriad of complicated mathematical objects and their relationships to each other in your head all at once. This page is an (incomplete) "cheat sheet" of the colorful characters belonging to this field of study.</p>
+
+<hr>
+
+<p><strong>Elliptic integrals.</strong> The complete elliptic integral of the first kind $K$ is defined by <script type="math/tex; mode=display">K(k) = \int_0^{\pi/2} \frac{d\vartheta}{\sqrt{1-k^2\sin^2\vartheta}} = \int_0^1 \frac{dz}{\sqrt{(1-z^2)(1-k^2 z^2)}}</script> and its complementary function $K'$ by $K'(k) = K(\sqrt{1-k^2})$.</p>
+
+<ul>
+<li>The Jacobi elliptic functions are inverses of the (multi-valued) incomplete elliptic integral of the first kind.</li>
+<li>The values $K$ and $K'$ are the quarter-periods of the Jacobi elliptic functions.</li>
+</ul>
+
+<hr>
+
+<p><strong>Weierstrass elliptic P-functions.</strong> The Weierstrass P-function $\wp(z)$ is defined relative to a set of periods $\omega_1,\omega_2$. It is an even doubly-periodic meromorphic function that is periodic with periods $\omega_1, \omega_2$. It is defined by the following absolutely convergent series: <script type="math/tex; mode=display">\wp(z) =\frac{1}{z^2} + \sum_{w\in \omega_1\mathbb Z + \omega_2\mathbb Z \backslash \{0\}} \bigg(\frac{1}{(z-w)^2} - \frac{1}{w^2}\bigg)</script> It can also be proven to satisfy a differential equation: <script type="math/tex; mode=display">\wp'^2 = 4\wp^3 - g_2 \wp - g_3</script> for constants $g_2,g_3\in\mathbb C$. These constants are called "modular invariants".</p>
+
+<ul>
+<li>The differential equation implies that $(\wp,\wp')$ parametrizes the elliptic curve $y^2 = x^3 - g_2 x - g_3$.</li>
+<li>The modular invariants as a function of $\omega_1,\omega_2$ are Eisenstein series $g_2 = 60 G_4$ and $g_3 = 140 G_6$.</li>
+</ul>
+
+<hr>
+
+<p><strong>Modular lambda function.</strong> The modular lambda function $\lambda(\tau)$ describes the shape of the values of the $\wp(z)$ function at its half-periods, where $\tau = \omega_2/\omega_1$ is the ratio of the periods of $\wp$. In particular, it is defined by the cross-ratio <script type="math/tex; mode=display">\lambda(\tau) = \frac{e_3-e_2}{e_1-e_2} = \frac{\wp(\tfrac{\omega_1+\omega_2}{2})-\wp(\tfrac{\omega_2}{2})}{\wp(\tfrac{\omega_1}{2})-\wp(\tfrac{\omega_2}{2})}</script>
+</p>
+
+<hr>
+
+<p><strong>Jacobi elliptic trigonometric functions.</strong></p>
+
+<hr>
+
+<p><strong>Elliptic nome.</strong></p>
+
+<hr>
+
+<p><strong>Jacobi theta functions.</strong> </p>
+
+<hr>
+
+<p><strong>Eisenstein series.</strong> The Eisenstein series $G_{2k}(\omega_1,\omega_2)$ is defined by <script type="math/tex; mode=display">G_{2k}(\omega_1,\omega_2) = \sum_{w\in\omega_1\mathbb Z + \omega_2\mathbb Z \backslash 0} \frac{1}{w^{2k}}</script>
+</p>
+
+<ul>
+<li>Multiples of the Eisenstein series give the modular invariants of $\wp$ in terms of its periods.</li>
+</ul>
+
+<hr>
+
+<p><strong>Modular J-invariant.</strong></p>
+
+<hr>
+
+<p><strong>Elliptic curves.</strong></p>
+
+<hr>
+
+<p><strong>Arithmetic-geometric mean.</strong></p>
+
+<hr>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

@@ -4,9 +4,19 @@
 
     "notes": [
         {
+            "title": "Elliptic functions and their friends",
+            "slug": "elliptic-integrals-and-friends",
+            "file": "elliptic-integrals-and-friends.md"
+        },
+        {
             "title": "List of simple but counterintuitive math things",
             "slug": "counterintuitive-math",
             "file": "counterintuitive-math.md"
+        },
+        {
+            "title": "Insane trigonometric identities",
+            "slug": "insane-trigonometry",
+            "file": "insane-trigonometry.md"
         },
         {
             "title": "Упражнения для сестры, часть 1",

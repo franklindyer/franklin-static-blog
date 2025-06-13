@@ -10,6 +10,13 @@
 
     "entries": [
         {
+            "title": "Untersuchung von einer schwingenden Beatty-artigen Folge",
+            "slug": "oscillating-beatty-golden-ratio-sum",
+            "date": "2025-06-20",
+            "lang": "de",
+            "file": "2025-06-20-de.md"
+        },
+        {
             "title": "Eine Technik zur Vereinfachung von aus Rekursionsgleichungen entstandenen Wachstumsklassen",
             "slug": "moderate-recurrence-trick",
             "date": "2025-06-01",
