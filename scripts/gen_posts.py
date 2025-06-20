@@ -8,7 +8,7 @@ JLOAD = jinja2.FileSystemLoader(searchpath="./content/tpl/")
 JENV = jinja2.Environment(loader=JLOAD)
 INDEX = json.loads(open("./content/entries.json").read())
 NOTES = json.loads(open("./content/notes.json").read())
-MD_EXT = ['mdx_math', 'markdown.extensions.tables', 'md_in_html']
+MD_EXT = ['mdx_math', 'markdown.extensions.tables', 'md_in_html', 'tables']
 MD_PROC = markdown.Markdown(extensions=MD_EXT)
 
 # Get thumbnail filenames for the entries that have a thumbnail

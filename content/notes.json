@@ -24,6 +24,16 @@
             "file": "sister-problem-set-1.md"
         },
         {
+            "title": "Упражнения для сестры, часть 2",
+            "slug": "sister-problem-set-2",
+            "file": "sister-problem-set-2.md"
+        },
+        {
+            "title": "Useful German vocab for math writing",
+            "slug": "german-math-vocab",
+            "file": "german-math-vocab.md"
+        },
+        {
             "title": "Derivation of the Weierstrass elliptic integral periods",
             "slug": "weierstrass-elliptic-periods-derivation",
             "file": "weierstrass-elliptic-periods-derivation.md"
