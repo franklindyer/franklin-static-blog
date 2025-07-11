@@ -4,11 +4,6 @@
 
     "notes": [
         {
-            "title": "Elliptic functions and their friends",
-            "slug": "elliptic-integrals-and-friends",
-            "file": "elliptic-integrals-and-friends.md"
-        },
-        {
             "title": "List of simple but counterintuitive math things",
             "slug": "counterintuitive-math",
             "file": "counterintuitive-math.md"
@@ -34,9 +29,14 @@
             "file": "sister-problem-set-3.md"
         },
         {
-            "title": "Useful German vocab for math writing",
-            "slug": "german-math-vocab",
-            "file": "german-math-vocab.md"
+            "title": "Упражнения для сестры, часть 4",
+            "slug": "sister-problem-set-4",
+            "file": "sister-problem-set-4.md"
+        },
+        {
+            "title": "Elliptic functions and their friends",
+            "slug": "elliptic-integrals-and-friends",
+            "file": "elliptic-integrals-and-friends.md"
         },
         {
             "title": "Derivation of the Weierstrass elliptic integral periods",
@@ -52,6 +52,16 @@
             "title": "Pi and the AGM: Exercises 1.2",
             "slug": "pi-agm-exercises-1-2",
             "file": "pi-agm-exercises-1-2.md"
+        },
+        {
+            "title": "Useful German vocab for math writing",
+            "slug": "german-math-vocab",
+            "file": "german-math-vocab.md"
+        },
+        {
+            "title": "Russian case inflection cheatsheet",
+            "slug": "russian-cases-cheatsheet",
+            "file": "russian-cases-cheatsheet.md"
         }
     ]
 }
