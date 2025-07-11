@@ -1,0 +1,95 @@
+<html>
+<head>
+    <title>Упражнения для сестры, часть 4</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Упражнения для сестры, часть 4</h2>
+
+<p>Do not use a calculator for any of these problems. Don't Google them, either. <br></p>
+
+<p>Do your best to solve them, but if you get stuck and can't find an answer to all parts of a problem, don't worry. We can talk about it together, and you can always come back and try to solve it again later.</p>
+
+<hr>
+
+<p><strong>Problem 1.</strong> This part is less of a "problem" and more of a small project. Think hard on this part and take a lot of care with your attempt, but do not worry if it doesn't feel "finished". I will ask you to come back and revisit this several times.</p>
+
+<p>The set of integers $\{\cdots,-1,0,1,2,3,\cdots\}$ is sometimes written $\mathbb Z$. (This Z comes from the German word "Zahlen".)</p>
+
+<p>Please make a list of things you (think you) know about the integers and their operations $+$ (addition), $\ast$ (multiplication) and $-$ (minus). And I mean the most <em>basic</em> facts about the integers. If you were going to try to describe the integers to an alien who had never used our number system before, what definitions or rules would you use to describe the integers as concisely as possible?</p>
+
+<p>You should make a big list of just about all the facts you can think of that you believe to be true about the integers. But then, you should try to pick out the facts that are as "essential" as possible. Try to make a smaller list of facts that are as simple and concise as possible, while still describing completely how arithmetic with integers works (as if to an alien who is unfamiliar with them). Try to make them <em>irredundant</em> as well. That  is, if one fact can be deduced from some of the other facts that are even simpler, then you should remove it from your short list.</p>
+
+<p>I realize this problem is a bit subjective. So if you have any questions for me, just ask!</p>
+
+<hr>
+
+<p><strong>Problem 2.</strong> Can you find a number that is both $\equiv 2\bmod 7$ and $\equiv 3\bmod 29$? What is the smallest such number? How many such numbers are there?</p>
+
+<p>Now try to find solutions to these "simultaneous congruences" as well:</p>
+
+<ul>
+<li>$x\equiv 1\bmod 7$ and $x\equiv 2\bmod 29$</li>
+<li>$x\equiv 1\bmod 7$ and $x\equiv 2\bmod 29$</li>
+<li>$x\equiv 3\bmod 7$ and $x\equiv 4\bmod 29$</li>
+<li>$x\equiv 4\bmod 7$ and $x\equiv 5\bmod 29$</li>
+<li>$x\equiv 4\bmod 7$ and $x\equiv 6\bmod 29$</li>
+<li>$x\equiv 8\bmod 7$ (that is, $\equiv 1\bmod 7$) and $x\equiv 12\bmod 29$</li>
+<li>$x\equiv -2\bmod 7$ (that is, $\equiv 5\bmod 7$) and $x\equiv -3\bmod 29$ (that is, $\equiv 26\bmod 7$)</li>
+<li>$x\equiv 1\bmod 7$ and $x\equiv 0\bmod 29$</li>
+<li>$x\equiv 0\bmod 7$ and $x\equiv 1\bmod 29$</li>
+<li>$x\equiv 6\bmod 7$ and $x\equiv 3\bmod 29$</li>
+<li>$x\equiv 3\bmod 7$ and $x\equiv 13\bmod 29$</li>
+</ul>
+
+<p>This might seem like a tedious exercise, but think hard about how you can make it easier on yourself to find these solutions. Once you've found a solution to one of these simultaneous congruences, can you use it to help you find solutions for the others?</p>
+
+<hr>
+
+<p><strong>Problem 3.</strong> You've learned a bit about the Church numerals in Lambda calculus. You should also be familiar with the definitions of <code>TRUE = λx.λy.x</code> and <code>FALSE = λx.λy.y</code>.</p>
+
+<p>Try to build lambda terms that solve the following problems. You might have already seen solutions to these before, but if you have, don't look back at your notes. Try to rebuild them for yourself.</p>
+
+<ul>
+<li>Make a lambda function <code>add</code> that adds two Church numerals.</li>
+<li>Make a lambda function <code>mult</code> that multiplies two Church numerals.</li>
+<li>Make a lambda function <code>pow</code> that raises one Church numeral to the power of another. ($0^0$ is not really defined, so <code>pow(0,0)</code> can return whatever you want.)</li>
+<li>Make a lambda function <code>isZero</code> that checks if a Church numeral is zero, returning <code>TRUE</code> or <code>FALSE</code>.</li>
+<li>Make a lambda function <code>isEven</code> that checks if a Church numeral is odd, returning <code>TRUE</code> or <code>FALSE</code>.</li>
+<li>Make a lambda function <code>pred</code> that gets the predecessor of a Church numeral. (And <code>pred(0)</code> should give <code>0</code>.)</li>
+<li>Make a lambda function <code>sub</code> that subtracts two Church numerals.</li>
+</ul>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>
