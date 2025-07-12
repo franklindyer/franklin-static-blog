@@ -10,6 +10,13 @@
 
     "entries": [
         {
+            "title": "A deceptively simple-looking minimax problem",
+            "slug": "minimax-uniform-lehmann",
+            "date": "2025-07-15",
+            "lang": "en",
+            "file": "2025-07-15.md"
+        },
+        {
             "title": "Untersuchung von einer schwingenden Beatty-artigen Folge",
             "slug": "oscillating-beatty-golden-ratio-sum",
             "date": "2025-06-20",
