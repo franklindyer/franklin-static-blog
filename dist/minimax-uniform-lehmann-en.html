@@ -1,0 +1,169 @@
+<html>
+<head>
+    <title>A deceptively simple-looking minimax problem</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>A deceptively simple-looking minimax problem</h2>
+
+<p>Lately I've been brushing up on my statistics (which is only prudent given all of the buzz about ML in the software dev world right now) and I've gone down a bit of a rabbit-hole studying <a href="https://en.wikipedia.org/wiki/Estimation_theory">parameter estimation problems</a>. Lehmann's books <em>Theory of Point Estimation</em> and <em>Testing Statistical Hypotheses</em> present parameter estimation problems in a general framework that I've found pretty insightful. Actually, as a side project I've put together a little website with a collection of <a href="https://paramest.com/">parameter estimation challenges</a> that you can solve in the browser by writing a WebR function. Check it out!</p>
+
+<p>These parameter estimation problems involve making estimates of unknown quantities given only imperfect information in the form of randomly distributed data. Penalties for incorrect answers are calculated in terms of a given "loss function". An interesting subclass of these problems are the <em>minimax problems</em>, where you are tasked with minimizing the expected loss <em>in the worst case</em>, that is, minimizing the maximum possible expected loss across all possible values of the unknown quantity.</p>
+
+<p>Lehmann comments that minimax problems are often very tricky to solve compared to other forms of parameter estimation problems. Of course, I had to see this for myself to believe it, so I wrote down one of the simplest minimax problems I could think of and tried to solve it.</p>
+
+<p>And boy, was he right. I've been toying with this problem on and off for the past several weeks, and it's been infuriating, particularly because the problem's statement is so simple on its face. But I finally finished solving it analytically just a few days ago, and the solution is far more complicated than it has any right to be.</p>
+
+<p>Anyways, here's the problem:</p>
+
+<blockquote>
+<p>There is an unknown parameter $\vartheta \in [0,1]$, and you need to make a guess $\vartheta^\ast$ at the value of this parameter. You are penalized based on how far off your guess is from the true value - if the true value is $\vartheta$ and your guess is $\vartheta^\ast$, then the penalty is $L(\vartheta,\vartheta^\ast) = (\vartheta - \vartheta^\ast)^2$, that is, the squared error. The only information you are given to inform your estimate is the value of a random variable $\omega\sim \mathcal U(0,\vartheta)$, that is, the value of a uniformly distributed random value in $[0,\vartheta]$. </p>
+<p>How can you choose your estimate in order to <em>minimize</em> the <em>maximum possible</em> expected penalty? That is, what strategy will <em>guarantee</em> the expected penalty to be as small as possible, regardless of the true value of $\vartheta\in [0,1]$? And what is this smallest possible expected penalty?</p>
+</blockquote>
+
+<p>The "strategies" for solving this problem can be represented as "decision functions" $\delta: [0,1]\to [0,1]$ such that $\delta(\omega) = \vartheta^\ast$ gives an estimate for the parameter $\vartheta$ in terms of the random observation $\omega\sim \mathcal U(0,\vartheta)$. You can <a href="https://paramest.com/challenges/unif-minimax">take a crack at this problem yourself</a> on my website by writing a decision function in R, if you want.</p>
+
+<p>This post will describe the winding path that I followed to the ultimate grotesque solution of this minimax problem. Enjoy! 🤡</p>
+
+<h3>A failed attempt</h3>
+
+<p>In Lehmann's <em>Theory of Point Estimation</em>, he mentions a very useful fact about minimax problems: if you can find a prior distribution $\Lambda$ and a Bayes solution $\delta_\Lambda$ for that prior that makes the risk function a <em>constant function</em>, then $\delta_\Lambda$ is automatically a minimax solution for the problem. (The <strong>risk function</strong> $R(\delta, \vartheta)$ is defined as the <em>expected loss</em> when a specific decision function $\delta$ is used, and the true parameter value is $\vartheta$.) He shows how to use this fact to deduce the minimax estimate for an unknown parameter $p$ given a binomially distributed random variable $X\sim\text{Binom}(n,p)$. (He does this by letting $\Lambda$ be a certain beta distribution, but as for where this idea came from in the first place, he kind of pulls it out of a hat.)</p>
+
+<p>So naturally, my first step was to look for a decision function $\delta$ making the risk function $R$ constant. Then I could try to find a prior distribution for which that decision function was Bayes optimal, and my work would be done. For the risk to be constant as a function of the parameter $\vartheta$, the following expression would have to be constant as a function of $\vartheta$: <script type="math/tex; mode=display">R(\vartheta) = \frac{1}{\vartheta}\int_0^\vartheta \big(\vartheta - \delta(x)\big)^2 ~ dx = C</script>
+</p>
+
+<p>It took me a few weeks of on-and-off work on this problem to realize that $\delta$ can be solved for analytically. But in the meantime, I found an approximate solution for $\delta$ by discretizing the interval $[0,1]$ into a bunch of evenly spaced points and reformulating the problem as a system of linear equations that could be solved algorithmically. In fact, there are infinitely many solutions $\delta$, as for any particular solution $\delta$, another solution can be obtained from the function $x\mapsto \alpha \delta(x/\alpha)$ for any $\alpha &gt; 0$, dilating the solution about the origin. This yields a function looking something like this:</p>
+
+<p><center>
+<img src="/img/2025-07-15-Fig1.png" alt="Fig1" />
+</center></p>
+
+<p>This poses an unfortunate problem: there is no way to dilate/contract this function in such a way that it is defined on all of $[0,1]$ and is also $\leq 1$ everywhere on $[0,1]$. This means that $\delta$ cannot be the Bayes solution for any prior $\Lambda$, because it can <em>never</em> be optimal to guess a value of $\vartheta$ that is greater than $1$ (since $\vartheta$ only takes values in the interval $[0,1]$). This dashes any hopes of proving minimaxity via the aforementioned theorem on constant risk functions.</p>
+
+<p>Of course, we could always try modifying this decision function so that it never returns an "unreasonable" estimate $\vartheta^\ast &gt; 1$. For instance, we might consider a decision function $x\mapsto \min(1, \delta(x))$ where $\delta$ is the function depicted above that makes the risk function $R$ a constant function. But of course, this truncated version does not make the $R$ a constant function. If we use $x\mapsto \min(1, \delta(x))$ as our decision function, then the new risk function looks like this:</p>
+
+<p><center>
+<img src="/img/2025-07-15-Fig2.png" alt="Fig2" />
+</center></p>
+
+<p>The maximum risk here is approximately $\approx 0.0891$, which is not too bad! But this risk function is non-constant, so there is no guarantee of minimaxity. And as we shall see in a moment, it is not, in fact, optimal.</p>
+
+<h3>Dubious approximation using gradient descent</h3>
+
+<p>After (erroneously) deciding that it was unlikely I would ever analytically find a minimax solution to this problem, I started looking for approximate numerical solutions. Initially, I had used numerical methods to approximate a decision function $\delta$ making the risk function constant. But a more direct approach would be to numerically calculate a decision function $\delta$ minimizing the maximum value of the risk function $R(\vartheta)$ by using a numerical minimization method.</p>
+
+<p>My numerical approach to this problem was as follows:</p>
+
+<ol>
+<li>Discretize the domain $\Theta = [0,1]$ into $n$ points</li>
+<li>Discretize some initial guess $\delta$ of the decision function as a vector in $\mathbb R^n$</li>
+<li>Express $R$ as a vector function $r:\mathbb R^n\to \mathbb R^n$ whose input is $\delta$ and whose output is a vector discretizing the risk function $R(\vartheta)$</li>
+<li>Apply <a href="https://en.wikipedia.org/wiki/Gradient_descent">gradient descent</a> to the objective function $| r(\delta) |_\infty = \max(|r(\delta)|)$</li>
+</ol>
+
+<p>There is a bit of a problem with this approach, though. Although the risk $r(\delta)$ is a differentiable function with respect to the different components of the $\delta$ vector, the supremum norm $|\cdot|<em>\infty$ is <em>not</em> a differentiable function of its vector argument, so gradient descent cannot really be applied (in its usual form) to the objective function $\delta\mapsto | r(\delta) |</em>\infty$.</p>
+
+<p>Instead, I applied a modified form of gradient descent in which at each step, only the gradient of the <em>largest component</em> of $r(\delta)$ is calculated and used to adjust the input vector $\delta$. This way, each step of the gradient descent algorithm focuses on decreasing the largest component of the output risk vector $R = r(\delta)$, which is necessary to decrease the maximum component of the vector $R$.</p>
+
+<p>This was just my heuristic approach to the problem, and it yielded a helpful insight, as we will see in a moment. But there was nothing rigorous about this idea. I've found no reference to this modified sup-norm version of gradient descent anywhere online, so I have no idea if there are any theoretical guarantees of its convergence. Also, the usual gradient descent algorithm uses the gradients at previous steps to dynamically adjust the step size, but because my modified algorithm is constantly switching between different components of $R$ to minimize, this kind of intelligent step size calculation wasn't possible. Instead, I just picked a "small enough" static step size to see what the method would turn up.</p>
+
+<p>Here's an animation of my modified gradient descent algorithm being applied to an initial decision function guess of $\delta(x) = x$:</p>
+
+<p><center>
+<img src="/img/2025-07-15-Fig3.gif" alt="Fig3" />
+</center></p>
+
+<p>We can see the input decision function $\delta$ and the output risk function $R$ seemingly converge to functions shaped similarly to what we saw in my original failed attempt. To me, this suggested that my initial approach might not have actually been too far off. However, the maximum risk of this numerical solution was significantly lower at $\approx 0.0747$, as compared to a maximum risk of $\approx 0.0891$ in the original attempt. </p>
+
+<p>The risk functions for the original attempt and this newer attempt look similar, in that they consist of a plateau stretching until about $x\approx 0.5$ followed by a parabolic-looking dip downwards. However, a notable difference between them is the fact that in the older solution, the end of the dip at $x=1$ falls short of the height of the original plateau, while in the newer solution, the end of the dip at $x=1$ seems to match the height of the original plateau. This qualitative observation led to the conjectured exact solution described in the next section (later proven to be correct).</p>
+
+<h3>A conjectured analytical solution</h3>
+
+<p>Previously, I mentioned the idea of trying to "salvage" a non-Bayes (and non-admissible) decision function $\delta$ making the risk function $R$ a constant function by capping its values at $1$. Then, when I used a modified version of gradient descent to search for a minimax solution, I noticed that the apparent numerical solution (and its risk function) looked an awful lot like the solution and non-constant risk function that I had salvaged from my original attempt, except that the height of the plateau in the risk function starting at $R(0)$ appeared to align with the final value $R(1)$ of the risk function.</p>
+
+<p>This led to my next method of attack: trying to find a decision function which both makes $R$ constant, and also makes $R(0) = R(1)$ when it is "capped" at a maximum value of $1$. In what follows, I will let $f$ denote a non-admissible decision function that makes $R$ constant, and let $\delta$ denote the decision function that results from capping it off at a maximum value of $1$.</p>
+
+<p>Around this time is when I figured out how to <em>analytically</em> solve for functions $f$ reducing the risk function $R$ to a constant, by solving a certain differential equation. And the answer is <em>weird</em>.</p>
+
+<p>We're looking for functions $f$ satisfying the following integral identity, for some constant $C$: <script type="math/tex; mode=display">R(\vartheta) = \frac{1}{\vartheta}\int_0^\vartheta \big(\vartheta - f(x)\big)^2 ~ dx = C</script> Note that this is the same as saying <script type="math/tex; mode=display">\frac{d}{d\vartheta}\int_0^\vartheta \big(\vartheta - f(x)\big)^2 ~ dx = C</script> Using the <a href="https://en.wikipedia.org/wiki/Leibniz_integral_rule">Leibniz integral rule</a> we can turn this into a differential equation for the function $f$: we obtain <script type="math/tex; mode=display">\big(\vartheta - f(\vartheta)\big)^2 + 2\vartheta^2 - 2\int_0^\vartheta f(x) ~ dx = 0</script> From this point, the calculations are a big nicer if we make a substitution, considering the function $g$ defined as $g(\vartheta) = f(\vartheta) - \vartheta$ in place of the function $f$. With this substitution, the above becomes <script type="math/tex; mode=display">g^2 + \vartheta^2 - 2\int_0^\vartheta g(x) ~ dx = 0</script> Differentiating once more with respect to $\vartheta$ yields: <script type="math/tex; mode=display">2g'g + 2\vartheta - 2g = 0</script> or, after simplifying, <script type="math/tex; mode=display">g' = 1 - \frac{\vartheta}{g}</script>
+</p>
+
+<p>The solution to this differential equation is quite messy and involves defining $g$ implicitly. (To be completely honest, I found the solution at first using Wolfram, but came up with the following slick derivation after the fact.) To solve it, we'll first define a complex-valued function $z:(0,1)\to \mathbb C$ as $z(\vartheta) = \zeta_3\vartheta + g(\vartheta)$, where $\zeta_3$ is the complex cube root of unity in the upper half-plane. Then note that by the differential equation for $g$, we have <script type="math/tex; mode=display">\frac{dz}{d\vartheta} = \zeta_3 + g' = \frac{\zeta_6}{g}\cdot z</script> which means that the following quantity has to be <em>purely real</em>, since $g$ is a real-valued function: <script type="math/tex; mode=display">\zeta_6^{-1}\cdot \frac{1}{z}\frac{dz}{d\vartheta}</script> But note this is simply the derivative of $\zeta_6^{-1}\log(z)$. Thus, since the derivative of $\zeta_6^{-1}\log(z)$ with respect to $\vartheta$ is a purely real quantity, the derivative of its imaginary part with respect to $\vartheta$ vanishes, and we have that it must have constant imaginary part: <script type="math/tex; mode=display">\text{Im}(\zeta_6^{-1}\log z) = C</script> By decomposing $z$ into its real and imaginary parts in terms of $g$ and $\vartheta$ and computing the imaginary part of $\zeta_6^{-1}\log z$ in terms of these quantities (and simplifying a bit, absorbing some numbers into the arbitrary constant $C$), we obtain the following gross-looking definition for $g(x)$ as an implicit function of $x$: <script type="math/tex; mode=display">\tfrac{1}{2}\log(g^2 - xg + x^2) - \tfrac{1}{\sqrt{3}}\arctan\Big(\frac{x-2g}{\sqrt{3} x}\Big) = C</script>
+</p>
+
+<p>Nasty! But if you open up a graphing calculator and plot the curve defined by this equation:</p>
+
+<p>
+<script type="math/tex; mode=display">\tfrac{1}{2}\log((f-x)^2 - x(f-x) + x^2) - \tfrac{1}{\sqrt{3}}\arctan\Big(\frac{3x-2f}{\sqrt{3} x}\Big) = C</script>
+</p>
+
+<p>you will miraculously find a shape that looks just like the graph we saw earlier.</p>
+
+<p>As discussed before, the empirical results of my (sus) gradient descent had led me to believe that the true minimax solution is a truncated version of the decision function $f$ (for some value of the constant $C$) defined as follows, where $x_\ast$ is the smallest real value $x$ for which $f(x) = 1$, i.e. the point at which $f$ turns into a decision function that no longer makes sense: <script type="math/tex; mode=display">\delta(x) = \begin{cases} f(x) & \text{if }x \leq x_\ast \\ 1 & \text{else}\end{cases}</script> and further, that $\delta$ it is such that its risk function $R$ satisfies $R(0) = R(1)$. It turns out that we can actually calculate the exact value of the constant $C$ (and hence the implicitly defined function $f$) for which this condition on the risk function is satisfied. This condition is equivalent to <script type="math/tex; mode=display">f_0^2 = \int_0^1 \big(1-\delta(x)\big)^2 ~ dx</script> or, since $\delta = 1$ for all $x\geq x_\ast$, the condition is <script type="math/tex; mode=display">f_0^2 = \int_0^{x_\ast} \big(1-f(x)\big)^2 ~ dx</script> Using the properties of $f$ and the differential equation for $g$, the RHS can actually be reduced to a pretty simple form in terms of $x_\ast$. I'll leave the details as an exercise, but it can be shown that the RHS can be reduced to the simple expression $f_0^2 - (1-x_\ast)(2x_\ast^2 - 3x_\ast + 1)$, from which it follows that the above equation implies <script type="math/tex; mode=display">(1-x_\ast)(2x_\ast^2 - 3x_\ast + 1) = 0</script> The only solution to this equation other than $x_\ast = 1$ (which is not possible) is $x_\ast = 1/2$ - a remarkably simple answer to a very complicated question! This means that if the condition $R(0)=R(1)$ holds then we must have $x_\ast = 1/2$, and consequently $f(1/2) = 1$, or $g(1/2) = 1/2$. Setting $(x,g) = (1/2,1/2)$ in the implicit equation defining $g(x)$ gives the following value of the constant $C$: <script type="math/tex; mode=display">C = -\log 2 + \frac{\pi}{6\sqrt{3}}\approx -0.391</script> which yields the following minimax loss value: <script type="math/tex; mode=display">\sup_{\vartheta\in [0,1]} R(\vartheta) = f(0)^2 = \tfrac{1}{4}e^{-2\pi/3\sqrt{3}}\approx 0.0746</script> which agrees numerically with the minimax loss value that I found empirically.</p>
+
+<p>After a few weeks of banging my head against the wall, I wasn't expecting to find an exact value for the minimax expected loss <em>at all</em>. And if I had, I certainly wouldn't have expected <em>that</em> kooky number!</p>
+
+<h3>Proof of minimaxity</h3>
+
+<p>At this point, I had a numerical minimax solution, and I had an analytical description of a function agreeing with it numerically which I <em>conjectured</em> to be minimax. But still no proof of its minimaxity.</p>
+
+<p>But finally I realized that another result from Lehmann on minimax solutions could still be applied, since it had slightly weaker hypotheses. In the weaker theorem, the risk function $R$ is not required to be constant. It is just required to be <em>constant on a set of unit measure</em> with respect to the prior distribution for which $\delta$ is Bayes. That is, $\delta=\delta_\Lambda$ needs to be a Bayes solution for some prior distribution $\Lambda$, and the risk function $R$ only needs to be constant on some <em>subset</em> $A\subset [0,1]$, so long as that subset has probability $\Lambda(A) = 1$.</p>
+
+<p>The solution $\delta$ that we've constructed above has a risk function $R(\vartheta)$ that is <em>not constant</em>. However, it <em>is</em> constant on the set $[0,1/2]\cup {1}$. This result means that if we can find a prior distribution $\Lambda$, supported on the set $[0,1/2]\cup {1}$, for which $\delta=\delta_\Lambda$ is the Bayes solution, then $\delta$ <em>is in fact minimax</em>. And this time, there are no glaring red flags about $\delta$ that preclude it from being minimax.</p>
+
+<p>The most general prior distribution $\Lambda$ supported on $[0,1/2]\cup {1}$ takes the form $\Lambda(X) = p [![ 1\in X ]! ] + (1-p)\Lambda_0(X)$ where $p\in [0,1]$ and $\Lambda_0$ is a narrower distribution on the set $[0,1/2]$. That is, a random variable on the set $[0,1/2]\cup {1}$ must take the value $1$ with some probability $p\in [0,1]$, and must follow some other distribution $\Lambda_0$ when its value falls in the interval $[0,1/2]$. </p>
+
+<p>We shall try to choose $p$ and $\Lambda_0$ in order to make our $\delta$ the Bayes solution for $\Lambda$. When the squared error loss function is used, the Bayes solution is just the expected value of the posterior distribution, meaning that <script type="math/tex; mode=display">\delta_\Lambda(x) = \mathbb E[\vartheta | x] = \frac{\tfrac{p}{1-p} + \int_x^{1/2} \Lambda_0(\phi) ~ d\phi}{\tfrac{p}{1-p} + \int_x^{1/2} \tfrac{1}{\phi}\Lambda_0(\phi) ~ d\phi}</script>
+</p>
+
+<p>when $x\in [0,1/2]$. When $x &gt; 1/2$, of course we have that $\delta_\Lambda(x) = 1$, since an observation of $1$ means that the value of $\vartheta$ <em>must be</em> $=1$ when it is known to belong to $[0,1/2]\cup {1}$. So we want to choose a value of $p$ and a density function $\Lambda_0$ such that the above equals $f(x)$ for all $x\in [0,1/2]$.</p>
+
+<p>With a bit of algebra, this can be turned into a nice differential equation for $\Lambda_0$. I found the following solution: <script type="math/tex; mode=display">\begin{align*}p &= \frac{1}{1 + h(\tfrac{1}{2}) - h(0)} \\ \Lambda_0(\vartheta) &= \frac{p}{1-p} ~ \frac{dh}{d\vartheta} \end{align*}</script> where <script type="math/tex; mode=display">h(\vartheta) =1-\exp\bigg(-\int_0^\vartheta \Big(\frac{1}{f(\phi)-\phi} - \frac{1}{f(\phi)}\Big)\cdot f'(\phi) ~ d\phi\bigg)</script> I'm not sure if this integral representation for $h$ in terms of $f$ can be simplified any further using the differential equation for $f$ - perhaps it can. But the above is sufficient to show existence of a Bayes prior $\Lambda$ for which $\delta = \delta_\Lambda$. One can check that the above does in fact define a valid density function for $\Lambda_0$ - namely, $\Lambda_0$ is positive on $[0,1/2]$ and it has unit integral over that interval - and that it satisfies the requisite integral equation to ensure $\mathbb E_\Lambda[\vartheta|x] = f(x)$ for $x\in [0,1/2]$. Just to get an idea of what this distribution looks like, here's the density function $\Lambda_0$ on $[0,1/2]$:</p>
+
+<p><center>
+<img src="/img/2025-07-15-Fig4.png" alt="Fig4" />
+</center></p>
+
+<p>and the value of $p$ is approximately $\approx 0.713$.</p>
+
+<p>This gives us a final definitive answer: the function $\delta$ is indeed a <em>minimax solution</em> of our problem. Whew!</p>
+
+<hr>
+
+<p>That wraps up my extended treatment of this problem. I <em>really</em> was not expecting to find exact expressions for the minimax solution and minimax expected loss, and I'm blown away by how strange-looking they are. I also wasn't expecting to encounter such tricky differential equations.</p>
+
+<p>Overall, a damn cool problem!</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>
