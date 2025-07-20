@@ -26,6 +26,7 @@ This is my personal cheatsheet for Russian case endings.
 |муж|→|мужья|
 |сын|→|сыновья|
 |друг|→|друзья|
+|дерево|→|деревья|
 |имя|→|имена|
 |город|→|города|
 |яблоко|→|яблоки|
@@ -56,7 +57,14 @@ I don't know of any exceptions. There are nouns with a removable vowel e.g. ре
 
 ### General rules
 
+|Case||Inflection|
+|---|---|---|
+|inanimate|→|same as nominative plural|
+|animate|→|same as genitive plural|
+
 ### Exceptions
+
+None that I know of.
 
 <hr>
 
@@ -76,7 +84,7 @@ I don't know of any exceptions. There are nouns with a removable vowel e.g. ре
 
 ### Exceptions
 
-|Word||Nominative plural|
+|Word||Prepositional singular|
 |---|---|---|
 |лес|→|в лесу, but о лесе|
 |сад|→|в саду, but о саде|
@@ -91,7 +99,17 @@ I don't know of any exceptions. There are nouns with a removable vowel e.g. ре
 
 ### General rules
 
+These are the same as the dative plural endings, except that -м becomes -х.
+
+|Case||Inflection|
+|---|---|---|
+|nom. plural ends -ы/а|→|change to -ах|
+|nom. plural ends -г/к/х/ч/ш/щ/ц followed by -и/я|→|change -и/я to -ах|
+|nom. plural ends -и/я|→|change to -ях|
+
 ### Exceptions
+
+None that I know of.
 
 <hr>
 
@@ -112,7 +130,7 @@ I don't know of any exceptions. There are nouns with a removable vowel e.g. ре
 
 ### Exceptions
 
-|Word||Genitive plural|
+|Word||Genitive singular|
 |---|---|---|
 |дочь|→|дочери|
 |мать|→|матери|
@@ -122,6 +140,25 @@ I don't know of any exceptions. There are nouns with a removable vowel e.g. ре
 ## Genitive plural
 
 ### General rules
+
+|Case||Inflection|
+|---|---|--|
+|-ь|→|сhange to -ей|
+|-ж/ч/ш/щ|→|+ей|
+|masculine, ends in -ц unstressed|→|+ев|
+|masculine, ends in consonant|→|+ов|
+|feminine/neuter, consonant group (not -тв/гр/рт) followed by -а/о|→|insert -о- or -е- in consonant group, drop -а/о|
+|feminine/neuter, -а/о|→|drop -а/о|
+|-ия/ие|→|-ий|
+|nom. plural ends -ья unstressed|→|change to -ьев|
+|nom. plural ends -ья stressed|→|change to -ей|
+|-й|→|-ев|
+|-жка/чка/шка/цка/ька|→|change to -жек/чек/шек/чек/ек|
+|ends in consonant followed by -ка|→|change to -ок|
+|-йка|→|-ек|
+|ends in consonant followed by -ня|→|change to -ен|
+|ends in consonant followed by -я|→|change to -ь|
+|-анин/янин|→|change to -ан/ян|
 
 ### Exceptions
 
@@ -179,7 +216,7 @@ No exceptions that I know of, except for the vowel-dropping nouns.
 
 ### Exceptions
 
-|Word||Genitive plural|
+|Word||Instrumental singular|
 |---|---|---|
 |дочь|→|дочерью|
 |мать|→|матерью|
@@ -190,5 +227,18 @@ No exceptions that I know of, except for the vowel-dropping nouns.
 
 ### General rules
 
+|Case||Inflection|
+|---|---|---|
+|nom. plural ends -ы/а|→|change to -ами|
+|nom. plural ends -г/к/х/ч/ж/ш/щ/ц followed by -и/я|→|change to -ами|
+|nom. plural ends -и/я|→|change to -ями|
+
 ### Exceptions
+
+|Word||Instrumental plural|
+|---|---|---|
+|дети|→|детьми|
+|дочери|→|дочерьми|
+|лошади|→|лошадьми|
+|люди|→|людьми|
 
