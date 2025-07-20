@@ -16,6 +16,18 @@ You should make a big list of just about all the facts you can think of that you
 
 I realize this problem is a bit subjective. So if you have any questions for me, just ask!
 
+**Edit.** You have already started this part of the problem. You should return to your list and write it up neatly and concisely, and then go through and see if there's anything you can eliminate, or anything you think you need to add. Take your time.
+
+Also, read each of the following simple statements about the integers. Decide if you think each one is true or false. Then try to prove or disprove it, using the basic assumptions about $\mathbb Z$ that you have on your list. Is your list "strong enough" to prove all the things you believe to be true, and disprove all the things you believe to be false?
+
+- $\forall x ~ 0\cdot x = 0$
+- $\exists x ~ x = x + 1$
+- $\forall x ~ (x+1)^2 = x^2 + 2\cdot x + 1$
+- $\forall x ~ \forall y ~ x \cdot y = 0 \implies (x = 0)\lor (y = 0)$
+- $\forall x ~ x - x\cdot x = 0 \implies (x = 0)\lor (x = 1)$
+- $\exists x ~ 2\cdot x = 1$
+- $\forall x ~ (\exists y ~ x = 2\cdot y) \lor (\exists y ~ x = 2\cdot y + 1)$ 
+
 <hr>
 
 **Problem 2.** Can you find a number that is both $\equiv 2\bmod 7$ and $\equiv 3\bmod 29$? What is the smallest such number? How many such numbers are there?
