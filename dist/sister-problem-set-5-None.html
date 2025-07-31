@@ -1,0 +1,94 @@
+<html>
+<head>
+    <title>Упражнения для сестры, часть 5</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+</head>
+<body>
+    <h2>Упражнения для сестры, часть 5</h2>
+
+<p>Do not use a calculator for any of these problems. Don't Google them, either. <br></p>
+
+<p>Do your best to solve them, but if you get stuck and can't find an answer to all parts of a problem, don't worry. We can talk about it together, and you can always come back and try to solve it again later.</p>
+
+<hr>
+
+<p><strong>Problem 1.</strong> As you did last time, take another close, careful look at your list of "basic rules" about $\mathbb Z$. Make a nice and neat list of rules. Give each of them names, if you want. (Like "Jerry".)</p>
+
+<p>The "bar" symbol <code>|</code> is a piece of notation often used in number theory to describe divisibility. If $a,b\in \mathbb Z$, then the statement $a|b$ is defined to mean "$a$ divides $b$", or written more formally, $\exists q ~ b = aq$.</p>
+
+<p>Using formal math language, try to write a definition of what it means for a number to be <em>prime</em>.</p>
+
+<p>Read each of the following statements about divisibility in $\mathbb Z$ and decide if you think each one is true or false. Can you prove the ones you believe to be true, and disprove the ones you believe to be false? Try to write systematic, step-by-step proofs citing a basic fact about $\mathbb Z$ from your list for each step. (You might find it helpful to write some intermediate "lemmas" as well, or cite statements you've proven previously.)</p>
+
+<ul>
+<li>$\forall a ~ 1 | a$</li>
+<li>$\neg \exists a ~ a | 1$</li>
+<li>$\forall a ~ \forall b ~ a | b \lor b | a$</li>
+<li>$\forall a ~ \forall b ~ \forall c ~ (a | b \land b | c) \implies a | c$</li>
+<li>$\forall a ~ \forall b ~ \forall c ~ (a | c \land b | c) \implies ab | c$</li>
+<li>$\forall a ~ \forall b ~ \forall c ~ \forall d ~ (a | b \land c | d) \implies ac | bd$</li>
+<li>$\forall a ~ \forall b ~ \forall d ~ d | ab \implies (d|a \lor d|b)$</li>
+</ul>
+
+<hr>
+
+<p><strong>Problem 2.</strong> The <em>Gaussian integers</em> is another kind of number system which is usually written as $\mathbb Z[i]$. It is defined as the set of complex numbers taking the form $a + bi$, where $a,b$ are integers. You can picture them as a kind of "grid" of points in the 2D complex plane, where the x- and y-components are both whole numbers.</p>
+
+<p>As you know, you can add and multiply complex numbers. Can you see why $\mathbb Z[i]$ is closed under addition and multiplication?</p>
+
+<p>You can ask questions about divisibility in $\mathbb Z[i]$ just as you can ask questions about divisibility in $\mathbb Z$. We say that $a|b$ for Gaussian integers $a,b\in\mathbb Z[i]$ if $b = aq$ for some $q\in\mathbb Z[i]$, that is, if $b$ is a <em>Gaussian integer multiple</em> of $a$.</p>
+
+<p>Determine the answers to the following divisibility questions in $\mathbb Z[i]$:</p>
+
+<ul>
+<li>is $12$ divisible by $3$?</li>
+<li>is $12$ divisible by $1+i$?</li>
+<li>is $12$ divisible by $1+2i$?</li>
+<li>is $2$ divisible by $1+i$?</li>
+<li>is $5$ divisible by $1+i$?</li>
+<li>is $5$ divisible by $1+2i$?</li>
+<li>is $2+3i$ divisible by $1+i$?</li>
+<li>is $7+i$ divisible by $1+i$?</li>
+</ul>
+
+<p>Do you notice any patterns? Can you find some simple criterion or "trick" for quickly determining if a Gaussian integer is divisible by $1+i$? (Also, I encourage you to think about this problem visually, in terms of the "grid" of Gaussian integers in the plane. What do the multiples of a number look like geometrically in the 2D plane?)</p>
+
+<hr>
+
+<p><strong>Problem 3.</strong> Imagine a frog lives on the real number line $\mathbb R$. He starts out sitting on the origin $0\in\mathbb R$, and he is capable of jumping $1$ unit to the left or $\sqrt{2}$ units to the right.</p>
+
+<p>Can the frog get to any real number? Why, or why not? If not, can he at least get <em>arbitrarily close</em> to any real number? That is, if he picks a real number $r\in\mathbb R$ and some "margin of error" $\epsilon$, can he get <em>within $\epsilon$ of $r$</em>, i.e. can he get within the interval $(r-\epsilon,r+\epsilon)$? Is there anything you can say about how long (how many hops) it might take him to get there, depending on what $r$ is?</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>
