@@ -47,6 +47,22 @@ img {
     padding: 3px;
 }
 
+.entry-title-group {
+    overflow: auto;
+    background: #eeeeee;
+    border-radius: 4px;
+    box-shadow: 4px 4px gray;
+    margin: 8px;
+    margin-bottom: 12px;
+    padding: 3px;
+}
+
+.entry-title-group h3 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding-left: 10px;
+}
+
 .post-link {
     position: relative;
     margin: 6px;

@@ -35,7 +35,7 @@ def generate_post(entry):
     f.close()
 
 def generate_all_posts():
-    for e in INDEX["entries"] + NOTES["notes"]:
+    for e in INDEX["entries"] + [e for g in NOTES["notes"] for e in NOTES["notes"][g]]:
         generate_post(e) 
 
 def generate_homepage():
