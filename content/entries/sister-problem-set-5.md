@@ -6,6 +6,16 @@ Do your best to solve them, but if you get stuck and can't find an answer to all
 
 <hr>
 
+**Don't forget** to revisit some of the problems on previous sets that you never finished! If you don't have time to work on *all of them*, no problem - just pick the ones that are most interesting to you.
+
+- **Set 1, Problem 3.** (repeated digit sums of natural numbers)
+- **Set 3, Problem 2.** (whether or not the continued fractions have a limit)
+- **Set 3, Problem 3.** (number of necklaces with $n=4,5,6$ beads)
+- **Set 4, Problem 1.** (you didn't manage to prove/disprove some statements)
+- **Set 4, Problem 3.** (lambda calculus arithmetic functions)
+
+<hr>
+
 **Problem 1.** As you did last time, take another close, careful look at your list of "basic rules" about $\mathbb Z$. Make a nice and neat list of rules. Give each of them names, if you want. (Like "Jerry".)
 
 The "bar" symbol `|` is a piece of notation often used in number theory to describe divisibility. If $a,b\in \mathbb Z$, then the statement $a|b$ is defined to mean "$a$ divides $b$", or written more formally, $\exists q ~ b = aq$.
