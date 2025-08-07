@@ -1,8 +1,11 @@
+from dotenv import load_dotenv
 import jinja2
 import json
 import os
 import markdown
 import markdown2
+
+load_dotenv()
 
 JLOAD = jinja2.FileSystemLoader(searchpath="./content/tpl/")
 JENV = jinja2.Environment(loader=JLOAD)
@@ -10,6 +13,7 @@ INDEX = json.loads(open("./content/entries.json").read())
 NOTES = json.loads(open("./content/notes.json").read())
 MD_EXT = ['mdx_math', 'markdown.extensions.tables', 'md_in_html', 'tables']
 MD_PROC = markdown.Markdown(extensions=MD_EXT)
+ENV_VARS = dict(os.environ)
 
 # Get thumbnail filenames for the entries that have a thumbnail
 for i in range(len(INDEX['entries'])):
@@ -27,7 +31,7 @@ def generate_post(entry):
     html_content = MD_PROC.convert(md_content)
     html_content = markdown2.markdown(html_content)
     html_tpl = JENV.get_template("entry.tpl")
-    html_page = html_tpl.render(title=entry["title"], content=html_content, conf=INDEX["config"])
+    html_page = html_tpl.render(title=entry["title"], content=html_content, conf=INDEX["config"], env=ENV_VARS)
 
     new_fname = make_post_filename(entry) 
     f = open(f"./dist/{new_fname}.html", 'w')
@@ -40,7 +44,7 @@ def generate_all_posts():
 
 def generate_homepage():
     html_tpl = JENV.get_template("home.tpl")
-    html_page = html_tpl.render(entries=INDEX["entries"][:5], conf=INDEX["config"])
+    html_page = html_tpl.render(entries=INDEX["entries"][:5], conf=INDEX["config"], env=ENV_VARS)
 
     f = open(f"./dist/index.html", 'w')
     f.write(html_page)
@@ -48,14 +52,14 @@ def generate_homepage():
 
 def generate_post_list():
     html_tpl = JENV.get_template("all.tpl")
-    html_page = html_tpl.render(entries=INDEX["entries"], conf=INDEX["config"])
+    html_page = html_tpl.render(entries=INDEX["entries"], conf=INDEX["config"], env=ENV_VARS)
 
     f = open(f"./dist/all.html", 'w')
     f.write(html_page)
     f.close()
 
     notes_tpl = JENV.get_template("notes.tpl")
-    html_page = notes_tpl.render(entries=NOTES["notes"], conf=NOTES["config"])
+    html_page = notes_tpl.render(entries=NOTES["notes"], conf=NOTES["config"], env=ENV_VARS)
 
     f = open(f"./dist/notes.html", 'w')
     f.write(html_page)
