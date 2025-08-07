@@ -40,6 +40,11 @@
                 "file": "sister-problem-set-5.md"
             },
             {
+                "title": "Упражнения для сестры, часть 6",
+                "slug": "sister-problem-set-6",
+                "file": "sister-problem-set-6.md"
+            },
+            {
                 "title": "Elliptic functions and their friends",
                 "slug": "elliptic-integrals-and-friends",
                 "file": "elliptic-integrals-and-friends.md"

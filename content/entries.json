@@ -10,6 +10,13 @@
 
     "entries": [
         {
+            "title": "Eine knappe Erklärung von der Kosinus-Formel des Skalarprodukts",
+            "slug": "dot-product-cosine-formula",
+            "date": "2025-08-15",
+            "lang": "de",
+            "file": "2025-08-15-de.md"
+        },
+        {
             "title": "A deceptively simple-looking minimax problem",
             "slug": "minimax-uniform-lehmann",
             "date": "2025-07-15",
