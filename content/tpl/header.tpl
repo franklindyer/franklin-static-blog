@@ -27,4 +27,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
     <link rel="stylesheet" href="/css/style.css">
     <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "{{ env['CLOUDFLARE_TOKEN'] }}"}'></script><!-- End Cloudflare Web Analytics -->
 </head>
