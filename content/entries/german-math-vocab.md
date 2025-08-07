@@ -11,6 +11,20 @@
 
 ### Thematic vocabulary
 
+#### Algebra
+
+|Deutsch|English|
+|---|---|
+|(die) Verknüpfung|operation|
+
+#### Geometry
+
+|Deutsch|English|
+|---|---|
+|(die) Drehung|rotation|
+|(das) Skalarprodukt|dot/scalar product|
+|(der) Winkel|angle|
+
 #### Number theory
 
 |Deutsch|English|
