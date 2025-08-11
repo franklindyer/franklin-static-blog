@@ -5,6 +5,13 @@
     {% include 'about.tpl' %}
     <hr>
 
+    <p>Here's where else you can find me:</p>
+    <ul>
+        <li><a href="https://github.com/franklindyer">GitHub</a></li>
+        <li><a href="https://math.stackexchange.com/users/438055/franklin-pezzuti-dyer">Mathematics Stack Exchange</a></li>
+        <li><a href="https://www.linkedin.com/in/franklin-pezzuti-dyer-3b0b84298/">LinkedIn</a></li>
+    </ul>
+
     <p>Here are some of my recent web projects:</p>
     <ul>
         <li><a href="https://abstract.narfnilk.com">Abstractionary</a>, an online multiplayer word-guessing game</li>
