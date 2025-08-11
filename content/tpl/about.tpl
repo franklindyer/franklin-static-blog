@@ -1,6 +1,9 @@
 <p>You can find my <a href="/pages/franklin_cv.html">CV here</a>.</p>
 
+<img src="/img/me.png" id="picture-of-me" />
+
 <details>
+
     <summary>About me in English</summary>
 
     Hi, I'm Franklin! I'm a software developer living in Albuquerque who likes programming, math and learning languages.

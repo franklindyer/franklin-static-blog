@@ -39,63 +39,72 @@
         },
         {
             "title": "Variación acotada y el operador de traslado",
-            "slug": "slug-231-es",
+            "slug": "bounded-variation-translation-operator",
+			"old-id": 231,
             "date": "2025-05-20",
             "lang": "es",
             "file": "2025-05-20.md"
         },
         {
             "title": "Ideal scaling of spaced repetition",
-            "slug": "slug-230-en",
+            "slug": "ideal-sr-scaling",
+			"old-id": 230,
             "date": "2025-02-20",
             "lang": "en",
             "file": "2025-02-20.md"
         },
         {
             "title": "Some collected cool stats about the Wiener process",
-            "slug": "slug-229-en",
+            "slug": "wiener-process-cool-facts",
+			"old-id": 229,
             "date": "2024-12-30",
             "lang": "en",
             "file": "2024-12-30.md"
         },
         {
             "title": "A character's journey from finger to glyph",
-            "slug": "slug-228-en",
+            "slug": "character-input-keyboard-to-glyph",
+			"old-id": 228,
             "date": "2024-11-30",
             "lang": "en",
             "file": "2024-11-30.md"
         },
         {
             "title": "A shitpost about Unicode's superscript digits",
-            "slug": "slug-227-en",
+            "slug": "unicode-superscript-shitpost",
+			"old-id": 227,
             "date": "2024-11-10",
             "lang": "en",
             "file": "2024-11-10.md"
         },
         {
             "title": "Ein Shitpost über die Hochzahlen in Unicode",
-            "slug": "slug-227-de",
+            "slug": "unicode-superscript-shitpost",
+			"old-id": 227,
             "date": "2024-11-10",
             "lang": "de",
             "file": "2024-11-10.de.md"
         },
         {
             "title": "A cartoon primer on online advertising",
-            "slug": "slug-226-en",
+            "slug": "online-advertising-webcomic",
+			"old-id": 226,
             "date": "2024-10-15",
             "lang": "en",
             "file": "2024-10-15.md"
         },
         {
             "title": "Garbage collection by reference counting in a simple Lisp-like language",
-            "slug": "slug-225-en",
+            "slug": "lisp-like-garbage-collecting-pair-language",
+			"old-id": 225,
             "date": "2024-09-30",
             "lang": "en",
             "file": "2024-09-30.md"
         },
         {
             "title": "Monodromy in graphs and spaces",
-            "slug": "slug-224-en",
+            "slug": "monodromy-graphs-sokoban",
+			"old-id": 224,
             "date": "2024-08-30",
             "lang": "en",
             "file": "2024-08-30.md"
@@ -103,6 +112,7 @@
         {
             "title": "Lessons from implementing Sokoban for the Intel 8080",
             "slug": "slug-223-en",
+			"old-id": 223,
             "date": "2024-08-10",
             "lang": "en",
             "file": "2024-08-10.md"
@@ -110,6 +120,7 @@
         {
             "title": " Was ich beim Implementieren von Sokoban fürs Intel 8080 gelernt habe",
             "slug": "slug-223-de",
+			"old-id": 223,
             "date": "2024-08-10",
             "lang": "de",
             "file": "2024-08-10.de.md"
@@ -117,6 +128,7 @@
         {
             "title": "Two faithful transitive actions of a 64-group on 8 elements",
             "slug": "slug-222-en",
+			"old-id": 222,
             "date": "2024-07-20",
             "lang": "en",
             "file": "2024-07-20.md"
@@ -124,6 +136,7 @@
         {
             "title": "A family of cyclic cubic polynomials",
             "slug": "slug-221-en",
+			"old-id": 221,
             "date": "2024-07-10",
             "lang": "en",
             "file": "2024-07-10.md"
@@ -131,6 +144,7 @@
         {
             "title": "Asymptotic speedup and data structure interpolation",
             "slug": "slug-220-en",
+			"old-id": 220,
             "date": "2024-06-10",
             "lang": "en",
             "file": "2024-06-10.md"
@@ -138,6 +152,7 @@
         {
             "title": "Simple dependency injection using monads",
             "slug": "slug-219-en",
+			"old-id": 219,
             "date": "2024-05-10",
             "lang": "en",
             "file": "2024-05-10.md"
@@ -145,6 +160,7 @@
         {
             "title": "A look around Albuquerque in QGIS",
             "slug": "slug-218-en",
+			"old-id": 218,
             "date": "2024-04-30",
             "lang": "en",
             "file": "2024-04-30.md"
@@ -152,6 +168,7 @@
         {
             "title": "Una vista áerea Albuquerque en QGIS",
             "slug": "slug-218-es",
+			"old-id": 218,
             "date": "2024-04-30",
             "lang": "es",
             "file": "2024-04-30.es.md"
@@ -159,6 +176,7 @@
         {
             "title": "RPi headless setup and remote connection",
             "slug": "slug-217-en",
+			"old-id": 217,
             "date": "2024-03-26",
             "lang": "en",
             "file": "2024-03-26.md"
@@ -166,6 +184,7 @@
         {
             "title": "Totality and non-standard recursion in Idris",
             "slug": "slug-216-en",
+			"old-id": 216,
             "date": "2024-03-20",
             "lang": "en",
             "file": "2024-03-20.md"
@@ -173,6 +192,7 @@
         {
             "title": "Totalidad y la recursión no estándar en Idris",
             "slug": "slug-216-es",
+			"old-id": 216,
             "date": "2024-03-20",
             "lang": "es",
             "file": "2024-03-20.es.md"
@@ -180,6 +200,7 @@
         {
             "title": "Der tragische Antagonist von True Detective: Night Country",
             "slug": "slug-215-de",
+			"old-id": 215,
             "date": "2024-03-10",
             "lang": "de",
             "file": "2024-03-10.de.md"
@@ -187,6 +208,7 @@
         {
             "title": "The tragic antagonist of True Detective: Night Country",
             "slug": "slug-215-en",
+			"old-id": 215,
             "date": "2024-03-10",
             "lang": "en",
             "file": "2024-03-10.md"
@@ -194,6 +216,7 @@
         {
             "title": "A Galois Theory elevator pitch",
             "slug": "slug-214-en",
+			"old-id": 214,
             "date": "2024-02-11",
             "lang": "en",
             "file": "2024-02-11.md"
@@ -201,6 +224,7 @@
         {
             "title": "Motivación elemental para la teoría de Galois",
             "slug": "slug-214-es",
+			"old-id": 214,
             "date": "2024-02-11",
             "lang": "es",
             "file": "2024-02-11.es.md"
@@ -208,6 +232,7 @@
         {
             "title": "Eine Anregung zur Galoistheorie",
             "slug": "slug-214-de",
+			"old-id": 214,
             "date": "2024-02-11",
             "lang": "de",
             "file": "2024-02-11.de.md"
@@ -215,6 +240,7 @@
         {
             "title": "Discovering copy-on-write in R",
             "slug": "slug-213-en",
+			"old-id": 213,
             "date": "2023-12-20",
             "lang": "en",
             "file": "2023-12-20.md"
@@ -222,6 +248,7 @@
         {
             "title": "A curried composition puzzle",
             "slug": "slug-212-en",
+			"old-id": 212,
             "date": "2023-12-15",
             "lang": "en",
             "file": "2023-12-15.md"
@@ -229,6 +256,7 @@
         {
             "title": "SQL injection and mitigation",
             "slug": "slug-211-en",
+			"old-id": 211,
             "date": "2023-11-15",
             "lang": "en",
             "file": "2023-11-15.md"
@@ -236,6 +264,7 @@
         {
             "title": "Finding dead links with a web crawler",
             "slug": "slug-210-en",
+			"old-id": 210,
             "date": "2023-10-15",
             "lang": "en",
             "file": "2023-10-15.md"
@@ -243,6 +272,7 @@
         {
             "title": "Memory management in Brainfuck",
             "slug": "slug-209-en",
+			"old-id": 209,
             "date": "2023-09-30",
             "lang": "en",
             "file": "2023-09-30.md"
@@ -250,6 +280,7 @@
         {
             "title": "Un rastreador de flujos sencillo",
             "slug": "slug-208-es",
+			"old-id": 208,
             "date": "2023-08-30",
             "lang": "es",
             "file": "2023-08-30.md"
@@ -257,6 +288,7 @@
         {
             "title": "Topología para la genética",
             "slug": "slug-207-es",
+			"old-id": 207,
             "date": "2023-07-15",
             "lang": "es",
             "file": "2023-07-15.md"
@@ -264,6 +296,7 @@
         {
             "title": "Topology for genetics",
             "slug": "slug-207-en",
+			"old-id": 207,
             "date": "2023-07-15",
             "lang": "en",
             "file": "2023-07-15.en.md"
@@ -271,6 +304,7 @@
         {
             "title": "Intransitive Zufallsvariablen",
             "slug": "slug-205-de",
+			"old-id": 205,
             "date": "2023-06-30",
             "lang": "de",
             "file": "2023-06-30.md"
@@ -278,6 +312,7 @@
         {
             "title": "Intransitive random variables",
             "slug": "slug-205-en",
+			"old-id": 205,
             "date": "2023-06-30",
             "lang": "en",
             "file": "2023-06-30-eng.md"
@@ -285,6 +320,7 @@
         {
             "title": "Una pequeña anomalía de codificación",
             "slug": "slug-204-es",
+			"old-id": 204,
             "date": "2023-06-15",
             "lang": "es",
             "file": "2023-06-15.md"
@@ -292,6 +328,7 @@
         {
             "title": "A little encoding anomaly",
             "slug": "slug-204-en",
+			"old-id": 204,
             "date": "2023-06-15",
             "lang": "en",
             "file": "2023-06-15.en.md"
@@ -299,6 +336,7 @@
         {
             "title": "Coproducts and case splits",
             "slug": "slug-203-en",
+			"old-id": 203,
             "date": "2023-05-30",
             "lang": "en",
             "file": "2023-05-30.md"
@@ -306,6 +344,7 @@
         {
             "title": "Abstracción de chatbots en Discord, Slack y Telegram",
             "slug": "slug-201-es",
+			"old-id": 201,
             "date": "2023-04-30",
             "lang": "es",
             "file": "2023-04-30.md"
@@ -313,6 +352,7 @@
         {
             "title": "Abstracting chatbots in Discord, Slack and Telegram",
             "slug": "slug-201-en",
+			"old-id": 201,
             "date": "2023-04-30",
             "lang": "en",
             "file": "2023-04-30-eng.md"
@@ -320,6 +360,7 @@
         {
             "title": "WebSockets para realizar computaciones remotas",
             "slug": "slug-199-es",
+			"old-id": 199,
             "date": "2023-03-13",
             "lang": "es",
             "file": "2023-03-13.md"
@@ -327,6 +368,7 @@
         {
             "title": "Doing remote computations with WebSockets",
             "slug": "slug-199-en",
+			"old-id": 199,
             "date": "2023-03-13",
             "lang": "en",
             "file": "2023-03-14-eng.md"
@@ -334,6 +376,7 @@
         {
             "title": "Counting elements of lists in Agda",
             "slug": "slug-198-en",
+			"old-id": 198,
             "date": "2023-02-14",
             "lang": "en",
             "file": "2023-02-14.md"
@@ -341,6 +384,7 @@
         {
             "title": "Ejemplos de mónadas",
             "slug": "slug-197-es",
+			"old-id": 197,
             "date": "2023-01-30",
             "lang": "es",
             "file": "2023-01-30.md"
@@ -348,6 +392,7 @@
         {
             "title": "Evitar evaluaciones sin fin en Scheme",
             "slug": "slug-195-es",
+			"old-id": 195,
             "date": "2022-11-30",
             "lang": "es",
             "file": "2022-11-30.md"
@@ -355,6 +400,7 @@
         {
             "title": "Avoiding endless evaluations in Scheme",
             "slug": "slug-195-en",
+			"old-id": 195,
             "date": "2022-11-30",
             "lang": "en",
             "file": "2022-11-30-eng.md"
@@ -362,6 +408,7 @@
         {
             "title": "Recorrer un sistema de archivos con restricciones",
             "slug": "slug-194-es",
+			"old-id": 194,
             "date": "2022-11-15",
             "lang": "es",
             "file": "2022-11-15.md"
@@ -369,6 +416,7 @@
         {
             "title": "Un sistema de lógica temporal",
             "slug": "slug-192-es",
+			"old-id": 192,
             "date": "2022-10-10",
             "lang": "es",
             "file": "2022-10-10.md"
@@ -376,6 +424,7 @@
         {
             "title": "A temporal system of logic",
             "slug": "slug-192-en",
+			"old-id": 192,
             "date": "2022-10-10",
             "lang": "en",
             "file": "2022-10-10_eng.md"
@@ -383,6 +432,7 @@
         {
             "title": "Pensamientos sobre la docencia",
             "slug": "slug-191-es",
+			"old-id": 191,
             "date": "2022-09-19",
             "lang": "es",
             "file": "2022-09-19.md"
@@ -390,6 +440,7 @@
         {
             "title": "Automating associativity",
             "slug": "slug-190-en",
+			"old-id": 190,
             "date": "2022-06-29",
             "lang": "en",
             "file": "2022-06-29.md"
@@ -397,6 +448,7 @@
         {
             "title": "Algebra and arithmetic with inductive types",
             "slug": "slug-189-en",
+			"old-id": 189,
             "date": "2022-06-02",
             "lang": "en",
             "file": "2022-06-02.md"
@@ -404,6 +456,7 @@
         {
             "title": "Three semesters of projects",
             "slug": "slug-188-en",
+			"old-id": 188,
             "date": "2022-05-20",
             "lang": "en",
             "file": "2022-05-20.md"
@@ -411,6 +464,7 @@
         {
             "title": "Funciones generadoras y el infinito potencial",
             "slug": "slug-187-es",
+			"old-id": 187,
             "date": "2022-03-16",
             "lang": "es",
             "file": "2022-03-16.md"
@@ -418,6 +472,7 @@
         {
             "title": "Analysis of growth orders, continued",
             "slug": "slug-186-en",
+			"old-id": 186,
             "date": "2022-01-30",
             "lang": "en",
             "file": "2022-01-30.md"
@@ -425,6 +480,7 @@
         {
             "title": "Analysis of growth orders of sequences",
             "slug": "slug-185-en",
+			"old-id": 185,
             "date": "2021-12-21",
             "lang": "en",
             "file": "2021-12-21.md"
@@ -432,6 +488,7 @@
         {
             "title": "قصتين في اللغة العربية",
             "slug": "slug-184-ar",
+			"old-id": 184,
             "date": "2021-12-06",
             "lang": "ar",
             "file": "2021-12-06.md"
@@ -439,6 +496,7 @@
         {
             "title": "Schauergeschichten der Analyse",
             "slug": "slug-183-de",
+			"old-id": 183,
             "date": "2021-10-31",
             "lang": "de",
             "file": "2021-10-31.md"
@@ -446,6 +504,7 @@
         {
             "title": "Sudoku en C",
             "slug": "slug-182-es",
+			"old-id": 182,
             "date": "2021-09-25",
             "lang": "es",
             "file": "2021-09-25.md"
@@ -453,6 +512,7 @@
         {
             "title": "Who's Who of Elliptic Functions",
             "slug": "slug-181-en",
+			"old-id": 181,
             "date": "2021-08-01",
             "lang": "en",
             "file": "2021-08-01.md"
@@ -460,6 +520,7 @@
         {
             "title": "Beatty Series and Sums over Rationals",
             "slug": "slug-180-en",
+			"old-id": 180,
             "date": "2021-06-01",
             "lang": "en",
             "file": "2021-06-01.md"
@@ -467,6 +528,7 @@
         {
             "title": "Convergence of Complex Power Series",
             "slug": "slug-179-en",
+			"old-id": 179,
             "date": "2021-05-11",
             "lang": "en",
             "file": "2021-05-11.md"
@@ -474,6 +536,7 @@
         {
             "title": "Polyhedra in STL and the Conway Operators",
             "slug": "slug-178-en",
+			"old-id": 178,
             "date": "2021-03-30",
             "lang": "en",
             "file": "2021-03-30.md"
@@ -481,6 +544,7 @@
         {
             "title": "Das perfekteste Bund (Fiktion)",
             "slug": "slug-177-de",
+			"old-id": 177,
             "date": "2021-03-13",
             "lang": "de",
             "file": "2021-03-13.md"
@@ -488,6 +552,7 @@
         {
             "title": "Eine Analyse des Willens",
             "slug": "slug-175-de",
+			"old-id": 175,
             "date": "2020-11-20",
             "lang": "de",
             "file": "2020-11-20.md"
@@ -495,6 +560,7 @@
         {
             "title": "An Analysis of the Will",
             "slug": "slug-175-en",
+			"old-id": 175,
             "date": "2020-11-20",
             "lang": "en",
             "file": "2020-11-20-eng.md"
@@ -502,6 +568,7 @@
         {
             "title": "Halloween with Freud",
             "slug": "slug-174-en",
+			"old-id": 174,
             "date": "2020-11-01",
             "lang": "en",
             "file": "freud_halloween.md"
@@ -509,6 +576,7 @@
         {
             "title": "Mechanical Mockery with Discord.py",
             "slug": "slug-173-en",
+			"old-id": 173,
             "date": "2020-10-30",
             "lang": "en",
             "file": "2020-10-30.md"
@@ -516,6 +584,7 @@
         {
             "title": "Who visits this blog, anyways?",
             "slug": "slug-172-en",
+			"old-id": 172,
             "date": "2020-10-11",
             "lang": "en",
             "file": "2020-10-11.md"
@@ -523,6 +592,7 @@
         {
             "title": "Introduction to Order Theory",
             "slug": "slug-171-en",
+			"old-id": 171,
             "date": "2020-09-20",
             "lang": "en",
             "file": "2020-09-20.md"
@@ -530,6 +600,7 @@
         {
             "title": "Conceptions of Infinity",
             "slug": "slug-170-en",
+			"old-id": 170,
             "date": "2020-08-23",
             "lang": "en",
             "file": "infinity_comic.md"
@@ -537,6 +608,7 @@
         {
             "title": "Recursive Generative Art with Pycairo",
             "slug": "slug-169-en",
+			"old-id": 169,
             "date": "2020-08-16",
             "lang": "en",
             "file": "2020-08-16.md"
@@ -544,6 +616,7 @@
         {
             "title": "Charon and Algernon (dialogue)",
             "slug": "slug-168-en",
+			"old-id": 168,
             "date": "2020-08-05",
             "lang": "en",
             "file": "2020-08-05.md"
@@ -551,6 +624,7 @@
         {
             "title": "Aristotle's Hylomorphism",
             "slug": "slug-167-en",
+			"old-id": 167,
             "date": "2020-07-30",
             "lang": "en",
             "file": "hylomorphism_comic.md"
@@ -558,6 +632,7 @@
         {
             "title": "Falacias que los informáticos creen sobre los nombres (traducción)",
             "slug": "slug-165-es",
+			"old-id": 165,
             "date": "2020-07-25",
             "lang": "es",
             "file": "falacias_sobre_nombres.md"
@@ -565,6 +640,7 @@
         {
             "title": "Lügen, die die Informatiker über Namen glauben (Übersetzung)",
             "slug": "slug-165-de",
+			"old-id": 165,
             "date": "2020-07-25",
             "lang": "de",
             "file": "lügen_über_namen.md"
@@ -572,6 +648,7 @@
         {
             "title": "Alternate Day-Night and Seasonal Cycles",
             "slug": "slug-164-en",
+			"old-id": 164,
             "date": "2020-07-15",
             "lang": "en",
             "file": "2020-07-15.md"
@@ -579,6 +656,7 @@
         {
             "title": "Bookworm Adventures",
             "slug": "slug-163-en",
+			"old-id": 163,
             "date": "2020-07-10",
             "lang": "en",
             "file": "2020-07-10.md"
@@ -586,6 +664,7 @@
         {
             "title": "Spiele zur subjektiven Untersuchung des Gehirns",
             "slug": "slug-162-de",
+			"old-id": 162,
             "date": "2020-06-30",
             "lang": "de",
             "file": "2020-06-30.md"
@@ -593,6 +672,7 @@
         {
             "title": "Señor Palomar (ficción)",
             "slug": "slug-160-es",
+			"old-id": 160,
             "date": "2020-06-10",
             "lang": "es",
             "file": "2020-06-10.md"
@@ -600,6 +680,7 @@
         {
             "title": "Mr. Palomar (fiction)",
             "slug": "slug-160-en",
+			"old-id": 160,
             "date": "2020-06-10",
             "lang": "en",
             "file": "2020-06-10-eng.md"
@@ -607,6 +688,7 @@
         {
             "title": "Packet-Fragmentation Optimization Problems",
             "slug": "slug-159-en",
+			"old-id": 159,
             "date": "2020-06-01",
             "lang": "en",
             "file": "2020-06-01.md"
@@ -614,6 +696,7 @@
         {
             "title": "Environmental Crossfitness in Genetic Algorithms",
             "slug": "slug-158-en",
+			"old-id": 158,
             "date": "2020-05-20",
             "lang": "en",
             "file": "2020-05-20.md"
@@ -621,6 +704,7 @@
         {
             "title": "Fish out of water (fiction)",
             "slug": "slug-156-en",
+			"old-id": 156,
             "date": "2020-05-10",
             "lang": "en",
             "file": "2020-05-10.md"
@@ -628,6 +712,7 @@
         {
             "title": "Trigonometry on the Koch Snowflake",
             "slug": "slug-157-en",
+			"old-id": 157,
             "date": "2020-04-25",
             "lang": "en",
             "file": "2020-04-25.md"
@@ -635,6 +720,7 @@
         {
             "title": "An orange (fiction)",
             "slug": "slug-155-en",
+			"old-id": 155,
             "date": "2020-04-02",
             "lang": "en",
             "file": "2020-04-02.md"
@@ -642,6 +728,7 @@
         {
             "title": "Population Puzzles and Mendelian Inheritance",
             "slug": "slug-154-en",
+			"old-id": 154,
             "date": "2020-03-07",
             "lang": "en",
             "file": "2020-03-07.md"
@@ -649,6 +736,7 @@
         {
             "title": "La hidra (ficción)",
             "slug": "slug-153-es",
+			"old-id": 153,
             "date": "2020-02-14",
             "lang": "es",
             "file": "2020-02-14.md"
@@ -656,6 +744,7 @@
         {
             "title": "Prädiktoren und Newcombs Paradoxon",
             "slug": "slug-151-de",
+			"old-id": 151,
             "date": "2020-02-07",
             "lang": "de",
             "file": "2020-02-07.md"
@@ -663,6 +752,7 @@
         {
             "title": "Predictors and Newcomb's Paradox",
             "slug": "slug-151-en",
+			"old-id": 151,
             "date": "2020-02-07",
             "lang": "en",
             "file": "2020-02-07-eng.md"
@@ -670,6 +760,7 @@
         {
             "title": "Reseña de la película 'Columbus'",
             "slug": "slug-149-es",
+			"old-id": 149,
             "date": "2020-01-19",
             "lang": "es",
             "file": "2020-01-19.md"
@@ -677,6 +768,7 @@
         {
             "title": "Review of the movie 'Columbus'",
             "slug": "slug-149-en",
+			"old-id": 149,
             "date": "2020-01-19",
             "lang": "en",
             "file": "2020-01-19-eng.md"
@@ -684,6 +776,7 @@
         {
             "title": "Aliens and Convergent Evolution",
             "slug": "slug-148-en",
+			"old-id": 148,
             "date": "2019-12-29",
             "lang": "en",
             "file": "aliens_convergent_evolution_comic.md"
@@ -691,6 +784,7 @@
         {
             "title": "SVD Decomposition and Image Compression",
             "slug": "slug-147-en",
+			"old-id": 147,
             "date": "2019-12-10",
             "lang": "en",
             "file": "2019-12-10.md"
@@ -698,6 +792,7 @@
         {
             "title": "Ambiguity in Language",
             "slug": "slug-146-en",
+			"old-id": 146,
             "date": "2019-11-15",
             "lang": "en",
             "file": "2019-11-15.md"
@@ -705,6 +800,7 @@
         {
             "title": "Loops and Groops",
             "slug": "slug-144-en",
+			"old-id": 144,
             "date": "2019-10-30",
             "lang": "en",
             "file": "2019-10-30.md"
@@ -712,6 +808,7 @@
         {
             "title": "The Limits of Science and Mathematics",
             "slug": "slug-145-en",
+			"old-id": 145,
             "date": "2019-10-26",
             "lang": "en",
             "file": "limits_of_science.md"
@@ -719,6 +816,7 @@
         {
             "title": "Pensamientos sobre la Tecnología",
             "slug": "slug-139-es",
+			"old-id": 139,
             "date": "2019-10-20",
             "lang": "es",
             "file": "2019-10-20.md"
@@ -726,6 +824,7 @@
         {
             "title": "Thoughts about Technology",
             "slug": "slug-139-en",
+			"old-id": 139,
             "date": "2019-10-20",
             "lang": "en",
             "file": "2019-10-20-eng.md"
@@ -733,6 +832,7 @@
         {
             "title": "Time Perception",
             "slug": "slug-143-en",
+			"old-id": 143,
             "date": "2019-10-10",
             "lang": "en",
             "file": "time_perception_comic.md"
@@ -740,6 +840,7 @@
         {
             "title": "Die Prinzen",
             "slug": "slug-134-de",
+			"old-id": 134,
             "date": "2019-10-05",
             "lang": "de",
             "file": "2019-10-05.md"
@@ -747,6 +848,7 @@
         {
             "title": "Die Prinzen",
             "slug": "slug-134-en",
+			"old-id": 134,
             "date": "2019-10-05",
             "lang": "en",
             "file": "2019-10-05-eng.md"
@@ -754,6 +856,7 @@
         {
             "title": "Warrant Canaries and Free Speech",
             "slug": "slug-142-en",
+			"old-id": 142,
             "date": "2019-10-01",
             "lang": "en",
             "file": "warrant_canary_comic.md"
@@ -761,6 +864,7 @@
         {
             "title": "Blue Eyes and Common Knowledge",
             "slug": "slug-130-en",
+			"old-id": 130,
             "date": "2019-09-20",
             "lang": "en",
             "file": "2019-09-20.md"
@@ -768,6 +872,7 @@
         {
             "title": "Retributive and Utilitarian Justice",
             "slug": "slug-141-en",
+			"old-id": 141,
             "date": "2019-09-20",
             "lang": "en",
             "file": "justice_comic.md"
@@ -775,6 +880,7 @@
         {
             "title": "Somos Robots",
             "slug": "slug-128-es",
+			"old-id": 128,
             "date": "2019-09-07",
             "lang": "es",
             "file": "2019-09-07.md"
@@ -782,6 +888,7 @@
         {
             "title": "We are Robots",
             "slug": "slug-128-en",
+			"old-id": 128,
             "date": "2019-09-07",
             "lang": "en",
             "file": "2019-09-07-eng.md"
@@ -789,6 +896,7 @@
         {
             "title": "Ego Depletion",
             "slug": "slug-138-en",
+			"old-id": 138,
             "date": "2019-09-03",
             "lang": "en",
             "file": "ego_depletion_comic.md"
@@ -796,6 +904,7 @@
         {
             "title": "Der Deutschkurs an der Universität Chicago",
             "slug": "slug-126-de",
+			"old-id": 126,
             "date": "2019-08-20",
             "lang": "de",
             "file": "2019-08-20.md"
@@ -803,6 +912,7 @@
         {
             "title": "The German Course at the University of Chicago",
             "slug": "slug-126-en",
+			"old-id": 126,
             "date": "2019-08-20",
             "lang": "en",
             "file": "2019-08-20-eng.md"
@@ -810,6 +920,7 @@
         {
             "title": "Forer Effect",
             "slug": "slug-137-en",
+			"old-id": 137,
             "date": "2019-08-17",
             "lang": "en",
             "file": "forer_effect_comic.md"
@@ -817,6 +928,7 @@
         {
             "title": "Análisis de la Película 'Us'",
             "slug": "slug-120-es",
+			"old-id": 120,
             "date": "2019-08-15",
             "lang": "es",
             "file": "2019-08-15.md"
@@ -824,6 +936,7 @@
         {
             "title": "Analysis of the movie 'Us'",
             "slug": "slug-120-en",
+			"old-id": 120,
             "date": "2019-08-15",
             "lang": "en",
             "file": "2019-08-15-eng.md"
@@ -831,6 +944,7 @@
         {
             "title": "Evolution with Python",
             "slug": "slug-119-en",
+			"old-id": 119,
             "date": "2019-08-05",
             "lang": "en",
             "file": "2019-08-05.md"
@@ -838,6 +952,7 @@
         {
             "title": "Snell's Law and Quickest Paths",
             "slug": "slug-118-en",
+			"old-id": 118,
             "date": "2019-07-25",
             "lang": "en",
             "file": "2019-07-25.md"
@@ -845,6 +960,7 @@
         {
             "title": "Kinderschema",
             "slug": "slug-136-en",
+			"old-id": 136,
             "date": "2019-07-25",
             "lang": "en",
             "file": "kinderschema_comic.md"
@@ -852,6 +968,7 @@
         {
             "title": "Consumer and Producer Surplus",
             "slug": "slug-115-en",
+			"old-id": 115,
             "date": "2019-07-15",
             "lang": "en",
             "file": "2019-07-15.md"
@@ -859,6 +976,7 @@
         {
             "title": "An Auction Problem",
             "slug": "slug-116-en",
+			"old-id": 116,
             "date": "2019-07-05",
             "lang": "en",
             "file": "2019-07-05.md"
@@ -866,6 +984,7 @@
         {
             "title": "El Instituto Veraniego de Idiomas",
             "slug": "slug-117-es",
+			"old-id": 117,
             "date": "2019-06-24",
             "lang": "es",
             "file": "2019-06-24.md"
@@ -873,6 +992,7 @@
         {
             "title": "El Cuarteto de Nos",
             "slug": "slug-114-es",
+			"old-id": 114,
             "date": "2019-06-10",
             "lang": "es",
             "file": "2019-06-10.md"
@@ -880,6 +1000,7 @@
         {
             "title": "Zeroes of Aperiodic Sinusoids",
             "slug": "slug-113-en",
+			"old-id": 113,
             "date": "2019-05-28",
             "lang": "en",
             "file": "2019-05-28.md"
@@ -887,6 +1008,7 @@
         {
             "title": "Supply and Demand",
             "slug": "slug-112-en",
+			"old-id": 112,
             "date": "2019-05-19",
             "lang": "en",
             "file": "2019-05-20.md"
@@ -894,6 +1016,7 @@
         {
             "title": "The Diet Problem",
             "slug": "slug-111-en",
+			"old-id": 111,
             "date": "2019-03-10",
             "lang": "en",
             "file": "2019-03-10.md"
@@ -901,6 +1024,7 @@
         {
             "title": "Utility and optimization problems",
             "slug": "slug-57-en",
+			"old-id": 57,
             "date": "2019-03-03",
             "lang": "en",
             "file": "2019-03-03_utility.md"
@@ -908,6 +1032,7 @@
         {
             "title": "Reseña del libro El juego de los abalorios, por Hermann Hesse",
             "slug": "slug-56-es",
+			"old-id": 56,
             "date": "2019-01-02",
             "lang": "es",
             "file": "2019-01-02_abalorios.md"
@@ -915,6 +1040,7 @@
         {
             "title": "Review of the book The Glass Bead Game by Hermann Hesse",
             "slug": "slug-56-en",
+			"old-id": 56,
             "date": "2019-01-02",
             "lang": "en",
             "file": "2019-01-02-eng.md"
@@ -922,6 +1048,7 @@
         {
             "title": "Reseña de la película Kumiko, Cazadora de Tesoros",
             "slug": "slug-54-es",
+			"old-id": 54,
             "date": "2018-12-27",
             "lang": "es",
             "file": "2018-12-27_kumiko.md"
@@ -929,6 +1056,7 @@
         {
             "title": "Review of the movie Kumiko the Treasure Hunter",
             "slug": "slug-54-en",
+			"old-id": 54,
             "date": "2018-12-27",
             "lang": "en",
             "file": "2018-12-27-eng.md"
@@ -936,6 +1064,7 @@
         {
             "title": "Random Variables Part 3: Continuous Distributions",
             "slug": "slug-58-en",
+			"old-id": 58,
             "date": "2018-11-03",
             "lang": "en",
             "file": "2018-11-03.md"
@@ -943,6 +1072,7 @@
         {
             "title": "Random Variables Part 2: Discrete Distributions",
             "slug": "slug-59-en",
+			"old-id": 59,
             "date": "2018-10-20",
             "lang": "en",
             "file": "2018-10-20.md"
@@ -950,6 +1080,7 @@
         {
             "title": "Random Variables Part 1: Measures of Central Tendency and Spread",
             "slug": "slug-60-en",
+			"old-id": 60,
             "date": "2018-10-10",
             "lang": "en",
             "file": "2018-10-10.md"
@@ -957,6 +1088,7 @@
         {
             "title": "Sums Involving Arithmetic Functions",
             "slug": "slug-61-en",
+			"old-id": 61,
             "date": "2018-09-01",
             "lang": "en",
             "file": "2018-09-01.md"
@@ -964,6 +1096,7 @@
         {
             "title": "Some Arithmetic Functions",
             "slug": "slug-62-en",
+			"old-id": 62,
             "date": "2018-08-25",
             "lang": "en",
             "file": "2018-08-25.md"
@@ -971,6 +1104,7 @@
         {
             "title": "About PROMYS",
             "slug": "slug-63-en",
+			"old-id": 63,
             "date": "2018-08-13",
             "lang": "en",
             "file": "2018-08-13.md"
@@ -978,6 +1112,7 @@
         {
             "title": "Interesting Trigonometric Integrals",
             "slug": "slug-64-en",
+			"old-id": 64,
             "date": "2018-06-16",
             "lang": "en",
             "file": "2018-06-16.md"
@@ -985,6 +1120,7 @@
         {
             "title": "Integrals involving Logarithms and Algebraic Functions",
             "slug": "slug-65-en",
+			"old-id": 65,
             "date": "2018-06-07",
             "lang": "en",
             "file": "2018-06-07.md"
@@ -992,6 +1128,7 @@
         {
             "title": "The Residue Theorem",
             "slug": "slug-66-en",
+			"old-id": 66,
             "date": "2018-05-26",
             "lang": "en",
             "file": "2018-05-26.md"
@@ -999,6 +1136,7 @@
         {
             "title": "A Half-Exponential Integral",
             "slug": "slug-67-en",
+			"old-id": 67,
             "date": "2018-05-19",
             "lang": "en",
             "file": "2018-05-19.md"
@@ -1006,6 +1144,7 @@
         {
             "title": "Integration without Antidifferentiation (Part 2)",
             "slug": "slug-68-en",
+			"old-id": 68,
             "date": "2018-04-26",
             "lang": "en",
             "file": "2018-04-26.md"
@@ -1013,6 +1152,7 @@
         {
             "title": "Dirichlet Series",
             "slug": "slug-69-en",
+			"old-id": 69,
             "date": "2018-04-12",
             "lang": "en",
             "file": "2018-04-12.md"
@@ -1020,6 +1160,7 @@
         {
             "title": "Multidimensional Integrals",
             "slug": "slug-70-en",
+			"old-id": 70,
             "date": "2018-03-30",
             "lang": "en",
             "file": "2018-03-30.md"
@@ -1027,6 +1168,7 @@
         {
             "title": "The Gamma and Digamma functions",
             "slug": "slug-71-en",
+			"old-id": 71,
             "date": "2018-03-10",
             "lang": "en",
             "file": "2018-03-10.md"
@@ -1034,6 +1176,7 @@
         {
             "title": "Reciprocal-Fibonacci Series",
             "slug": "slug-72-en",
+			"old-id": 72,
             "date": "2018-01-30",
             "lang": "en",
             "file": "2018-01-30.md"
@@ -1041,6 +1184,7 @@
         {
             "title": "Some Double-Exponential Series",
             "slug": "slug-73-en",
+			"old-id": 73,
             "date": "2018-01-07",
             "lang": "en",
             "file": "2018-01-07.md"
@@ -1048,6 +1192,7 @@
         {
             "title": "Using complex numbers to evaluate series",
             "slug": "slug-74-en",
+			"old-id": 74,
             "date": "2017-12-22",
             "lang": "en",
             "file": "2017-12-22.md"
@@ -1055,6 +1200,7 @@
         {
             "title": "Fractional Iterates",
             "slug": "slug-75-en",
+			"old-id": 75,
             "date": "2017-12-08",
             "lang": "en",
             "file": "2017-12-08.md"
@@ -1062,6 +1208,7 @@
         {
             "title": "Strange recursions",
             "slug": "slug-76-en",
+			"old-id": 76,
             "date": "2017-11-14",
             "lang": "en",
             "file": "2017-11-14.md"
@@ -1069,6 +1216,7 @@
         {
             "title": "A summary of functional iteration",
             "slug": "slug-77-en",
+			"old-id": 77,
             "date": "2017-11-04",
             "lang": "en",
             "file": "2017-11-04.md"
@@ -1076,6 +1224,7 @@
         {
             "title": "Solving Difference Equations",
             "slug": "slug-78-en",
+			"old-id": 78,
             "date": "2017-10-14",
             "lang": "en",
             "file": "2017-10-14.md"
@@ -1083,6 +1232,7 @@
         {
             "title": "Integration without Antidifferentiation",
             "slug": "slug-79-en",
+			"old-id": 79,
             "date": "2017-09-05",
             "lang": "en",
             "file": "2017-09-05.md"
@@ -1090,6 +1240,7 @@
         {
             "title": "More Functional Equations",
             "slug": "slug-80-en",
+			"old-id": 80,
             "date": "2017-08-15",
             "lang": "en",
             "file": "2017-08-15.md"
@@ -1097,6 +1248,7 @@
         {
             "title": "Sums with Binomial Coefficients",
             "slug": "slug-81-en",
+			"old-id": 81,
             "date": "2017-07-30",
             "lang": "en",
             "file": "2017-07-30.md"
@@ -1104,6 +1256,7 @@
         {
             "title": "Inverse Trigonometric Identities",
             "slug": "slug-82-en",
+			"old-id": 82,
             "date": "2017-07-10",
             "lang": "en",
             "file": "2017-07-10.md"
@@ -1111,6 +1264,7 @@
         {
             "title": "Roulettes, non-Russian",
             "slug": "slug-83-en",
+			"old-id": 83,
             "date": "2017-07-03",
             "lang": "en",
             "file": "2017-07-03.md"
@@ -1118,6 +1272,7 @@
         {
             "title": "Non-telescoping Sums",
             "slug": "slug-84-en",
+			"old-id": 84,
             "date": "2017-06-24",
             "lang": "en",
             "file": "2017-06-24.md"
@@ -1125,6 +1280,7 @@
         {
             "title": "The Gamma and Lambert-W Functions",
             "slug": "slug-85-en",
+			"old-id": 85,
             "date": "2017-06-21",
             "lang": "en",
             "file": "2017-06-21.md"
@@ -1132,6 +1288,7 @@
         {
             "title": "Extension of Summation Bounds",
             "slug": "slug-86-en",
+			"old-id": 86,
             "date": "2017-06-11",
             "lang": "en",
             "file": "2017-06-11.md"
@@ -1139,6 +1296,7 @@
         {
             "title": "Telescoping Sums",
             "slug": "slug-87-en",
+			"old-id": 87,
             "date": "2017-06-09",
             "lang": "en",
             "file": "2017-06-09.md"
@@ -1146,6 +1304,7 @@
         {
             "title": "The Billiard Ball Problem",
             "slug": "slug-88-en",
+			"old-id": 88,
             "date": "2017-06-03",
             "lang": "en",
             "file": "2017-06-03.md"
@@ -1153,6 +1312,7 @@
         {
             "title": "Solving Functional Equations",
             "slug": "slug-89-en",
+			"old-id": 89,
             "date": "2017-05-31",
             "lang": "en",
             "file": "2017-05-31.md"
@@ -1160,6 +1320,7 @@
         {
             "title": "Pascal's Trapezoid and Some Puzzles",
             "slug": "slug-90-en",
+			"old-id": 90,
             "date": "2017-05-22",
             "lang": "en",
             "file": "2017-05-22.md"
@@ -1167,6 +1328,7 @@
         {
             "title": "Digit Sums",
             "slug": "slug-91-en",
+			"old-id": 91,
             "date": "2017-05-13",
             "lang": "en",
             "file": "2017-05-13.md"
@@ -1174,6 +1336,7 @@
         {
             "title": "Two Divisibility Problems",
             "slug": "slug-92-en",
+			"old-id": 92,
             "date": "2017-05-09",
             "lang": "en",
             "file": "2017-05-09.md"
@@ -1181,6 +1344,7 @@
         {
             "title": "Pascal's Triangle",
             "slug": "slug-93-en",
+			"old-id": 93,
             "date": "2017-05-06",
             "lang": "en",
             "file": "2017-05-06.md"
@@ -1188,6 +1352,7 @@
         {
             "title": "Explicit Fibonacci Sequence",
             "slug": "slug-94-en",
+			"old-id": 94,
             "date": "2017-04-29",
             "lang": "en",
             "file": "2017-04-29.md"
@@ -1195,6 +1360,7 @@
         {
             "title": "n-Involutory Rational Functions",
             "slug": "slug-95-en",
+			"old-id": 95,
             "date": "2017-04-17",
             "lang": "en",
             "file": "2017-04-17.md"
@@ -1202,6 +1368,7 @@
         {
             "title": "Iterated Polynomials",
             "slug": "slug-96-en",
+			"old-id": 96,
             "date": "2017-04-09",
             "lang": "en",
             "file": "2017-04-09.md"
@@ -1209,6 +1376,7 @@
         {
             "title": "More on Iterated Functions",
             "slug": "slug-97-en",
+			"old-id": 97,
             "date": "2017-04-04",
             "lang": "en",
             "file": "2017-04-04.md"
@@ -1216,6 +1384,7 @@
         {
             "title": "Amortization Formulas",
             "slug": "slug-98-en",
+			"old-id": 98,
             "date": "2017-03-30",
             "lang": "en",
             "file": "2017-03-30.md"
@@ -1223,6 +1392,7 @@
         {
             "title": "Area Under a Sine Arch",
             "slug": "slug-99-en",
+			"old-id": 99,
             "date": "2017-03-09",
             "lang": "en",
             "file": "2017-03-09.md"
@@ -1230,6 +1400,7 @@
         {
             "title": "Squares in a Lattice Grid",
             "slug": "slug-100-en",
+			"old-id": 100,
             "date": "2017-02-24",
             "lang": "en",
             "file": "2017-02-24.md"
@@ -1237,6 +1408,7 @@
         {
             "title": "Slicing a Plane",
             "slug": "slug-101-en",
+			"old-id": 101,
             "date": "2017-02-19",
             "lang": "en",
             "file": "2017-02-19.md"
@@ -1244,6 +1416,7 @@
         {
             "title": "Triangle Median Problem",
             "slug": "slug-102-en",
+			"old-id": 102,
             "date": "2017-02-10",
             "lang": "en",
             "file": "2017-02-10.md"
@@ -1251,6 +1424,7 @@
         {
             "title": "How to Graph a Donut",
             "slug": "slug-103-en",
+			"old-id": 103,
             "date": "2017-01-28",
             "lang": "en",
             "file": "2017-01-28.md"
@@ -1258,6 +1432,7 @@
         {
             "title": "Iterated Functions",
             "slug": "slug-104-en",
+			"old-id": 104,
             "date": "2017-01-12",
             "lang": "en",
             "file": "2017-01-12.md"
@@ -1265,6 +1440,7 @@
         {
             "title": "The Lemniscate",
             "slug": "slug-105-en",
+			"old-id": 105,
             "date": "2016-12-27",
             "lang": "en",
             "file": "2016-12-27.md"
@@ -1272,6 +1448,7 @@
         {
             "title": "Tilted Parabola",
             "slug": "slug-106-en",
+			"old-id": 106,
             "date": "2016-12-07",
             "lang": "en",
             "file": "2016-12-07.md"
@@ -1279,6 +1456,7 @@
         {
             "title": "Distance from a Point to a Line",
             "slug": "slug-107-en",
+			"old-id": 107,
             "date": "2016-12-01",
             "lang": "en",
             "file": "2016-12-01.md"
@@ -1286,6 +1464,7 @@
         {
             "title": "Island Bomb Problem",
             "slug": "slug-108-en",
+			"old-id": 108,
             "date": "2016-11-20",
             "lang": "en",
             "file": "2016-11-20.md"
@@ -1293,6 +1472,7 @@
         {
             "title": "Area of a Regular Polygon",
             "slug": "slug-109-en",
+			"old-id": 109,
             "date": "2016-11-08",
             "lang": "en",
             "file": "2016-11-08.md"
@@ -1300,6 +1480,7 @@
         {
             "title": "Centroid of a Triangle",
             "slug": "slug-110-en",
+			"old-id": 110,
             "date": "2016-11-05",
             "lang": "en",
             "file": "2016-11-05.md"

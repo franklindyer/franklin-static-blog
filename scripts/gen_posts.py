@@ -65,6 +65,16 @@ def generate_post_list():
     f.write(html_page)
     f.close()
 
+
+def generate_redirects():
+    f = open(f"./dist/_redirects", 'w')
+    for e in INDEX["entries"]:
+        if "old-id" in e:
+            f.write(f"/post/{e['old-id']} /{e['slug']}\n")
+            if not (f"slug-{e['old-id']}" in e['slug']):
+                f.write(f"/slug-{e['old-id']}-{e.get('lang')} /{e['slug']}\n")
+
 generate_all_posts()
 generate_post_list()
+generate_redirects()
 generate_homepage()
