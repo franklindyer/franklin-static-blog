@@ -1,6 +1,6 @@
-<p>You can find my <a href="/pages/franklin_cv.html">CV here</a>.</p>
-
 <img src="/img/me.png" id="picture-of-me" />
+
+<p>You can find my <a href="/pages/franklin_cv.html">CV here</a>.</p>
 
 <details>
 
