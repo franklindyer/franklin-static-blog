@@ -70,9 +70,9 @@ def generate_redirects():
     f = open(f"./dist/_redirects", 'w')
     for e in INDEX["entries"]:
         if "old-id" in e:
-            f.write(f"/post/{e['old-id']} /{e['slug']}\n")
+            f.write(f"/post/{e['old-id']} /{make_post_filename(e)}\n")
             if not (f"slug-{e['old-id']}" in e['slug']):
-                f.write(f"/slug-{e['old-id']}-{e.get('lang')} /{e['slug']}\n")
+                f.write(f"/slug-{e['old-id']}-{e.get('lang')} /{make_post_filename(e)}\n")
 
 generate_all_posts()
 generate_post_list()
