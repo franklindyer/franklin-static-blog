@@ -17,7 +17,7 @@
         <li><a href="https://abstract.narfnilk.com">Abstractionary</a>, an online multiplayer word-guessing game</li>
         <li><a href="https://paramest.com">Statistical parameter estimation puzzles</a> run in the browser using WebR</li>
         <li><a href="https://flashcardapp.org">Flashcard app</a>, still very much a work-in-progress</li>
-        <li><a href="https://www.narfnilk.com/asymptotic-calculator/">Asymptotic growth order calculator</a>, an offshoot of my undergrad research</li>
+        <li><a href="https://asymptotic-calculator.com">Asymptotic growth order calculator</a>, an offshoot of my undergrad research</li>
     </ul>
 
     <h2>Recent posts</h2>
