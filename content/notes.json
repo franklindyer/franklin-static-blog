@@ -68,6 +68,11 @@
 
         "Languages": [
             {
+                "title": "Grammar terminology cheatsheet",
+                "slug": "grammar-terms-cheatsheet",
+                "file": "grammar-terms-cheatsheet.md"
+            },
+            {
                 "title": "Useful German vocab for math writing",
                 "slug": "german-math-vocab",
                 "file": "german-math-vocab.md"
