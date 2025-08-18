@@ -10,6 +10,13 @@
 
     "entries": [
         {
+            "title": "Interessante Eigenartigkeiten der russischen Grammatik",
+            "slug": "eigenartigkeiten-von-russisch",
+            "date": "2025-09-01",
+            "lang": "de",
+            "file": "2025-09-01-de.md"
+        },
+        {
             "title": "Eine knappe Erklärung von der Kosinus-Formel des Skalarprodukts",
             "slug": "dot-product-cosine-formula",
             "date": "2025-08-15",
