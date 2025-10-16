@@ -14,35 +14,40 @@
             "slug": "eigenartigkeiten-von-russisch",
             "date": "2025-09-01",
             "lang": "de",
-            "file": "2025-09-01-de.md"
+            "file": "2025-09-01-de.md",
+            "tags": ["russian", "language"]
         },
         {
             "title": "Eine knappe Erklärung von der Kosinus-Formel des Skalarprodukts",
             "slug": "dot-product-cosine-formula",
             "date": "2025-08-15",
             "lang": "de",
-            "file": "2025-08-15-de.md"
+            "file": "2025-08-15-de.md",
+            "tags": ["math", "geometry", "trig"]
         },
         {
             "title": "A deceptively simple-looking minimax problem",
             "slug": "minimax-uniform-lehmann",
             "date": "2025-07-15",
             "lang": "en",
-            "file": "2025-07-15.md"
+            "file": "2025-07-15.md",
+            "tags": ["math", "stats"]
         },
         {
             "title": "Untersuchung von einer schwingenden Beatty-artigen Folge",
             "slug": "oscillating-beatty-golden-ratio-sum",
             "date": "2025-06-20",
             "lang": "de",
-            "file": "2025-06-20-de.md"
+            "file": "2025-06-20-de.md",
+            "tags": ["math", "sequences-and-series"]
         },
         {
             "title": "Eine Technik zur Vereinfachung von aus Rekursionsgleichungen entstandenen Wachstumsklassen",
             "slug": "moderate-recurrence-trick",
             "date": "2025-06-01",
             "lang": "de",
-            "file": "2025-06-01-de.md"
+            "file": "2025-06-01-de.md",
+            "tags": ["math", "asymptotics", "sequences-and-series"]
         },
         {
             "title": "Variación acotada y el operador de traslado",
@@ -50,7 +55,8 @@
 			"old-id": 231,
             "date": "2025-05-20",
             "lang": "es",
-            "file": "2025-05-20.md"
+            "file": "2025-05-20.md",
+            "tags": ["math", "analysis"]
         },
         {
             "title": "Ideal scaling of spaced repetition",
@@ -58,7 +64,8 @@
 			"old-id": 230,
             "date": "2025-02-20",
             "lang": "en",
-            "file": "2025-02-20.md"
+            "file": "2025-02-20.md",
+            "tags": ["math", "language", "asymptotics"]
         },
         {
             "title": "Some collected cool stats about the Wiener process",
@@ -66,7 +73,8 @@
 			"old-id": 229,
             "date": "2024-12-30",
             "lang": "en",
-            "file": "2024-12-30.md"
+            "file": "2024-12-30.md",
+            "tags": ["math", "stats"]
         },
         {
             "title": "A character's journey from finger to glyph",
@@ -74,7 +82,8 @@
 			"old-id": 228,
             "date": "2024-11-30",
             "lang": "en",
-            "file": "2024-11-30.md"
+            "file": "2024-11-30.md",
+            "tags": ["software", "cs", "text"]
         },
         {
             "title": "A shitpost about Unicode's superscript digits",
@@ -82,7 +91,8 @@
 			"old-id": 227,
             "date": "2024-11-10",
             "lang": "en",
-            "file": "2024-11-10.md"
+            "file": "2024-11-10.md",
+            "tags": ["text"]
         },
         {
             "title": "Ein Shitpost über die Hochzahlen in Unicode",
@@ -90,7 +100,8 @@
 			"old-id": 227,
             "date": "2024-11-10",
             "lang": "de",
-            "file": "2024-11-10.de.md"
+            "file": "2024-11-10.de.md",
+            "tags": ["text"]
         },
         {
             "title": "A cartoon primer on online advertising",
@@ -98,7 +109,8 @@
 			"old-id": 226,
             "date": "2024-10-15",
             "lang": "en",
-            "file": "2024-10-15.md"
+            "file": "2024-10-15.md",
+            "tags": ["comic", "society"]
         },
         {
             "title": "Garbage collection by reference counting in a simple Lisp-like language",
@@ -106,7 +118,8 @@
 			"old-id": 225,
             "date": "2024-09-30",
             "lang": "en",
-            "file": "2024-09-30.md"
+            "file": "2024-09-30.md",
+            "tags": ["cs", "software"]
         },
         {
             "title": "Monodromy in graphs and spaces",
@@ -114,7 +127,8 @@
 			"old-id": 224,
             "date": "2024-08-30",
             "lang": "en",
-            "file": "2024-08-30.md"
+            "file": "2024-08-30.md",
+            "tags": ["math", "puzzle", "algebra"]
         },
         {
             "title": "Lessons from implementing Sokoban for the Intel 8080",
@@ -122,7 +136,8 @@
 			"old-id": 223,
             "date": "2024-08-10",
             "lang": "en",
-            "file": "2024-08-10.md"
+            "file": "2024-08-10.md",
+            "tags": ["cs", "software"]
         },
         {
             "title": " Was ich beim Implementieren von Sokoban fürs Intel 8080 gelernt habe",
@@ -130,7 +145,8 @@
 			"old-id": 223,
             "date": "2024-08-10",
             "lang": "de",
-            "file": "2024-08-10.de.md"
+            "file": "2024-08-10.de.md",
+            "tags": ["cs", "software"]
         },
         {
             "title": "Two faithful transitive actions of a 64-group on 8 elements",
@@ -138,7 +154,8 @@
 			"old-id": 222,
             "date": "2024-07-20",
             "lang": "en",
-            "file": "2024-07-20.md"
+            "file": "2024-07-20.md",
+            "tags": ["math", "algebra"]
         },
         {
             "title": "A family of cyclic cubic polynomials",
@@ -146,7 +163,8 @@
 			"old-id": 221,
             "date": "2024-07-10",
             "lang": "en",
-            "file": "2024-07-10.md"
+            "file": "2024-07-10.md",
+            "tags": ["math", "algebra", "trig"]
         },
         {
             "title": "Asymptotic speedup and data structure interpolation",
@@ -154,7 +172,8 @@
 			"old-id": 220,
             "date": "2024-06-10",
             "lang": "en",
-            "file": "2024-06-10.md"
+            "file": "2024-06-10.md",
+            "tags": ["cs", "math", "asymptotics"]
         },
         {
             "title": "Simple dependency injection using monads",
@@ -162,7 +181,8 @@
 			"old-id": 219,
             "date": "2024-05-10",
             "lang": "en",
-            "file": "2024-05-10.md"
+            "file": "2024-05-10.md",
+            "tags": ["cs", "functional"]
         },
         {
             "title": "A look around Albuquerque in QGIS",
@@ -170,7 +190,8 @@
 			"old-id": 218,
             "date": "2024-04-30",
             "lang": "en",
-            "file": "2024-04-30.md"
+            "file": "2024-04-30.md",
+            "tags": ["software", "stats"]
         },
         {
             "title": "Una vista áerea Albuquerque en QGIS",
@@ -178,7 +199,8 @@
 			"old-id": 218,
             "date": "2024-04-30",
             "lang": "es",
-            "file": "2024-04-30.es.md"
+            "file": "2024-04-30.es.md",
+            "tags": ["software", "stats"]
         },
         {
             "title": "RPi headless setup and remote connection",
@@ -186,7 +208,8 @@
 			"old-id": 217,
             "date": "2024-03-26",
             "lang": "en",
-            "file": "2024-03-26.md"
+            "file": "2024-03-26.md",
+            "tags": ["software"]
         },
         {
             "title": "Totality and non-standard recursion in Idris",
@@ -194,7 +217,8 @@
 			"old-id": 216,
             "date": "2024-03-20",
             "lang": "en",
-            "file": "2024-03-20.md"
+            "file": "2024-03-20.md",
+            "tags": ["cs", "math", "functional"]
         },
         {
             "title": "Totalidad y la recursión no estándar en Idris",
@@ -202,7 +226,8 @@
 			"old-id": 216,
             "date": "2024-03-20",
             "lang": "es",
-            "file": "2024-03-20.es.md"
+            "file": "2024-03-20.es.md",
+            "tags": ["cs", "math", "functional"]
         },
         {
             "title": "Der tragische Antagonist von True Detective: Night Country",
@@ -210,7 +235,8 @@
 			"old-id": 215,
             "date": "2024-03-10",
             "lang": "de",
-            "file": "2024-03-10.de.md"
+            "file": "2024-03-10.de.md",
+            "tags": ["writing", "film"]
         },
         {
             "title": "The tragic antagonist of True Detective: Night Country",
@@ -218,7 +244,8 @@
 			"old-id": 215,
             "date": "2024-03-10",
             "lang": "en",
-            "file": "2024-03-10.md"
+            "file": "2024-03-10.md",
+            "tags": ["writing", "film"]
         },
         {
             "title": "A Galois Theory elevator pitch",
@@ -226,7 +253,8 @@
 			"old-id": 214,
             "date": "2024-02-11",
             "lang": "en",
-            "file": "2024-02-11.md"
+            "file": "2024-02-11.md",
+            "tags": ["math", "algebra"]
         },
         {
             "title": "Motivación elemental para la teoría de Galois",
@@ -234,7 +262,8 @@
 			"old-id": 214,
             "date": "2024-02-11",
             "lang": "es",
-            "file": "2024-02-11.es.md"
+            "file": "2024-02-11.es.md",
+            "tags": ["math", "algebra"]
         },
         {
             "title": "Eine Anregung zur Galoistheorie",
@@ -242,7 +271,8 @@
 			"old-id": 214,
             "date": "2024-02-11",
             "lang": "de",
-            "file": "2024-02-11.de.md"
+            "file": "2024-02-11.de.md",
+            "tags": ["math", "algebra"]
         },
         {
             "title": "Discovering copy-on-write in R",
@@ -250,7 +280,8 @@
 			"old-id": 213,
             "date": "2023-12-20",
             "lang": "en",
-            "file": "2023-12-20.md"
+            "file": "2023-12-20.md",
+            "tags": ["cs", "math", "software", "stats"]
         },
         {
             "title": "A curried composition puzzle",
@@ -258,7 +289,8 @@
 			"old-id": 212,
             "date": "2023-12-15",
             "lang": "en",
-            "file": "2023-12-15.md"
+            "file": "2023-12-15.md",
+            "tags": ["cs", "math", "functional"]
         },
         {
             "title": "SQL injection and mitigation",
@@ -266,7 +298,8 @@
 			"old-id": 211,
             "date": "2023-11-15",
             "lang": "en",
-            "file": "2023-11-15.md"
+            "file": "2023-11-15.md",
+            "tags": ["cs", "web", "security"]
         },
         {
             "title": "Finding dead links with a web crawler",
@@ -274,7 +307,8 @@
 			"old-id": 210,
             "date": "2023-10-15",
             "lang": "en",
-            "file": "2023-10-15.md"
+            "file": "2023-10-15.md",
+            "tags": ["web", "software"]
         },
         {
             "title": "Memory management in Brainfuck",
@@ -282,7 +316,8 @@
 			"old-id": 209,
             "date": "2023-09-30",
             "lang": "en",
-            "file": "2023-09-30.md"
+            "file": "2023-09-30.md",
+            "tags": ["cs", "math", "puzzle"]
         },
         {
             "title": "Un rastreador de flujos sencillo",
@@ -290,7 +325,8 @@
 			"old-id": 208,
             "date": "2023-08-30",
             "lang": "es",
-            "file": "2023-08-30.md"
+            "file": "2023-08-30.md",
+            "tags": ["cs", "software"]
         },
         {
             "title": "Topología para la genética",
@@ -298,7 +334,8 @@
 			"old-id": 207,
             "date": "2023-07-15",
             "lang": "es",
-            "file": "2023-07-15.md"
+            "file": "2023-07-15.md",
+            "tags": ["math"]
         },
         {
             "title": "Topology for genetics",
@@ -306,7 +343,8 @@
 			"old-id": 207,
             "date": "2023-07-15",
             "lang": "en",
-            "file": "2023-07-15.en.md"
+            "file": "2023-07-15.en.md",
+            "tags": ["math"]
         },
         {
             "title": "Intransitive Zufallsvariablen",
@@ -314,7 +352,8 @@
 			"old-id": 205,
             "date": "2023-06-30",
             "lang": "de",
-            "file": "2023-06-30.md"
+            "file": "2023-06-30.md",
+            "tags": ["math", "stats"]
         },
         {
             "title": "Intransitive random variables",
@@ -322,7 +361,8 @@
 			"old-id": 205,
             "date": "2023-06-30",
             "lang": "en",
-            "file": "2023-06-30-eng.md"
+            "file": "2023-06-30-eng.md",
+            "tags": ["math", "stats"]
         },
         {
             "title": "Una pequeña anomalía de codificación",
