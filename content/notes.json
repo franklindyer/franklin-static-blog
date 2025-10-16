@@ -87,6 +87,14 @@
                 "slug": "russian-cases-cheatsheet",
                 "file": "russian-cases-cheatsheet.md"
             }
+        ],
+
+        "Misc": [
+            {
+                "title": "Reading list",
+                "slug": "reading-list",
+                "file": "reading-list.md"
+            }
         ]
     }
 }

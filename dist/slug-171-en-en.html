@@ -332,65 +332,7 @@
 
 <p>For example, in his <em>Metaphysics</em>, Aristotle considers the chain of causation that culminates in the occurrence of an event. Consider the event of me pressing a key on my keyboard. We can identify a thought in my mind as a cause of that event, and the cause of the thought in my brain can be identified and some pattern of electrical impulses, and so on. To formalize this chain of causation, we might let $E_0$ represent the pressing of a key on my keyboard, $E_1$ represent the thought in my mind, $E_2$ represent the pattern of neuron firings, $E_3$ the cause of those neuronal firings, and so on. And we might symbolically represent the assertion “$A$ is causally prior to $B$” by writing $A &lt; B$. Then our chain of causality can be expressed as an order:</p>
 
-<p>
-<script type="math/tex; mode=display">...<E_3<E_2<E_1<E_0</script>
-</p>
-
-<p>Aristotle, who is hostile to the notion of a “completed” or “actual” infinity, insists that this chain cannot continue indefinitely and therefore must eventually terminate:</p>
-
-<p>
-<script type="math/tex; mode=display">E_n<...<E_3<E_2<E_1<E_0</script>
-</p>
-
-<p>In other words, any causal chain leading up to a current event must be order-isomorphic to $[n+1]$ for some positive $n$, according to Aristotle. (And the first element of this chain is the “prime mover” which sets all other events in motion, which Aristotle equates with God.) But if we dismiss Aristotle’s views on infinity, we can use order theory to construct all sorts of bizarre conceptions of how causality might work. For example, we might permit the possibility of a causal chain isomorphic to $\mathbb N^d$, in which there is no “most prior” event or cause, and every event is caused by some causally prior event. Or we might conceive of a causal chain taking the form $(\omega + 1)^d$:</p>
-
-<p>
-<script type="math/tex; mode=display">E_\omega...<E_3<E_2<E_1<E_0</script>
-</p>
-
-<p>in which every causal chain stretches back infinitely far, and yet is caused by some event $E_\omega$ that is causally prior to all other events (similarly to Aristotle’s “prime mover”). </p>
-
-<p>There’s even a case to be made for modelling causality using a <em>dense</em> ordering. Consider once more the event $E_0$ of a key on my keyboard being pressed. We might say that this event was caused by $E_1$, a thought in my brain:</p>
-
-<p>
-<script type="math/tex; mode=display">E_1 < E_0</script>
-</p>
-
-<p>But we might also say that it was caused <em>more proximately</em> by the movement of muscles in my finger, which we can denote $E_{1/2}$, and that this movement of muscles was caused by my thought:</p>
-
-<p>
-<script type="math/tex; mode=display">E_1 < E_{1/2} < E_0</script>
-</p>
-
-<p>Then again, we might say that the <em>more proximate</em> cause of the key being pressed was the exertion of a force against the key by my finger (which we may denote $E_{1/3}$), which was caused by the movement of muscles in my finger. And the movement of muscles in my finger was not caused directly by my thought, but by an electrical impulse sent from my brain to my nerve cells (denoted $E_{2/3}$). So now we have</p>
-
-<p>
-<script type="math/tex; mode=display">E_1 < E_{2/3} < E_{1/2} < E_{1/3} <E_0</script>
-</p>
-
-<p>Can you see where I’m going with this? It seems that between any two events, we can find some causally intermediate event that is causally prior to the latter and causally posterior to the former. So maybe the causal structure of events leading up to the current moment should be modelled by something like $\mathbb Q$, or perhaps even $\mathbb R$!</p>
-
-<p>One more quick example before I wrap up: this time, it’s taken from ethics rather than metaphysics. The philosopher John Stuart Mill was a proponent of the theory of utilitarianism, which relates morality to human happiness or pleasure. In order to determine which actions are “good” or distinguish between “better” and “worse” actions, one must determine which produces the most human happiness. (That’s a bit of an oversimplification, but it suffices for our purposes.)</p>
-
-<p>One common objection to utilitarianism is that it encourages hedonism - if “goodness” is tied to maximizing pleasure, then we all ought to lavish ourselves with sensual pleasures as much as possible, but this seems like an absurd piece of moral advice. Mill attempts to defend utilitarianism by distinguishing between “higher pleasures” (i.e. pleasures of the mind, such as contemplation and learning) and “lower pleasures” (i.e. sensual pleasures like food and sex). According to Mill, even the tiniest amount of a higher pleasure is superior to an arbitrarily intense lower pleasure.</p>
-
-<p>We can reframe Mill’s reform of utilitarianism in terms of order theory. The traditional scale upon which one would rank pleasures might be, say, $\mathbb N$:</p>
-
-<p>
-<script type="math/tex; mode=display">P_0 < P_1 < P_2 < P_3 < ...</script>
-</p>
-
-<p>with $P_0$ representing no pleasure at all, $P_1$ representing the smallest detectable amount of pleasure, and so on. Assuming that this list contains infinitely many sensual pleasures, any pleasure in this order (say $P_{453}$, the pleasure of finally finishing a lengthy blog post) is exceeded by some sensual pleasure ($P_{501}$, the pleasure of eating a corn-dog). This is bad news for utilitarianism, because it means that there’s no reason for me to ever finish my blog posts ($P_{453}$) when I can gain more pleasure by eating corn dogs ($P_{501}$).</p>
-
-<p>Mill’s solution is to use a hierarchy of pleasures that looks like this:</p>
-
-<p>
-<script type="math/tex; mode=display">P_0 < P_1 < P_2 < ... < P_{\omega} < P_{\omega + 1} < P_{\omega + 2} < ...</script>
-</p>
-
-<p>In this arrangement, $P_0$ is no pleasure at all, $P_1$ and all of its successors are lower pleasures, and $P_\omega$ and its successors are higher pleasures. This order, which is isomorphic to $2\mathbb N$, reflects Mill’s view that no lower pleasure, however great, is greater than even the smallest amount of any higher pleasure.</p>
-
-<p>With that example, I’ll conclude this monster of a blog post! </p>
+<p>$$...</p>
 
     <br>
 <a href="/">go to homepage</a>
