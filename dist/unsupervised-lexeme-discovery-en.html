@@ -1,0 +1,211 @@
+<html>
+<head>
+    <title>A vector technique for unsupervised lexeme discovery</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5b8562dcfaa5413ba2aea8294b9d585e"}'></script><!-- End Cloudflare Web Analytics -->
+</head>
+<body>
+    <h2>A vector technique for unsupervised lexeme discovery</h2>
+
+<p>Lately I've been an active contributor to <a href="https://tatoeba.org/en">Tatoeba</a>, a huge open-source collection of parallel sentences in many different world languages. Aside from being an amazing resource for the languages I'm studying, it's given me exposure to languages that I didn't even know existed before, and it's also a great dataset for NLP projects.</p>
+
+<p>I've been mulling over the following question: given a bunch of example sentences translated into your own language, would it be possible to algorithmically deduce translations for individual lexemes/morphemes? When done manually, this task is fairly simple. For instance, I don't know any Hungarian, but if I were given the following Hungarian translations of English sentences:</p>
+
+<table>
+<thead>
+<tr>
+<th>English</th>
+<th>Hungarian</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tom filled the bottle with drinking water.</td>
+<td>Tom megtöltötte az üveget ivóvízzel.</td>
+</tr>
+<tr>
+<td>Tom drinks at least three liters of water every day.</td>
+<td>Tom naponta legalább három liter vizet iszik.</td>
+</tr>
+<tr>
+<td>If it weren't for water, humans wouldn't survive.</td>
+<td>Ha nem lenne víz, az emberek nem élnék túl.</td>
+</tr>
+<tr>
+<td>The water came up to our knees.</td>
+<td>A víz térdig ért.</td>
+</tr>
+<tr>
+<td>I would like some water.</td>
+<td>Kérek egy kis vizet.</td>
+</tr>
+</tbody>
+</table>
+
+<p>...then after staring at these sentences for a while, I would be able to guess that the word for <code>water</code> in Hungarian is <code>víz</code> without any prior knowledge. This is because the only thing in common between the English sentences is the word <code>water</code>, whereas for the Hungarian sentences it seems to be <code>víz</code> or <code>viz</code> (sometimes with additional prefixes/suffixes). In fact, I would also be willing to guess that <code>ivóvízzel</code> means <code>drinking water</code>.</p>
+
+<p>Really, all I did was look at these sentences, find some common subsequences of characters, and make a heuristic judgment about what the most likely translation of the word <code>water</code> would be. This process seems like it should be susceptible to automation, so I gave it a try! </p>
+
+<p>Most of the NLP tools and algorithms that I've learned about are for processing text at the word/morpheme level, and presuppose a tokenizer/lemmatizer/stemmer for the target language. This task, however, occurs at the character level and concerns how we discover lexemes/morphemes in the first place. I'm not familiar with many NLP techniques that work at this low of a level, so this problem has been a very fun challenge! </p>
+
+<p>Below, I explain my approach and discuss some of its current weaknesses.</p>
+
+<hr>
+
+<p>But first, a little eye candy!</p>
+
+<p>Given a list of sentences in a target language with a word/phrase/substring in common between their English translations, my code calculates a kind of "heatmap" on each sentence, assigning each position in the sentence a score between 0 and 1 quantifying its local similarity to other sentences. We can visualize the results for specific sentences by graphing the scores by character index. Here's an example in Hungarian, generated when searching for a translation of the word <code>water</code>:</p>
+
+<p><center><img src="/img/2025-11-05-Fig1.png" alt="Fig1" /></center></p>
+
+<p>I also have a utility for visualizing this "relevance score" by highlighting segments of sentences in the target language with varying levels of saturation. Here's what this looks like for the same example in Hungarian:</p>
+
+<p><center><img src="/img/2025-11-05-Fig2.png" alt="Fig2" /></center></p>
+
+<p>Candidate words can be obtained from sentences by extracting segments containing the highest scores. By defining a custom string distance metric on the extracted strings and performing <a href="https://docs.scipy.org/doc/scipy/reference/cluster.hierarchy.html">hierarchical clustering</a>, we can also obtain a heuristic grouping of the words into clusters comprising possible lexemes. These clustered words or word forms can then be visualized as a <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.cluster.hierarchy.dendrogram.html">dendrogram</a>. Here's a dendrogram output by my code for the same example in Hungarian:</p>
+
+<p><center><img src="/img/2025-11-05-Fig3.png" alt="Fig3" /></center></p>
+
+<p>Although most of my test runs have used parallel sentences from Tatoeba, data can be ingested from any TSV-formatted file of parallel sentences. I was also able to import some data in <a href="https://en.wikipedia.org/wiki/Kannada">Kannada</a> (a Dravidian language spoken in India) from the <a href="https://github.com/project-anuvaad/anuvaad-parallel-corpus?tab=readme-ov-file">Anuvaad Parallel Corpus</a> and test out my algorithm on it. Here's the resulting dendrogram when I asked it to infer possible translations for the word <code>beautiful</code>:</p>
+
+<p><center><img src="/img/2025-11-05-Fig5.png" alt="Fig5" /></center></p>
+
+<p><a href="#examples-table">Jump to the end of the post</a> for a huge table of examples showing lexeme guesses for a few very common words in several different languages. Though my code is still pretty rough around the edges, I'm very happy with how the results are coming out so far, and I wonder if it has the potential to be developed into something more sophisticated like an unsupervized best-effort lemmatizer for languages lacking established lemmatization tools.</p>
+
+<p>If you're interested, you can check out my code in a Jupyter notebook <a href="https://github.com/franklindyer/lexeme-discovery/blob/main/lexeme-discovery.ipynb">here on Github</a>. I encourage you to play around with it! Parallel sentence data from several sample languages is included in the repo, so no additional downloads (aside from Python packages) should be necessary.</p>
+
+<hr>
+
+<p>Now, here's a more in-the-weeds description of my approach.</p>
+
+<p>The problem under consideration is as follows: given a bunch of sentences in language $L$ whose translations contain a certain word $w$ (or more generally, matching a certain regex), produce one or more "candidate morphemes" in the language $L$ that might serve as translations of $w$. I'm calling this problem "unsupervised" because I'm not using ground truth data (such as dictionaries in various languages) to train any sort of model to recognize words. </p>
+
+<p>My first thought was to use an <a href="https://en.wikipedia.org/wiki/N-gram">n-gram model</a> to analyze common sequences of characters in example sentences. Given a set $S$ of sentences in language $L$ with translations containing the target word $w$, we could tabulate the frequencies of 2-grams or 3-grams among those sentences. Then the "hottest" substrings in each sentence could be identified as the ones containing more high-frequency n-grams on average.</p>
+
+<p><center><img src="/img/2025-11-05-Fig4.png" alt="Fig3" /></center></p>
+
+<p>I implemented this approach and it worked shockingly well for many languages. However, there was a huge drawback for languages like Arabic and Hebrew that have <em>non-contiguous</em> word roots. For instance, in Hebrew, the word for <code>to read</code> has the 3-letter root <code>קרא</code>, and conjugating this verb sometimes involves inserting letters in between: <code>he reads</code> becomes <code>קורא</code>, inserting the letter <code>ו</code>. This is a big problem for the n-grams approach, because when scoring these words in a collection of sentences, the 2-grams <code>קר</code> and <code>קו</code> would <em>compete with each other</em> in the 2-gram frequency count, causing different conjugations of <code>to read</code> to detract from each others' scores.</p>
+
+<p>My immediate next thought was to use an generalized version of n-grams called "skip-grams", in which both contiguous and non-contiguous letter combinations are tabulated, e.g. there might be a frequency category not only for the substring <code>קר</code>, but also an additional category for occurrences of <code>ק</code> and <code>ר</code> separated by one or fewer characters, or by two or fewer characters, and so on. The problem with this approach is that the number of possible categories grows very quickly and it's not obvious what kind of scoring system should be used to take them all into account.</p>
+
+<p>The idea I'm about to describe occurred to me at around midnight one night, and I ended up staying up until about 3am frantically coding up a proof-of-concept - I <em>had to know</em> if it would work! Vector embeddings were fresh in my mind because of a recent online course in NLP, but I had never seen a vector embedding technique applied to individual characters rather than words.</p>
+
+<p>Say $C$ is the set of all characters in the language $L$. These characters might be normalized to avoid distinguishing characters that are "really the same", e.g. capitalized versus lowercase versions of the same letter, or accented versus non-accented variants, etc. Each character $c\in C$ is assigned a unit vector $\phi(v)\in \mathbb R^d$ where $d$ is the dimension of the embedding. These embeddings should either assign orthogonal vectors to different characters (in which case we must have $d\ge |C|$) or <em>very nearly</em> orthogonal vectors to different characters (in which case you can often do with fewer than $|C|$ dimensions). This ensures that different characters are handled independently.</p>
+
+<p>Once we have a character embedding, we define a way of embedding <em>pairs of characters</em> separated by a certain number of indices in a string. This can be defined by a function $\psi:C^2\times {0,\cdots,\ell}\to\mathbb R^d$, where $\psi(c_1,c_2,j)$ is the embedding for $c_1$ followed by $c_2$ after $j$ characters, and $\ell$ is the "lookahead value" determining the maximum level of separation represented by the embedding. I've experimented with a few different options for this embedding, but the general idea is that $\psi(c_1,c_2, i)$ and $\psi(c_1,c_2, j)$ should be somewhat similar to each other, especially when $i,j$ are close, in order to allow embeddings of the same character $c_2$ in slightly different positions after $c_1$ to "constructively interfere" with each other. In this way, $\psi$ acts sort of like a "fuzzy" n-grams frequency table that avoids huge proliferation of frequency categories by allowing some of them to conflate with each other. Further, $\psi(c_1,c_2,i)$ and $\psi(c_1,c_3,j)$ should be orthogonal or near-orthogonal when $c_2\ne c_3$.</p>
+
+<p><center><img src="/img/2025-11-05-Fig6.png" alt="Fig6" /></center></p>
+
+<p>One option I've tried has been <script type="math/tex; mode=display">\psi(c_1,c_2,j) := \cos\Big(\frac{\pi j}{2\ell+1}\Big)\phi(c_2)</script> and another is the following, where $U$ is a unitary matrix that is close to the identity and $\alpha &lt; 1$ is some constant: <script type="math/tex; mode=display">\psi(c_1,c_2,j) := (\alpha U)^j \phi(c_2)</script> Both of these work pretty well, but I suspect that the results can be improved by more intelligently designing the function $\psi$, and this is a detail I want to continue experimenting with.</p>
+
+<p>Next, we define a function $\Psi$ such that $\Psi(i, s)$ gives an embedding combining the character pair embeddings $\psi(s[i], -, -)$ for several of the characters following $s[i]$, up to the character $s[i+\ell]$ at the lookahead threshold: <script type="math/tex; mode=display">\Psi(i, s) := \sum_{j=i}^{i+\ell} \psi(s[i], s[j], j-i)</script> And then, given a whole collection of sentences $S$, we define a combined embedding $\overline{\Psi}(c)$ that, intuitively speaking, summarizes the "average context" of the character $c$ in all of the places it appears in all the sentences of $S$. It is defined as follows: <script type="math/tex; mode=display">\overline{\Psi}(c, S) := \frac{1}{1+\tfrac{|S|}{|\{s\in S: ~ c \in s\}|}}\cdot\sum_{s\in S}\sum_{s[j] = c} \frac{\Psi(j, s)}{\#(c, s)}</script>
+</p>
+
+<p>This is an average of all of the embeddings $\Psi(j, s)$ of the positions where the character $c$ appears across all sentences, averaged across different appearances of the character $c$ in each sentence $s$. Making this an average rather than a sum is vital, both because it prevents extremely long sentences from affecting these embeddings disproportionately, and because it prevents high-frequency characters from having much larger embeddings in general. It is also multiplied by a scaling factor punishing characters that occur only in a small number of the sentences in $S$.</p>
+
+<p>Finally, for each sentence $s$ in $S$, each of its characters is scored by calculating the cosine similarity of each character's <em>local embedding</em> in that specific sentence with its <em>global embedding</em> across all of the sentences in $S$. That is: </p>
+
+<p>
+<script type="math/tex; mode=display">\text{score}(i, s) = \frac{\overline{\Psi}(c, S)\cdot \Psi(i, s)}{\lVert\overline{\Psi}(c, S)\rVert\cdot \lVert\Psi(i, s)\rVert}</script>
+</p>
+
+<p>When a character is followed by sequences of characters that frequently follow it in many of the sentences in $S$, then the vectors $\overline{\Psi}(c, S)$ and $\Psi(i, s)$ should point in similar directions, meaning that $\text{score}(i, s)$ should be larger.</p>
+
+<p>In my scripts, I also apply some final post-processing to the character scores $\text{score}(i, s)$ for each sentence. For one, I scale and translate the scores into the interval $[0,1]$ by subtracting the minimum score and scaling by the difference between the min and max scores. I also smooth the scores across each sentence by taking a windowed average, and apply a power function such as $x\mapsto x^4$ because it accentuates the difference between higher and lower scores. This is how we get the "heatmap" highlighted sentences and graphs showcased earlier. Extracting the words occurring at the peaks of these graphs is how relevant words are extracted from sentences.</p>
+
+<hr>
+
+<p>This technique still has several kinks that need to be worked out. For instance, in its current form, it does not distinguish subsequences that are common within a certain subset of sentences from subsequences that are common throughout <em>the language as a whole</em>. For that reason, the results of the above process often contain some irrelevant high-frequency strings corresponding to common words similar to <code>the</code>, <code>a/an</code> and <code>I</code> in English, for example. The same goes for the names <code>Tom</code> and <code>Mary</code>, which are <em>extremely common</em> in the Tatoeba corpus (to the point of being an inside joke of the Tatoeba community). Perhaps character scores could be modified by penalizing characters whose local embeddings are too similar to their global embedding in the language as a whole.</p>
+
+<p>On a similar note, even if a certain word is not common in the language as a whole, it may <em>co-occur</em> very commonly with the target word. Consider for instance the words <code>read/reads/reading</code> and <code>book</code>. Naturally, they co-occur in a lot of the English sentences of the Tatoeba corpus, so that this technique might be likely to, say, mis-identify the Hungarian word for <code>book</code> as an appropriate translation of <code>to read</code>. I still haven't made up my mind about how to remedy this issue.</p>
+
+<p>Finally, there is a key type of deduction that we use easily when manually inferring words' meanings, but my vector method does not take advantage of. Let me illustrate it with another example. Consider the following parallel sentences in English and Latvian. From these sentences, can you guess a translation for the word <code>milk</code>?</p>
+
+<table>
+<thead>
+<tr>
+<th>English</th>
+<th>Latvian</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No, I never drink coffee with milk.</td>
+<td>Nē, es nekad nedzeru kafiju ar pienu.</td>
+</tr>
+<tr>
+<td>Boris never confronted Rima.</td>
+<td>Boriss nekad nestājās pretī Rimai.</td>
+</tr>
+<tr>
+<td>Don't drink alcohol.</td>
+<td>Nedzeriet alkoholu.</td>
+</tr>
+<tr>
+<td>I didn't drink any coffee today.</td>
+<td>Es šodien nedzēru kafiju.</td>
+</tr>
+<tr>
+<td>Do you actually like your coffee with salt?</td>
+<td>Vai jums tiešām garšo kafija ar sāli?</td>
+</tr>
+<tr>
+<td>No, I can't.</td>
+<td>Nē, es nevaru.</td>
+</tr>
+</tbody>
+</table>
+
+<p>You could probably infer that <code>pienu</code> means milk even though it only appears in one of these sentences. This is because the remaining words in that sentence also appear in at least one of the other sentences, but <code>milk</code> does not appear in any of their English translations. That is, we have applied a process of elimination to deduce a translation for the word <code>milk</code>, which is a heuristic that my code does not (yet) attempt to use.</p>
+
+<p>To sum up, the things I'd still like to improve, in brief, are:</p>
+
+<ul>
+<li>find a way of dealing with overrepresented named entities in the Tatoeba corpus, e.g. Tom and Mary</li>
+<li>penalize common letter combinations throughout the language</li>
+<li>come up with a way to filter out words that commonly co-occur with a target word</li>
+<li>incorporate an add-on that also takes into account eliminative strategies </li>
+</ul>
+
+<hr>
+
+<p><a id="examples-table"></a></p>
+
+<p>Here's a big fat table showing my algorithm's output for a few common words in several different languages, in case you would like to get a feel for how well it works and the kinds of errors it makes. I recommend Wikitionary for looking up the meanings of these words if you want to check their definitions for accuracy.</p>
+
+<table><tr><td></td><td>dog</td><td>cat</td><td>book</td><td>bread</td><td>water</td><td>milk</td><td>home</td><td>day</td><td>eat</td><td>sleep</td><td>read</td><td>black</td><td>white</td><td>big</td><td>small</td></tr><tr><td>ber<br>(Berber)</td><td>aydinni<br>uydinni<br>aydi<br>aydia<br>uydi<br>aydinneɣ<br>aydinnek<br>aydinnes<br>aydiinu<br>weydi</td><td>amcicnni<br>umcicnni<br>amcica<br>amcic<br>umcic<br>amuccnni<br>amcicinu<br>imucca<br>yimucca<br>imcac</td><td>adlisnni<br>udlisnni<br>idlisen<br>yidlisen<br>adlis<br>adlisa<br>yedlisen<br>adlisnnes<br>adlisinu<br>udlis</td><td>aɣrum<br>uɣrum<br>weɣrum<br>aɣrumnni<br>uɣṛum<br>aɣrumnnes<br>weɣrumnni<br>weɣruminu<br>aqbur<br>ara</td><td>waman<br>wamana<br>aman<br>watay<br>yeḥman<br>amanaya<br>amannni<br>amandin<br>mani<br>ameqqran</td><td>akeffay<br>akeffaya<br>ukeffay<br>akeffaynni<br>ukeffaynni<br>ukeffayis<br>akeffaynnek<br>ayefki<br>uyefki<br>yefkaiyid</td><td>ɣer<br>ɣef<br>deg<br>seg<br>yedda<br>yebda<br>yella<br>yelli<br>taddart<br>tamaneɣt</td><td>wass<br>ass<br>assa<br>wussan<br>ussan<br>ussana<br>asmi<br>assnni<br>assnsen<br>yessen</td><td>isett<br>nsett<br>ttetteɣ<br>ttetten<br>setteɣ<br>setten<br>teččed<br>teččeḍ<br>iḥemmel<br>ikemmel</td><td>teṭṭes<br>yeṭṭes<br>neṭṭes<br>yeṭṭsen<br>yeḍḍes<br>teṭṭseḍ<br>teṭṭsed<br>yettaṭṭas<br>yelzem<br>yiḍes</td><td>yeqqar<br>yeqqard<br>yeɣra<br>yeɣrad<br>yeɣri<br>adlis<br>adlisa<br>udlis<br>idlisen<br>yidlisen</td><td>aberkan<br>taberkant<br>iberkanen<br>tiberkanin<br>krayellan<br>tsednan<br>aberqemmuc<br>dakken<br>asgainna<br>ayisnnek</td><td>amellal<br>umellal<br>tamellalt<br>imellalen<br>yimellalen<br>tmellalt<br>mellul<br>tmellalin<br>timellalin<br>mellulet</td><td>tameqqrant<br>tameqrant<br>ameqran<br>ameqqran<br>ameqṛan<br>timeqqranin<br>timeqranin<br>imeqranen<br>meqqren<br>aḥeqqar</td><td>amecṭuḥ<br>tamecṭuḥt<br>mecṭuḥit<br>mecṭuḥet<br>imecṭuḥen<br>tameẓyant<br>tamurt<br>taḥanut<br>teɣlust<br>anect</td></tr><tr><td>ell<br>(Greek)</td><td>σκύλος<br>σκύλους<br>σκύλο<br>σκύλου<br>σκυλί<br>σκυλιά<br>δύσκολο<br>του<br>σου<br>σκότωσε</td><td>γάτα<br>γάτας<br>γάλα<br>γάτες<br>γάτος<br>είναι<br>είσαι<br>φοβάται<br>κοιμάται<br>τα</td><td>βιβλίο<br>βιβλίου<br>βιβλία<br>τίτλος<br>έβαλες<br>βάλε<br>το<br>του<br>ιστορικά<br>ανήκει</td><td>ψωμί<br>ψωμιού<br>σκορδόψωμο<br>μέρα<br>κάνω<br>αυτοί<br>τομ<br>μισό<br>έκοψε<br>είναι</td><td>νερό<br>νερά<br>νερού<br>άερα<br>πίνει<br>πίνεις<br>καλύτερο<br>είναι<br>έργα<br>δεν</td><td>γάλα<br>για<br>υγεία<br>σόγιας<br>λίγο<br>αλλεργικός</td><td>σπίτι<br>στις<br>πάτε<br>πόδια<br>είναι<br>τεράστιου<br>ποια<br>παιδιά<br>στο<br>σπό</td><td>μέρα<br>ημέρα<br>μέσα<br>μέρες<br>ημέρες<br>μέχρι<br>χώρα<br>σήμερα<br>μια<br>μία</td><td>τρώνε<br>τρώει<br>να<br>ένα<br>τρώω<br>τομ<br>τον<br>φάω<br>φάε<br>τα</td><td>κοιμάμαι<br>κοιμάται<br>κοιμάσαι<br>κοιμήθηκα<br>κοιμήθηκαν<br>κοιμήθηκε<br>κοιμήθηκες<br>κοιμόταν<br>κοιμούνται<br>κοιμηθεί</td><td>διαβάζει<br>διαβάζεις<br>διαβάσει<br>διαβάσεις<br>διαβάσω<br>διαβάζω<br>διάβασα<br>διάβασμα<br>διάβαζα<br>διάβασε</td><td>μαύρο<br>μαύρος<br>μαύρα<br>μαύρη<br>μαύρες<br>τομ<br>του<br>τον<br>το<br>αγοριού</td><td>άσπρο<br>άσπρος<br>άσπρα<br>άσπρη<br>άσπρους<br>εκείνα<br>είναι<br>εμφανίζεται<br>έναν<br>ένας</td><td>μεγάλο<br>μεγάλος<br>μεγάλοι<br>μεγάλα<br>μεγάλη<br>μεγάλε<br>μεγάλες<br>μέγαλος<br>μεγαλύτερη<br>μεγαλουπόλεις</td><td>μικρός<br>μικρό<br>μικρή<br>μικρά<br>μικρού<br>είναι<br>μεσαία<br>μένα<br>ένα<br>ενός</td></tr><tr><td>hun<br>(Hungarian)</td><td>kutyát<br>kutyád<br>kutyám<br>kutyák<br>kutyákat<br>kutyámat<br>kutyáját<br>kutyánkat<br>kutyája<br>kutyánk</td><td>macskákat<br>macskádat<br>macska<br>macskája<br>macskát<br>macskám<br>macskád<br>macskákért<br>macskával<br>macskánk</td><td>könyvet<br>könyveit<br>könyvét<br>könyvei<br>könyved<br>könyvek<br>könyve<br>könyveket<br>könyvedet<br>könyveim</td><td>kenyeret<br>kenyérhez<br>kenyérre<br>kenyérben<br>kenyerünk<br>bundáskenyeret<br>kenyér<br>kenyérből<br>kent<br>milyen</td><td>vizet<br>vizem<br>vized<br>vízen<br>vízben<br>vízzel<br>vízhez<br>vízre<br>vízbe<br>vizünk</td><td>tejet<br>tejed<br>tejjel<br>tehenet<br>tejből<br>tej<br>teheneket<br>vajat<br>fejni<br>sajt</td><td>otthon<br>itthon<br>otthonom<br>hazafele<br>hazafelé<br>otthonukról<br>haza<br>házat<br>tom<br>tomi</td><td>nap<br>napig<br>napok<br>napot<br>napon<br>napja<br>napom<br>napod<br>napokra<br>naponta</td><td>eszem<br>eszel<br>eszik<br>eszi<br>szeretnél<br>szeretnék<br>esznek<br>eszünk<br>vettem<br>ettem</td><td>aludni<br>elaludni<br>aludnom<br>alszik<br>alszok<br>aludj<br>aludt<br>aludjunk<br>aludtunk<br>aludtam</td><td>olvastad<br>olvastam<br>olvassam<br>olvasni<br>elolvasni<br>olvasod<br>olvasok<br>olvasom<br>olvasol<br>elolvastam</td><td>fekete<br>feketébe<br>feketék<br>feketében<br>felhőket<br>koromfekete<br>szeretem<br>nekem<br>feketepiacról<br>végezte</td><td>fehér<br>fehérre<br>fehérbe<br>falfehér<br>fehérnél<br>fehérbor<br>elfehéredik<br>megfehéredett<br>festette<br>fordult</td><td>nagy<br>vagy<br>nagyon<br>nagyok<br>mary<br>vagyok<br>egy<br>nagyvárosban<br>nagyvárosok<br>hogyan</td><td>kicsi<br>kocsim<br>kicsiben<br>kisvárosban<br>kisvárosból<br>kis<br>cicije<br>kisbicskát<br>szókincsed<br>kilátást</td></tr><tr><td>hye<br>(Armenian)</td><td>շունը։<br>շունը<br>շունդ<br>շունն<br>շուն<br>անունը<br>շանը<br>շանը։<br>շան։<br>ունի</td><td>կատուն<br>կատուն։<br>կատու։<br>կատուս<br>կատու<br>կատուները<br>կատուները։<br>կատուներ<br>կատուների<br>կատվին։</td><td>գիրքը։<br>գիրքը<br>գրքեր<br>գրքերը<br>գրքերն<br>գրքեր։<br>գիրքն<br>գիրք<br>գրել<br>գրքում։</td><td>հաց<br>հացը<br>հաց։<br>հացն<br>հացը։<br>գնեցի։<br>գնեց։<br>գնելիս։<br>առավ։<br>պատվիրեցի։</td><td>ջուր<br>ջուրը<br>ջուր։<br>ջուրը։<br>մաքուր<br>նոր<br>ունի<br>ջրով<br>խմում։<br>ու</td><td>կաթը<br>կաթ<br>կաթի<br>կաթ։<br>կաթը։<br>կատուն<br>խմել։<br>խմել<br>եմ<br>են</td><td>տուն<br>տուն։<br>տանն<br>տա՞նն<br>տանը<br>տանը։<br>տան<br>շուտ<br>տանել։<br>յաննին</td><td>երեկ<br>երեք<br>ամեն<br>մենք<br>մերին<br>երբեք<br>այն<br>տանն<br>համար<br>նրան։</td><td>ուտում։<br>ուտու՞մ։<br>ուտում<br>ուտո՞ւմ<br>ուտու՞մ<br>ուզում<br>ուտել։<br>ուտես։<br>ուտելու<br>ուտելու։</td><td>քնում։<br>քնում<br>քնել։<br>քնեք։<br>քնելը<br>քնեց։<br>քնո՞ւմ<br>քնել<br>քնեցի<br>քնեցի։</td><td>կարդացել<br>կարդացե՞լ<br>կարդում<br>կարդում։<br>կարդո՞ւմ<br>կարդացել։<br>կարդալ<br>կարդալ։<br>կարդա։<br>կարդաց</td><td>սև<br>սա<br>ես<br>այս<br>են։<br>եք։<br>ամեն<br>ամպերով։<br>մեքենան<br>նա</td><td>սպիտակ<br>սպիտակ։<br>պատերը<br>պատը<br>տունը։<br>սա<br>առյուծը<br>է։</td><td>մեծ<br>մե՞ծ<br>մեծ։<br>մենք<br>ամեն<br>է։<br>չէ։<br>են։<br>եմ<br>աչքեր</td><td>փոքր<br>փոքրիկ<br>բնակարանը<br>բառարանը<br>է։<br>էր։<br>որքա՞ն<br>մեր<br>երկիր<br>էր</td></tr><tr><td>ind<br>(Indonesian)</td><td>anjing<br>anjingku<br>anjingmu<br>anjingnya<br>ingin<br>jangan<br>anaknya<br>anggur<br>siang<br>makanan</td><td>kucing<br>kucingku<br>kucingmu<br>kucingnya<br>bukan<br>makan<br>temukan<br>ikan<br>menyukai<br>ini</td><td>buku<br>bukuku<br>bukumu<br>bukan<br>bukunya<br>suka<br>baru<br>bukubuku<br>aku<br>kesukaanmu</td><td>roti<br>rotinya<br>dari<br>tom<br>itu<br>turun<br>wanita<br>memberikan<br>air<br>mentega</td><td>airnya<br>air<br>dari<br>hari<br>ada<br>udara<br>mandi<br>mineral<br>sendiri<br>pantai</td><td>susu<br>susunya<br>sudah<br>sebelum<br>nasi<br>sapi<br>dua<br>setiap<br>dari<br>di</td><td>rumah<br>kerumah<br>rumahmu<br>rumahku<br>rumahnya<br>sebuah<br>hujan<br>bukan<br>apakah<br>pulang</td><td>hari<br>sehari<br>harimu<br>hasil<br>harga<br>nasi<br>hampir<br>seharian<br>harihari<br>kemarin</td><td>makan<br>akan<br>makanan<br>memakan<br>dimakan<br>maukah<br>malam<br>ikan<br>mana<br>kacang</td><td>tidur<br>tertidur<br>tidurlah<br>tidak<br>ribut<br>yaitu<br>menidurkanku<br>badak<br>dua<br>itu</td><td>membaca<br>membacakan<br>dibaca<br>beberapa<br>baca<br>dibacanya<br>majalah<br>sebuah<br>bukunya<br>padaku</td><td>hitam<br>kita<br>wanita<br>minum<br>tanpa<br>itu<br>melihat<br>pakaian<br>tikus<br>putih</td><td>putih<br>seputih<br>batubatu<br>hitam<br>salju<br>itu<br>ini</td><td>besar<br>sebesar<br>gambar<br>sejajar<br>semua<br>seluas<br>osaka<br>sebuah<br>sebelum<br>terkadang</td><td>kecil<br>memiliki<br>sempit<br>lakilaki<br>mencarikan<br>terlalu<br>kita<br>tetapi<br>tinggal<br>ini</td></tr><tr><td>isl<br>(Icelandic)</td><td>hundinn<br>hundurinn<br>hundinum<br>hundanna<br>hundarnir<br>hundur<br>kötturinn<br>hundasýningu<br>eigandinn<br>hundar</td><td>kötturinn<br>köttinn<br>köttur<br>hundurinn<br>maðurinn<br>kettir<br>ketti<br>kattar<br>kettinum<br>kött</td><td>bókina<br>bókin<br>bókinni<br>bók<br>bóka<br>bókarinnar<br>bækurnar<br>bækur<br>tekur<br>kemur</td><td>brauð<br>brauðbita<br>borðarðu<br>borðaði<br>borða<br>að<br>með<br>er</td><td>vatn<br>vatns<br>vatni<br>vatnið<br>vatninu<br>vatnsglas<br>kranavatn<br>vertu<br>flöskunni<br>fötunni</td><td>mjólk<br>mjólkar</td><td>heima<br>heim<br>heiman<br>heimilið<br>eins<br>heimabæinn<br>til<br>mig<br>minnir<br>er</td><td>daginn<br>dagurinn<br>dagsins<br>dag<br>daga<br>dagana<br>enginn<br>degi<br>segir<br>lengi</td><td>borðar<br>borða<br>borðað<br>borðaði<br>borðum<br>borðarðu<br>orðin<br>borðaðirðu<br>brauð<br>að</td><td>sofa<br>sofið<br>svefni<br>svefns<br>sofandi<br>sofnaði<br>svefn<br>svafst<br>svaf<br>hafa</td><td>lesa<br>lesið<br>þessa<br>lestu<br>skáldsöguna<br>skáldsögu<br>elska<br>lestur<br>enska<br>þessar</td><td>svartir<br>svartur<br>svört<br>svart<br>svörtu<br>svörtum<br>kolsvart<br>svartklædd<br>var<br>stór</td><td>hvítar<br>hvíta<br>hvítt<br>hvít<br>hvítur<br>hvítklædda<br>hvað<br>þetta<br>hvítvínsglas<br>eða</td><td>stórt<br>stór<br>stóra<br>stóri<br>er<br>ert<br>eru<br>stóran<br>stórir<br>en</td><td>lítill<br>lítil<br>lítið<br>litlum<br>litlir<br>litla<br>hluti<br>með lítið<br>bill<br>leit</td></tr><tr><td>kan<br>(Kannada)</td><td>ಪ್ರಾಣಿಗಳ<br>ಪ್ರಾಣಿಗಳು<br>ಇಲ್ಲಿವೆ<br>ಇಲ್ಲಿಗೆ<br>ಮಾತ್ರವಲ್ಲದೆ<br>ಮಾತ್ರವಲ್ಲದೇ<br>ಇಲ್ಲಿ<br>ಇಲ್ಲಿನ<br>ಪ್ರಾಣಿಗಳಾದ<br>ಕತ್ತೆ</td><td>ಚಿರತೆಗಳು<br>ಚಿರತೆಗಳ<br>ಕಾಡು<br>ಕಂಡು<br>ಬೆಕ್ಕು<br>ಬೆಕ್ಕಿನ<br>ಶ್ರೇಣಿಗಳನ್ನು<br>ಪ್ರಾಣಿಗಳನ್ನು<br>ಕಾಣಬಹುದು<br>ಕಾಣಬಹದು</td><td>ಪುಸ್ತಕಗಳು<br>ಪುಸ್ತಕಗಳ<br>ಪುಸ್ತಕಗಳನ್ನು<br>ಪುಸ್ತಕವನ್ನು<br>ಪ್ರವಾಸಿಗರು<br>ಪ್ರವಾಸಿಗರಿಗೆ<br>ಮತ್ತು<br>ವಸ್ತು<br>ಎತ್ತರ<br>ಪುಸ್ತಕಗಳಿವೆ</td><td>ಹಾಗು<br>ಪ್ರಶಾಂತ</td><td>ಮತ್ತು<br>ಮುತ್ತು<br>ಮತ್ತೆ<br>ಹೊತ್ತು<br>ಪ್ರವಾಸಿಗರ<br>ಪ್ರವಾಸಿಗರು<br>ಮತ್ತೊಂದು<br>ಮರೆತು<br>ಸುತ್ತಲು<br>ನೀರಿನ</td><td>ಮಾಡಿಸಲಾಗುತ್ತದೆ<br>ಮಾಡಲಾಗುತ್ತದೆ<br>ನೀಡಲಾಗುತ್ತದೆ<br>ನಂಬಲಾಗುತ್ತದೆ<br>ಪೂಜಿಸಲಾಗುತ್ತದೆ<br>ಹಾಲನ್ನು<br>ಹೆಸರನ್ನು<br>ಮತ್ತು<br>ಭಕ್ತರು<br>ಮಾತ್ರ</td><td>ಅಳಿವನಂಚಿನಲ್ಲಿರುವ<br>ಅಳಿವಿನಂಚಿನಲ್ಲಿರುವ<br>ಮತ್ತು<br>ಮುತ್ತ<br>ಪಕ್ಷಿಗಳಿವೆ<br>ಪಕ್ಷಿಗಳಿಗೆ<br>ಕತ್ತೆ<br>ಪ್ರಾಣಿಗಳ<br>ಪ್ರಾಣಿಗಳು<br>ಮನೆಯಾಗಿದೆ</td><td>ದಿನಗಳಲ್ಲೂ<br>ದಿನಗಳಲ್ಲಿ<br>ಬೆಳಗ್ಗೆ<br>ಬೆಳಿಗ್ಗೆ<br>ಆಚರಿಸಲಾಗುತ್ತದೆ<br>ನೆರವೇರಿಸಲಾಗುತ್ತದೆ<br>ತೆರೆದಿರುತ್ತಿದ್ದು<br>ತೆರೆದಿರುತ್ತದೆ<br>ಮತ್ತು<br>ಮತ್ತೆ</td><td>ಸೇವಿಸುತ್ತಾರೆ<br>ಸಲ್ಲಿಸುತ್ತಾರೆ<br>ಆಹಾರಗಳನ್ನು<br>ಆಹಾರವನ್ನು<br>ಪ್ರವಾಸಿಗರಿಗೆ<br>ಪ್ರವಾಸಿಗರೂ<br>ಕೊಲ್ಲುತ್ತಾರೆ<br>ಮಾಡಬಹುದು<br>ಮಾಡುವುದು<br>ತಿನ್ನುತ್ತಾರೆ</td><td>ಇಲ್ಲಿ<br>ರಲ್ಲಿ<br>ಇಲ್ಲಿಗೆ<br>ಮಲಗಿರುವ<br>ಮಲಗಿರುವಂತಹ<br>ಒದಗಿಸುತ್ತದೆ<br>ತೋರಿಸುತ್ತದೆ<br>ಮಲಗುವ<br>ಎಲ್ಲಾ<br>ಎಲ್ಲರ</td><td>ಸೂರ್ಯಾಸ್ತಮಾನವನ್ನು<br>ಸೂರ್ಯಸ್ನಾನವನ್ನು<br>ಇಲ್ಲಿನ<br>ಇಲ್ಲಿಯ<br>ಇಲ್ಲಿ<br>ಸ್ವಾಗತವನ್ನು<br>ಕ್ರಾಂತಿಯನ್ನೇ<br>ನಲ್ಲಿ<br>ಶಾಸನವೊಂದನ್ನು<br>ಹೆಸರುಗಳನ್ನು</td><td>ಕಪ್ಪು<br>ಕೆಂಪು<br>ಕಟ್ಟು<br>ಕಪ್ಪುಕರಡಿ<br>ಇಲ್ಲಿ<br>ಇಲ್ಲಿನ<br>ಮತ್ತು<br>ಮತ್ತೊಂದು<br>ರಫ್ತು<br>ಬೆಕ್ಕು</td><td>ಬಿಳಿ<br>ಬಿಳಿಯ<br>ನಿರ್ಮಿಸಲಾಗಿದೆ<br>ನಿರ್ಮಿಸಲಾಗಿರುವ<br>ಮತ್ತು<br>ಮತ್ತೊಂದು<br>ವಸ್ತು<br>ನಿರ್ಮಿಸಲ್ಪಟ್ಟಿದೆ<br>ಪ್ರವಾಸಿಗರು<br>ಪ್ರವಾಸಿಗರನ್ನು</td><td>ದೊಡ್ಡ<br>ದೊಡ್ದ<br>ಪ್ರವಾಸಿಗರ<br>ಪ್ರವಾಸಿಗರು<br>ಇಲ್ಲಿ<br>ಇಲ್ಲಿನ<br>ಇಲ್ಲಿದೆ<br>ಇಲ್ಲಿಗೆ<br>ನಲ್ಲಿ<br>ದೊಡ್ಡದಾದ</td><td>ಸ್ಥಳದಲ್ಲಿರುವ<br>ಸಮೀಪದಲ್ಲಿರುವ<br>ಇಲ್ಲಿವೆ<br>ಇಲ್ಲಿಗೆ<br>ಅಲೀಗಢದಲ್ಲಿರುವ<br>ದೂರದಲ್ಲಿರುವ<br>ಪ್ರವಾಸಿಗರು<br>ಪ್ರವಾಸಿ<br>ರಸ್ತೆಯಲ್ಲಿರುವ<br>ಜಿಲ್ಲೆಯಲ್ಲಿರುವ</td></tr><tr><td>kat<br>(Georgian)</td><td>ძაღლია<br>ძაღლი<br>ძაღლის<br>ძაღლს<br>ძაღლები<br>ძალიან<br>ძაღლთან<br>აი<br>არ</td><td>კატა<br>კატები<br>არის</td><td>წიგნი<br>წიგნის<br>წიგნია<br>წიგნში<br>წიგნს<br>წიგნებია<br>წიგნები<br>წიგნების<br>წიგნმა<br>ისინი</td><td>პური<br>პურს<br>ვჭამ<br>ჭამს<br>მაქვს<br>ვიყიდე</td><td>წყალს<br>წყალი<br>წყლის</td><td>რძე<br>რძეს<br>რძისგან<br>სახლისკენ<br>მე</td><td>სახლში<br>სახლშია<br>სახლი<br>სახლიდან<br>სახლისკენ<br>ახლა<br>ლეილას<br>დარჩით<br>ისინი<br>დაბნელებამდე</td><td>დღე<br>დღეს<br>დღეა<br>დღეში<br>დღის<br>ყოველდღე<br>რამდენ<br>მე<br>ბარდება<br>ეს</td><td>ჭამს<br>ჭამას<br>ვჭამ<br>ვჭამთ<br>ჭამა<br>გიჭამია<br>გვიჭამია<br>მიირთვა<br>მიირთვი<br>დესერტი</td><td>მძინავს<br>სძინავს<br>გძინავს<br>დაეძინა<br>დაიძინა<br>ძინავთ<br>გვეძინა<br>ეძინათ<br>მეძინა<br>დასაძინებლად</td><td>კითხულობენ<br>კითხულობს<br>ვკითხულობ<br>წაიკითხა<br>წავიკითხავ<br>კითხვა</td><td>ძაღლი<br>შავია</td><td>არის<br>თეთრი</td><td>დიდი<br>სახლი<br>ის</td><td>პატარა<br>მდინარის<br>მახლობლად<br>სახლში<br>ტომი</td></tr><tr><td>lit<br>(Lithuanian)</td><td>šunis<br>šunys<br>šuns<br>šunį<br>šunų<br>šunims<br>šuo<br>šuniui<br>nusipirkau<br>nusipirkti</td><td>katės<br>katė<br>katę<br>kates<br>katinai<br>katinas<br>katei<br>kėdės<br>katiną<br>kam</td><td>knygą<br>knyga<br>knygų<br>knygas<br>knygos<br>knygoje<br>mokiniai<br>naudinga<br>laikai<br>yra</td><td>duoną<br>duona<br>duonos<br>duok<br>parduoda<br>kurią<br>nori<br>nuo<br>pikto<br>žinau</td><td>vandens<br>vandenį<br>vandeniu<br>vanduo<br>vienas<br>sunkesnis<br>sūresnis<br>daviau<br>kareiviai<br>negalėtume</td><td>pieno<br>pieną<br>pienu<br>pienas<br>geria<br>geriu<br>neduoda<br>išgerti<br>nori<br>palaukti</td><td>namo<br>namų<br>namie<br>namai<br>mano<br>esame<br>neeiname<br>neturite<br>mane<br>taip</td><td>dienų<br>dieną<br>diena<br>dienas<br>viena<br>dienos<br>dienoms<br>dienom<br>dirba<br>kasdien</td><td>valgyti<br>valgti<br>pavalgyti<br>valgėte<br>valgei<br>valgom<br>valgo<br>suvaglyti<br>nevalgo<br>nevalgė</td><td>miegoti<br>pamiegoti<br>miegojai<br>miegojo<br>miega<br>miego<br>miegu<br>miegi<br>miegojau<br>miegantį</td><td>skaityti<br>perskaityti<br>skaitai<br>skaityk<br>perskaitysi<br>perskatyti<br>skaitoma<br>neskaityk<br>skaitau<br>perskaitysiu</td><td>juodas<br>juoda<br>juodai<br>juodų<br>juodo<br>juodą<br>juodus<br>juodos<br>juokiasi<br>lova</td><td>balta<br>baltas<br>baltą<br>balto<br>matau<br>pabalo</td><td>didelis<br>didelias<br>didelių<br>dideli<br>didelė<br>didelį<br>viena</td><td>mažas<br>mažos<br>maža<br>mažame<br>matai<br>namas<br>maži<br>mažą<br>mažoje<br>labai</td></tr><tr><td>lvs<br>(Latvian)</td><td>suni<br>suns<br>sunim<br>suņi<br>mans<br>suņu<br>mani<br>manu<br>suņiem<br>sāka</td><td>kaķis<br>kaķus<br>kaķim<br>kaķi<br>kaķa<br>mazākais<br>raibais<br>tikai<br>kaklu<br>vairāk</td><td>grāmata<br>grāmatu<br>grāmatas<br>grāmatām<br>smaga<br>man<br>tava<br>ir<br>tā</td><td>maizi<br>maizes<br>rupjmaizi<br>kvass<br>esi<br>kas<br>ar<br>ir</td><td>ūdens<br>ūdeni<br>ūdenī<br>ūdenim<br>ūdenstilpē<br>minerālūdens<br>iedevu<br>gruntsūdeņus<br>putni<br>nedzeru</td><td>pienu<br>piena<br>piens<br>rūgušpienu<br>priekšroku<br>reta<br>nedzer<br>pazīstama<br>un<br>ir</td><td>mājās<br>mājām<br>atstājis<br>atstāja<br>nerunājam<br>aizmirsa<br>sekoja<br>savu<br>angliski<br>ej</td><td>dienu<br>diena<br>dienā<br>vienu<br>dienas<br>dienai<br>ēdiena<br>dienās<br>viena<br>dienām</td><td>ēstu<br>ēst<br>ēd<br>ēdu<br>mēs<br>ēdīs<br>ēdīsi<br>ēdis<br>neēdu<br>ēdīšu</td><td>gulēju<br>gulēšu<br>gulēja<br>gulēji<br>gulēt<br>pagulēt<br>gulēsi<br>guļot<br>guļ<br>guļu</td><td>lasīt<br>lasītu<br>lasot<br>grāmatas<br>grāmata<br>lasīja<br>lasīju<br>izlasītu<br>lasījis<br>lasu</td><td>melns<br>melnas<br>melnos<br>melnās<br>melna<br>melnā<br>melnu<br>melnai<br>melnie<br>melnajā</td><td>balts<br>baltu<br>baltā<br>balto<br>baltais<br>bars<br>melnas<br>bikses<br>tas<br>straumi</td><td>liela<br>lielu<br>lieli<br>lielā<br>liels<br>lielās<br>lielām<br>saule<br>saules<br>tai</td><td>mazas<br>maza<br>mazu<br>mazs<br>mazā<br>mana<br>manam<br>maziem<br>marija<br>redzama</td></tr><tr><td>mkd<br>(Macedonian)</td><td>кучето<br>кучево<br>кучиња<br>кучињата<br>куче<br>кучка<br>куки<br>кое<br>очекуваше<br>чуваше</td><td>мачкава<br>мачката<br>мачките<br>мачка<br>мачки<br>сака<br>сакам<br>кучиња<br>имам<br>таа</td><td>книгата<br>книгава<br>книги<br>книга<br>книгите<br>читаш<br>дека<br>магии<br>премногу<br>на</td><td>леб<br>леп<br>лебот<br>треба<br>ли<br>е<br>со<br>во<br>од<br>на</td><td>водата<br>водава<br>вода<br>додај<br>додека<br>воденица<br>навадам<br>доволна<br>создаде<br>да</td><td>млеко<br>млекото<br>млеково<br>мене<br>козјо<br>пиеме<br>смееме<br>колку<br>ако<br>може</td><td>дома<br>дом<br>мама<br>додека<br>том<br>има<br>домашните<br>одам<br>одиме<br>да</td><td>ден<br>дена<br>еден<br>денес<br>денов<br>денот<br>дедо<br>арен<br>две<br>дневно</td><td>јадам<br>јадат<br>јадеш<br>јаде<br>јадел<br>јадеме<br>јадеше<br>јади<br>јадење<br>јадено</td><td>спијат<br>спијам<br>спие<br>спиев<br>спиеш<br>спиел<br>спиеле<br>спиење<br>спиеше<br>спиј</td><td>прочитам<br>прочита<br>прочиташ<br>прочитал<br>прочитав<br>читам<br>чита<br>читаш<br>читал<br>читаше</td><td>црни<br>црно<br>црна<br>црн<br>црниот<br>том<br>тоа<br>црнец<br>црната<br>црнокос</td><td>црнобели<br>црнобело<br>бели<br>белци<br>бела<br>бело<br>бел<br>белата<br>белиот<br>врело</td><td>голема<br>големо<br>големи<br>голем<br>том<br>тоа<br>поента<br>помогна<br>главното<br>главната</td><td>мала<br>мали<br>мало<br>мал<br>малата<br>табла<br>премала<br>премали<br>премало<br>малечка</td></tr><tr><td>nob<br>(Norwegian Bokmal)</td><td>hunden<br>hundene<br>hunder<br>under<br>hund<br>hun<br>rundt<br>nesten<br>sovende<br>hans</td><td>katten<br>kattene<br>katter<br>katt<br>klatre<br>hater<br>etter<br>svarte<br>kanskje<br>elsker</td><td>bøker<br>bøger<br>bøkene<br>boken<br>bokas<br>boka<br>bok<br>noen<br>ønsker<br>denne</td><td>brød<br>brødet<br>dere<br>denne<br>drar<br>ludder<br>allerede<br>de<br>er<br>egentlig</td><td>vann<br>vanne<br>vannet<br>mannen<br>vanndamp<br>enn<br>var<br>renne<br>varer<br>plantene</td><td>melk<br>melken<br>melkekyr<br>melkeallergi<br>melkeproduksjon<br>drikker<br>i</td><td>hjem<br>hjemme<br>jeg<br>hele<br>komme<br>kommer<br>hvis<br>rette<br>der<br>deg</td><td>dagen<br>dager<br>dag<br>deg<br>ganger<br>klager<br>dagboken<br>leger<br>lang<br>gang</td><td>spiser<br>spise<br>spiste<br>spises<br>spist<br>spis<br>pisa<br>disse<br>spisesalen<br>pizza</td><td>sovet<br>sover<br>sove<br>sovende<br>hver<br>sov<br>ideer<br>søvn<br>ligger<br>som</td><td>lese<br>leser<br>leste<br>lest<br>eller<br>hele<br>eventyr<br>allerede<br>denne<br>disse</td><td>svart<br>svarte<br>sort<br>var<br>hvit<br>hatt<br>har<br>katten<br>hesten<br>en</td><td>hvit<br>hvite<br>hvitt<br>har<br>var<br>hest<br>katten<br>kanter<br>svart<br>vi</td><td>stort<br>stor<br>store<br>svart<br>som<br>etter<br>sett<br>et<br>er<br>en</td><td>liten<br>lite<br>litt<br>lille<br>gutten<br>den<br>en<br>enn<br>kvinnen<br>enden</td></tr><tr><td>ron<br>(Romanian)</td><td>câinele<br>câinelui<br>câine<br>câini<br>caine<br>câinilor<br>cine<br>câinii<br>inventat<br>nevoie</td><td>pisica<br>pisică<br>pisici<br>pisicii<br>pisicile<br>pipăit<br>scăpat<br>trecea<br>petrece<br>mănâncă</td><td>carte<br>cartea<br>aceasta<br>această<br>care<br>cărți<br>cărții<br>cărui<br>foarte<br>cărțile</td><td>pâinea<br>pâine<br>taie<br>pe<br>proaspătă<br>în<br>ai</td><td>apă<br>apa<br>apei<br>apus<br>proaspăt<br>piatră<br>puțină<br>luxoasă<br>pe<br>era</td><td>laptele<br>lapte<br>poate<br>alerga<br>turnat<br>ea<br>el<br>a</td><td>acasă<br>casă<br>casa<br>școală<br>astăzi<br>șase<br>acum<br>tatăl<br>meargă<br>rămas</td><td>zi<br>azi<br>duminică<br>duminica<br>zile<br>zilele<br>săptămâna<br>săptămânii<br>ai<br>fi</td><td>mănânci<br>mănânc<br>mănânce<br>mănâncă<br>mănâncăți<br>mânca<br>mâncat<br>mâncați<br>mâncăm<br>mâncare</td><td>doarme<br>doarmă<br>dormi<br>dormit<br>dormind<br>dormea<br>dorm<br>adorm<br>dormeau<br>dormeam</td><td>citit<br>citite<br>citito<br>citești<br>citește<br>citim<br>citesc<br>citească<br>citi<br>cartea</td><td>negru<br>negrul<br>negre<br>negri<br>neagră<br>afară<br>mereu<br>fiecare<br>erau<br>grup</td><td>alb<br>albă<br>albe<br>albi<br>ale<br>sau<br>astăzi<br>lebedele<br>umple<br>ca</td><td>mare<br>mari<br>are<br>marile<br>țară<br>tale<br>foarte<br>mărire<br>favoare<br>gaura</td><td>mică<br>mici<br>mic<br>este<br>ești<br>asta<br>există<br>acesta<br>acest<br>camera</td></tr></table>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>

@@ -10,6 +10,14 @@
 
     "entries": [
         {
+            "title": "A vector technique for unsupervised lexeme discovery",
+            "slug": "unsupervised-lexeme-discovery",
+            "date": "2025-11-05",
+            "lang": "en",
+            "file": "2025-11-05.md",
+            "tags": ["language", "math", "stats", "cs", "text"]
+        },
+        {
             "title": "Interessante Eigenartigkeiten der russischen Grammatik",
             "slug": "eigenartigkeiten-von-russisch",
             "date": "2025-09-01",
