@@ -1,0 +1,101 @@
+<html>
+<head>
+    <title>Polynomvernichtenden Funktionen und Folgen</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]},
+      processEscapes: true,
+      menuSettings: { inTabOrder: false },
+      "AssistiveMML": {
+         disabled: false,
+         styles: {
+            ".MJX_Assistive_MathML": {
+                position:"absolute!important",
+                clip: (MathJax.Hub.Browser.isMSIE && (document.documentMode||0) < 8 ?
+                    "rect(1px 1px 1px 1px)" : "rect(1px, 1px, 1px, 1px)"),
+                padding: "1px 0 0 0!important",
+                border: "0!important",
+                height: "1px!important",
+                width: "1px!important",
+                overflow: "hidden!important",
+                display:"block!important"
+            }
+        }
+      }
+    });
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, type=text/html" charset="UTF-8">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML' async></script>
+    <!-- Cloudflare Web Analytics -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "5b8562dcfaa5413ba2aea8294b9d585e"}'></script><!-- End Cloudflare Web Analytics -->
+</head>
+<body>
+    <h2>Polynomvernichtenden Funktionen und Folgen</h2>
+
+<p>In diesem Blogeintrag wollte ich einfach ein Ergebnis von der Realanalyse mitteilen, die ich für sehr unintuitiv halte. Es lautet, dass es Funktionen $f:\mathbb R^+\to\mathbb R$ gibt, die alle Polynomfunktionen <em>vernichten</em>, also <em>orthogonal</em> zu jeder Polynomfunktion sind, bezüglich des $L^2$-Skalarprodukt. Das heißt, es gibt Funktionen $f:\mathbb R^+\to\mathbb R$, für die gilt <script type="math/tex; mode=display">\int_0^\infty f(x) \cdot P(x) ~ dx = 0</script> für jedes Polynom $P$. Anders gesagt gilt folgendes für alle $k\in\mathbb N$: <script type="math/tex; mode=display">\int_0^\infty f(x)\cdot x^k ~ dx = 0</script> Überraschenderweise ist es ziemlich einfach, die Formel einer bestimmten Elementarfunktion vorzulegen, die diese seltsame Eigenschaft erfüllen. Die folgende Integralformel gilt für alle $\alpha\in\mathbb C$ bei denen $\text{Re}(\alpha) &gt; 0$: <script type="math/tex; mode=display">g_n(\alpha) = \int_0^\infty x^n e^{-\alpha x} ~ dx = \frac{n!}{\alpha^{n+1}}</script> Wenn man $\alpha$ die Werte von komplexen Einheitswurzeln annehmen lässt, dabei stellt sich heraus, dass besondere Linearkombinationen von verschiedenen Werten von $f_n(\alpha)$ den Wert Null annehmen für alle $n$ die einer bestimmten Teilfolge von $\mathbb N$ gehören. Zum Beispiel, jede vierte Wert von $\zeta_8^n + \zeta_8^{-n}$ ist Null, weil $\zeta_8^{8n+2}=+i$ und $\zeta_8^{-(8n+2)}= -i$. Deshalb gilt <script type="math/tex; mode=display">\frac{g_{4n+1}(\zeta_8) + g_{4n+1}(\zeta_8^{-1})}{2} = \int_0^\infty x^{4n+1} e^{-x/\sqrt{2}}\cos\big(x/\sqrt{2}\big) ~ dx = 0</script> Nach einem zusätzlichen Ersatz in diesem Integral, ergibt sich, dass <script type="math/tex; mode=display">\int_0^\infty \frac{e^{-\sqrt[4]{x}}\cos(\sqrt[4]{x})}{\sqrt x}\cdot x^k ~ dx = 0</script> Die gleiche Methode bringt noch weitere Beispielfunktionen hervor:</p>
+
+<p>
+<script type="math/tex; mode=display">\begin{align*}
+f(x) &= \frac{e^{-\sqrt{3} \sqrt[6]{x}}\cos(\sqrt[6]{x})}{\sqrt{x}} \\
+f(x) &= \frac{e^{-(\sqrt{2}-1) \sqrt[8]{x}}\cos(\sqrt[8]{x})}{\sqrt{x}} \\
+f(x) &= \frac{e^{-(2-\sqrt{3}) \sqrt[12]{x}}\cos(\sqrt[12]{x})}{\sqrt{x}} \\
+\end{align*}</script>
+</p>
+
+<p>Natürlich erfüllen auch lineare Kombinationen von diesen Funktionen die gleiche seltsame Eigenschaft; das heißt, die Menge von allen integrierbaren Funktionen $f:\mathbb R^+\to\mathbb R$, die orthogonal zu jedem Polynom sind, ist ein <em>Vektorraum</em>. Es ist nämlich der Nullraum des Operators <script type="math/tex; mode=display">f ~ \mapsto ~ \bigg\langle\int_{0}^\infty f(x) \cdot x^k ~ dx\bigg\rangle_{k\in\mathbb N}</script> Die Existenz solcher Beispielfunktionen ist sogar überraschender, in Anbetracht der Tatsache, dass es keine derartige Funktionen im Vektorraum von integrierbaren Funktionen auf dem Interval $[0,1]$ anstatt $[0,\infty)$, dessen Nichtexistenz eine Konzequenz des <a href="https://en.wikipedia.org/wiki/Stone–Weierstrass_theorem">Satzes von Stone-Weierstrass</a> ist. Wenn eine Funktion $f:[0,1]\to\mathbb R$ orthogonal zu jedem Polynom auf dem Interval $[0,1]$ wäre, dann wäre auch $\langle f, P\rangle =0$ für jedes Polynom $P$, weshalb es im Widerspruch zum Satz von Stone-Weierstrass unmöglich wäre, $f$ durch Polynomfunktionen zu approximieren.</p>
+
+<hr>
+
+<p>Diesem Resultat entspricht auch ein diskretes Gegenstück. Es existieren auch unendlichen Folgen $(a_n)$ von Realzahlen, die ally Polynomfolgen $(n^k)$ vernichten bezüglich des $\ell^2$-Skalarproduktes, damit folgendes gilt für jede $k\in\mathbb N$:</p>
+
+<p>
+<script type="math/tex; mode=display">\sum_{n=1}^{\infty} a_n\cdot n^k = 0</script>
+</p>
+
+<p>Diese Folgen bilden auch einen Vektorraum, der der Kernraum von einer unendlichen <a href="https://en.wikipedia.org/wiki/Vandermonde_matrix">Vandermonde-Matrix</a> sind, was sogar erstaunlicher ist, weil alle endliche Vandermonde-Teilmatrizen von dieser Matrix voller Rang sind, also einen nulldimensionale Kernraum besitzen:</p>
+
+<p>
+<script type="math/tex; mode=display">\begin{bmatrix}1 & 1 & 1 & 1 & \cdots \\ 1 & 2 & 3 & 4 & \cdots \\ 1 & 2^2 & 3^2 & 4^2 & \cdots \\ 1 & 2^3 & 3^3 & 4^3 & \cdots \\ \cdots & \cdots & \cdots & \cdots & \end{bmatrix}\begin{bmatrix}a_1 \\ a_2 \\ a_3 \\ a_4 \\ \cdots\end{bmatrix} = \mathbf{0}</script>
+</p>
+
+<p>Es ist schwerer, die Existenz solcher Folgen zu beweisen, doch man kann sich die früher erwähnte polynomvernichtende Funktionen $f:\mathbb R^+\to\mathbb R$ zunutze machen, um Beispielfolgen zu produzieren. Sei $f$ eine bestimmte polynomvernichtende Funktion $f:\mathbb R^+\to\mathbb R$ und sei bestimmt eine komplexe Funktion $\phi_f$ durch die folgende Formel, wo $z\in \mathbb C$ die Ungleichung $\text{Re}(z) &lt; 1$ erfüllt:</p>
+
+<p>
+<script type="math/tex; mode=display">\phi_f(z) := \int_0^\infty f(x) \cdot e^{-x(1-z)} ~ dx</script>
+</p>
+
+<p>Diese Formel definiert eine analytische Funktion $\phi_f$ in der ganzen Kreisscheibe $|z| &lt; 1$, weshalb folgt es, dass $\phi_f$ eine konvergente Potenzreihe innerhalb dieser Kreisscheibe besitzt:</p>
+
+<p>
+<script type="math/tex; mode=display">\phi_f(z) = \sum_{n=0}^\infty \frac{\phi_f^{(n)}(0)}{n!}\cdot z^n</script>
+</p>
+
+<p>Durch die Formel, damit $\phi_f$ definiert wurde, kann man beweisen, dass sich sowohl $\phi_f$ als auch alle ihrer Ableitungen $\phi_f^{(k)}$ dem Nullwert annähern als $z\to 1$:</p>
+
+<p>
+<script type="math/tex; mode=display">\lim_{z\to 1}\phi_f^{(k)}(z) = k!\int_0^\infty f(x)\cdot x^k ~ dx = 0</script>
+</p>
+
+<p>Das ist selbst zwar ein ziemlich ungewöhnliches Grenzverhalten von einer analytischen Funktion, doch darüber hinaus kann man daraus folgern, dass die Koeffizientenfolge $a_n = \phi_f^{(n)}(0)/n!$ zu jedem Polynom orthogonal ist, denn</p>
+
+<p>
+<script type="math/tex; mode=display">\lim_{z\to 1}\phi_f^{(k)}(z) = \sum_{n=0}^\infty a_n\cdot n(n-1)\cdots (n-k+1) = 0</script>
+</p>
+
+<p>und jene Familie von Polynomen $n(n-1)\cdots (n-k+1)$ spannt den ganzen Vektorraum von Polynomfunktionen auf. Deshalb ergibt sich die folgende Formel für eine Beispielsfolge $(a_n)$ mit der Eigenart, für die wir uns interessieren:</p>
+
+<p>
+<script type="math/tex; mode=display">a_n := \frac{1}{n!}\int_0^\infty f(x) \cdot x^n e^{-x} ~ dx</script>
+</p>
+
+<p>Soweit ich weiß gibt es keine schöne analytisch geschlossene Formel für eine zu jedem Polynom orthogonale Folge $(a_n)$. Die <a href="https://en.wikipedia.org/wiki/Thue–Morse_sequence">Thue-Morse Folge</a> bekommt doch eine "ehrenvolle Erwähnung": obwohl die unendliche Summe von $\sigma(n)\cdot n^k$ gar nicht konvergent ist, trifft ihre Folgen von Partialsummen den Nullwert unendlich oft. Insbesondere gilt <script type="math/tex; mode=display">\sum_{n=1}^{m\cdot 2^{k+1}} \sigma(n)\cdot n^k = 0</script> für jede $m,k\in\mathbb N$, der an und für sich auch eine sehr sonderbare eigenschaft ist!</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+</body>
+</html>
