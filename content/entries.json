@@ -10,6 +10,14 @@
 
     "entries": [
         {
+            "title": "Exploring finite central groupoids",
+            "slug": "finite-central-groupoids",
+            "date": "2026-01-01",
+            "lang": "en",
+            "file": "2026-01-01.md",
+            "tags": ["math", "algebra"]
+        },
+        {
             "title": "Polynomvernichtenden Funktionen und Folgen",
             "slug": "polynomvernichtung",
             "date": "2025-12-03",
