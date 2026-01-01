@@ -10,6 +10,9 @@ mkdir ./dist/js
 rm -r ./dist/pages
 mkdir ./dist/pages
 
+rm -r ./dist/files
+mkdir ./dist/files
+
 cp ./content/img/favicon.ico ./dist/
 cp ./content/img/*.png ./dist/img/
 cp ./content/img/*.jpg ./dist/img/
@@ -22,3 +25,5 @@ cp ./content/css/*.css ./dist/css/
 cp ./content/js/*.js ./dist/js/
 
 cp ./content/pages/*.html ./dist/pages/
+
+cp ./content/files/* ./dist/files/
