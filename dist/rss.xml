@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+    <title>Franklin's blog</title>
+    <description>Franklin's blog</description>
+    <link>https://franklin.dyer.me</link>
+    <atom:link href="https://franklin.dyer.me/rss.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+        <title>Exploring finite central groupoids</title>
+        <link>http://franklin.dyer.me/finite-central-groupoids-en.html</link>
+        <guid>finite-central-groupoids-en</guid>
+        <pubDate>2026-01-01</pubDate>
+    </item>
+    
+    <item>
+        <title>Polynomvernichtenden Funktionen und Folgen</title>
+        <link>http://franklin.dyer.me/polynomvernichtung-de.html</link>
+        <guid>polynomvernichtung-de</guid>
+        <pubDate>2025-12-03</pubDate>
+    </item>
+    
+    <item>
+        <title>A vector technique for unsupervised lexeme discovery</title>
+        <link>http://franklin.dyer.me/unsupervised-lexeme-discovery-en.html</link>
+        <guid>unsupervised-lexeme-discovery-en</guid>
+        <pubDate>2025-11-05</pubDate>
+    </item>
+    
+    <item>
+        <title>Interessante Eigenartigkeiten der russischen Grammatik</title>
+        <link>http://franklin.dyer.me/eigenartigkeiten-von-russisch-de.html</link>
+        <guid>eigenartigkeiten-von-russisch-de</guid>
+        <pubDate>2025-09-01</pubDate>
+    </item>
+    
+    <item>
+        <title>Eine knappe Erklärung von der Kosinus-Formel des Skalarprodukts</title>
+        <link>http://franklin.dyer.me/dot-product-cosine-formula-de.html</link>
+        <guid>dot-product-cosine-formula-de</guid>
+        <pubDate>2025-08-15</pubDate>
+    </item>
+    
+    <item>
+        <title>A deceptively simple-looking minimax problem</title>
+        <link>http://franklin.dyer.me/minimax-uniform-lehmann-en.html</link>
+        <guid>minimax-uniform-lehmann-en</guid>
+        <pubDate>2025-07-15</pubDate>
+    </item>
+    
+    <item>
+        <title>Untersuchung von einer schwingenden Beatty-artigen Folge</title>
+        <link>http://franklin.dyer.me/oscillating-beatty-golden-ratio-sum-de.html</link>
+        <guid>oscillating-beatty-golden-ratio-sum-de</guid>
+        <pubDate>2025-06-20</pubDate>
+    </item>
+    
+    <item>
+        <title>Eine Technik zur Vereinfachung von aus Rekursionsgleichungen entstandenen Wachstumsklassen</title>
+        <link>http://franklin.dyer.me/moderate-recurrence-trick-de.html</link>
+        <guid>moderate-recurrence-trick-de</guid>
+        <pubDate>2025-06-01</pubDate>
+    </item>
+    
+    <item>
+        <title>Variación acotada y el operador de traslado</title>
+        <link>http://franklin.dyer.me/bounded-variation-translation-operator-es.html</link>
+        <guid>bounded-variation-translation-operator-es</guid>
+        <pubDate>2025-05-20</pubDate>
+    </item>
+    
+    <item>
+        <title>Ideal scaling of spaced repetition</title>
+        <link>http://franklin.dyer.me/ideal-sr-scaling-en.html</link>
+        <guid>ideal-sr-scaling-en</guid>
+        <pubDate>2025-02-20</pubDate>
+    </item>
+    
+</channel>
+</rss>

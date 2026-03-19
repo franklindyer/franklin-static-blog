@@ -42,6 +42,14 @@ def generate_all_posts():
     for e in INDEX["entries"] + [e for g in NOTES["notes"] for e in NOTES["notes"][g]]:
         generate_post(e) 
 
+def generate_rss():
+    xml_tpl = JENV.get_template("rss.tpl") 
+    feed = xml_tpl.render(entries=INDEX["entries"][:10], conf=INDEX["config"], env=ENV_VARS)
+    
+    f = open(f"./dist/rss.xml", 'w')
+    f.write(feed)
+    f.close()
+
 def generate_homepage():
     html_tpl = JENV.get_template("home.tpl")
     html_page = html_tpl.render(entries=INDEX["entries"][:5], conf=INDEX["config"], env=ENV_VARS)
@@ -77,4 +85,5 @@ def generate_redirects():
 generate_all_posts()
 generate_post_list()
 generate_redirects()
+generate_rss()
 generate_homepage()
