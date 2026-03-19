@@ -4,11 +4,17 @@ import json
 import os
 import markdown
 import markdown2
+import re
 
 load_dotenv()
 
+def escape_ampersands(text):
+    # Escape & that are not part of existing entities
+    return re.sub(r"&(?!([a-zA-Z]+|#\d+);)", "&amp;", text)
+
 JLOAD = jinja2.FileSystemLoader(searchpath="./content/tpl/")
 JENV = jinja2.Environment(loader=JLOAD)
+JENV.filters['escape_ampersands'] = escape_ampersands
 INDEX = json.loads(open("./content/entries.json").read())
 NOTES = json.loads(open("./content/notes.json").read())
 MD_EXT = ['mdx_math', 'markdown.extensions.tables', 'md_in_html', 'tables']
@@ -44,7 +50,15 @@ def generate_all_posts():
 
 def generate_rss():
     xml_tpl = JENV.get_template("rss.tpl") 
-    feed = xml_tpl.render(entries=INDEX["entries"][:10], conf=INDEX["config"], env=ENV_VARS)
+
+    feed_entries = INDEX["entries"][:10]
+    for i in range(len(feed_entries)):
+        new_fname = make_post_filename(feed_entries[i])
+        content = open(f"./dist/{new_fname}.html").read()
+        content = re.compile("<body>(.*)</body>", re.MULTILINE|re.DOTALL).search(content).group(1)
+        feed_entries[i]["content"] = content
+
+    feed = xml_tpl.render(entries=feed_entries, conf=INDEX["config"], env=ENV_VARS)
     
     f = open(f"./dist/rss.xml", 'w')
     f.write(feed)
