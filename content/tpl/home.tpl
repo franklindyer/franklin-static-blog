@@ -24,6 +24,7 @@
 
     <h2>Recent posts</h2>
     <a href="/all.html"><b>View all posts</b></a>
+    <a href="/rss.xml"><b>Use my RSS feed</b></a>
     {% include 'entries.tpl' %}
     <a> ...and here are <a href="/notes.html"><b>some things that aren't posts</b></a></a>
 </body>
