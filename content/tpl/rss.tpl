@@ -12,6 +12,7 @@
         <link>http://franklin.dyer.me/{{ e['slug'] }}-{{ e['lang'] }}.html</link>
         <guid>{{ e['slug'] }}-{{ e['lang'] }}</guid>
         <pubDate>{{ e['date'] }}</pubDate>
+        <content:encoded type="html"><![CDATA[{{ e['content'] | escape_ampersands | safe }}]]></content:encoded>
     </item>
     {% endfor %}
 </channel>
