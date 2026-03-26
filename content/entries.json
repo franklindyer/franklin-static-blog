@@ -9,7 +9,15 @@
     },
 
     "entries": [
-        {
+       {
+            "title": "Angeblich schwere 5x5 Latin-Square-Rätsel",
+            "slug": "hard-latin-square-puzzles",
+            "date": "2026-03-30",
+            "lang": "de",
+            "file": "2026-03-30-de.md",
+            "tags": ["math", "logic", "puzzle"]
+       },
+       {
             "title": "Exploring finite central groupoids",
             "slug": "finite-central-groupoids",
             "date": "2026-01-01",
