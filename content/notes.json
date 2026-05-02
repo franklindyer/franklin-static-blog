@@ -68,6 +68,11 @@
 
         "Languages": [
             {
+                "title": "Language learning resources",
+                "slug": "language-learning-resources",
+                "file": "language-learning-resources.md"
+            },
+            {
                 "title": "Grammar terminology cheatsheet",
                 "slug": "grammar-terms-cheatsheet",
                 "file": "grammar-terms-cheatsheet.md"
