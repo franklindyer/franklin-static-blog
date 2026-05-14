@@ -10,6 +10,14 @@
 
     "entries": [
        {
+            "title": "Die Normalengleichungen auf einen Blick",
+            "slug": "normalengleichungen-auf-einen-blick",
+            "date": "2026-05-15",
+            "lang": "de",
+            "file": "2026-05-15-de.md",
+            "tags": ["math", "linear-algebra", "stats"]
+       },
+       {
             "title": "Angeblich schwere 5x5 Latin-Square-Rätsel",
             "slug": "hard-latin-square-puzzles",
             "date": "2026-03-30",

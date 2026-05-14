@@ -8,6 +8,40 @@
     
     
     <item>
+        <title>Die Normalengleichungen auf einen Blick</title>
+        <link>http://franklin.dyer.me/normalengleichungen-auf-einen-blick-de.html</link>
+        <guid>normalengleichungen-auf-einen-blick-de</guid>
+        <pubDate>2026-05-15</pubDate>
+        <content:encoded type="html"><![CDATA[
+    <h2>Die Normalengleichungen auf einen Blick</h2>
+
+<p>Vor ein paar Jahren, als ich als Lehrassistent für einen Numerikkurs auf UNM arbeitete, musste ich bei vielen Gelegenheiten mehreren verwirrten Studierenden die <strong>Normalengleichungen</strong> erläutern, also die modifizierte Matrix-Vektor-Gleichung $A^\ast A \mathbf{x} = A^\ast\mathbf{b}$, durch der man die Least-Squares-Lösung einer überbestimmten Gleichung $A\mathbf{x} = \mathbf{b}$ rechnet, wenn keine exakte Lösung zu finden ist. Es gibt tatsächlich eine schöne und einfache geometrische Erläuterung sowohl für diese Gleichung als auch für die etwas geheimnisvoll aussehende <strong>Pseudoinverse</strong> $(A^\ast A)^{-1} A^\ast$ einer Matrix.</p>
+
+<p>Kürzlich ist mir eingefallen, als ich noch mal auf dieses Thema in einem Statistikkurs zurückgekommen bin, dass ich diesen Gedankengang nicht einmal niedergeschrieben habe. Ob oder wie sehr diese Intuition den Studierenden tatsächlich geholfen hat, bin ich immer noch nicht ganz sicher, aber in diesem Blogeintrag lege ich sie schriftlich dar, selbst wenn nur für meinen Eigenbedarf.</p>
+
+<hr>
+
+<p>Die Least-Squares-Lösung zur Gleichung $A\mathbf{x} = \mathbf{b}$ ist, per Definition, der Vektor $\mathbf{x}^\ast$, der die Distanz $\lVert A\mathbf{x} - \mathbf{b}\rVert_2$ minimiert. Natürlich ist es nicht (unbedingt) eine Lösung der Gleichung $A\mathbf{x} = \mathbf{b}$, da $\mathbf{b}$ sich vielleicht überhaupt nicht im Spaltenraum der Matrix $A$ sitzt. Die entscheidende Einsicht zur Rechnung der Least-Squares-Lösung lautet, dass der Fehlervektor $A\mathbf{x} - \mathbf{b}$ <em>orthogonal</em> zum Spaltenraum $\text{col}(A)$ sein muss.</p>
+
+<p>In einer zweidimensionalen Ebene kann mann diese Tatsache ganz intuitiv auf einen Blick erfassen. Stell dir mal vor, dass $\mathbf{y}=A\mathbf{x}$ die Projektion von $\mathbf{b}$ in den Spaltenraum von $A$ ist, damit $\mathbf{b}-\mathbf{y}$ dazu orthogonal ist, und dass $\mathbf{y}'=A\mathbf{x}'$ ein anderer Punkt im Spaltenraum von $A$ ist, also ein alternativer Kantidat für die Least-Squares-Schätzung. Dann sieht die Situation so aus:</p>
+
+<p><center>
+<img src="/img/2026-05-15-Fig1.png" alt="Fig 1" />
+</center></p>
+
+<p>Mithilfe des Satzes des Pythagoras können wir folgern, dass $\lVert \mathbf{b}-\mathbf{y}' \rVert^2 = \lVert \mathbf{b}-\mathbf{y} \rVert^2 + \lVert \mathbf{y}-\mathbf{y}' \rVert^2$ und deshalb, dass $\lVert \mathbf{b}-\mathbf{y}' \rVert &gt; \lVert \mathbf{b}-\mathbf{y} \rVert$, also $\mathbf{y}'$ steht tatsächlich ferner vom Zielpunkt $\mathbf{b}$ als $\mathbf{y}$.</p>
+
+<p>Also: wenn $\mathbf{x}$ die wahre Least-Squares-Lösung ist, dann soll $A\mathbf{x} - \mathbf{b}$ orthogonal zu $\text{col}(A)$ sein. Das heißt: $A\mathbf{x} - \mathbf{b}$ muss orthogonal zu <em>jeder Spalte</em> von $A$ sein. Durch Linksmultiplikation mit der Matrix $A^\ast$ rechnet man das Skalarprodukt von einem Vektor mit jeder Spalte von $A$, was genau der Nullvektor produzieren soll, wenn dieser Eingabevektor orthogonal zu jeder Spalte von $A$ ist. Deshalb erfüllt die Least-Squares-Lösung die folgende Gleichung: <script type="math/tex; mode=display">A^\ast (A\mathbf{x} - \mathbf{b}) = \mathbf{0}</script> oder: <script type="math/tex; mode=display">A^\ast A\mathbf{x} = A^\ast\mathbf{b}</script> Beachte, dass selbst wenn $A$ keine Quadratmatrix ist, also die Dimensionen $m\times n$ mit $m\neq n$ hat, muss $A^\ast A$ die dimensionen $n\times n$ haben, also eine Quadratmatrix sein. Wenn $A^\ast A$ zudem eine invertierbare Matrix ist, also wenn die Spalten von $A$ linear unabhängig sind, dann können wir weiterhin folgern: <script type="math/tex; mode=display">\mathbf{x}^\ast = (A^\ast A)^{-1} A^\ast \mathbf{b}</script> Deshalb nennt man die Matrix $(A^\ast A)^{-1} A^\ast$ die Pseudoinverse von $A$: wenn $A$ invertierbar ist ergibt Linksmultiplikation mit der Inverse $A^{-1}$ die Lösung zur Gleichung $A\mathbf{x} = \mathbf{b}$, aber wenn $A$ gar keine Quadratmatrix ist aber vollen Spaltenrang hat, dann ergibt Linksmultiplikation mit $(A^\ast A)^{-1} A^\ast$ die <em>Least-Squares-Lösung</em> der selben Gleichung. Wenn $A$ invertierbar ist stimmen diese Definitionen natürlich überein, da der Ausdruck $(A^\ast A)^{-1} A^\ast$ in diesem Fall auf $A^{-1}$ simplifiziert werden kann.</p>
+
+    <br>
+<a href="/">go to homepage</a>
+<hr>
+<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
+<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
+]]></content:encoded>
+    </item>
+    
+    <item>
         <title>Angeblich schwere 5x5 Latin-Square-Rätsel</title>
         <link>http://franklin.dyer.me/hard-latin-square-puzzles-de.html</link>
         <guid>hard-latin-square-puzzles-de</guid>
@@ -2090,99 +2124,6 @@ n &amp; s(F_n) \\\hline
 <p>
 <script type="math/tex; mode=display">\begin{align*}T(n) = T(n ~ / ~ 2) + \frac{1}{\log n} ~ &amp;\implies ~ T(n) = \Theta(\log \log n) \\ T(n) = T(n ~ / ~ 2) + e^{\sqrt{\log n}} ~ &amp;\implies ~ T(n) = \Theta\big(n\sqrt{\log n}\cdot e^{\sqrt{\log n}}\big) \\ T(n) = 2 ~ T(n ~ / ~ 2) + \frac{n\log\log n}{\log n} ~ &amp;\implies ~ T(n) = \Theta(n \log^2\log n)\end{align*}</script>
 </p>
-
-    <br>
-<a href="/">go to homepage</a>
-<hr>
-<div id="license-statement">The posts on this website are licensed under <a href="https://creativecommons.org/licenses/by-nc/4.0/">CC-by-NC 4.0</a>.</div>
-<div id="notbyai"><a href="https://notbyai.fyi/"><img src="/img/written-by-human.png"/><img src="/img/illustrated-by-human.png"/></a></div>
-]]></content:encoded>
-    </item>
-    
-    <item>
-        <title>Variación acotada y el operador de traslado</title>
-        <link>http://franklin.dyer.me/bounded-variation-translation-operator-es.html</link>
-        <guid>bounded-variation-translation-operator-es</guid>
-        <pubDate>2025-05-20</pubDate>
-        <content:encoded type="html"><![CDATA[
-    <h2>Variación acotada y el operador de traslado</h2>
-
-<p>Recientemente he tenido que tramitar algunos datos físicos de tipo serie cronológica e investigar formas de medir la exactitud de un modelo que produce tales series. Una medida típica es la norma $\lVert \cdot\rVert_1$, con la que se puede cuantificar la "distancia" entre funciones reales $f,g$ así: <script type="math/tex; mode=display">\lVert f-g\rVert_1 := \int_\mathcal{D} |f-g| ~ dt</script> Sucede que el modelo físico que estoy investigando produce a veces datos ligeramente retrasados temporalmente. Eso me ha animado a pensar un poco más teóricamente (aunque probablemente no importe mucho para ese proyecto) cuánto error puede surgir de translados pequeños. Es decir, si $T_\Delta$ representa el operador de translado: <script type="math/tex; mode=display">T_\Delta f(x) := f(x + \Delta)</script> entonces ¿qué se puede decir sobre la distancia $\lVert T_\epsilon f - f\rVert_1$, cuando $\epsilon$ es un número real positivo y pequeñito? </p>
-
-<p><center><img src="/img/2025-05-20-Fig1.png" alt="Fig 1" /></center></p>
-
-<p>Poco cuesta convencerse de que para la mayoría de funciones no patológicos, tanto funciones continuas como funciones escalonadas, la norma $\lVert T_\epsilon f - f\rVert_1$ disminuye <em>linealmente</em> como función de $\epsilon\to 0$. Pero precisamente ¿qué condiciones tiene que cumplir $f$ para que esto sea verdad?</p>
-
-<p>He encontrado una condición suficiente en $f$ muy chula para que $\lVert T_\epsilon f - f\rVert_1 = \mathcal O(\epsilon)$ mientras que $\epsilon\to 0$: la <a href="https://es.wikipedia.org/wiki/Variación_acotada">variación acotada</a>. Aquí me pongo a bosquejar una prueba y también presentar un ejemplo de una aplicación sin la propiedad de variación acotada para la cual $\lVert T_\epsilon f - f\rVert_1$ disminye más lentamente.</p>
-
-<hr>
-
-<p>Primero demonstramos que cualquiera aplicación integrable $f:[0,1]\to \mathbb R$ con variación acotada cumple $\lVert T_\epsilon f - f\rVert_1 = \mathcal O(\epsilon)$. Para aclarar: en este dominio $[0,1]$ definimos el operador $T_\Delta$ de manera envolvente como si fuera el dominio un toro, es decir, definimos $T_\Delta f(x)$ como $T_\Delta f(x + \Delta \bmod 1)$. Así que, primero suponemos que $f:[0,1]\to \mathbb R$ es una función acotada, y que $B &gt; 0$ sea una cota superior concreta en su variación.</p>
-
-<p>Que sea $\epsilon \in (0, 1)$ arbitrario y que sea $2n$ el número entero par más grande para el cual $2n\epsilon &lt; 1$. Como $f$ tiene variación acotada por hipótesis, también tiene que ser acotada, así que</p>
-
-<p>
-<script type="math/tex; mode=display">\int_0^1 |T_\epsilon f - f| ~ dx = \int_0^{2n\epsilon} |T_{\epsilon} f - f | ~ dx + \mathcal O(\epsilon)</script>
-</p>
-
-<p>Definimos ahora una función $\Delta(I,\epsilon)$ así, cuyos argumentos son un intervalo $I\subset [0,1]$ y un número real positivo pequeño $\epsilon &gt; 0$:</p>
-
-<p>
-<script type="math/tex; mode=display">\Delta(I,\epsilon) := \sup_{x\in I} |f(x+\epsilon) - f(x)|</script>
-</p>
-
-<p>Como antes, de la expresión $f(x+\epsilon)$ entendemos $f(x+\epsilon \bmod 1)$. Fíjate que esta expresión siempre  le da a $\Delta(I,\epsilon)$ un valor finito como $f$ es acotada. Podemos derivar una cota mayor en $\lVert T_\epsilon f - f \rVert_1$ partiendo el intervalo de integración en muchas partes y expresando el valor máximo de $| T_\epsilon f - f|$ en cada subintervalo en términos de $\Delta$:</p>
-
-<p>
-<script type="math/tex; mode=display">\int_0^1 | T_\epsilon f - f | ~ dx = \sum_{k=0}^{2n-1}\int_{k\epsilon}^{(k+1)\epsilon} |T_\epsilon f - f| ~ dx \leq \epsilon\sum_{k=0}^{2n-1} \Delta(k\epsilon + [0,\epsilon], ~ \epsilon)</script>
-</p>
-
-<p>Que sea $\delta \ll 1/n$ (por ejemplo, $\delta = 1/n^2$) y que sea $x_0,x_1,\cdots, x_{2n-1}$ una serie de valores tales que $x_k\in k\epsilon + [0,\epsilon]$ y $|f(x_k + \epsilon) - f(x_k)| \geq \Delta(k\epsilon + [0,\epsilon], ~ \epsilon) - \delta$, pues tales valores tienen que existir debido a la definición de $\Delta$ como un supremo. Repartiendo la suma que aparece en nuestra cota superior en sus términos pares e impares, se tiene que:</p>
-
-<p>
-<script type="math/tex; mode=display">\sum_{k=0}^{2n-1} \Delta(k\epsilon + [0,\epsilon], \epsilon) = \sum_{k=0}^{n-1} \Delta(2k\epsilon + [0,\epsilon], \epsilon) + \sum_{k=0}^{n-1} \Delta((2k+1)\epsilon + [0,\epsilon], \epsilon)</script>
-</p>
-
-<p>Considerando primero la suma con los términos pares, se ve que</p>
-
-<p>
-<script type="math/tex; mode=display">\sum_{k=0}^{n-1} \Delta(2k\epsilon + [0,\epsilon], \epsilon) \leq n\delta + \sum_{k=0}^{n-1} |f(x_{2k}+\epsilon)-f(x_{2k})|\leq n\delta + B</script>
-</p>
-
-<p>debido a la definición de la cota $B$ en la variación de $f$, junto con el hecho de que $x_0, x_0 + \epsilon, x_1, x_1 + \epsilon, \cdots$ es una sucesión creciente dentro del intervalo $[0,1]$. Semejantemente se puede derivar una cota superior para los términos impares. Sumando estas cotas se obtiene una cota en la suma entera:</p>
-
-<p>
-<script type="math/tex; mode=display">\sum_{k=0}^{2n-1} \Delta(k\epsilon + [0,\epsilon], \epsilon) \leq 2n\delta + 2B</script>
-</p>
-
-<p>Y pues como $\delta &gt; 0$ podría haber sido arbitrariamente pequeña, se tiene también:</p>
-
-<p>
-<script type="math/tex; mode=display">\sum_{k=0}^{2n-1} \Delta(k\epsilon + [0,\epsilon], \epsilon) \leq 2B</script>
-</p>
-
-<p>Entonces obtenemos una cota de $\mathcal O(\epsilon)$ en el integral que consideramos:</p>
-
-<p>
-<script type="math/tex; mode=display">\int_0^1 | T_\epsilon f - f | ~ dx \leq 2B\epsilon + \mathcal O(\epsilon) = \mathcal O(\epsilon)</script>
-</p>
-
-<hr>
-
-<p>En cuanto a contraejemplos, no es muy difícil encontrar funciones que faltan la propiedad de variación acotada tales que $\lVert T_\epsilon f - f\rVert_\epsilon$ no es $\mathcal O(\epsilon)$. Considérate por ejemplo $f(x) = \log x$ o bien $f(x) = 1/\sqrt{x}$ para $x\in (0,1]$ junto con $f(0) = 0$. Cuesta un poco más encontrar contraejemplos <em>continuos</em>, pero se los puede hallar mediante una construcción parecida al <a href="https://es.wikipedia.org/wiki/Seno_del_topólogo">seno del topólogo</a>. </p>
-
-<p>Define la aplicación $f:[0,1]\to\mathbb R$ por segmentos en una familia de intervalos $[0,1/2), [1/2,3/4), [3/4,7/8), \cdots$ de tamaño que disminuye geométricamente, tal que en cada intervalo $f$ es un sinusoide cuyo periodo parte su intervalo respectivo. Se puede asignarle al sinusoide número $n$ un número entero de periodos $N_n$ y una amplitud $a_n$, tal que para cada $n\in\mathbb N$, <script type="math/tex; mode=display">f(x) = a_n\sin\big(2^{n+1}N_n\pi x\big)</script> para todo $x\in [1-2^{n}, 1-2^{n+1})$. Una función así definida será continua siempre y cuando $a_n\to 0$ mientras que $n\to\infty$. </p>
-
-<p>Dada esta definición, se ve que cuando se traslada $f$ por $\epsilon = (2^{n+1} N_n)^{-1}$, o sea medio periodo del sinusoide número $n$, se produce "interferencia destructiva" dentro del n-ésimo intervalo de tal manera que los puntos máximos de $y = f(x)$ y de $y = f(x + \epsilon)$ se desalinean. </p>
-
-<p><center><img src="/img/2025-05-20-Fig2.png" alt="Fig2" /></center></p>
-
-<p>Se puede demonstrar que la cota inferior siguiente vale para este valor fijo de $\epsilon$: <script type="math/tex; mode=display">\lVert T_\epsilon f - f\rVert_1 \geq  + \frac{4}{\pi} \cdot \frac{a_n}{2^n}\cdot \Big(1 - \frac{1}{N_n}\Big)</script>
-</p>
-
-<p>Si se define, por ejemplo, $a_n = 1/n$ y $N_n = n^2 2^n$, entonces $\lVert T_\epsilon f - f\rVert_1 = \Omega(\sqrt{\epsilon})$ según esta cota!</p>
-
-<p>Todavía me quedan algunas preguntas no contestadas. ¿Es posible que $\lVert T_\epsilon f - f\rVert_1$ ni disminuya a $0$ mientras que $\epsilon\to 0$, siendo $f$ una aplicación continua? Aunque no es cierto para toda función integrable $f$ que $\lVert T_\epsilon f - f\rVert\to 0$ mientras que $\epsilon\to 0$, ¿tiene que ser $0$ un púnto límite de esta cantidad mientras $\epsilon\to 0$?</p>
 
     <br>
 <a href="/">go to homepage</a>
