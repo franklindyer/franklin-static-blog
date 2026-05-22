@@ -5,6 +5,11 @@
     "notes": {
         "Math": [
             {
+                "title": "Some grammar formalisms exercises",
+                "slug": "grammar-formalisms-ex",
+                "file": "grammar-formalisms-ex.md"
+            },
+            {
                 "title": "List of simple but counterintuitive math things",
                 "slug": "counterintuitive-math",
                 "file": "counterintuitive-math.md"
