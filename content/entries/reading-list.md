@@ -6,12 +6,19 @@
 - **Pedro Páramo** (Juan Rulfo)
 - **Conversación en la catedral** (Mario Vargas Llosa)
 - **El beso de la mujer araña** (Manuel Puig)
+- **Buddenbrooks** (Thomas Mann)
+- **Ein Brasilianer in Berlin** (João Ubaldo Ribeiro)
+- **Brasilien: ein Land der Zukunft** (Stefan Zweig)
+- **Unterm Rad** (Herman Hesse)
+- **Bekenntnisse eines europäischen Intellektuellen** (Franz Schoenberner)
 - **Отцы и дети / Fathers and Sons** (Иван Тургенев)
 - **Пикник на обочине / Roadside Picnic** (Аркадий и Борис Стругацкий)
 - **Один день Ивана Денисовича** (Александр Солженицын)
 - **Архипелаг ГУЛАГ** (Александр Солженицын)
+- **Чемодан** (Михаил Булгаков)
+- **一百個人的十年**
 
-## Past favorites
+## Books I've enjoyed 
 
 ### Fiction
 
