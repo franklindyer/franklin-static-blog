@@ -2,7 +2,8 @@
 
 - **Homenaje a Cataluña** (George Orwell, Spanish Version)
 - **Estrella distante** (Roberto Bolaño)
-- **El hambre** (Martín Caparros)
+- **El hambre** (Martín Caparrós)
+- **Ñamérica** (Martín Caparrós)
 - **Pedro Páramo** (Juan Rulfo)
 - **Conversación en la catedral** (Mario Vargas Llosa)
 - **El beso de la mujer araña** (Manuel Puig)
