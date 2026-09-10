@@ -2,7 +2,6 @@
 
 - **Homenaje a Cataluña** (George Orwell, Spanish Version)
 - **Estrella distante** (Roberto Bolaño)
-- **El hambre** (Martín Caparrós)
 - **Ñamérica** (Martín Caparrós)
 - **Pedro Páramo** (Juan Rulfo)
 - **Conversación en la catedral** (Mario Vargas Llosa)
@@ -10,8 +9,9 @@
 - **Buddenbrooks** (Thomas Mann)
 - **Ein Brasilianer in Berlin** (João Ubaldo Ribeiro)
 - **Brasilien: ein Land der Zukunft** (Stefan Zweig)
-- **Unterm Rad** (Herman Hesse)
 - **Bekenntnisse eines europäischen Intellektuellen** (Franz Schoenberner)
+- **Besuch in Deutschland** (Hannah Arendt)
+- **Elemente und Ursprünge totaler Herrschaft** (Hannah Arendt)
 - **Отцы и дети / Fathers and Sons** (Иван Тургенев)
 - **Пикник на обочине / Roadside Picnic** (Аркадий и Борис Стругацкий)
 - **Один день Ивана Денисовича** (Александр Солженицын)
@@ -28,7 +28,9 @@
 - **Heart of Darkness** (Joseph Conrad)
 - **The Secret History** (Donna Tartt)
 - **San Manuel Bueno, mártir** (Miguel de Unamuno)
+- **El hambre** (Martín Caparrós)
 - **Das Glasperlenspiel** (Hermann Hesse)
+- **Unterm Rad** (Herman Hesse)
 - **Schachnovelle** (Stefan Zweig)
 - **Der Zauberberg** (Thomas Mann)
 
