@@ -1,5 +1,7 @@
 ## To read
 
+- **Propaganda** (Edward Bernays)
+- **The Architectural Uncanny: Essays in the Modern Unhomely** (Anthony Vidler)
 - **Homenaje a Cataluña** (George Orwell, Spanish Version)
 - **Estrella distante** (Roberto Bolaño)
 - **Ñamérica** (Martín Caparrós)
